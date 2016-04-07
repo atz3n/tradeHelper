@@ -1,6 +1,9 @@
 import './globalData.js';
-import { KrakenPlatform } from './krakenPlatform.js';
+import { KrakenPlatform } from './KrakenPlatform.js';
+import {TaskH} from './TaskH.js';
 
+
+Data = new Mongo.Collection('data');
 
 export var counterServer = 0;
 
@@ -28,9 +31,10 @@ if (Meteor.isServer) {
       counterServer++;
       Meteor.ClientCall.apply(clientId, 'cltClbk_test', [counterServer], function(error, result) {})
 
-
+      console.log(TaskH.TestFunc());
+      kPl.locDB = 'bla';
       kPl.update();
-      kPl2.update();
+      // kPl2.update();
 
 
 
@@ -41,3 +45,8 @@ if (Meteor.isServer) {
     }
   });
 }
+
+
+
+
+

@@ -71,7 +71,7 @@ Template.body.events({
           instance.pairValue.set('error');
           return;
         }
-        console.log('clicked');
+        
         var jsonVal = JSON.parse(response);
 
         instance.pairValue.set('');        

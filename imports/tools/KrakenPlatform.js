@@ -1,4 +1,4 @@
-import { KrakenApi } from '../api/krakenApi.js'
+import { KrakenApi } from '../api/KrakenApi.js'
 import './globalData.js';
 
 
@@ -36,15 +36,21 @@ export function KrakenPlatform() {
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-   this.test = {pair: 'fsdf<'}
+   
+   this.locDB = 'undefined'; 
 
 
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
+
+  /**
+   * [update description]
+   * @return {[type]} [description]
+   */
   this.update = function() {
-  	console.log(this.test);
+    console.log(this.locDB);
     var data = kClnt.getTicker(config.pair);
 
     if(data === KrakenApi.ERROR_STRING){
@@ -56,6 +62,11 @@ export function KrakenPlatform() {
   }
 
 
+  /**
+   * [configure description]
+   * @param  {[type]} configuration [description]
+   * @return {[type]}               [description]
+   */
   this.configure = function(configuration) {
     config = Object.assign({}, configuration);
     return true;

@@ -1,6 +1,8 @@
-import '../api/krakenApi.js';
+import '../api/KrakenApi.js';
 import '../api/serverCallbacks.js'
-import '../tools/scheduler.js';
+import '../tools/TaskM.js';
+
+import '../api/krakenApi__.js';
 
 
 
