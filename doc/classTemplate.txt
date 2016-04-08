@@ -37,7 +37,7 @@
   Class
  ***********************************************************************/
 
-export function ClassName() {
+export function ClassName(ConstrParam) {
 
   /***********************************************************************
     Private Instance Variable
