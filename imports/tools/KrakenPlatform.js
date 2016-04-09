@@ -37,9 +37,6 @@ export function KrakenPlatform() {
     Public Instance Variable
    ***********************************************************************/
    
-   this.locDB = 'undefined'; 
-
-
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
@@ -50,7 +47,6 @@ export function KrakenPlatform() {
    * @return {[type]} [description]
    */
   this.update = function() {
-    console.log(this.locDB);
     var data = kClnt.getTicker(config.pair);
 
     if(data === KrakenApi.ERROR_STRING){

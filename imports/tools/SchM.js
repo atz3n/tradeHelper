@@ -1,4 +1,29 @@
-import {InstHandler} from './InstHandler.js';
+/**
+ * @description:
+ * Manages SyncCron schedules
+ *
+ * - needs InstHandler.js
+ * - static only module
+ * 
+ * @author Atzen
+ * @version 1.0
+ * 
+ * CHANGES:
+ * 12-Apr-2016 : Initial version
+ */
+
+import { InstHandler } from './InstHandler.js';
+
+
+/***********************************************************************
+  Private Static Variable
+ ***********************************************************************/
+
+/**
+ * The schedules
+ * @type {InstHandler}
+ */
+var schedules = new InstHandler();
 
 
 /***********************************************************************
@@ -6,47 +31,109 @@ import {InstHandler} from './InstHandler.js';
  ***********************************************************************/
 
 /***********************************************************************
-  private Static Variable
+  Private Static Function
  ***********************************************************************/
 
 /***********************************************************************
   Public Static Function
  ***********************************************************************/
 
-SchM.startSchedules = function(){
+/**
+ * Starts all schedules (has to be called to start scheduling)
+ */
+SchM.startSchedules = function() {
   SyncedCron.start();
 }
 
-SchM.stopSchedules = function(){
+
+/**
+ * Removes all schedules
+ */
+SchM.removeSchedules = function() {
   SyncedCron.stop();
+  schedules.clear();
 }
 
-SchM.pauseSchedules = function(){
+
+/**
+ * Stops all schedules
+ */
+SchM.stopSchedules = function() {
   SyncedCron.pause();
 }
 
 
-/***********************************************************************
-  Private Static Function
- ***********************************************************************/
+/**
+ * Creates a schedule
+ * @param {string} id               id of schedule
+ * @param {string} time             schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
+ * @param {function} cyclicFunction callback function that will be executed
+ */
+SchM.createSchedule = function(id, time, cyclicFunction) {
+  schedules.addObj(id, new Schedule());
+  schedules.getObj(id).createSchedule(id, time, cyclicFunction);
+}
+
+
+/**
+ * Removes a schedule
+ * @param  {string} id id of schedule
+ */
+SchM.removeSchedule = function(id) {
+  schedules.getObj(id).stop();
+  schedules.delete(id);
+}
+
+
+/**
+ * Stops a schedule
+ * @param  {string} id id of schedule
+ */
+SchM.stopSchedule = function(id) {
+  schedules.getObj(id).stop();
+}
+
+
+/**
+ * Restarts a schedule (only successful after creating and stopping a schedule)
+ * @param  {string} id id of schedule
+ */
+SchM.restartSchedule = function(id) {
+  schedules.getObj(id).restart();
+}
+
+
+/**
+ * Sets/Resets a schedule time
+ * @param {string} id   id of schedule
+ * @param {string} time schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
+ */
+SchM.setScheduleTime = function(id, time) {
+  schedules.getObj(id).setTime(time);
+}   
+
 
 /***********************************************************************
   Class
  ***********************************************************************/
 
-var function SchM() {
+export function SchM() {
 
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-  
+
+  /**
+   * Schedule array
+   * @type {InstHandler}
+   */
   var schedules = new InstHandler();
 
 
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-   
+
   /***********************************************************************
     Private Instance Function
    ***********************************************************************/
@@ -54,23 +141,6 @@ var function SchM() {
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
-
-  this.addSchedule = function(cyclicFunction, id, time){
-    
-    schedules.addObj(new Schedule(), id);
-    schedules.getObj(id).setCyclicFunction(cyclicFunction, id, time);
-  }
-
-
-  this.removeSchedule = function(id){
-    schedules.getObj(id).remove();
-    schedules.delete(id);
-  }
-
-
-  this.setScheduleTime = function(time){
-    schedules.getObj(id).setTime(time);
-  }
 }
 
 
@@ -79,17 +149,28 @@ var function SchM() {
   Private Class
  ***********************************************************************/
 
-var function Schedule(id, time, cyclicFunction) {
+/**
+ * Private schedule class
+ */
+function Schedule() {
 
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-  
+
+  /**
+   * Variable containing the callback function
+   * @type {Function}
+   */
   var cycFunc = 'init';
 
+  /**
+   * Variable containing the schedule parameters
+   * @type {Object}
+   */
   var cycFuncParams = {
-    _id = 'init',
-    _time = 'init'
+    _id: 'init',
+    _time: 'init'
   };
 
 
@@ -102,18 +183,22 @@ var function Schedule(id, time, cyclicFunction) {
    ***********************************************************************/
 
   /**
-   * [addCycFunc description]
+   * creates a schedule
    */
-  var addCycFunc(){
+  var createSch = function() {
+
     SyncedCron.add({
-    name: cycFuncParams._id,
-    schedule: function(parser) {
-      return parser.text(cycFuncParams._time)
-    },
-    job: function() {
-      cycFunc();
-    }
-  }  
+      name: cycFuncParams._id, // set schedule name
+
+      schedule: function(parser) {
+        return parser.text(cycFuncParams._time) // set schedule time
+      },
+      
+      job: function() {
+        cycFunc(); // set callback function
+      }
+    });
+  }
 
 
   /***********************************************************************
@@ -121,36 +206,43 @@ var function Schedule(id, time, cyclicFunction) {
    ***********************************************************************/
 
   /**
-   * [setCyclicFunction description]
-   * @param {[type]} cyclicFunction [description]
-   * @param {[type]} id             [description]
-   * @param {[type]} time           [description]
+   * Creates the schedule
+   * @param {string} id               id of schedule
+   * @param {string} time             schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
+   * @param {function} cyclicFunction callback function that will be executed
    */
-  this.setCyclicFunction = function(cyclicFunction, id, time){
-    cycFunc = cyclicFunction; 
+  this.createSchedule = function(id, time, cyclicFunction) {
+    cycFunc = cyclicFunction;
     cycFuncParams._id = id;
-    cycFuncParams._time = id;
-
-    addCycFunc();
-  }
-  
-
-  /**
-   * [setTime description]
-   * @param {[type]} time [description]
-   */
-  this.setTime = function(time){
-    SyncedCron.remove(cycFuncParams._id);
     cycFuncParams._time = time;
-    addCycFunc();
+
+    createSch();
   }
 
 
   /**
-   * [remove description]
-   * @return {[type]} [description]
+   * Sets/Resets the schedule time
+   * @param  {string} id id of schedule
    */
-  this.remove = function(){
+  this.setTime = function(time) {
+    this.stop(cycFuncParams._id);
+    cycFuncParams._time = time;
+    createSch();
+  }
+
+
+  /**
+   * Removes the schedule
+   */
+  this.stop = function() {
     SyncedCron.remove(cycFuncParams._id);
+  }
+
+
+  /**
+   * Restarts the schedule (only successful after creating and stopping a schedule)
+   */
+  this.restart = function() {
+    createSch();
   }
 }
