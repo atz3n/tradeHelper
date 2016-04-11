@@ -17,7 +17,7 @@ KrakenPlatform.ConfigDefault = {
   private Static Variable
  ***********************************************************************/
 
-var kClnt = new KrakenApi();
+var _kClnt = new KrakenApi();
 
 
 /***********************************************************************
@@ -30,7 +30,7 @@ export function KrakenPlatform() {
     Private Instance Variable
    ***********************************************************************/
   
-  var config = Object.assign({}, KrakenPlatform.ConfigDefault);
+  var _config = Object.assign({}, KrakenPlatform.ConfigDefault);
 
 
   /***********************************************************************
@@ -47,7 +47,7 @@ export function KrakenPlatform() {
    * @return {[type]} [description]
    */
   this.update = function() {
-    var data = kClnt.getTicker(config.pair);
+    var data = _kClnt.getTicker(_config.pair);
 
     if(data === KrakenApi.ERROR_STRING){
     	return false;
@@ -63,8 +63,8 @@ export function KrakenPlatform() {
    * @param  {[type]} configuration [description]
    * @return {[type]}               [description]
    */
-  this.configure = function(configuration) {
-    config = Object.assign({}, configuration);
+  this.setConfig = function(configuration) {
+    _config = Object.assign({}, configuration);
     return true;
   }
 };

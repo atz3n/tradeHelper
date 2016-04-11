@@ -52,22 +52,16 @@ export function KrakenApi() {
     Private Instance Variable
    ***********************************************************************/
 
-  var config = {
+  var _config = {
     url_ServerTime: 'https://api.kraken.com/0/public/Time',
     url_Ticker: 'https://api.kraken.com/0/public/Ticker',
     url_Trades: 'https://api.kraken.com/0/public/Trades',
   };
 
 
-
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-
-  this.TestVar = {
-    x: 'gsgsd'
-  }
-
 
   /***********************************************************************
     Public Instance Function
@@ -80,7 +74,7 @@ export function KrakenApi() {
    */
   this.getRecentTrades = function(pair) {
     try {
-      return JSON.parse(HTTP.get(config.url_Trades, { params: { pair: pair } }).content).result[pair];
+      return JSON.parse(HTTP.get(_config.url_Trades, { params: { pair: pair } }).content).result[pair];
     } catch (e) {
       console.log(e.message);
       return KrakenApi.ERROR_STRING;
@@ -95,7 +89,7 @@ export function KrakenApi() {
    */
   this.getTicker = function(pair) {
     try {
-      return JSON.parse(HTTP.get(config.url_Ticker, { params: { pair: pair } }).content).result[pair];
+      return JSON.parse(HTTP.get(_config.url_Ticker, { params: { pair: pair } }).content).result[pair];
     } catch (e) {
       console.log(e.message);
       return KrakenApi.ERROR_STRING;
@@ -114,7 +108,7 @@ export function KrakenApi() {
     }
 
     try {
-      var jsonVal = JSON.parse(HTTP.get(config.url_ServerTime, {}).content);
+      var jsonVal = JSON.parse(HTTP.get(_config.url_ServerTime, {}).content);
 
       var keys = Object.keys(jsonVal.result);
       for (var i = 0; i < keys.length; i++) {

@@ -23,7 +23,7 @@ import { InstHandler } from './InstHandler.js';
  * The schedules
  * @type {InstHandler}
  */
-var schedules = new InstHandler();
+var _schedules = new InstHandler();
 
 
 /***********************************************************************
@@ -51,7 +51,7 @@ SchM.startSchedules = function() {
  */
 SchM.removeSchedules = function() {
   SyncedCron.stop();
-  schedules.clear();
+  _schedules.clear();
 }
 
 
@@ -70,8 +70,8 @@ SchM.stopSchedules = function() {
  * @param {function} cyclicFunction callback function that will be executed
  */
 SchM.createSchedule = function(id, time, cyclicFunction) {
-  schedules.addObj(id, new Schedule());
-  schedules.getObj(id).createSchedule(id, time, cyclicFunction);
+  _schedules.addObj(id, new Schedule());
+  _schedules.getObj(id).createSchedule(id, time, cyclicFunction);
 }
 
 
@@ -80,8 +80,8 @@ SchM.createSchedule = function(id, time, cyclicFunction) {
  * @param  {string} id id of schedule
  */
 SchM.removeSchedule = function(id) {
-  schedules.getObj(id).stop();
-  schedules.delete(id);
+  _schedules.getObj(id).stop();
+  _schedules.delete(id);
 }
 
 
@@ -90,7 +90,7 @@ SchM.removeSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.stopSchedule = function(id) {
-  schedules.getObj(id).stop();
+  _schedules.getObj(id).stop();
 }
 
 
@@ -99,7 +99,7 @@ SchM.stopSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.restartSchedule = function(id) {
-  schedules.getObj(id).restart();
+  _schedules.getObj(id).restart();
 }
 
 
@@ -109,7 +109,7 @@ SchM.restartSchedule = function(id) {
  * @param {string} time schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  */
 SchM.setScheduleTime = function(id, time) {
-  schedules.getObj(id).setTime(time);
+  _schedules.getObj(id).setTime(time);
 }   
 
 
@@ -122,13 +122,6 @@ export function SchM() {
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-
-  /**
-   * Schedule array
-   * @type {InstHandler}
-   */
-  var schedules = new InstHandler();
-
 
   /***********************************************************************
     Public Instance Variable
@@ -162,13 +155,13 @@ function Schedule() {
    * Variable containing the callback function
    * @type {Function}
    */
-  var cycFunc = 'init';
+  var _cycFunc = 'init';
 
   /**
    * Variable containing the schedule parameters
    * @type {Object}
    */
-  var cycFuncParams = {
+  var _cycFuncParams = {
     _id: 'init',
     _time: 'init'
   };
@@ -188,14 +181,14 @@ function Schedule() {
   var createSch = function() {
 
     SyncedCron.add({
-      name: cycFuncParams._id, // set schedule name
+      name: _cycFuncParams._id, // set schedule name
 
       schedule: function(parser) {
-        return parser.text(cycFuncParams._time) // set schedule time
+        return parser.text(_cycFuncParams._time) // set schedule time
       },
       
       job: function() {
-        cycFunc(); // set callback function
+        _cycFunc(); // set callback function
       }
     });
   }
@@ -212,9 +205,9 @@ function Schedule() {
    * @param {function} cyclicFunction callback function that will be executed
    */
   this.createSchedule = function(id, time, cyclicFunction) {
-    cycFunc = cyclicFunction;
-    cycFuncParams._id = id;
-    cycFuncParams._time = time;
+    _cycFunc = cyclicFunction;
+    _cycFuncParams._id = id;
+    _cycFuncParams._time = time;
 
     createSch();
   }
@@ -225,8 +218,8 @@ function Schedule() {
    * @param  {string} id id of schedule
    */
   this.setTime = function(time) {
-    this.stop(cycFuncParams._id);
-    cycFuncParams._time = time;
+    this.stop(_cycFuncParams._id);
+    _cycFuncParams._time = time;
     createSch();
   }
 
@@ -235,7 +228,7 @@ function Schedule() {
    * Removes the schedule
    */
   this.stop = function() {
-    SyncedCron.remove(cycFuncParams._id);
+    SyncedCron.remove(_cycFuncParams._id);
   }
 
 

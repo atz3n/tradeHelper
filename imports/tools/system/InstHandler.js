@@ -42,7 +42,7 @@ export function InstHandler() {
    * internal array that holds all objects
    * @type {Array}
    */
-  var objArray = new Array();
+  var _objArray = new Array();
 
 
   /***********************************************************************
@@ -68,7 +68,7 @@ export function InstHandler() {
 
 
     /* saves obj in a free element space or overrides it (if same id was found) */
-    objArray.every(function(element, index, array) {
+    _objArray.every(function(element, index, array) {
     	var idx = 0;
       if(index < array.length){
         if (element === 'undefined' || array[index]['id'] === id) {
@@ -83,9 +83,9 @@ export function InstHandler() {
 
     /* if no space is available, push obj to the end */
     if (added === false) {
-      objArray[objArray.length] = new Object();
-      objArray[objArray.length - 1]['obj'] = Object.assign({}, obj);
-      objArray[objArray.length - 1]['id'] = id;
+      _objArray[_objArray.length] = new Object();
+      _objArray[_objArray.length - 1]['obj'] = Object.assign({}, obj);
+      _objArray[_objArray.length - 1]['id'] = id;
       return true;
     }
 
@@ -103,7 +103,7 @@ export function InstHandler() {
     
 
     /* get element index of object */
-    var idx = objArray.findIndex(function(element, index, array){
+    var idx = _objArray.findIndex(function(element, index, array){
       if(element['id'] === id)
         found = true;
         return true;
@@ -111,7 +111,7 @@ export function InstHandler() {
 
     /* remove element */
     if(found === true){
-      objArray.delete(idx);
+      _objArray.delete(idx);
       return true;
     }
 
@@ -128,7 +128,7 @@ export function InstHandler() {
     var found = false;
     
     /* get element index of object */
-    var idx = objArray.findIndex(function(element, index, array){
+    var idx = _objArray.findIndex(function(element, index, array){
       if(element['id'] === id){
         found = true;
         return true;
@@ -137,7 +137,7 @@ export function InstHandler() {
 
     /* return object */
     if(found === true){
-      return objArray[idx]['obj'];
+      return _objArray[idx]['obj'];
     }
 
     return 'undefined';
@@ -149,7 +149,7 @@ export function InstHandler() {
    * @return {bool} true if successful
    */
   this.clear = function(){
-  	objArray = new Object();
+  	_objArray = new Object();
   	return true;
   }
 }
