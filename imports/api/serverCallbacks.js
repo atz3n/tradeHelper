@@ -1,5 +1,5 @@
-import {counterServer} from '../tools/tasks.js';
-import {SchM} from '../tools/SchM.js';
+import {counterServer} from '../tools/system/tasks.js';
+import {SchM} from '../tools/system/SchM.js';
 
 Meteor.methods({
 	srvClbk_getData: function(){

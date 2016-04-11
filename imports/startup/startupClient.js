@@ -1,5 +1,5 @@
 import '../api/clientCallbacks.js';
-import '../tools/globalData.js';
+import '../tools/system/globalData.js';
 import '../ui/body.js';
 
 

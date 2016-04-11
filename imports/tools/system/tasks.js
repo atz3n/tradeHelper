@@ -1,6 +1,6 @@
 import './globalData.js';
-import { KrakenPlatform } from './KrakenPlatform.js';
 import {SchM} from './SchM.js';
+import { KrakenPlatform } from '../platforms/KrakenPlatform.js';
 
 
 
