@@ -155,7 +155,7 @@ function Schedule() {
    * Variable containing the callback function
    * @type {Function}
    */
-  var _cycFunc = 'init';
+  var _cycFunc = function(){};
 
   /**
    * Variable containing the schedule parameters

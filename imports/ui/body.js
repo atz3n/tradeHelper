@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import './body.html';
-import '../tools/system/globalData.js';
+import '../tools/globalData.js';
 
 
 /***********************************************************************

@@ -1,6 +1,6 @@
 import '../api/KrakenApi.js';
 import '../api/serverCallbacks.js'
-import '../tools/system/tasks.js';
+import '../tools/tasks.js';
 
 import '../api/krakenApi__.js';
 

@@ -52,27 +52,29 @@
   Class
  ***********************************************************************/
 
-export function ClassName(ConstrParam) {
+export function TestData() {
 
   /***********************************************************************
     Inheritances
    ***********************************************************************/
 
-   // InheritancesClass.apply(this);
-   
+  // InheritancesClass.apply(this);
+
 
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-  
-  // var _variable = 'Value';
+
+  var _counter = 0;
+  var _dataArray = new Array();
+
 
 
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-   
-   // this.Variable = 'Value'; 
+
+  // this.Variable = 'Value'; 
 
 
   /***********************************************************************
@@ -82,15 +84,44 @@ export function ClassName(ConstrParam) {
   // var functionName = function(param) {
   //   return 'Value';
   // }
-  
+
 
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
-  // this.functionName = function(param) {
-  //   return 'Value';
-  // }
+  this.reset = function() {
+    _counter = 0;
+  }
 
+  this.setCounter = function(counter) {
+    _counter = counter;
+  }
+
+  this.setData = function(dataArray) {
+    _dataArray = Object.assign({}, dataArray);
+  }
+
+  this.update = function() {
+    _counter++;
+  }
+
+  this.getSin = function(gain) {
+    var deg2rad = _counter * 2 * Math.PI / 360;
+    if (typeof gain == 'undefined'){
+      return Math.sin(deg2rad) + 1;
+    }
+
+    return gain * (Math.sin(deg2rad) + 1);
+  }
+
+  this.getData = function() {
+    return _dataArray[_counter % _dataArray.length];
+  }
+
+
+  this.getCounter = function(){
+    return _counter;
+  }
 
 }

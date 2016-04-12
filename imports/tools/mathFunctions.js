@@ -6,6 +6,6 @@
  * @param  {string} baseVal  basic value
  * @return {string}          calculated percentage differnce
  */
-function percentage(checkVal, baseVal) {
+percentage = function(checkVal, baseVal) {
 	return ((checkVal - baseVal) / baseVal) * 100;
 }

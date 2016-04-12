@@ -2,8 +2,12 @@ Packages:
 http requests:
 -meteor add http
 
- scheduler
+scheduler
 -meteor add percolate:synced-cron
 
- client callbacks
+client callbacks
 -meteor add anti:methods
+
+logger
+-meteor add ostrio:logger
+-meteor add ostrio:loggerfile

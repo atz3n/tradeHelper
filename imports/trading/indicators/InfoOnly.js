@@ -12,7 +12,7 @@
  */
 
 
-// import { Instance } from '../dir/example.js';
+import { Iindicator } from '../../api/Iindicator.js';
 // import './example.js';
 
 
@@ -47,25 +47,25 @@
 //   return 'Value';
 // }
 
-
 /***********************************************************************
   Class
  ***********************************************************************/
 
-export function ClassName(ConstrParam) {
+export function InfoOnly( temp2) {
 
   /***********************************************************************
     Inheritances
    ***********************************************************************/
+  
+   Iindicator.apply(this);
 
-   // InheritancesClass.apply(this);
-   
 
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
   
   // var _variable = 'Value';
+  var temp = temp2;
 
 
   /***********************************************************************
@@ -87,6 +87,11 @@ export function ClassName(ConstrParam) {
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
+
+   this.update = function(){
+    console.log(temp);
+   }
+
 
   // this.functionName = function(param) {
   //   return 'Value';
