@@ -1,4 +1,4 @@
-import {test} from '../ui/body.js';
+// import {test} from '../ui/body.js';
 
 
 Meteor.ClientCall.methods({

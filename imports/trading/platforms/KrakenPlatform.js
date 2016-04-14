@@ -1,5 +1,5 @@
 import { KrakenApi } from '../../api/KrakenApi.js'
-import '../../tools/globalData.js';
+// import '../../tools/globalData.js';
 
 
 /***********************************************************************

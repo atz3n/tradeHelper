@@ -22,3 +22,7 @@ http
 percolate:synced-cron
 anti:methods
 autopublish
+meteorhacks:npm
+
+
+npm-container

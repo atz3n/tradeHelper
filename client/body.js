@@ -1,15 +1,15 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-import './body.html';
-import '../tools/globalData.js';
-
+// import './body.html';
+// import '../tools/globalData.js';
+import {KrakenApi} from '../imports/api/KrakenApi.js';
 
 /***********************************************************************
   Private Function
  ***********************************************************************/
 
-export var test = new ReactiveVar('init');
+// export var test = new ReactiveVar('init');
 
 
 /***********************************************************************
@@ -112,8 +112,7 @@ Template.body.events({
 
     /*++++++++++ setButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setButton") {
-
-      Meteor.call('getKrakenTimeStamp', 'unix', function(error, response) {
+      Meteor.call('getServerTime', KrakenApi.timeFormat.unix, function(error, response) {
         if(response == 'krakenApiError'){
           instance.highValue.set('error');
           return;

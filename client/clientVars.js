@@ -1,0 +1,4 @@
+
+
+
+test = new ReactiveVar('init');

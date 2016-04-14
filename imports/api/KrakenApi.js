@@ -1,4 +1,31 @@
-import { HTTP } from 'meteor/http'
+
+/**
+ * @description:
+ * <Description>
+ *
+ * <Optional informations>
+ * 
+ * @author Atzen
+ * @version 1.0
+ * 
+ * CHANGES:
+ * 02-Jun-2015 : Initial version
+ */
+
+
+// import { Instance } from '../dir/example.js';
+// import './example.js';
+
+
+/***********************************************************************
+  Private Static Variable
+ ***********************************************************************/
+
+  var _config = {
+    url_ServerTime: 'https://api.kraken.com/0/public/Time',
+    url_Ticker: 'https://api.kraken.com/0/public/Ticker',
+    url_Trades: 'https://api.kraken.com/0/public/Trades',
+  };
 
 
 /***********************************************************************
@@ -37,42 +64,19 @@ KrakenApi.Pair = {
 
 
 /***********************************************************************
-  private Static Variable
+  Private Static Function
  ***********************************************************************/
-
 
 /***********************************************************************
-  Class
+  Public Static Function
  ***********************************************************************/
-
-export function KrakenApi() {
-
-
-  /***********************************************************************
-    Private Instance Variable
-   ***********************************************************************/
-
-  var _config = {
-    url_ServerTime: 'https://api.kraken.com/0/public/Time',
-    url_Ticker: 'https://api.kraken.com/0/public/Ticker',
-    url_Trades: 'https://api.kraken.com/0/public/Trades',
-  };
-
-
-  /***********************************************************************
-    Public Instance Variable
-   ***********************************************************************/
-
-  /***********************************************************************
-    Public Instance Function
-   ***********************************************************************/
 
   /**
    * [getRecentTrades description]
    * @param  {[type]} pair [description]
    * @return {[type]}      [description]
    */
-  this.getRecentTrades = function(pair) {
+  KrakenApi.getRecentTrades = function(pair) {
     try {
       return JSON.parse(HTTP.get(_config.url_Trades, { params: { pair: pair } }).content).result[pair];
     } catch (e) {
@@ -87,7 +91,7 @@ export function KrakenApi() {
    * @param  {[type]} pair [description]
    * @return {[type]}      [description]
    */
-  this.getTicker = function(pair) {
+  KrakenApi.getTicker = function(pair) {
     try {
       return JSON.parse(HTTP.get(_config.url_Ticker, { params: { pair: pair } }).content).result[pair];
     } catch (e) {
@@ -102,11 +106,11 @@ export function KrakenApi() {
    * @param  {[type]} format [description]
    * @return {[type]}        [description]
    */
-  this.getServerTime = function(format) {
+  KrakenApi.getServerTime = function(format) {
     if (format !== KrakenApi.timeFormat.unix && format !== KrakenApi.timeFormat.rcf) {
       return KrakenApi.ERROR_STRING;
     }
-
+    console.log(format);
     try {
       var jsonVal = JSON.parse(HTTP.get(_config.url_ServerTime, {}).content);
 
@@ -129,4 +133,32 @@ export function KrakenApi() {
       return KrakenApi.ERROR_STRING;
     }
   }
-};
+
+
+/***********************************************************************
+  Class
+ ***********************************************************************/
+
+export function KrakenApi() {
+
+  /***********************************************************************
+    Inheritances
+   ***********************************************************************/
+
+  /***********************************************************************
+    Private Instance Variable
+   ***********************************************************************/
+
+  /***********************************************************************
+    Public Instance Variable
+   ***********************************************************************/
+
+  /***********************************************************************
+    Private Instance Function
+   ***********************************************************************/
+
+  /***********************************************************************
+    Public Instance Function
+   ***********************************************************************/
+
+}

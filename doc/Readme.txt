@@ -9,5 +9,5 @@ client callbacks
 -meteor add anti:methods
 
 logger
--meteor add ostrio:logger
--meteor add ostrio:loggerfile
+https://meteorhacks.com/logging-support-for-meteor.html
+-  meteor add meteorhacks:npm
