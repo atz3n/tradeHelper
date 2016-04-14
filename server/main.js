@@ -1,12 +1,13 @@
-import './globalData.js';
-import {SchM} from './SchM.js';
-import { KrakenPlatform } from '../trading/platforms/KrakenPlatform.js';
-import {Swing} from '../trading/indicators/Swing.js'
-import {TestData} from '../testing/TestData.js';
+import './startup';
+
+// import './globalData.js';
+import {SchM} from '../imports/tools/SchM.js';
+import {KrakenPlatform} from '../imports/trading/platforms/KrakenPlatform.js';
+import {Swing} from '../imports/trading/indicators/Swing.js'
+import {TestData} from '../imports/testing/TestData.js';
 
 
 
-export var counterServer = 0;
 
 
 
@@ -31,6 +32,7 @@ var swing = new Swing();
 swing.setBuyNotifyFunc(buyNotiFunc);
 swing.setSellNotifyFunc(sellNotiFunc);
 swing.start(testData.getSin());
+logger.info('Current: ' + swing.getData().currentVal);
   console.log('Current: ' + swing.getData().currentVal);
   console.log('Frozen: ' + swing.getData().frozenVal);
   console.log('Top: ' + swing.getData().topVal);
@@ -58,6 +60,7 @@ function buyNotiFunc(){
 function cyclicFunction1(){
   // kPl.update();
   counterServer++;
+  logger.info(counterServer);
   Meteor.ClientCall.apply(clientId, 'cltClbk_test', [counterServer], function(error, result) {
   });
   // console.log('func1 called!!!');
@@ -82,8 +85,10 @@ function cyclicFunction2(){
 }
 
 
-// SchM.createSchedule(scheduleIds.func1, 'every 20 secs', cyclicFunction1);
-SchM.createSchedule(scheduleIds.func2, 'every 1 secs', cyclicFunction2);
+SchM.createSchedule(scheduleIds.func1, 'every 10 secs', cyclicFunction1);
+// SchM.createSchedule(scheduleIds.func2, 'every 1 secs', cyclicFunction2);
+
+
 SchM.startSchedules();
 
 
