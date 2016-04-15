@@ -13,7 +13,7 @@
 
 
 // import { Instance } from '../dir/example.js';
-import '../../tools/mathFunctions.js';
+import '../../tools/miscFunctions.js';
 import { Iindicator } from '../../api/Iindicator.js'
 
 

@@ -2,13 +2,18 @@
  * @description:
  * Saves instances into an array and manages them
  *
+ * 
  * - no dependencies
+ *
  * 
  * @author Atzen
- * @version 1.0
+ * @version 1.1.0
+ *
  * 
  * CHANGES:
  * 12-Apr-2016 : Initial version
+ * 15-Apr-2016 : renamed functions (Obj -> Object)
+ *               added getObjects function
  */
 
 
@@ -63,7 +68,7 @@ export function InstHandler() {
    * @param {Object} obj object which should be stored
    * @return {bool}      true if successful
    */
-  this.addObj = function(id, obj) {
+  this.addObject = function(id, obj) {
     var added = false;
 
 
@@ -73,7 +78,8 @@ export function InstHandler() {
       if(index < array.length){
         if (element === 'undefined' || array[index]['id'] === id) {
           array[index] = new Object();
-          array[index]['obj'] = Object.assign({}, obj);
+          array[index]['obj'] = obj;
+          // array[index]['obj'] = Object.assign({}, obj);
           array[index]['id'] = id;
           added = true;
           return true;
@@ -84,7 +90,8 @@ export function InstHandler() {
     /* if no space is available, push obj to the end */
     if (added === false) {
       _objArray[_objArray.length] = new Object();
-      _objArray[_objArray.length - 1]['obj'] = Object.assign({}, obj);
+      _objArray[_objArray.length - 1]['obj'] = obj;
+      // _objArray[_objArray.length - 1]['obj'] = Object.assign({}, obj);
       _objArray[_objArray.length - 1]['id'] = id;
       return true;
     }
@@ -98,7 +105,7 @@ export function InstHandler() {
    * @param  {string} id id of object which should be removed
    * @return {bool}      true if successful
    */
-  this.removeObj = function(id) {
+  this.removeObject = function(id) {
     var found = false;
     
 
@@ -124,7 +131,7 @@ export function InstHandler() {
    * @param  {string} id id of object which should be returned
    * @return {Object}    object which should be returned (returns 'undefined' if not found)
    */
-  this.getObj = function(id){
+  this.getObject = function(id){
     var found = false;
     
     /* get element index of object */
@@ -151,6 +158,21 @@ export function InstHandler() {
   this.clear = function(){
   	_objArray = new Object();
   	return true;
+  }
+
+
+  /**
+   * Returns all objects in an Array
+   * @return {Array} array to be returned
+   */
+  this.getObjects = function(){
+    tmp = new Array();
+
+    for(i = 0 ; i < _objArray.length ; i++){
+      tmp[i] = _objArray[i]['obj'];
+    }
+
+    return tmp;
   }
 }
 

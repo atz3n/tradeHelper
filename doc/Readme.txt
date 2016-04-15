@@ -1,13 +1,15 @@
 Packages:
 http requests:
--meteor add http
+- meteor add http
 
 scheduler
--meteor add percolate:synced-cron
+- meteor add percolate:synced-cron
+- meteor add voidale:later-js-tz
 
 client callbacks
--meteor add anti:methods
+- meteor add anti:methods
 
 logger
-https://meteorhacks.com/logging-support-for-meteor.html
 -  meteor add meteorhacks:npm
+https://meteorhacks.com/logging-support-for-meteor.html
+https://www.npmjs.com/package/winston-mongodb

@@ -1,10 +1,10 @@
 import './startup';
 
 // import './globalData.js';
-import {SchM} from '../imports/tools/SchM.js';
-import {KrakenPlatform} from '../imports/trading/platforms/KrakenPlatform.js';
-import {Swing} from '../imports/trading/indicators/Swing.js'
-import {TestData} from '../imports/testing/TestData.js';
+import { SchM } from '../imports/tools/SchM.js';
+import { KrakenPlatform } from '../imports/trading/platforms/KrakenPlatform.js';
+import { Swing } from '../imports/trading/indicators/Swing.js'
+import { TestData } from '../imports/testing/TestData.js';
 
 
 
@@ -33,22 +33,21 @@ swing.setBuyNotifyFunc(buyNotiFunc);
 swing.setSellNotifyFunc(sellNotiFunc);
 swing.start(testData.getSin());
 logger.info('Current: ' + swing.getData().currentVal);
-  console.log('Current: ' + swing.getData().currentVal);
-  console.log('Frozen: ' + swing.getData().frozenVal);
-  console.log('Top: ' + swing.getData().topVal);
-  console.log('Bottom: ' + swing.getData().bottomVal);
+logger.info('Frozen : ' + swing.getData().frozenVal);
+logger.info('Top    : ' + swing.getData().topVal);
+logger.info('Bottom : ' + swing.getData().bottomVal);
+logger.info('-------------------------------------');
 
 
 
-
-function sellNotiFunc(){
-  console.log('selling');
+function sellNotiFunc() {
+  logger.info('selling');
   swing.sold();
 }
 
 
-function buyNotiFunc(){
-  console.log('buying');
+function buyNotiFunc() {
+  logger.info('buying');
   swing.bought();
 }
 
@@ -57,36 +56,31 @@ function buyNotiFunc(){
 
 
 
-function cyclicFunction1(){
+function cyclicFunction1() {
   // kPl.update();
   counterServer++;
-  logger.info(counterServer);
-  Meteor.ClientCall.apply(clientId, 'cltClbk_test', [counterServer], function(error, result) {
-  });
+  // logger.info(counterServer);
+  Meteor.ClientCall.apply(clientId, 'cltClbk_test', [counterServer], function(error, result) {});
   // console.log('func1 called!!!');
 }
 
-function cyclicFunction2(){
-  // console.log('func2 called!!!');
-  if(testData.getCounter() <= 360){
+function cyclicFunction2() {
+  if (testData.getCounter() <= 360) {
     testData.update();
     swing.update(testData.getSin());
-    console.log('Current: ' + swing.getData().currentVal);
-    console.log('Frozen: ' + swing.getData().frozenVal);
-    console.log('Top: ' + swing.getData().topVal);
-    console.log('Bottom: ' + swing.getData().bottomVal);
-  } else{
+    logger.info('Current: ' + swing.getData().currentVal);
+    logger.info('Frozen : ' + swing.getData().frozenVal);
+    logger.info('Top    : ' + swing.getData().topVal);
+    logger.info('Bottom : ' + swing.getData().bottomVal);
+    logger.info('-------------------------------------');
+  } else {
     SchM.stopSchedules();
   }
-  // console.log(testData.getSin());
-  // testData.update();
-  // infoOnly.pause();
-  // kPl2.update();
 }
 
 
-SchM.createSchedule(scheduleIds.func1, 'every 10 secs', cyclicFunction1);
-// SchM.createSchedule(scheduleIds.func2, 'every 1 secs', cyclicFunction2);
+// SchM.createSchedule(scheduleIds.func1, 'every 10 secs', cyclicFunction1);
+SchM.createSchedule(scheduleIds.func2, 'every 1 secs', cyclicFunction2);
 
 
 SchM.startSchedules();
@@ -144,8 +138,3 @@ SchM.startSchedules();
 //     }
 //   });
 // }
-
-
-
-
-

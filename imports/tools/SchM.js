@@ -2,11 +2,18 @@
  * @description:
  * Manages SyncCron schedules
  *
- * - needs InstHandler.js
+ * 
+ * - dependencies:
+ *    InstHandler.js
+ *    SyncedCron (meteor add percolate:synced-cron)
+ *    later.js (meteor add voidale:later-js-tz)
+ *    
  * - static only module
+ *
  * 
  * @author Atzen
- * @version 1.0
+ * @version 1.0.0
+ *
  * 
  * CHANGES:
  * 12-Apr-2016 : Initial version
@@ -37,6 +44,15 @@ var _schedules = new InstHandler();
 /***********************************************************************
   Public Static Function
  ***********************************************************************/
+
+/**
+ * Allows to configure the underlying SyncedCron system
+ * @param {Object} config parameter of SyncedCron.config function
+ */
+SchM.setSyncedCronConfig = function(config){
+  SyncedCron.config(config);
+}
+
 
 /**
  * Starts all schedules (has to be called to start scheduling)
@@ -70,8 +86,14 @@ SchM.stopSchedules = function() {
  * @param {function} cyclicFunction callback function that will be executed
  */
 SchM.createSchedule = function(id, time, cyclicFunction) {
-  _schedules.addObj(id, new Schedule());
-  _schedules.getObj(id).createSchedule(id, time, cyclicFunction);
+  /* check error */
+  var tmp = later.parse.text(time);
+  if(tmp.error != -1) return false;
+  
+  _schedules.addObject(id, new Schedule());
+  _schedules.getObject(id).createSchedule(id, time, cyclicFunction);
+  
+  return true; 
 }
 
 
@@ -80,8 +102,8 @@ SchM.createSchedule = function(id, time, cyclicFunction) {
  * @param  {string} id id of schedule
  */
 SchM.removeSchedule = function(id) {
-  _schedules.getObj(id).stop();
-  _schedules.delete(id);
+  _schedules.getObject(id).stop();
+  _schedules.removeObject(id);
 }
 
 
@@ -90,7 +112,7 @@ SchM.removeSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.stopSchedule = function(id) {
-  _schedules.getObj(id).stop();
+  _schedules.getObject(id).stop();
 }
 
 
@@ -99,7 +121,7 @@ SchM.stopSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.restartSchedule = function(id) {
-  _schedules.getObj(id).restart();
+  _schedules.getObject(id).restart();
 }
 
 
@@ -109,7 +131,7 @@ SchM.restartSchedule = function(id) {
  * @param {string} time schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  */
 SchM.setScheduleTime = function(id, time) {
-  _schedules.getObj(id).setTime(time);
+  _schedules.getObject(id).setTime(time);
 }   
 
 
