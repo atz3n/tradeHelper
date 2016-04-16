@@ -25,7 +25,7 @@ import { TestData } from '../imports/testing/TestData.js';
 
 
 var testData = new TestData();
-var swing = new Swing();
+var swing = new Swing(logger);
 
 // testData.setCounter(90);
 
@@ -43,12 +43,20 @@ logger.info('-------------------------------------');
 function sellNotiFunc() {
   logger.info('selling');
   swing.sold();
+  
+  /* restart */
+  if(swing.getStatus() === 'out')
+    swing.start(testData.getSin());
 }
 
 
 function buyNotiFunc() {
   logger.info('buying');
+ 
   swing.bought();
+ /* restart */
+  if(swing.getStatus() === 'out')
+    swing.start(testData.getSin());
 }
 
 

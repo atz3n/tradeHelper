@@ -29,7 +29,7 @@ var _dataInit = {
   bottomVal: 0
 };
 
-var _statesInit = {
+var _positionsInit = {
   long: false,
   short: false
 };
@@ -57,7 +57,7 @@ Swing.SettingDefault = {
   Private Static Function
  ***********************************************************************/
 
-// var variable = function(param){
+// var _variable = function(param){
 //   return 'Value';
 // }
 
@@ -75,7 +75,7 @@ Swing.SettingDefault = {
   Class
  ***********************************************************************/
 
-export function Swing() {
+export function Swing(logger) {
 
   /***********************************************************************
     Inheritances
@@ -88,22 +88,19 @@ export function Swing() {
     Private Instance Variable
    ***********************************************************************/
 
-  // var variable = 'Value';
-  // var _price = 'init';
-
-
   var _config = Object.assign({}, Swing.ConfigDefault);
   var _setting = Object.assign({}, Swing.SettingDefault);
   var _data = Object.assign({}, _dataInit);
-  var _states = Object.assign({}, _statesInit);
+  var _positions = Object.assign({}, _positionsInit);
 
   var _buyNotifyFunc = function() {};
   var _sellNotifyFunc = function() {};
 
   var _active = false;
 
-  var tempState = 'init';
+  var _tmpPos = 'init';
 
+  var _logger = logger;
 
   /***********************************************************************
     Public Instance Variable
@@ -116,9 +113,10 @@ export function Swing() {
     Private Instance Function
    ***********************************************************************/
 
-  // var _setStartData = function(param) {
-  //   return 'Value';
-  // }
+  var _log = function(message){
+    if(_logger !== 'undefined')
+      _logger.debug('Swing: ' + message);
+  }
 
 
   /***********************************************************************
@@ -138,36 +136,48 @@ export function Swing() {
       _data.bottomVal = Math.min(_data.bottomVal, _data.currentVal);
 
 
-      /* start "longen" or shorten */
-      if (!_states.long && !_states.short) {
+      /* open long or short */
+      if (!_positions.long && !_positions.short) {
+
+        /* open short */
         if (_setting.enableShort) {
           if (Math.abs(percentage(_data.currentVal, _data.frozenVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.frozenVal) {
-            tempState = 'short';
+            _log('Short Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+
+            _tmpPos = 'short';
             _sellNotifyFunc();
           }
         }
 
+        /* open long */
         if (_setting.enableLong) {
           if (Math.abs(percentage(_data.currentVal, _data.frozenVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.frozenVal) {
-            tempState = 'long';
+            _log('Long Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+            
+            _tmpPos = 'long';
             _buyNotifyFunc();
           }
         }
+
       }
 
 
-      /* end shorten */
-      if (!_states.long && _states.short) {
+      /* close short */
+      if (!_positions.long && _positions.short) {
         if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.shortAfterBottomBuyNotifyPerc) {
-          tempState = 'short';
+          _log('Short Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+
+          _tmpPos = 'short';
           _buyNotifyFunc();
         }
       }
 
-      /* end "longen" */
-      if (_states.long && !_states.short) {
+      /* close long */
+      if (_positions.long && !_positions.short) {
         if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.longAfterTopSellNotifyPerc) {
-          tempState = 'long';
+          _log('Long Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+
+          _tmpPos = 'long';
           _sellNotifyFunc();
         }
       }
@@ -181,7 +191,10 @@ export function Swing() {
 
 
   this.getStatus = function() {
-
+    if(_positions.long || _positions.short)
+      return 'in';
+    else
+      return 'out';
   }
 
 
@@ -191,6 +204,7 @@ export function Swing() {
 
 
   this.start = function(price) {
+    _log('start tracking');
     _data.currentVal = price;
     _data.frozenVal = price;
     _data.bottomVal = price;
@@ -200,13 +214,15 @@ export function Swing() {
 
 
   this.stop = function() {
+    _log('stop tracking');
     _active = false;
     _data = Object.assign({}, Swing._dataInit);
-    _states = Object.assign({}, Swing._statesInit);
+    _positions = Object.assign({}, Swing._positionsInit);
   }
 
 
   this.pause = function() {
+    _log('pause tracking');
     _active = false;
   }
 
@@ -220,15 +236,16 @@ export function Swing() {
         _data.frozenVal = _data.currentVal;
       }
 
-      if (tempState == 'short') {
-        _states.short = false;
+      if (_tmpPos == 'short') {
+        _positions.short = false;
+
+        _log('Short Closed, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
       }
 
-      if (tempState == 'long') {
-        _states.long = true;
+      if (_tmpPos == 'long') {
+        _positions.long = true;
 
-        /* restart */
-        this.start(_data.currentVal);
+        _log('Long Opened, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
       }
     }
   }
@@ -243,15 +260,16 @@ export function Swing() {
         _data.frozenVal = _data.currentVal;
       }
 
-      if (tempState == 'short') {
-        _states.short = true;
+      if (_tmpPos == 'short') {
+        _positions.short = true;
+
+        _log('Short Opened, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
       }
 
-      if (tempState == 'long') {
-        _states.long = false;
+      if (_tmpPos == 'long') {
+        _positions.long = false;
 
-        /* restart */
-        this.start(_data.currentVal);
+        _log('Long Closed, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
       }
     }
   }

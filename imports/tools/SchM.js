@@ -12,11 +12,12 @@
  *
  * 
  * @author Atzen
- * @version 1.0.0
+ * @version 1.0.1
  *
  * 
  * CHANGES:
  * 12-Apr-2016 : Initial version
+ * 16-Apr-2016 : added '_' prefix to private statements
  */
 
 import { InstHandler } from './InstHandler.js';
@@ -200,7 +201,7 @@ function Schedule() {
   /**
    * creates a schedule
    */
-  var createSch = function() {
+  var _createSch = function() {
 
     SyncedCron.add({
       name: _cycFuncParams._id, // set schedule name
@@ -231,7 +232,7 @@ function Schedule() {
     _cycFuncParams._id = id;
     _cycFuncParams._time = time;
 
-    createSch();
+    _createSch();
   }
 
 
@@ -242,7 +243,7 @@ function Schedule() {
   this.setTime = function(time) {
     this.stop(_cycFuncParams._id);
     _cycFuncParams._time = time;
-    createSch();
+    _createSch();
   }
 
 
@@ -258,6 +259,6 @@ function Schedule() {
    * Restarts the schedule (only successful after creating and stopping a schedule)
    */
   this.restart = function() {
-    createSch();
+    _createSch();
   }
 }

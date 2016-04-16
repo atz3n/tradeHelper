@@ -37,7 +37,7 @@
   Private Static Function
  ***********************************************************************/
 
-// var variable = function(param){
+// var _variable = function(param){
 //   return 'Value';
 // }
 
@@ -82,7 +82,7 @@ export function ClassName(ConstrParam) {
     Private Instance Function
    ***********************************************************************/
 
-  // var functionName = function(param) {
+  // var _functionName = function(param) {
   //   return 'Value';
   // }
   

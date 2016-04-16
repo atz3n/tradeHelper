@@ -47,7 +47,7 @@ Logger.ConfigDefault = {
   Private Static Function
   ***********************************************************************/
 
-var timeFormat = function() {
+var _timeFormat = function() {
   var date = new Date();
 
 
@@ -86,13 +86,11 @@ var timeFormat = function() {
 
   /* Milliseconds */
   tmp = date.getMilliseconds();
-  if(tmp >= 1000) tmp = tmp % 10;
-  
   if (tmp < 100) {
     if (tmp < 10) {
-      ret += '0' + tmp;
-    } else {
       ret += '00' + tmp;
+    } else {
+      ret += '0' + tmp;
     }
   } else {
     ret += tmp;
@@ -102,7 +100,7 @@ var timeFormat = function() {
 }
 
 
-var createFileName = function(suffix) {
+var _createFileName = function(suffix) {
   var date = new Date();
 
 
@@ -159,8 +157,9 @@ export function Logger(name) {
 
   var _config = Object.assign({}, Logger.ConfigDefault);
 
-  var _db = new Mongo.Collection(_name + 'logs');
-
+  var _db = null;
+  var _dbCreated = false;
+  
 
   /***********************************************************************
     Public Instance Variable
@@ -170,7 +169,7 @@ export function Logger(name) {
     Private Instance Function
     ***********************************************************************/
 
-  var messageFormat = function(options) {
+  var _messageFormat = function(options) {
     var tmp = '';
 
     if (_config.viewTime && _config.viewLevel) {
@@ -189,29 +188,34 @@ export function Logger(name) {
   }
 
 
-  var createFileLogger = function(path, fileName) {
+  var _createFileLogger = function(path, fileName) {
     _fileLg = new winston.transports.File({
       name: _name + 'file',
       level: _config.fileLevel,
-      timestamp: timeFormat,
-      formatter: messageFormat,
+      timestamp: _timeFormat,
+      formatter: _messageFormat,
       filename: path + fileName,
       json: false
     })
   }
 
 
-  var createConsoleLogger = function() {
+  var _createConsoleLogger = function() {
     _consoleLg = new winston.transports.Console({
       name: _name + 'cnsl',
       level: _config.cnslLevel,
-      timestamp: timeFormat, // function pointer
-      formatter: messageFormat,
+      timestamp: _timeFormat, // function pointer
+      formatter: _messageFormat,
     })
   }
 
 
-  var createDatabaseLogger = function() {
+  var _createDatabaseLogger = function() {
+    if(_dbCreated === false){
+      _db = new Mongo.Collection(_name + 'logs');
+      _dbCreated = true;
+    }
+
     _dbLg = new winston.transports.MongoDB({
       name: _name + 'db',
       level: _config.dbLevel,
@@ -221,7 +225,7 @@ export function Logger(name) {
   }
 
 
-  var createLogger = function() {
+  var _createLogger = function() {
 
     var tmp = new InstHandler()
 
@@ -253,56 +257,56 @@ export function Logger(name) {
 
 
   this.setFileLogger = function(filename, path) {
-    createFileLogger(path, filename);
-    createLogger();
+    _createFileLogger(path, filename);
+    _createLogger();
   }
 
 
   this.setDailyFileLogger = function(scheduleName, path, suffix) {
-    createFileLogger(path, createFileName(suffix));
-    createLogger();
+    _createFileLogger(path, _createFileName(suffix));
+    _createLogger();
 
     return SchM.createSchedule(scheduleName, 'at 00:00', function() {
 
-      createFileLogger(path, createFileName(suffix));
-      createLogger();
+      _createFileLogger(path, _createFileName(suffix));
+      _createLogger();
     });
   }
 
 
   this.setConsoleLogger = function() {
-    createConsoleLogger();
-    createLogger();
+    _createConsoleLogger();
+    _createLogger();
   }
 
 
   this.setDatabaseLogger = function() {
-    createDatabaseLogger();
-    createLogger();
+    _createDatabaseLogger();
+    _createLogger();
   }
 
 
   this.removeFileLogger = function() {
     _fileLg = null;
-    createLogger();
+    _createLogger();
   }
 
 
   this.removeDailyFileLogger = function(scheduleName) {
     SchM.removeSchedule(scheduleName);
     _fileLg = null;
-    createLogger();
+    _createLogger();
   }
 
 
   this.removeConsoleLogger = function() {
     _consoleLg = null;
-    createLogger();
+    _createLogger();
   }
 
   this.removeDatabaseLogger = function() {
     _dbLg = null;
-    createLogger();
+    _createLogger();
   }
 
 
