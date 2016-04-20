@@ -1,0 +1,867 @@
+{
+  "application": {
+    "title": "Trade Helper",
+    "theme": "bootswatch-simplex",
+    "on_user_created_code": "Settings.insert({ enNotification: 'true', ownerId: user._id });",
+    "roles": [
+      "admin",
+      "user"
+    ],
+    /***********************************************************************
+  Global Config
+ ***********************************************************************/
+    "default_role": "user",
+    "send_verification_email": false,
+    /***********************************************************************
+  Collections
+ ***********************************************************************/
+    "collections": [
+      {
+        "name": "settings",
+        "fields": [
+          {
+            "name": "enNotification",
+            "title": "Enable Notifications",
+            "type": "bool",
+            "input": "checkbox",
+            "default": "true"
+          }
+        ]
+      },
+      {
+        "name": "swings",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "type",
+            "title": "Type (Do not change, it's a workaround)",
+            "type": "string",
+            "default": "swingType",
+            "show_in_insert_form": true,
+            "show_in_update_form": false,
+            "show_in_dataview": false,
+            "required": true
+          },
+          {
+            "name": "lnpnp",
+            "title": "Open Long Position [%]",
+            "type": "float",
+            "default": "5.0",
+            "min": "0",
+            "required": true
+          },
+          {
+            "name": "latsnp",
+            "title": "Close Long Position [%]",
+            "type": "float",
+            "default": "5.0",
+            "min": "0",
+            "required": true
+          },
+          {
+            "name": "snpnp",
+            "title": "Open Short Positon [%]",
+            "type": "float",
+            "default": "5.0",
+            "min": "0",
+            "required": true
+          },
+          {
+            "name": "sabbnp",
+            "title": "Close Short Position [%]",
+            "type": "float",
+            "default": "5.0",
+            "min": "0",
+            "required": true
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
+        "name": "dummys",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "type",
+            "title": "Type (Do not change, it's a workaround)",
+            "type": "string",
+            "default": "dummyType",
+            "show_in_insert_form": true,
+            "show_in_update_form": false,
+            "show_in_dataview": false,
+            "required": true
+          },
+          {
+            "name": "dummyCont",
+            "title": "Dummy Content",
+            "type": "string"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      }
+    ],
+    /***********************************************************************
+  Queries
+ ***********************************************************************/
+    "queries": [
+      {
+        "name": "dummys",
+        "collection": "dummys",
+        "filter": {}
+      },
+      {
+        "name": "dummys_empty",
+        "collection": "dummys",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "dummy",
+        "collection": "dummys",
+        "filter": {
+          "_id": ":dummyId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "swings",
+        "collection": "swings",
+        "filter": {}
+      },
+      {
+        "name": "swings_empty",
+        "collection": "swings",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "swing",
+        "collection": "swings",
+        "filter": {
+          "_id": ":swingId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "setting",
+        "collection": "settings",
+        "filter": {
+          "_id": "Meteor.userId()"
+        },
+        "find_one": true
+      },
+      {
+        "name": "admin_users",
+        "collection": "users"
+      },
+      {
+        "name": "admin_user",
+        "collection": "users",
+        "filter": {
+          "_id": ":userId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "users_null",
+        "collection": "users",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "current_user_data",
+        "collection": "users",
+        "filter": {
+          "_id": "Meteor.userId()"
+        },
+        "find_one": true
+      }
+    ],
+    /***********************************************************************
+  Public
+ ***********************************************************************/
+    "public_zone": {
+      "pages": [
+        {
+          "name": "about",
+          "title": "In process...",
+          "type": "page"
+        },
+        {
+          "name": "home_public",
+          "title": "Welcome to Trade Helper",
+          "type": "page"
+        },
+        {
+          "name": "login",
+          "template": "login",
+          "type": "page"
+        },
+        {
+          "name": "register",
+          "template": "register",
+          "type": "page"
+        },
+        {
+          "name": "verify_email",
+          "template": "verify_email",
+          "route_params": [
+            "verifyEmailToken"
+          ],
+          "type": "page"
+        },
+        {
+          "name": "forgot_password",
+          "template": "forgot_password",
+          "type": "page"
+        },
+        {
+          "name": "reset_password",
+          "template": "reset_password",
+          "route_params": [
+            "resetPasswordToken"
+          ],
+          "type": "page"
+        }
+      ],
+      "components": [
+        {
+          "name": "left_menu",
+          "type": "menu",
+          "class": "nav navbar-nav",
+          "dest_selector": "#menu",
+          "items": [
+            {
+              "title": "Home",
+              "route": "home_public"
+            },
+            {
+              "title": "About",
+              "route": "about"
+            }
+          ]
+        },
+        {
+          "name": "right_menu",
+          "type": "menu",
+          "class": "nav navbar-nav navbar-right",
+          "dest_selector": "#menu",
+          "items": [
+            {
+              "title": "Register",
+              "route": "register"
+            },
+            {
+              "title": "Login",
+              "route": "login"
+            }
+          ]
+        }
+      ],
+      "type": "zone"
+    },
+    /***********************************************************************
+  Private
+ ***********************************************************************/
+    "private_zone": {
+      "pages": [
+        {
+          "name": "history",
+          "type": "page"
+        },
+        {
+          "name": "charts",
+          "type": "page"
+        },
+        {
+          "name": "info",
+          "type": "page"
+        },
+        {
+          "name": "strategies",
+          "type": "page"
+        },
+        {
+          "name": "plugins",
+          "components": [
+            {
+              "name": "viewSwings",
+              "title": "Swing",
+              "type": "data_view",
+              "text_if_empty": "No Swing configured",
+              "query_name": "swings",
+              "query_params": [],
+              "insert_route": "plugins.insertSwing",
+              "edit_route": "plugins.editSwing",
+              "edit_route_params": [
+                {
+                  "name": "swingId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "plugins.detailsSwing",
+              "details_route_params": [
+                {
+                  "name": "swingId",
+                  "value": "this._id"
+                }
+              ]
+            },
+            {
+              "name": "viewDummys",
+              "title": "Dummy",
+              "type": "data_view",
+              "text_if_empty": "No Dummy configured",
+              "query_name": "dummys",
+              "query_params": [],
+              "insert_route": "plugins.insertDummy",
+              "edit_route": "plugins.editDummy",
+              "edit_route_params": [
+                {
+                  "name": "dummyId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "plugins.detailsDummy",
+              "details_route_params": [
+                {
+                  "name": "dummyId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insertSwing",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Swing",
+                  "query_name": "swings_empty",
+                  "query_params": [],
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "detailsSwing",
+              "route_params": [
+                "swingId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "swing",
+                  "query_params": [],
+                  "close_route": "plugins",
+                  "back_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "editSwing",
+              "route_params": [
+                "swingId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Swing",
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins",
+                  "query_name": "swing",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "insertDummy",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Dummy",
+                  "query_name": "dummys_empty",
+                  "query_params": [],
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "detailsDummy",
+              "route_params": [
+                "dummyId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "dummy",
+                  "query_params": [],
+                  "close_route": "plugins",
+                  "back_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "editDummy",
+              "route_params": [
+                "dummyId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Dummy",
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins",
+                  "query_name": "dummy",
+                  "query_params": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "settings",
+          "components": [
+            {
+              "name": "edit_form",
+              "type": "form",
+              "mode": "update",
+              "title": "Edit Settings",
+              "submit_route": "plugins",
+              "cancel_route": "plugins",
+              "query_name": "setting"              
+            }
+          ]
+        },
+        {
+          "name": "home_private",
+          "title": "Welcome {{userFullName}}!",
+          "type": "page"
+        },
+        {
+          "name": "admin",
+          "roles": [
+            "admin"
+          ],
+          "pages": [
+            {
+              "name": "users",
+              "components": [
+                {
+                  "name": "view",
+                  "type": "data_view",
+                  "title": "Users",
+                  "text_if_empty": "No users yet",
+                  "query_name": "admin_users",
+                  "fields": [
+                    {
+                      "name": "profile.name",
+                      "title": "Name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "profile.email",
+                      "title": "E-mail",
+                      "type": "string"
+                    },
+                    {
+                      "name": "roles",
+                      "title": "Role",
+                      "type": "string"
+                    }
+                  ],
+                  "insert_route": "admin.users.insert",
+                  "edit_route": "admin.users.edit",
+                  "edit_route_params": [
+                    {
+                      "name": "userId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "admin.users.details",
+                  "details_route_params": [
+                    {
+                      "name": "userId",
+                      "value": "this._id"
+                    }
+                  ]
+                }
+              ],
+              "pages": [
+                {
+                  "name": "details",
+                  "route_params": [
+                    "userId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "User details",
+                      "query_name": "admin_user",
+                      "fields": [
+                        {
+                          "name": "profile.name",
+                          "title": "Name",
+                          "type": "string"
+                        },
+                        {
+                          "name": "profile.email",
+                          "title": "E-mail",
+                          "type": "email"
+                        },
+                        {
+                          "name": "roles",
+                          "title": "Role",
+                          "type": "string"
+                        }
+                      ],
+                      "close_route": "admin.users",
+                      "back_route": "admin.users"
+                    }
+                  ],
+                  "type": "page"
+                },
+                {
+                  "name": "insert",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "Add new user",
+                      "submit_route": "admin.users",
+                      "cancel_route": "admin.users",
+                      "query_name": "users_null",
+                      "fields": [
+                        {
+                          "name": "profile.name",
+                          "title": "Name",
+                          "required": true,
+                          "type": "string"
+                        },
+                        {
+                          "name": "profile.email",
+                          "title": "E-mail",
+                          "type": "email",
+                          "required": true
+                        },
+                        {
+                          "name": "password",
+                          "title": "Password",
+                          "input": "password",
+                          "required": true,
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  ],
+                  "type": "page"
+                },
+                {
+                  "name": "edit",
+                  "route_params": [
+                    "userId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit user",
+                      "submit_route": "admin.users",
+                      "cancel_route": "admin.users",
+                      "query_name": "admin_user",
+                      "fields": [
+                        {
+                          "name": "profile.name",
+                          "title": "Name",
+                          "required": true,
+                          "type": "string"
+                        },
+                        {
+                          "name": "profile.email",
+                          "title": "E-mail",
+                          "type": "email",
+                          "required": true
+                        },
+                        {
+                          "name": "roles",
+                          "type": "array",
+                          "title": "Role",
+                          "input": "radio",
+                          "input_items": [
+                            {
+                              "value": "user",
+                              "title": "User"
+                            },
+                            {
+                              "value": "admin",
+                              "title": "Admin"
+                            },
+                            {
+                              "value": "blocked",
+                              "title": "Blocked"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "type": "page"
+                }
+              ],
+              "type": "page"
+            }
+          ],
+          "components": [
+            {
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
+                {
+                  "title": "Users",
+                  "route": "admin.users"
+                }
+              ]
+            }
+          ],
+          "type": "page"
+        },
+        {
+          "name": "user_settings",
+          "roles": [
+            "user",
+            "admin"
+          ],
+          "pages": [
+            {
+              "name": "profile",
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit your profile",
+                  "submit_route": "user_settings.profile",
+                  "query_name": "current_user_data",
+                  "fields": [
+                    {
+                      "name": "profile.name",
+                      "title": "Name",
+                      "required": true,
+                      "type": "string"
+                    },
+                    {
+                      "name": "profile.email",
+                      "title": "E-mail",
+                      "type": "email",
+                      "required": true
+                    },
+                    {
+                      "name": "profile.facebook",
+                      "title": "Facebook URL",
+                      "type": "string"
+                    },
+                    {
+                      "name": "profile.google",
+                      "title": "Google+ URL",
+                      "type": "string"
+                    },
+                    {
+                      "name": "profile.twitter",
+                      "title": "Twitter ID",
+                      "type": "string"
+                    },
+                    {
+                      "name": "profile.website",
+                      "title": "Website URL",
+                      "type": "string"
+                    }
+                  ]
+                }
+              ],
+              "type": "page"
+            },
+            {
+              "name": "change_pass",
+              "template": "change_pass",
+              "type": "page"
+            }
+          ],
+          "components": [
+            {
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
+                {
+                  "title": "Profile",
+                  "route": "user_settings.profile"
+                },
+                {
+                  "title": "Change password",
+                  "route": "user_settings.change_pass"
+                }
+              ]
+            }
+          ],
+          "type": "page"
+        },
+        {
+          "name": "logout",
+          "template": "logout",
+          "type": "page"
+        }
+      ],
+      "components": [
+        {
+          "name": "left_menu",
+          "type": "menu",
+          "class": "nav navbar-nav",
+          "dest_selector": "#menu",
+          "items": [
+            {
+              "title": "Home",
+              "route": "home_private",
+              "icon_class": "fa fa-home"
+            },
+            {
+              "title": "Charts",
+              "route": "charts",
+              "icon_class": "fa fa-line-chart"
+            },
+            {
+              "title": "Strategies",
+              "route": "strategies",
+              "icon_class": "fa fa-flask"
+            },
+            {
+              "title": "Plugins",
+              "route": "plugins",
+              "icon_class": "fa fa-plug"
+            },
+            {
+              "title": "Settings",
+              "route": "settings",
+              "icon_class": "fa fa-gears"
+            },
+            {
+              "title": "History",
+              "route": "history",
+              "icon_class": "fa fa-history"
+            },
+            {
+              "title": "Info",
+              "route": "info",
+              "icon_class": "fa fa-info"
+            }
+          ]
+        },
+        {
+          "name": "right_menu",
+          "type": "menu",
+          "class": "nav navbar-nav navbar-right",
+          "dest_selector": "#menu",
+          "items": [
+            {
+              "title": "Admin",
+              "route": "admin",
+              "icon_class": "fa fa-wrench"
+            },
+            {
+              "title": "{{userEmail}}",
+              "items": [
+                {
+                  "title": "Settings",
+                  "route": "user_settings"
+                },
+                {
+                  "title": "Logout",
+                  "route": "logout"
+                }
+              ],
+              "icon_class": "fa fa-cog"
+            }
+          ]
+        }
+      ],
+      "type": "zone"
+    },
+    "free_zone": {
+      "type": "zone"
+    },
+    "packages": {}
+  }
+}

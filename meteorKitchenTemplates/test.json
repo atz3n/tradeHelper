@@ -1,0 +1,115 @@
+{
+    "application": {
+
+        "title": "Example application",
+
+        "collections": [
+            {
+                "name": "customers",
+                "fields": [
+                    { "name": "name", "title": "Name", "required": true },
+                    { "name": "phone", "title": "Phone", "default": "-" },
+                    { "name": "email", "title": "E-mail", "type": "email" }
+                ]
+            }
+        ],
+
+        "queries": [
+            {
+                "name": "customers",
+                "collection": "customers",
+                "filter": {}
+            },
+            {
+                "name": "customers_empty",
+                "collection": "customers",
+                "filter": {"_id": null}
+            },
+            {
+                "name": "customer",
+                "collection": "customers",
+                "filter": { "_id": ":customerId" }
+            }
+        ],
+
+        "free_zone": {
+
+            "pages": [
+                {
+                    "name": "home",
+                    "components": [
+                        {
+                            "name": "view",
+                            "type": "data_view",
+
+                            "title": "Customers",
+                            "text_if_empty": "No customers here :(",
+
+                            "query_name": "customers",
+
+                            "insert_route": "home.insert",
+                            "insert_route_params": [
+                            ],
+
+                            "edit_route": "home.edit",
+                            "edit_route_params": [
+                                { "name": "customerId", "value": "this._id" }
+                            ],
+
+                            "details_route": "",
+                            "details_route_params": [
+                            ]
+                        }
+                    ],
+
+                    "pages": [
+                        {
+                            "name": "insert",
+                            "components": [
+                                {
+                                    "name": "insert_form",
+                                    "type": "form",
+                                    "mode": "insert",
+                                    "title": "New customer",
+
+                                    "query_name": "customers_empty",
+
+                                    "submit_route": "home",
+                                    "cancel_route": "home"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "edit",
+                            "route_params": ["customerId"],
+                            "components": [
+                                {
+                                    "name": "edit_form",
+                                    "type": "form",
+                                    "mode": "update",
+                                    "title": "Edit customer",
+
+                                    "query_name": "customer",
+
+                                    "submit_route": "home",
+                                    "cancel_route": "home"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+
+            "components": [
+                {
+                    "name": "main_menu",
+                    "type": "menu",
+                    "class": "nav navbar-nav",
+                    "items": [
+                        { "title": "Customers", "route": "home" }
+                    ]
+                }
+            ]
+        }
+    }
+}
