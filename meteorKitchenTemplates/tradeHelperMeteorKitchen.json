@@ -2,7 +2,7 @@
   "application": {
     "title": "Trade Helper",
     "theme": "bootswatch-simplex",
-    "on_user_created_code": "Settings.insert({ enNotification: 'true', ownerId: user._id });",
+    "on_user_created_code": "Settings.insert({ enNotification: 'true', dummy: 'false', ownerId: user._id, modifiedBy: user._id });",
     "roles": [
       "admin",
       "user"
@@ -25,7 +25,25 @@
             "type": "bool",
             "input": "checkbox",
             "default": "true"
+          },
+          {
+            "name": "dummy",
+            "title": "Dummy",
+            "type": "bool",
+            "input": "checkbox",
+            "default": "false"
           }
+
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
         ]
       },
       {
@@ -191,10 +209,29 @@
         "find_one": true
       },
       {
+        "name": "settings",
+        "collection": "settings",
+        "filter": {}
+      },
+      {
+        "name": "settings_empty",
+        "collection": "settings",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "settings_first",
+        "collection": "settings",
+        "filter": {},
+        "find_one": true
+      },
+      {
         "name": "setting",
         "collection": "settings",
         "filter": {
-          "_id": "Meteor.userId()"
+          "_id": ":settingId"
         },
         "find_one": true
       },
@@ -329,7 +366,19 @@
         },
         {
           "name": "strategies",
-          "type": "page"
+          "type": "page",
+          "components": [
+            {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Setting",
+                  "submit_route": "settings",
+                  "cancel_route": "settings",
+                  "query_name": "settings_first",
+                  "query_params": []
+                }
+          ]
         },
         {
           "name": "plugins",
@@ -490,15 +539,84 @@
         },
         {
           "name": "settings",
+          
           "components": [
             {
-              "name": "edit_form",
-              "type": "form",
-              "mode": "update",
-              "title": "Edit Settings",
-              "submit_route": "plugins",
-              "cancel_route": "plugins",
-              "query_name": "setting"              
+              "name": "view",
+              "title": "Settings",
+              "type": "data_view",
+              "text_if_empty": "No Settings configured",
+              "query_name": "settings",
+              "query_params": [],
+              "insert_route": "settings.insert",
+              "edit_route": "settings.edit",
+              "edit_route_params": [
+                {
+                  "name": "settingId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "settings.details",
+              "details_route_params": [
+                {
+                  "name": "settingId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insert",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Setting",
+                  "query_name": "settings_empty",
+                  "query_params": [],
+                  "submit_route": "settings",
+                  "cancel_route": "settings"
+                }
+              ]
+            },
+            {
+              "name": "details",
+              "route_params": [
+                "settingId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "setting",
+                  "query_params": [],
+                  "close_route": "settings",
+                  "back_route": "settings"
+                }
+              ]
+            },
+            {
+              "name": "edit",
+              "route_params": [
+                "settingId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Setting",
+                  "submit_route": "settings",
+                  "cancel_route": "settings",
+                  "query_name": "setting",
+                  "query_params": []
+                }
+              ]
             }
           ]
         },
