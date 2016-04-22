@@ -54,21 +54,51 @@
         ]
       },
       {
-        "name": "strategyItems",
+        "name": "strategyPlugins",
         "fields": [
           {
-            "name": "name",
-            "title": "Name",
-            "type": "string",
-            "required": true
+            "name": "swingId",
+            "title": "Swing",
+            "input": "select",
+            "default": "init",
+            "lookup_query_name": "swings",
+            "lookup_field": "name",
+            "lookup_key": "_id",
+            "show_in_dataview": false,
+            "show_in_read_only_form": false,
+            "join_collection": "swings",
+            "join_fields": [
+              "name"
+            ],
+            "join_container": "swing"
           },
           {
-            "name": "dummy",
-            "title": "dummy",
-            "type": "integer",
-            "min": "1",
-            "default": "10",
-            "required": true
+            "name": "swing.name",
+            "title": "Swing",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
+          },
+          {
+            "name": "dummyId",
+            "title": "Dummy",
+            "input": "select",
+            "default": "not used",
+            "lookup_query_name": "dummys",
+            "lookup_field": "name",
+            "lookup_key": "_id",
+            "show_in_dataview": false,
+            "show_in_read_only_form": false,
+            "join_collection": "dummys",
+            "join_fields": [
+              "name"
+            ],
+            "join_container": "dummy"
+          },
+          {
+            "name": "dummy.name",
+            "title": "Dummy",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
           }
         ],
         "owner_field": "ownerId",
@@ -121,45 +151,49 @@
             "required": true
           },
           {
-            "name": "type",
-            "title": "Type (Do not change, it's a workaround)",
+            "name": "platform",
+            "title": "Platform",
             "type": "string",
-            "default": "swingType",
-            "show_in_insert_form": true,
-            "show_in_update_form": false,
-            "show_in_dataview": false,
+            "input": "radio",
+						"input_items": [
+              {
+								"title": "Kraken.com",
+								"value": "Kraken.com"
+							}
+              
+            ],
             "required": true
           },
           {
             "name": "lnpnp",
             "title": "Open Long Position [%]",
             "type": "float",
-            "default": "5.0",
-            "min": "0",
+            "default": 5,
+            "min": 0,
             "required": true
           },
           {
             "name": "latsnp",
             "title": "Close Long Position [%]",
             "type": "float",
-            "default": "5.0",
-            "min": "0",
+            "default": 5,
+            "min": 0,
             "required": true
           },
           {
             "name": "snpnp",
             "title": "Open Short Positon [%]",
             "type": "float",
-            "default": "5.0",
-            "min": "0",
+            "default": 5,
+            "min": 0,
             "required": true
           },
           {
             "name": "sabbnp",
             "title": "Close Short Position [%]",
             "type": "float",
-            "default": "5.0",
-            "min": "0",
+            "default": 5,
+            "min": 0,
             "required": true
           },
           {
@@ -322,25 +356,25 @@
         "find_one": true
       },
       {
-        "name": "strategyItems",
-        "collection": "strategyItems",
+        "name": "strategyPlugins",
+        "collection": "strategyPlugins",
         "filter": {
-          "strategyId":":strategyId" 
+          "strategyId": ":strategyId"
         }
       },
       {
-        "name": "strategyItems_empty",
-        "collection": "strategyItems",
+        "name": "strategyPlugins_empty",
+        "collection": "strategyPlugins",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "strategyItem",
-        "collection": "strategyItems",
+        "name": "strategyPlugin",
+        "collection": "strategyPlugins",
         "filter": {
-          "_id": ":strategyItemId"
+          "_id": ":strategyPluginId"
         },
         "find_one": true
       },
@@ -488,7 +522,7 @@
                   "value": "this._id"
                 }
               ],
-              "details_route": "strategies.details",
+              "details_route": "strategies.detailsReadOnly",
               "details_route_params": [
                 {
                   "name": "strategyId",
@@ -505,22 +539,137 @@
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
-                  "title": "New Strategie",
+                  "title": "New Strategy",
                   "query_name": "strategies_empty",
                   "query_params": [],
                   "submit_route": "strategies.details",
                   "submit_route_params": [
-										{
-											"name": "strategyId",
-											"value": "newId"
-										}
-									],
+                    {
+                      "name": "strategyId",
+                      "value": "newId"
+                    }
+                  ],
                   "cancel_route": "strategies"
                 }
               ]
             },
             {
               "name": "details",
+              "template": "page_subcontent_tabnav",
+              "route_params": [
+                "strategyId"
+              ],
+              "components": [
+                {
+                  "name": "plugins_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Strategy",
+                  "layout": "horizontal",
+                  "query_name": "strategy",
+                  "close_route": "strategies",
+                  "back_route": "strategies"
+                }
+              ],
+              "force_yield_subpages": true,
+              "pages": [
+                {
+                  "name": "plugins",
+                  "components": [
+                    {
+                      "name": "view",
+                      "type": "data_view",
+                      "title": "Plugins",
+                      "text_if_empty": "No plugins",
+                      "query_name": "strategyPlugins",
+                      "insert_button_title": "Add New",
+                      "insert_route": "strategies.details.insert",
+                      "insert_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ],
+                      "edit_route": "strategies.details.edit",
+                      "edit_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "UI._parentData(1).params.strategyId"
+                        },
+                        {
+                          "name": "strategyPluginId",
+                          "value": "this._id"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "insert",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "Add Plugin",
+                      "query_name": "strategyPlugins_empty",
+                      "hidden_fields": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ],
+                      "submit_route": "strategies.details",
+                      "submit_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ],
+                      "cancel_route": "strategies.details",
+                      "cancel_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "edit",
+                  "route_params": [
+                    "strategyPluginId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit Plugin",
+                      "query_name": "strategyPlugin",
+                      "submit_route": "strategies.details",
+                      "submit_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ],
+                      "cancel_route": "strategies.details",
+                      "cancel_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "detailsReadOnly",
+              "template": "page_subcontent_tabnav",
               "route_params": [
                 "strategyId"
               ],
@@ -532,105 +681,65 @@
                   "title": "Details",
                   "layout": "horizontal",
                   "query_name": "strategy",
-                  "query_params": [],
                   "close_route": "strategies",
                   "back_route": "strategies"
                 }
               ],
               "force_yield_subpages": true,
               "pages": [
-								{
-									"name": "items",
-									"components": [
-										{
-											"name": "view",
-											"type": "data_view",
-											"text_if_empty": "No items",
-											"query_name": "strategyItems",
-											"insert_button_title": "Add item",
-											"insert_route": "strategies.details.insert",
-											"insert_route_params": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											],
-											"edit_route": "strategies.details.edit",
-											"edit_route_params": [
-												{
-													"name": "strategyId",
-													"value": "UI._parentData(1).params.strategyId"
-												},
-												{
-													"name": "itemId",
-													"value": "this._id"
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "insert",
-									"components": [
-										{
-											"name": "insert_form",
-											"type": "form",
-											"mode": "insert",
-											"title": "Add item",
-											"query_name": "strategyItems_empty",
-											"hidden_fields": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											],
-											"submit_route": "strategies.details",
-											"submit_route_params": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											],
-											"cancel_route": "strategies.details",
-											"cancel_route_params": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "edit",
-									"route_params": [
-										"strategyItemId"
-									],
-									"components": [
-										{
-											"name": "edit_form",
-											"type": "form",
-											"mode": "update",
-											"title": "Edit item",
-											"query_name": "strategyItem",
-											"submit_route": "strategies.details",
-											"submit_route_params": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											],
-											"cancel_route": "strategies.details",
-											"cancel_route_params": [
-												{
-													"name": "strategyId",
-													"value": "this.params.strategyId"
-												}
-											]
-										}
-									]
-								}
-							]
+                {
+                  "name": "plugins",
+                  "components": [
+                    {
+                      "name": "view",
+                      "type": "data_view",
+                      "text_if_empty": "No plugins",
+                      "query_name": "strategyPlugins",
+                      "details_route": "strategies.detailsReadOnly.details",
+                      "details_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "UI._parentData(1).params.strategyId"
+                        },
+                        {
+                          "name": "strategyPluginId",
+                          "value": "this._id"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "details",
+                  "route_params": [
+                    "strategyPluginId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details Plugin",
+                      "layout": "horizontal",
+                      "query_name": "strategyPlugin",
+                      "close_route": "strategies.detailsReadOnly",
+                      "close_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ],
+                      "back_route": "strategies.detailsReadOnly",
+                      "back_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "this.params.strategyId"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             },
             {
               "name": "edit",
@@ -651,9 +760,7 @@
               ]
             }
           ],
-          
           "type": "page"
-          
         },
         {
           "name": "plugins",
@@ -832,12 +939,12 @@
           "name": "info",
           "template_rendered_code": "$('table').addClass('table');",
           "components": [
-						{
-							"name": "content",
-							"type": "markdown",
-							"source_file": "tradeHelper/files/info.md"
-						}
-					],
+            {
+              "name": "content",
+              "type": "markdown",
+              "source_file": "tradeHelper/files/info.md"
+            }
+          ],
           "type": "page"
         },
         {

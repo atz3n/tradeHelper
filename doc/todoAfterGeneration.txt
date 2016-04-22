@@ -1,0 +1,15 @@
+
+Replace:
+<select class="form-control" name="swingId" autofocus="autofocus">
+	{{#each swings}}
+		<option value="{{_id}}">							{{name}}</option>
+	{{/each}}
+</select>
+
+With:
+<select class="form-control" name="swingId" autofocus="autofocus">
+	<option value="{{_id}}">							</option>
+	{{#each swings}}
+		<option value="{{_id}}">							{{name}}</option>
+	{{/each}}
+</select>
