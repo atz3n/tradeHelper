@@ -17,6 +17,72 @@
  ***********************************************************************/
     "collections": [
       {
+        "name": "strategies",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "updateTime",
+            "title": "Update Time [min]",
+            "type": "integer",
+            "min": 1,
+            "default": 10,
+            "required": true
+          },
+          {
+            "name": "status",
+            "title": "Active",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": false
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
+        "name": "strategyItems",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "dummy",
+            "title": "dummy",
+            "type": "integer",
+            "min": "1",
+            "default": "10",
+            "required": true
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
         "name": "settings",
         "fields": [
           {
@@ -33,7 +99,6 @@
             "input": "checkbox",
             "default": "false"
           }
-
         ],
         "owner_field": "ownerId",
         "roles_allowed_to_read": [
@@ -236,6 +301,50 @@
         "find_one": true
       },
       {
+        "name": "strategies",
+        "collection": "strategies",
+        "filter": {}
+      },
+      {
+        "name": "strategies_empty",
+        "collection": "strategies",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "strategy",
+        "collection": "strategies",
+        "filter": {
+          "_id": ":strategyId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "strategyItems",
+        "collection": "strategyItems",
+        "filter": {
+          "strategyId":":strategyId" 
+        }
+      },
+      {
+        "name": "strategyItems_empty",
+        "collection": "strategyItems",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "strategyItem",
+        "collection": "strategyItems",
+        "filter": {
+          "_id": ":strategyItemId"
+        },
+        "find_one": true
+      },
+      {
         "name": "admin_users",
         "collection": "users"
       },
@@ -353,7 +462,8 @@
     "private_zone": {
       "pages": [
         {
-          "name": "history",
+          "name": "home_private",
+          "title": "Welcome {{userFullName}}!",
           "type": "page"
         },
         {
@@ -361,24 +471,189 @@
           "type": "page"
         },
         {
-          "name": "info",
-          "type": "page"
-        },
-        {
           "name": "strategies",
-          "type": "page",
           "components": [
             {
+              "name": "view",
+              "title": "Strategies",
+              "type": "data_view",
+              "text_if_empty": "No Strategies configured",
+              "query_name": "strategies",
+              "query_params": [],
+              "insert_route": "strategies.insert",
+              "edit_route": "strategies.edit",
+              "edit_route_params": [
+                {
+                  "name": "strategyId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "strategies.details",
+              "details_route_params": [
+                {
+                  "name": "strategyId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insert",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Strategie",
+                  "query_name": "strategies_empty",
+                  "query_params": [],
+                  "submit_route": "strategies.details",
+                  "submit_route_params": [
+										{
+											"name": "strategyId",
+											"value": "newId"
+										}
+									],
+                  "cancel_route": "strategies"
+                }
+              ]
+            },
+            {
+              "name": "details",
+              "route_params": [
+                "strategyId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "strategy",
+                  "query_params": [],
+                  "close_route": "strategies",
+                  "back_route": "strategies"
+                }
+              ],
+              "force_yield_subpages": true,
+              "pages": [
+								{
+									"name": "items",
+									"components": [
+										{
+											"name": "view",
+											"type": "data_view",
+											"text_if_empty": "No items",
+											"query_name": "strategyItems",
+											"insert_button_title": "Add item",
+											"insert_route": "strategies.details.insert",
+											"insert_route_params": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											],
+											"edit_route": "strategies.details.edit",
+											"edit_route_params": [
+												{
+													"name": "strategyId",
+													"value": "UI._parentData(1).params.strategyId"
+												},
+												{
+													"name": "itemId",
+													"value": "this._id"
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "insert",
+									"components": [
+										{
+											"name": "insert_form",
+											"type": "form",
+											"mode": "insert",
+											"title": "Add item",
+											"query_name": "strategyItems_empty",
+											"hidden_fields": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											],
+											"submit_route": "strategies.details",
+											"submit_route_params": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											],
+											"cancel_route": "strategies.details",
+											"cancel_route_params": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "edit",
+									"route_params": [
+										"strategyItemId"
+									],
+									"components": [
+										{
+											"name": "edit_form",
+											"type": "form",
+											"mode": "update",
+											"title": "Edit item",
+											"query_name": "strategyItem",
+											"submit_route": "strategies.details",
+											"submit_route_params": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											],
+											"cancel_route": "strategies.details",
+											"cancel_route_params": [
+												{
+													"name": "strategyId",
+													"value": "this.params.strategyId"
+												}
+											]
+										}
+									]
+								}
+							]
+            },
+            {
+              "name": "edit",
+              "route_params": [
+                "strategyId"
+              ],
+              "components": [
+                {
                   "name": "edit_form",
                   "type": "form",
                   "mode": "update",
-                  "title": "Edit Setting",
-                  "submit_route": "settings",
-                  "cancel_route": "settings",
-                  "query_name": "settings_first",
+                  "title": "Edit Strategies",
+                  "submit_route": "strategies",
+                  "cancel_route": "strategies",
+                  "query_name": "strategy",
                   "query_params": []
                 }
-          ]
+              ]
+            }
+          ],
+          
+          "type": "page"
+          
         },
         {
           "name": "plugins",
@@ -535,11 +810,42 @@
                 }
               ]
             }
-          ]
+          ],
+          "type": "page"
         },
         {
           "name": "settings",
-          
+          "components": [
+            {
+              "name": "edit_form",
+              "type": "form",
+              "mode": "update",
+              "title": "Edit Setting",
+              "submit_route": "settings",
+              "query_name": "settings_first",
+              "query_params": []
+            }
+          ],
+          "type": "page"
+        },
+        {
+          "name": "info",
+          "template_rendered_code": "$('table').addClass('table');",
+          "components": [
+						{
+							"name": "content",
+							"type": "markdown",
+							"source_file": "tradeHelper/files/info.md"
+						}
+					],
+          "type": "page"
+        },
+        {
+          "name": "history",
+          "type": "page"
+        },
+        {
+          "name": "develop",
           "components": [
             {
               "name": "view",
@@ -548,15 +854,14 @@
               "text_if_empty": "No Settings configured",
               "query_name": "settings",
               "query_params": [],
-              "insert_route": "settings.insert",
-              "edit_route": "settings.edit",
+              "edit_route": "develop.editSettings",
               "edit_route_params": [
                 {
                   "name": "settingId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "settings.details",
+              "details_route": "develop.detailsSettings",
               "details_route_params": [
                 {
                   "name": "settingId",
@@ -567,22 +872,7 @@
           ],
           "pages": [
             {
-              "name": "insert",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Setting",
-                  "query_name": "settings_empty",
-                  "query_params": [],
-                  "submit_route": "settings",
-                  "cancel_route": "settings"
-                }
-              ]
-            },
-            {
-              "name": "details",
+              "name": "detailsSettings",
               "route_params": [
                 "settingId"
               ],
@@ -595,13 +885,13 @@
                   "layout": "horizontal",
                   "query_name": "setting",
                   "query_params": [],
-                  "close_route": "settings",
-                  "back_route": "settings"
+                  "close_route": "develop",
+                  "back_route": "develop"
                 }
               ]
             },
             {
-              "name": "edit",
+              "name": "editSettings",
               "route_params": [
                 "settingId"
               ],
@@ -611,18 +901,14 @@
                   "type": "form",
                   "mode": "update",
                   "title": "Edit Setting",
-                  "submit_route": "settings",
-                  "cancel_route": "settings",
+                  "submit_route": "develop",
+                  "cancel_route": "develop",
                   "query_name": "setting",
                   "query_params": []
                 }
               ]
             }
-          ]
-        },
-        {
-          "name": "home_private",
-          "title": "Welcome {{userFullName}}!",
+          ],
           "type": "page"
         },
         {
@@ -944,6 +1230,11 @@
               "title": "Info",
               "route": "info",
               "icon_class": "fa fa-info"
+            },
+            {
+              "title": "Develop",
+              "route": "develop",
+              "icon_class": "fa fa-desktop"
             }
           ]
         },
