@@ -57,6 +57,37 @@
         "name": "strategyPlugins",
         "fields": [
           {
+            "name": "andPlugins",
+            "title": "And Connected Plugin",
+            "type": "array",
+            "array_item_type": "object",
+            "input": "crud",
+            "crud_fields": [
+              {
+                "name": "andPlugin",
+                "title": "Plugin",
+                "input": "select",
+                "lookup_query_name": "dummys",
+                "lookup_field": "name",
+                "lookup_key": "_id",
+                "show_in_dataview": true,
+                "show_in_read_only_form": true,
+                "join_collection": "dummys",
+                "join_fields": [
+                  "name"
+                ],
+                "join_container": "dummy"
+              },
+              {
+                "name": "dummy.name",
+                "title": "Plugin",
+                "show_in_insert_form": false,
+                "show_in_update_form": false
+              }
+            ],
+            "required": true
+          },
+          {
             "name": "swingId",
             "title": "Swing",
             "input": "select",
@@ -113,35 +144,6 @@
         ]
       },
       {
-        "name": "settings",
-        "fields": [
-          {
-            "name": "enNotification",
-            "title": "Enable Notifications",
-            "type": "bool",
-            "input": "checkbox",
-            "default": "true"
-          },
-          {
-            "name": "dummy",
-            "title": "Dummy",
-            "type": "bool",
-            "input": "checkbox",
-            "default": "false"
-          }
-        ],
-        "owner_field": "ownerId",
-        "roles_allowed_to_read": [
-          "owner"
-        ],
-        "roles_allowed_to_update": [
-          "owner"
-        ],
-        "roles_allowed_to_delete": [
-          "owner"
-        ]
-      },
-      {
         "name": "swings",
         "fields": [
           {
@@ -155,12 +157,11 @@
             "title": "Platform",
             "type": "string",
             "input": "radio",
-						"input_items": [
+            "input_items": [
               {
-								"title": "Kraken.com",
-								"value": "Kraken.com"
-							}
-              
+                "title": "Kraken.com",
+                "value": "Kraken.com"
+              }
             ],
             "required": true
           },
@@ -259,6 +260,137 @@
         "roles_allowed_to_delete": [
           "owner"
         ]
+      },
+      {
+        "name": "krakens",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "pair",
+            "title": "Currency Pair",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "Ether/Euro",
+                "value": "eth_eur"
+              },
+              {
+                "title": "Ether/Bitcoin",
+                "value": "eth_btc"
+              },
+              {
+                "title": "Bitcoin/Euro",
+                "value": "btc_eur"
+              }
+            ],
+            "required": true
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
+        "name": "testDatas",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+           {
+            "name": "data",
+            "title": "Test Data",
+            "type": "float",
+            "input": "textarea",
+            
+            "required": true
+          },
+          {
+            "name": "datas",
+            "title": "Test Data",
+            "type": "array",
+            "array_item_type": "object",
+            "input": "crud",
+            "crud_fields": [
+              {
+                "name": "dummyId",
+                "title": "Dummy",
+                "input": "select",
+                "lookup_query_name": "dummys",
+                "lookup_field": "name",
+                "lookup_key": "_id",
+                "show_in_dataview": false,
+                "show_in_read_only_form": false,
+                "join_collection": "dummys",
+                "join_fields": [
+                  "name"
+                ],
+                "join_container": "dummy"
+              },
+              {
+                "name": "dummy.name",
+                "title": "Dummy",
+                "show_in_insert_form": false,
+                "show_in_update_form": false
+              }
+            ],
+            "required": true
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
+        "name": "settings",
+        "fields": [
+          {
+            "name": "enNotification",
+            "title": "Enable Notifications",
+            "type": "bool",
+            "input": "checkbox",
+            "default": "true"
+          },
+          {
+            "name": "dummy",
+            "title": "Dummy",
+            "type": "bool",
+            "input": "checkbox",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
       }
     ],
     /***********************************************************************
@@ -282,7 +414,70 @@
         "name": "dummy",
         "collection": "dummys",
         "filter": {
-          "_id": ":dummyId"
+          "_id": ":test1Id"
+        },
+        "find_one": true
+      },
+      {
+        "name": "test1Qs",
+        "collection": "exchanges",
+        "filter": {"kraken":":kraken"}
+      },
+      {
+        "name": "test1Q_empty",
+        "collection": "exchanges",
+        "filter": {
+          "kraken._id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "test1Q",
+        "collection": "exchanges",
+        "filter": {
+          "kraken._id": ":test1Id"
+        },
+        "find_one": true
+      },
+      {
+        "name": "krakens",
+        "collection": "krakens",
+        "filter": {}
+      },
+      {
+        "name": "krakens_empty",
+        "collection": "krakens",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "kraken",
+        "collection": "krakens",
+        "filter": {
+          "_id": ":krakenId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "testDatas",
+        "collection": "testDatas",
+        "filter": {}
+      },
+      {
+        "name": "testDatas_empty",
+        "collection": "testDatas",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "testData",
+        "collection": "testDatas",
+        "filter": {
+          "_id": ":testDataId"
         },
         "find_one": true
       },
@@ -502,6 +697,88 @@
         },
         {
           "name": "charts",
+          "components": [
+            {
+              "name": "view1",
+              "title": "test",
+              "type": "data_view",
+              "text_if_empty": "No ...",
+              "query_name": "test1Qs",
+              "query_params": [],
+              "insert_route": "charts.insert1",
+              "edit_route": "charts.edit1",
+              "edit_route_params": [
+                {
+                  "name": "test1Id",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "charts.details1",
+              "details_route_params": [
+                {
+                  "name": "test1Id",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+          {
+              "name": "insert1",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New ...",
+                  "query_name": "test1Q_empty",
+                  "query_params": [],
+                  "submit_route": "charts",
+                  "cancel_route": "charts"
+                }
+              ]
+            },
+            {
+              "name": "details1",
+              "route_params": [
+                "test1Id"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "test1Q",
+                  "query_params": [],
+                  "close_route": "charts",
+                  "back_route": "charts"
+                }
+              ]
+            },
+            {
+              "name": "edit1",
+              "route_params": [
+                "test1Id"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit ...",
+                  "submit_route": "charts",
+                  "cancel_route": "charts",
+                  "query_name": "test1Q",
+                  "query_params": []
+                }
+              ]
+            }
+          
+          
+          ],
+          
           "type": "page"
         },
         {
@@ -522,7 +799,7 @@
                   "value": "this._id"
                 }
               ],
-              "details_route": "strategies.detailsReadOnly",
+              "details_route": "strategies.details",
               "details_route_params": [
                 {
                   "name": "strategyId",
@@ -579,19 +856,30 @@
                     {
                       "name": "view",
                       "type": "data_view",
-                      "title": "Plugins",
+                      "title": "OR Connected Plugins",
                       "text_if_empty": "No plugins",
                       "query_name": "strategyPlugins",
                       "insert_button_title": "Add New",
-                      "insert_route": "strategies.details.insert",
+                      "insert_route": "strategies.details.pluginsInsert",
                       "insert_route_params": [
                         {
                           "name": "strategyId",
                           "value": "this.params.strategyId"
                         }
                       ],
-                      "edit_route": "strategies.details.edit",
+                      "edit_route": "strategies.details.pluginsEdit",
                       "edit_route_params": [
+                        {
+                          "name": "strategyId",
+                          "value": "UI._parentData(1).params.strategyId"
+                        },
+                        {
+                          "name": "strategyPluginId",
+                          "value": "this._id"
+                        }
+                      ],
+                      "details_route": "strategies.details.pluginsDetails",
+                      "details_route_params": [
                         {
                           "name": "strategyId",
                           "value": "UI._parentData(1).params.strategyId"
@@ -605,13 +893,13 @@
                   ]
                 },
                 {
-                  "name": "insert",
+                  "name": "pluginsInsert",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "Add Plugin",
+                      "title": "Add OR Connected Plugin",
                       "query_name": "strategyPlugins_empty",
                       "hidden_fields": [
                         {
@@ -637,7 +925,7 @@
                   ]
                 },
                 {
-                  "name": "edit",
+                  "name": "pluginsEdit",
                   "route_params": [
                     "strategyPluginId"
                   ],
@@ -664,53 +952,9 @@
                       ]
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "name": "detailsReadOnly",
-              "template": "page_subcontent_tabnav",
-              "route_params": [
-                "strategyId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "strategy",
-                  "close_route": "strategies",
-                  "back_route": "strategies"
-                }
-              ],
-              "force_yield_subpages": true,
-              "pages": [
-                {
-                  "name": "plugins",
-                  "components": [
-                    {
-                      "name": "view",
-                      "type": "data_view",
-                      "text_if_empty": "No plugins",
-                      "query_name": "strategyPlugins",
-                      "details_route": "strategies.detailsReadOnly.details",
-                      "details_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "UI._parentData(1).params.strategyId"
-                        },
-                        {
-                          "name": "strategyPluginId",
-                          "value": "this._id"
-                        }
-                      ]
-                    }
-                  ]
                 },
                 {
-                  "name": "details",
+                  "name": "pluginsDetails",
                   "route_params": [
                     "strategyPluginId"
                   ],
@@ -722,14 +966,14 @@
                       "title": "Details Plugin",
                       "layout": "horizontal",
                       "query_name": "strategyPlugin",
-                      "close_route": "strategies.detailsReadOnly",
+                      "close_route": "strategies.details",
                       "close_route_params": [
                         {
                           "name": "strategyId",
                           "value": "this.params.strategyId"
                         }
                       ],
-                      "back_route": "strategies.detailsReadOnly",
+                      "back_route": "strategies.details",
                       "back_route_params": [
                         {
                           "name": "strategyId",
@@ -741,6 +985,7 @@
                 }
               ]
             },
+            
             {
               "name": "edit",
               "route_params": [
@@ -914,6 +1159,157 @@
                   "cancel_route": "plugins",
                   "query_name": "dummy",
                   "query_params": []
+                }
+              ]
+            }
+          ],
+          "type": "page"
+        },
+        {
+          "name": "exchanges",
+          "components": [
+            {
+              "name": "viewKraken",
+              "title": "Kraken.com",
+              "type": "data_view",
+              "text_if_empty": "No Settings configured",
+              "query_name": "krakens",
+              "query_params": [],
+              "insert_route": "exchanges.insertKraken",
+              "details_route": "exchanges.detailsKraken",
+              "details_route_params": [
+                {
+                  "name": "krakenId",
+                  "value": "this._id"
+                }
+              ]
+            },
+            {
+              "name": "viewTestData",
+              "title": "Test Data",
+              "type": "data_view",
+              "text_if_empty": "No Dataset configured",
+              "query_name": "testDatas",
+              "query_params": [],
+              "insert_route": "exchanges.insertTestData",
+              "edit_route": "exchanges.editTestData",
+              "edit_route_params": [
+                {
+                  "name": "testDataId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "exchanges.detailsTestData",
+              "details_route_params": [
+                {
+                  "name": "testDataId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insertKraken",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Settings",
+                  "query_name": "krakens_empty",
+                  "query_params": [],
+                  "submit_route": "exchanges",
+                  "cancel_route": "exchanges"
+                }
+              ]
+            },
+            {
+              "name": "editKraken",
+              "route_params": [
+                "krakenId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Settings",
+                  "submit_route": "exchanges",
+                  "cancel_route": "exchanges",
+                  "query_name": "kraken",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "detailsKraken",
+              "route_params": [
+                "krakenId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "kraken",
+                  "query_params": [],
+                  "close_route": "exchanges",
+                  "back_route": "exchanges"
+                }
+              ]
+            },
+            {
+              "name": "insertTestData",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Dataset",
+                  "query_name": "testDatas_empty",
+                  "query_params": [],
+                  "submit_route": "exchanges",
+                  "cancel_route": "exchanges"
+                }
+              ]
+            },
+            {
+              "name": "editTestData",
+              "route_params": [
+                "testDataId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Dataset",
+                  "submit_route": "exchanges",
+                  "cancel_route": "exchanges",
+                  "query_name": "testData",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "detailsTestData",
+              "route_params": [
+                "testDataId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "testData",
+                  "query_params": [],
+                  "close_route": "exchanges",
+                  "back_route": "exchanges"
                 }
               ]
             }
@@ -1322,6 +1718,11 @@
               "title": "Plugins",
               "route": "plugins",
               "icon_class": "fa fa-plug"
+            },
+            {
+              "title": "Exchanges",
+              "route": "exchanges",
+              "icon_class": "fa fa-exchange"
             },
             {
               "title": "Settings",

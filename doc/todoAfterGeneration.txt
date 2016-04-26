@@ -1,4 +1,4 @@
-
+1. 
 Replace:
 <select class="form-control" name="swingId" autofocus="autofocus">
 	{{#each swings}}
@@ -13,3 +13,30 @@ With:
 		<option value="{{_id}}">							{{name}}</option>
 	{{/each}}
 </select>
+
+
+2. File client/views/strategies/details_read_only/details/details.js
+Replace:
+"click #form-close-button": function(e, t) {
+	e.preventDefault();
+
+	Router.go("strategies.detailsReadOnly", {strategyId: this.params.strategyId});
+},
+"click #form-back-button": function(e, t) {
+	e.preventDefault();
+
+	Router.go("strategies.detailsReadOnly", {strategyId: this.params.strategyId});
+}
+
+
+With:
+"click #form-close-button": function(e, t) {
+	e.preventDefault();
+
+	Router.go("strategies.details_read_only", {strategyId: this.params.strategyId});
+},
+"click #form-back-button": function(e, t) {
+	e.preventDefault();
+
+	Router.go("strategies.details_read_only", {strategyId: this.params.strategyId});
+}
