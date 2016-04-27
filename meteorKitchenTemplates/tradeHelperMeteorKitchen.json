@@ -34,12 +34,24 @@
             "required": true
           },
           {
-            "name": "status",
-            "title": "Active",
-            "type": "bool",
-            "input": "checkbox",
-            "display_helper": "booleanToYesNo",
-            "default": false
+            "name": "orPlugins",
+            "title": "Plugin Bundles (logical connected via 'or')",
+            "type": "array",
+            "array_item_type": "object",
+            "input": "crud",
+            "crud_fields": [
+              {
+                "name": "andPlugins",
+                "title": "Plugin Bundle",
+                "type": "string",
+                "input": "select",
+                "lookup_query_name": "pluginbundles",
+                "lookup_field": "name",
+                "lookup_key": "_id",
+                "required": true
+              }
+            ],
+            "required": true
           }
         ],
         "owner_field": "ownerId",
@@ -54,82 +66,32 @@
         ]
       },
       {
-        "name": "strategyPlugins",
+        "name": "pluginbundles",
         "fields": [
           {
-            "name": "andPlugins",
-            "title": "And Connected Plugin",
+            "name": "name",
+            "title": "Name",
+            "type": "string"
+          },
+          {
+            "name": "bundlePlugins",
+            "title": "Plugins (logical connected via 'and')",
             "type": "array",
             "array_item_type": "object",
             "input": "crud",
             "crud_fields": [
               {
-                "name": "andPlugin",
+                "name": "bundlePlugin",
                 "title": "Plugin",
+                "type": "string",
                 "input": "select",
-                "lookup_query_name": "dummys",
+                "lookup_query_name": "swings",
                 "lookup_field": "name",
                 "lookup_key": "_id",
-                "show_in_dataview": true,
-                "show_in_read_only_form": true,
-                "join_collection": "dummys",
-                "join_fields": [
-                  "name"
-                ],
-                "join_container": "dummy"
-              },
-              {
-                "name": "dummy.name",
-                "title": "Plugin",
-                "show_in_insert_form": false,
-                "show_in_update_form": false
+                "required": true
               }
             ],
             "required": true
-          },
-          {
-            "name": "swingId",
-            "title": "Swing",
-            "input": "select",
-            "default": "init",
-            "lookup_query_name": "swings",
-            "lookup_field": "name",
-            "lookup_key": "_id",
-            "show_in_dataview": false,
-            "show_in_read_only_form": false,
-            "join_collection": "swings",
-            "join_fields": [
-              "name"
-            ],
-            "join_container": "swing"
-          },
-          {
-            "name": "swing.name",
-            "title": "Swing",
-            "show_in_insert_form": false,
-            "show_in_update_form": false
-          },
-          {
-            "name": "dummyId",
-            "title": "Dummy",
-            "input": "select",
-            "default": "not used",
-            "lookup_query_name": "dummys",
-            "lookup_field": "name",
-            "lookup_key": "_id",
-            "show_in_dataview": false,
-            "show_in_read_only_form": false,
-            "join_collection": "dummys",
-            "join_fields": [
-              "name"
-            ],
-            "join_container": "dummy"
-          },
-          {
-            "name": "dummy.name",
-            "title": "Dummy",
-            "show_in_insert_form": false,
-            "show_in_update_form": false
           }
         ],
         "owner_field": "ownerId",
@@ -156,13 +118,10 @@
             "name": "platform",
             "title": "Platform",
             "type": "string",
-            "input": "radio",
-            "input_items": [
-              {
-                "title": "Kraken.com",
-                "value": "Kraken.com"
-              }
-            ],
+            "input": "select",
+            "lookup_query_name": "krakens",
+            "lookup_field": "name",
+            "lookup_key": "_id",
             "required": true
           },
           {
@@ -312,43 +271,11 @@
             "type": "string",
             "required": true
           },
-           {
+          {
             "name": "data",
             "title": "Test Data",
             "type": "float",
             "input": "textarea",
-            
-            "required": true
-          },
-          {
-            "name": "datas",
-            "title": "Test Data",
-            "type": "array",
-            "array_item_type": "object",
-            "input": "crud",
-            "crud_fields": [
-              {
-                "name": "dummyId",
-                "title": "Dummy",
-                "input": "select",
-                "lookup_query_name": "dummys",
-                "lookup_field": "name",
-                "lookup_key": "_id",
-                "show_in_dataview": false,
-                "show_in_read_only_form": false,
-                "join_collection": "dummys",
-                "join_fields": [
-                  "name"
-                ],
-                "join_container": "dummy"
-              },
-              {
-                "name": "dummy.name",
-                "title": "Dummy",
-                "show_in_insert_form": false,
-                "show_in_update_form": false
-              }
-            ],
             "required": true
           }
         ],
@@ -415,27 +342,6 @@
         "collection": "dummys",
         "filter": {
           "_id": ":test1Id"
-        },
-        "find_one": true
-      },
-      {
-        "name": "test1Qs",
-        "collection": "exchanges",
-        "filter": {"kraken":":kraken"}
-      },
-      {
-        "name": "test1Q_empty",
-        "collection": "exchanges",
-        "filter": {
-          "kraken._id": null
-        },
-        "find_one": true
-      },
-      {
-        "name": "test1Q",
-        "collection": "exchanges",
-        "filter": {
-          "kraken._id": ":test1Id"
         },
         "find_one": true
       },
@@ -551,25 +457,25 @@
         "find_one": true
       },
       {
-        "name": "strategyPlugins",
-        "collection": "strategyPlugins",
+        "name": "pluginbundles",
+        "collection": "pluginbundles",
         "filter": {
           "strategyId": ":strategyId"
         }
       },
       {
-        "name": "strategyPlugins_empty",
-        "collection": "strategyPlugins",
+        "name": "pluginbundles_empty",
+        "collection": "pluginbundles",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "strategyPlugin",
-        "collection": "strategyPlugins",
+        "name": "pluginbundle",
+        "collection": "pluginbundles",
         "filter": {
-          "_id": ":strategyPluginId"
+          "_id": ":pluginbundleId"
         },
         "find_one": true
       },
@@ -697,88 +603,10 @@
         },
         {
           "name": "charts",
-          "components": [
-            {
-              "name": "view1",
-              "title": "test",
-              "type": "data_view",
-              "text_if_empty": "No ...",
-              "query_name": "test1Qs",
-              "query_params": [],
-              "insert_route": "charts.insert1",
-              "edit_route": "charts.edit1",
-              "edit_route_params": [
-                {
-                  "name": "test1Id",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "charts.details1",
-              "details_route_params": [
-                {
-                  "name": "test1Id",
-                  "value": "this._id"
-                }
-              ]
-            }
-          ],
-          "pages": [
-          {
-              "name": "insert1",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New ...",
-                  "query_name": "test1Q_empty",
-                  "query_params": [],
-                  "submit_route": "charts",
-                  "cancel_route": "charts"
-                }
-              ]
-            },
-            {
-              "name": "details1",
-              "route_params": [
-                "test1Id"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "test1Q",
-                  "query_params": [],
-                  "close_route": "charts",
-                  "back_route": "charts"
-                }
-              ]
-            },
-            {
-              "name": "edit1",
-              "route_params": [
-                "test1Id"
-              ],
-              "components": [
-                {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit ...",
-                  "submit_route": "charts",
-                  "cancel_route": "charts",
-                  "query_name": "test1Q",
-                  "query_params": []
-                }
-              ]
-            }
-          
-          
-          ],
-          
+          "type": "page"
+        },
+        {
+          "name": "controls",
           "type": "page"
         },
         {
@@ -819,7 +647,7 @@
                   "title": "New Strategy",
                   "query_name": "strategies_empty",
                   "query_params": [],
-                  "submit_route": "strategies.details",
+                  "submit_route": "strategies",
                   "submit_route_params": [
                     {
                       "name": "strategyId",
@@ -832,160 +660,23 @@
             },
             {
               "name": "details",
-              "template": "page_subcontent_tabnav",
               "route_params": [
                 "strategyId"
               ],
               "components": [
                 {
-                  "name": "plugins_form",
+                  "name": "details_form",
                   "type": "form",
                   "mode": "read_only",
-                  "title": "Strategy",
+                  "title": "Details",
                   "layout": "horizontal",
                   "query_name": "strategy",
+                  "query_params": [],
                   "close_route": "strategies",
                   "back_route": "strategies"
                 }
-              ],
-              "force_yield_subpages": true,
-              "pages": [
-                {
-                  "name": "plugins",
-                  "components": [
-                    {
-                      "name": "view",
-                      "type": "data_view",
-                      "title": "OR Connected Plugins",
-                      "text_if_empty": "No plugins",
-                      "query_name": "strategyPlugins",
-                      "insert_button_title": "Add New",
-                      "insert_route": "strategies.details.pluginsInsert",
-                      "insert_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ],
-                      "edit_route": "strategies.details.pluginsEdit",
-                      "edit_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "UI._parentData(1).params.strategyId"
-                        },
-                        {
-                          "name": "strategyPluginId",
-                          "value": "this._id"
-                        }
-                      ],
-                      "details_route": "strategies.details.pluginsDetails",
-                      "details_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "UI._parentData(1).params.strategyId"
-                        },
-                        {
-                          "name": "strategyPluginId",
-                          "value": "this._id"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "pluginsInsert",
-                  "components": [
-                    {
-                      "name": "insert_form",
-                      "type": "form",
-                      "mode": "insert",
-                      "title": "Add OR Connected Plugin",
-                      "query_name": "strategyPlugins_empty",
-                      "hidden_fields": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ],
-                      "submit_route": "strategies.details",
-                      "submit_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ],
-                      "cancel_route": "strategies.details",
-                      "cancel_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "pluginsEdit",
-                  "route_params": [
-                    "strategyPluginId"
-                  ],
-                  "components": [
-                    {
-                      "name": "edit_form",
-                      "type": "form",
-                      "mode": "update",
-                      "title": "Edit Plugin",
-                      "query_name": "strategyPlugin",
-                      "submit_route": "strategies.details",
-                      "submit_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ],
-                      "cancel_route": "strategies.details",
-                      "cancel_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "pluginsDetails",
-                  "route_params": [
-                    "strategyPluginId"
-                  ],
-                  "components": [
-                    {
-                      "name": "details_form",
-                      "type": "form",
-                      "mode": "read_only",
-                      "title": "Details Plugin",
-                      "layout": "horizontal",
-                      "query_name": "strategyPlugin",
-                      "close_route": "strategies.details",
-                      "close_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ],
-                      "back_route": "strategies.details",
-                      "back_route_params": [
-                        {
-                          "name": "strategyId",
-                          "value": "this.params.strategyId"
-                        }
-                      ]
-                    }
-                  ]
-                }
               ]
             },
-            
             {
               "name": "edit",
               "route_params": [
@@ -1000,6 +691,89 @@
                   "submit_route": "strategies",
                   "cancel_route": "strategies",
                   "query_name": "strategy",
+                  "query_params": []
+                }
+              ]
+            }
+          ],
+          "type": "page"
+        },
+        {
+          "name": "pluginbundles",
+          "components": [
+            {
+              "name": "view",
+              "title": "Plugin Bundles",
+              "type": "data_view",
+              "text_if_empty": "No Bundle configured",
+              "query_name": "pluginbundles",
+              "query_params": [],
+              "insert_route": "pluginbundles.insert",
+              "edit_route": "pluginbundles.edit",
+              "edit_route_params": [
+                {
+                  "name": "pluginbundleId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "pluginbundles.details",
+              "details_route_params": [
+                {
+                  "name": "pluginbundleId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insert",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Plugin Bundle",
+                  "query_name": "pluginbundles_empty",
+                  "query_params": [],
+                  "submit_route": "pluginbundles",
+                  "cancel_route": "pluginbundles"
+                }
+              ]
+            },
+            {
+              "name": "details",
+              "route_params": [
+                "pluginbundleId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "pluginbundle",
+                  "query_params": [],
+                  "close_route": "pluginbundles",
+                  "back_route": "pluginbundles"
+                }
+              ]
+            },
+            {
+              "name": "edit",
+              "route_params": [
+                "pluginbundleId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Bundle",
+                  "submit_route": "pluginbundles",
+                  "cancel_route": "pluginbundles",
+                  "query_name": "pluginbundle",
                   "query_params": []
                 }
               ]
@@ -1176,6 +950,13 @@
               "query_name": "krakens",
               "query_params": [],
               "insert_route": "exchanges.insertKraken",
+              "edit_route": "exchanges.editKraken",
+              "edit_route_params": [
+                {
+                  "name": "krakenId",
+                  "value": "this._id"
+                }
+              ],
               "details_route": "exchanges.detailsKraken",
               "details_route_params": [
                 {
@@ -1710,9 +1491,19 @@
               "icon_class": "fa fa-line-chart"
             },
             {
+              "title": "Controls",
+              "route": "controls",
+              "icon_class": "fa fa-gamepad"
+            },
+            {
               "title": "Strategies",
               "route": "strategies",
               "icon_class": "fa fa-flask"
+            },
+            {
+              "title": "Bundles",
+              "route": "pluginbundles",
+              "icon_class": "fa fa-cubes"
             },
             {
               "title": "Plugins",

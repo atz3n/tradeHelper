@@ -1,0 +1,174 @@
+<template name="StrategiesEdit">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> StrategiesEditEditForm}}
+		<div class="modal crud-insert-form-container" id="field-or-plugins-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						{{> StrategiesEditFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="StrategiesEditEditForm">
+	<div id="strategies-edit-edit-form" class="">
+		<h2 id="component-title">
+			Edit Strategies
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name">
+					Name
+				</label>
+				<div class="input-div">
+					<input type="text" name="name" value="{{strategy.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-update-time">
+				<label for="updateTime">
+					Update Time [min]
+				</label>
+				<div class="input-div">
+					<input type="text" name="updateTime" value="{{strategy.updateTime}}" class="form-control" required="required" data-type="integer" data-min="1">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-or-plugins">
+				<label for="orPlugins">
+					Plugin Bundles (logical connected via 'or')
+				</label>
+				<div class="input-div">
+					<table class="table table-striped">
+						<thead>
+							<tr class="crud-table-controls">
+								<td colspan="1">
+									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-or-plugins-insert-form">
+										<span class="fa fa-plus">
+										</span>
+										Add
+									</button>
+								</td>
+							</tr>
+							{{#if orPluginsCrudItems}}
+							<tr class="crud-table-header">
+								<th>
+									Plugin Bundle
+								</th>
+								<th>
+									&nbsp;
+								</th>
+							</tr>
+							{{/if}}
+						</thead>
+						<tbody>
+							{{#each orPluginsCrudItems}}
+							<tr class="crud-table-row">
+								<td>
+									{{andPlugins}}
+								</td>
+								<td class="td-icon delete-icon">
+									<span class="fa fa-trash-o" title="Delete">
+									</span>
+								</td>
+							</tr>
+							{{/each}}
+						</tbody>
+					</table>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+					<a href="#" id="form-cancel-button" class="btn btn-default">
+						Cancel
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+
+<template name="StrategiesEditFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm">
+	<div id="strategies-edit-field-or-plugins-insert-form-container-field-or-plugins-insert-form" class="">
+		<h2 id="component-title">
+			Insert
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-and-plugins">
+				<label for="andPlugins">
+					Plugin Bundle
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="andPlugins" data-type="string" required="required" autofocus="autofocus">
+						{{#each pluginbundles}}
+						<option value="{{_id}}">							{{name}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+					<a href="#" id="form-cancel-button" class="btn btn-default">
+						Cancel
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+

@@ -1,0 +1,70 @@
+<template name="Settings">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> SettingsEditForm}}
+	</div>
+</template>
+
+<template name="SettingsEditForm">
+	<div id="settings-edit-form" class="">
+		<h2 id="component-title">
+			Edit Setting
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-en-notification">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{settings_first.enNotification}}" name="enNotification" data-type="bool" autofocus="autofocus" {{itemIsChecked settings_first.enNotification true}}>
+							Enable Notifications
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-dummy">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{settings_first.dummy}}" name="dummy" data-type="bool" {{itemIsChecked settings_first.dummy true}}>
+							Dummy
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+

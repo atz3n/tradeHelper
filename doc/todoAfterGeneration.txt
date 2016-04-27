@@ -1,42 +1,126 @@
-1. 
+
+1. File client/views/plugins/insert_swing_controller.js
 Replace:
-<select class="form-control" name="swingId" autofocus="autofocus">
-	{{#each swings}}
-		<option value="{{_id}}">							{{name}}</option>
-	{{/each}}
-</select>
+isReady: function() {
+		
+
+		var subs = [
+			Meteor.subscribe("krakens"),
+			Meteor.subscribe("swings_empty")
+		];
+		var ready = true;
+		_.each(subs, function(sub) {
+			if(!sub.ready())
+				ready = false;
+		});
+		return ready;
+	},
+
+	data: function() {
+		
+
+		var data = {
+			params: this.params || {},
+			krakens: Krakens.find({}, {}),
+			swings_empty: Swings.findOne({_id:null}, {})
+		};
+		
+
+		return data;
+	},
 
 With:
-<select class="form-control" name="swingId" autofocus="autofocus">
-	<option value="{{_id}}">							</option>
-	{{#each swings}}
-		<option value="{{_id}}">							{{name}}</option>
-	{{/each}}
-</select>
+isReady: function() {
+		
+
+		var subs = [
+			Meteor.subscribe("krakens"),
+			Meteor.subscribe("test_datas"),
+			Meteor.subscribe("swings_empty")
+		];
+		var ready = true;
+		_.each(subs, function(sub) {
+			if(!sub.ready())
+				ready = false;
+		});
+		return ready;
+	},
+
+	data: function() {
+		
+
+		var data = {
+			params: this.params || {},
+			krakens: Krakens.find({}, {}),
+			testDatas: TestDatas.find({}, {}),
+			swings_empty: Swings.findOne({_id:null}, {})
+		};
+		
+
+		return data;
+	},
 
 
-2. File client/views/strategies/details_read_only/details/details.js
+2. File client/views/plugins/insert_swing.html
 Replace:
-"click #form-close-button": function(e, t) {
-	e.preventDefault();
-
-	Router.go("strategies.detailsReadOnly", {strategyId: this.params.strategyId});
-},
-"click #form-back-button": function(e, t) {
-	e.preventDefault();
-
-	Router.go("strategies.detailsReadOnly", {strategyId: this.params.strategyId});
-}
-
+<div class="input-div">
+					<select class="form-control" name="platform" data-type="string" required="required">
+						{{#each krakens}}
+						<option value="{{_id}}">							{{name}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
 
 With:
-"click #form-close-button": function(e, t) {
-	e.preventDefault();
+<div class="input-div">
+					<select class="form-control" name="platform" data-type="string" required="required">
+						{{#each krakens}}
+						<option value="{{_id}}">							{{name}}</option>
+						{{/each}}
+						{{#each testDatas}}
+						<option value="{{_id}}">							{{name}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
 
-	Router.go("strategies.details_read_only", {strategyId: this.params.strategyId});
-},
-"click #form-back-button": function(e, t) {
-	e.preventDefault();
 
-	Router.go("strategies.details_read_only", {strategyId: this.params.strategyId});
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   "input": "select",
+                "lookup_query_name": "swings",
+                "lookup_field": "name",
+                "lookup_key": "_id"
+
+
+
+
