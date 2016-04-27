@@ -17,13 +17,22 @@ standard-minifier-js    # JS minifier run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
-insecure                # Allow all DB writes from clients (for prototyping)
+accounts-password
+accounts-base
 http
-percolate:synced-cron
-anti:methods
-autopublish
-meteorhacks:npm
-
-
-npm-container
-voidale:later-js-tz
+email
+spiderable
+ejson
+random
+iron:router
+natestrauser:font-awesome
+matb33:collection-hooks
+perak:user-roles
+copleykj:livestamp
+less
+nemo64:bootstrap
+reactive-dict
+mizzao:bootboxjs
+mrt:moment
+rajit:bootstrap3-datepicker
+perak:markdown
