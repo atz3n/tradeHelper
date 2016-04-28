@@ -13,7 +13,7 @@ Template.StrategiesInsert.helpers({
 });
 
 Template.StrategiesInsertInsertForm.rendered = function() {
-	pageSession.set("orPluginsCrudItems", []);
+	pageSession.set("pluginsCrudItems", []);
 
 
 	pageSession.set("strategiesInsertInsertFormInfoMessage", "");
@@ -88,7 +88,7 @@ Template.StrategiesInsertInsertForm.events({
 			function(values) {
 				
 
-				values.orPlugins = pageSession.get("orPluginsCrudItems"); newId = Strategies.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
+				values.plugins = pageSession.get("pluginsCrudItems"); newId = Strategies.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 
@@ -112,7 +112,7 @@ Template.StrategiesInsertInsertForm.events({
 		/*BACK_REDIRECT*/
 	}, 
 
-	'click .field-or-plugins .crud-table-row .delete-icon': function(e, t) { e.preventDefault(); var self = this; bootbox.dialog({ message: 'Delete? Are you sure?', title: 'Delete', animate: false, buttons: { success: { label: 'Yes', className: 'btn-success', callback: function() { var items = pageSession.get('orPluginsCrudItems'); var index = -1; _.find(items, function(item, i) { if(item._id == self._id) { index = i; return true; }; }); if(index >= 0) items.splice(index, 1); pageSession.set('orPluginsCrudItems', items); } }, danger: { label: 'No', className: 'btn-default' } } }); return false; }
+	'click .field-plugins .crud-table-row .delete-icon': function(e, t) { e.preventDefault(); var self = this; bootbox.dialog({ message: 'Delete? Are you sure?', title: 'Delete', animate: false, buttons: { success: { label: 'Yes', className: 'btn-success', callback: function() { var items = pageSession.get('pluginsCrudItems'); var index = -1; _.find(items, function(item, i) { if(item._id == self._id) { index = i; return true; }; }); if(index >= 0) items.splice(index, 1); pageSession.set('pluginsCrudItems', items); } }, danger: { label: 'No', className: 'btn-default' } } }); return false; }
 });
 
 Template.StrategiesInsertInsertForm.helpers({
@@ -122,17 +122,17 @@ Template.StrategiesInsertInsertForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("strategiesInsertInsertFormErrorMessage");
 	}, 
-		"orPluginsCrudItems": function() {
-		return pageSession.get("orPluginsCrudItems");
+		"pluginsCrudItems": function() {
+		return pageSession.get("pluginsCrudItems");
 	}
 });
 
 
-Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm.rendered = function() {
+Template.StrategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertForm.rendered = function() {
 	
 
-	pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormInfoMessage", "");
-	pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormErrorMessage", "");
+	pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", "");
+	pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -160,25 +160,25 @@ Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFo
 	$("input[autofocus]").focus();
 };
 
-Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm.events({
+Template.StrategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormInfoMessage", "");
-		pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormErrorMessage", "");
+		pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", "");
+		pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormMode = "insert";
+			var strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormMode = "insert";
 			if(!t.find("#form-cancel-button")) {
-				switch(strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormMode) {
+				switch(strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormInfoMessage", message);
+						pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", message);
 					}; break;
 				}
 			}
@@ -189,7 +189,7 @@ Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFo
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormErrorMessage", message);
+			pageSession.set("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -203,7 +203,7 @@ Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFo
 			function(values) {
 				
 
-				var data = pageSession.get("orPluginsCrudItems") || []; values._id = Random.id(); data.push(values); pageSession.set("orPluginsCrudItems", data); $("#field-or-plugins-insert-form").modal("hide"); e.currentTarget.reset();
+				var data = pageSession.get("pluginsCrudItems") || []; values._id = Random.id(); data.push(values); pageSession.set("pluginsCrudItems", data); $("#field-plugins-insert-form").modal("hide"); e.currentTarget.reset();
 			}
 		);
 
@@ -212,7 +212,7 @@ Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFo
 	"click #form-cancel-button": function(e, t) {
 		e.preventDefault();
 
-		$("#field-or-plugins-insert-form").modal("hide"); t.find("form").reset();
+		$("#field-plugins-insert-form").modal("hide"); t.find("form").reset();
 
 		/*CANCEL_REDIRECT*/
 	},
@@ -230,12 +230,12 @@ Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFo
 	
 });
 
-Template.StrategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm.helpers({
+Template.StrategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormInfoMessage");
+		return pageSession.get("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("strategiesInsertFieldOrPluginsInsertFormContainerFieldOrPluginsInsertFormErrorMessage");
+		return pageSession.get("strategiesInsertFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage");
 	}
 	
 });

@@ -51,14 +51,14 @@
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-or-plugins">
-				<label for="orPlugins" class="col-sm-3 control-label">
+			<div class="form-group  field-plugins">
+				<label for="plugins" class="col-sm-3 control-label">
 					Plugin Bundles (logical connected via 'or')
 				</label>
 				<div class="input-div col-sm-9">
 					<table class="table table-striped">
 						<thead>
-							{{#if orPluginsCrudItems}}
+							{{#if pluginsCrudItems}}
 							<tr class="crud-table-header">
 								<th>
 									Plugin Bundle
@@ -67,10 +67,10 @@
 							{{/if}}
 						</thead>
 						<tbody>
-							{{#each orPluginsCrudItems}}
+							{{#each pluginsCrudItems}}
 							<tr class="crud-table-row">
 								<td>
-									{{andPlugins}}
+									{{bundleId}}
 								</td>
 							</tr>
 							{{/each}}
