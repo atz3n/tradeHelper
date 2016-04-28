@@ -7,11 +7,11 @@
 			</div>
 		</div>
 		{{> StrategiesEditEditForm}}
-		<div class="modal crud-insert-form-container" id="field-or-plugins-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal crud-insert-form-container" id="field-plugins-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-body">
-						{{> StrategiesEditFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm}}
+						{{> StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm}}
 					</div>
 				</div>
 			</div>
@@ -60,8 +60,8 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-or-plugins">
-				<label for="orPlugins">
+			<div class="form-group  field-plugins">
+				<label for="plugins">
 					Plugin Bundles (logical connected via 'or')
 				</label>
 				<div class="input-div">
@@ -69,14 +69,14 @@
 						<thead>
 							<tr class="crud-table-controls">
 								<td colspan="1">
-									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-or-plugins-insert-form">
+									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-plugins-insert-form">
 										<span class="fa fa-plus">
 										</span>
 										Add
 									</button>
 								</td>
 							</tr>
-							{{#if orPluginsCrudItems}}
+							{{#if pluginsCrudItems}}
 							<tr class="crud-table-header">
 								<th>
 									Plugin Bundle
@@ -88,10 +88,10 @@
 							{{/if}}
 						</thead>
 						<tbody>
-							{{#each orPluginsCrudItems}}
+							{{#each pluginsCrudItems}}
 							<tr class="crud-table-row">
 								<td>
-									{{andPlugins}}
+									{{bundleId}}
 								</td>
 								<td class="td-icon delete-icon">
 									<span class="fa fa-trash-o" title="Delete">
@@ -123,8 +123,8 @@
 	</div>
 </template>
 
-<template name="StrategiesEditFieldOrPluginsInsertFormContainerFieldOrPluginsInsertForm">
-	<div id="strategies-edit-field-or-plugins-insert-form-container-field-or-plugins-insert-form" class="">
+<template name="StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm">
+	<div id="strategies-edit-field-plugins-insert-form-container-field-plugins-insert-form" class="">
 		<h2 id="component-title">
 			Insert
 		</h2>
@@ -140,12 +140,12 @@
 				{{infoMessage}}
 			</div>
 			{{/if}}
-			<div class="form-group  field-and-plugins">
-				<label for="andPlugins">
+			<div class="form-group  field-bundle-id">
+				<label for="bundleId">
 					Plugin Bundle
 				</label>
 				<div class="input-div">
-					<select class="form-control" name="andPlugins" data-type="string" required="required" autofocus="autofocus">
+					<select class="form-control" name="bundleId" data-type="string" required="required" autofocus="autofocus">
 						{{#each pluginbundles}}
 						<option value="{{_id}}">							{{name}}</option>
 						{{/each}}

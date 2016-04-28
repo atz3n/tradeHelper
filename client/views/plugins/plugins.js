@@ -31,7 +31,7 @@ var PluginsViewSwingsItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "platform", "lnpnp", "latsnp", "snpnp", "sabbnp", "enLong", "enShort"];
+		var searchFields = ["name", "platformId", "lnpnp", "latsnp", "snpnp", "sabbnp", "enLong", "enShort"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
