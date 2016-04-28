@@ -34,14 +34,14 @@
             "required": true
           },
           {
-            "name": "orPlugins",
+            "name": "pluginBundles",
             "title": "Plugin Bundles (logical connected via 'or')",
             "type": "array",
             "array_item_type": "object",
             "input": "crud",
             "crud_fields": [
               {
-                "name": "andPlugins",
+                "name": "bundleId",
                 "title": "Plugin Bundle",
                 "type": "string",
                 "input": "select",
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "name": "pluginbundles",
+        "name": "pluginBundles",
         "fields": [
           {
             "name": "name",
@@ -81,11 +81,11 @@
             "input": "crud",
             "crud_fields": [
               {
-                "name": "bundlePlugin",
+                "name": "pluginId",
                 "title": "Plugin",
                 "type": "string",
                 "input": "select",
-                "lookup_query_name": "swings",
+                "lookup_query_name": "plSwings",
                 "lookup_field": "name",
                 "lookup_key": "_id",
                 "required": true
@@ -106,7 +106,7 @@
         ]
       },
       {
-        "name": "swings",
+        "name": "plSwings",
         "fields": [
           {
             "name": "name",
@@ -114,15 +114,16 @@
             "type": "string",
             "required": true
           },
-          {
-            "name": "platform",
-            "title": "Platform",
+         {
+            "name": "exchangeId",
+            "title": "Exchange",
             "type": "string",
             "input": "select",
-            "lookup_query_name": "krakens",
+            "lookup_query_name": "exKrakens",
             "lookup_field": "name",
             "lookup_key": "_id",
             "required": true
+           	
           },
           {
             "name": "lnpnp",
@@ -185,22 +186,12 @@
         ]
       },
       {
-        "name": "dummys",
+        "name": "plDummys",
         "fields": [
           {
             "name": "name",
             "title": "Name",
             "type": "string",
-            "required": true
-          },
-          {
-            "name": "type",
-            "title": "Type (Do not change, it's a workaround)",
-            "type": "string",
-            "default": "dummyType",
-            "show_in_insert_form": true,
-            "show_in_update_form": false,
-            "show_in_dataview": false,
             "required": true
           },
           {
@@ -221,7 +212,7 @@
         ]
       },
       {
-        "name": "krakens",
+        "name": "exKrakens",
         "fields": [
           {
             "name": "name",
@@ -263,7 +254,7 @@
         ]
       },
       {
-        "name": "testDatas",
+        "name": "exTestDatas",
         "fields": [
           {
             "name": "name",
@@ -325,86 +316,86 @@
  ***********************************************************************/
     "queries": [
       {
-        "name": "dummys",
-        "collection": "dummys",
+        "name": "plDummys",
+        "collection": "plDummys",
         "filter": {}
       },
       {
-        "name": "dummys_empty",
-        "collection": "dummys",
+        "name": "plDummys_empty",
+        "collection": "plDummys",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "dummy",
-        "collection": "dummys",
+        "name": "plDummy",
+        "collection": "plDummys",
         "filter": {
           "_id": ":test1Id"
         },
         "find_one": true
       },
       {
-        "name": "krakens",
-        "collection": "krakens",
+        "name": "exKrakens",
+        "collection": "exKrakens",
         "filter": {}
       },
       {
-        "name": "krakens_empty",
-        "collection": "krakens",
+        "name": "exKrakens_empty",
+        "collection": "exKrakens",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "kraken",
-        "collection": "krakens",
+        "name": "exKraken",
+        "collection": "exKrakens",
         "filter": {
-          "_id": ":krakenId"
+          "_id": ":exKrakenId"
         },
         "find_one": true
       },
       {
-        "name": "testDatas",
-        "collection": "testDatas",
+        "name": "exTestDatas",
+        "collection": "exTestDatas",
         "filter": {}
       },
       {
-        "name": "testDatas_empty",
-        "collection": "testDatas",
+        "name": "exTestDatas_empty",
+        "collection": "exTestDatas",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "testData",
-        "collection": "testDatas",
+        "name": "exTestData",
+        "collection": "exTestDatas",
         "filter": {
-          "_id": ":testDataId"
+          "_id": ":exTestDataId"
         },
         "find_one": true
       },
       {
-        "name": "swings",
-        "collection": "swings",
+        "name": "plSwings",
+        "collection": "plSwings",
         "filter": {}
       },
       {
-        "name": "swings_empty",
-        "collection": "swings",
+        "name": "plSwings_empty",
+        "collection": "plSwings",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "swing",
-        "collection": "swings",
+        "name": "plSwing",
+        "collection": "plSwings",
         "filter": {
-          "_id": ":swingId"
+          "_id": ":plSwingId"
         },
         "find_one": true
       },
@@ -458,14 +449,14 @@
       },
       {
         "name": "pluginbundles",
-        "collection": "pluginbundles",
+        "collection": "pluginBundles",
         "filter": {
           "strategyId": ":strategyId"
         }
       },
       {
         "name": "pluginbundles_empty",
-        "collection": "pluginbundles",
+        "collection": "pluginBundles",
         "filter": {
           "_id": null
         },
@@ -473,7 +464,7 @@
       },
       {
         "name": "pluginbundle",
-        "collection": "pluginbundles",
+        "collection": "pluginBundles",
         "filter": {
           "_id": ":pluginbundleId"
         },
@@ -785,47 +776,47 @@
           "name": "plugins",
           "components": [
             {
-              "name": "viewSwings",
-              "title": "Swing",
+              "name": "viewPlSwings",
+              "title": "plSwing",
               "type": "data_view",
               "text_if_empty": "No Swing configured",
-              "query_name": "swings",
+              "query_name": "plSwings",
               "query_params": [],
-              "insert_route": "plugins.insertSwing",
-              "edit_route": "plugins.editSwing",
+              "insert_route": "plugins.insertPlSwing",
+              "edit_route": "plugins.editPlSwing",
               "edit_route_params": [
                 {
-                  "name": "swingId",
+                  "name": "plSwingId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "plugins.detailsSwing",
+              "details_route": "plugins.detailsPlSwing",
               "details_route_params": [
                 {
-                  "name": "swingId",
+                  "name": "plSwingId",
                   "value": "this._id"
                 }
               ]
             },
             {
-              "name": "viewDummys",
+              "name": "viewPlDummys",
               "title": "Dummy",
               "type": "data_view",
               "text_if_empty": "No Dummy configured",
-              "query_name": "dummys",
+              "query_name": "plDummys",
               "query_params": [],
-              "insert_route": "plugins.insertDummy",
-              "edit_route": "plugins.editDummy",
+              "insert_route": "plugins.insertPlDummy",
+              "edit_route": "plugins.editPlDummy",
               "edit_route_params": [
                 {
-                  "name": "dummyId",
+                  "name": "plDummyId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "plugins.detailsDummy",
+              "details_route": "plugins.detailsPlDummy",
               "details_route_params": [
                 {
-                  "name": "dummyId",
+                  "name": "plDummyId",
                   "value": "this._id"
                 }
               ]
@@ -833,14 +824,14 @@
           ],
           "pages": [
             {
-              "name": "insertSwing",
+              "name": "insertPlSwing",
               "components": [
                 {
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
                   "title": "New Swing",
-                  "query_name": "swings_empty",
+                  "query_name": "plSwings_empty",
                   "query_params": [],
                   "submit_route": "plugins",
                   "cancel_route": "plugins"
@@ -848,9 +839,9 @@
               ]
             },
             {
-              "name": "detailsSwing",
+              "name": "detailsPlSwing",
               "route_params": [
-                "swingId"
+                "plSwingId"
               ],
               "components": [
                 {
@@ -859,7 +850,7 @@
                   "mode": "read_only",
                   "title": "Details",
                   "layout": "horizontal",
-                  "query_name": "swing",
+                  "query_name": "plSwing",
                   "query_params": [],
                   "close_route": "plugins",
                   "back_route": "plugins"
@@ -867,9 +858,9 @@
               ]
             },
             {
-              "name": "editSwing",
+              "name": "editPlSwing",
               "route_params": [
-                "swingId"
+                "plSwingId"
               ],
               "components": [
                 {
@@ -879,20 +870,20 @@
                   "title": "Edit Swing",
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
-                  "query_name": "swing",
+                  "query_name": "plSwing",
                   "query_params": []
                 }
               ]
             },
             {
-              "name": "insertDummy",
+              "name": "insertPlDummy",
               "components": [
                 {
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
                   "title": "New Dummy",
-                  "query_name": "dummys_empty",
+                  "query_name": "plDummys_empty",
                   "query_params": [],
                   "submit_route": "plugins",
                   "cancel_route": "plugins"
@@ -900,9 +891,9 @@
               ]
             },
             {
-              "name": "detailsDummy",
+              "name": "detailsPlDummy",
               "route_params": [
-                "dummyId"
+                "plDummyId"
               ],
               "components": [
                 {
@@ -911,7 +902,7 @@
                   "mode": "read_only",
                   "title": "Details",
                   "layout": "horizontal",
-                  "query_name": "dummy",
+                  "query_name": "plDummy",
                   "query_params": [],
                   "close_route": "plugins",
                   "back_route": "plugins"
@@ -919,9 +910,9 @@
               ]
             },
             {
-              "name": "editDummy",
+              "name": "editPlDummy",
               "route_params": [
-                "dummyId"
+                "plDummyId"
               ],
               "components": [
                 {
@@ -931,7 +922,7 @@
                   "title": "Edit Dummy",
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
-                  "query_name": "dummy",
+                  "query_name": "plDummy",
                   "query_params": []
                 }
               ]
@@ -943,47 +934,47 @@
           "name": "exchanges",
           "components": [
             {
-              "name": "viewKraken",
+              "name": "viewExKraken",
               "title": "Kraken.com",
               "type": "data_view",
               "text_if_empty": "No Settings configured",
-              "query_name": "krakens",
+              "query_name": "exKrakens",
               "query_params": [],
-              "insert_route": "exchanges.insertKraken",
-              "edit_route": "exchanges.editKraken",
+              "insert_route": "exchanges.insertExKraken",
+              "edit_route": "exchanges.editExKraken",
               "edit_route_params": [
                 {
-                  "name": "krakenId",
+                  "name": "exKrakenId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "exchanges.detailsKraken",
+              "details_route": "exchanges.detailsExkraken",
               "details_route_params": [
                 {
-                  "name": "krakenId",
+                  "name": "exKrakenId",
                   "value": "this._id"
                 }
               ]
             },
             {
-              "name": "viewTestData",
+              "name": "viewExTestData",
               "title": "Test Data",
               "type": "data_view",
               "text_if_empty": "No Dataset configured",
-              "query_name": "testDatas",
+              "query_name": "exTestDatas",
               "query_params": [],
-              "insert_route": "exchanges.insertTestData",
-              "edit_route": "exchanges.editTestData",
+              "insert_route": "exchanges.insertExTestData",
+              "edit_route": "exchanges.editExTestData",
               "edit_route_params": [
                 {
-                  "name": "testDataId",
+                  "name": "exTestDataId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "exchanges.detailsTestData",
+              "details_route": "exchanges.detailsExTestData",
               "details_route_params": [
                 {
-                  "name": "testDataId",
+                  "name": "exTestDataId",
                   "value": "this._id"
                 }
               ]
@@ -991,14 +982,14 @@
           ],
           "pages": [
             {
-              "name": "insertKraken",
+              "name": "insertExKraken",
               "components": [
                 {
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
                   "title": "New Settings",
-                  "query_name": "krakens_empty",
+                  "query_name": "exKrakens_empty",
                   "query_params": [],
                   "submit_route": "exchanges",
                   "cancel_route": "exchanges"
@@ -1006,9 +997,9 @@
               ]
             },
             {
-              "name": "editKraken",
+              "name": "editExKraken",
               "route_params": [
-                "krakenId"
+                "exKrakenId"
               ],
               "components": [
                 {
@@ -1018,15 +1009,15 @@
                   "title": "Edit Settings",
                   "submit_route": "exchanges",
                   "cancel_route": "exchanges",
-                  "query_name": "kraken",
+                  "query_name": "exKraken",
                   "query_params": []
                 }
               ]
             },
             {
-              "name": "detailsKraken",
+              "name": "detailsExKraken",
               "route_params": [
-                "krakenId"
+                "exKrakenId"
               ],
               "components": [
                 {
@@ -1035,7 +1026,7 @@
                   "mode": "read_only",
                   "title": "Details",
                   "layout": "horizontal",
-                  "query_name": "kraken",
+                  "query_name": "exKraken",
                   "query_params": [],
                   "close_route": "exchanges",
                   "back_route": "exchanges"
@@ -1043,14 +1034,14 @@
               ]
             },
             {
-              "name": "insertTestData",
+              "name": "insertExTestData",
               "components": [
                 {
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
                   "title": "New Dataset",
-                  "query_name": "testDatas_empty",
+                  "query_name": "exTestDatas_empty",
                   "query_params": [],
                   "submit_route": "exchanges",
                   "cancel_route": "exchanges"
@@ -1058,9 +1049,9 @@
               ]
             },
             {
-              "name": "editTestData",
+              "name": "editExTestData",
               "route_params": [
-                "testDataId"
+                "exTestDataId"
               ],
               "components": [
                 {
@@ -1070,15 +1061,15 @@
                   "title": "Edit Dataset",
                   "submit_route": "exchanges",
                   "cancel_route": "exchanges",
-                  "query_name": "testData",
+                  "query_name": "exTestData",
                   "query_params": []
                 }
               ]
             },
             {
-              "name": "detailsTestData",
+              "name": "detailsExTestData",
               "route_params": [
-                "testDataId"
+                "exTestDataId"
               ],
               "components": [
                 {
@@ -1087,7 +1078,7 @@
                   "mode": "read_only",
                   "title": "Details",
                   "layout": "horizontal",
-                  "query_name": "testData",
+                  "query_name": "exTestData",
                   "query_params": [],
                   "close_route": "exchanges",
                   "back_route": "exchanges"
