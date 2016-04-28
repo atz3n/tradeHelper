@@ -6,12 +6,12 @@
 				</div>
 			</div>
 		</div>
-		{{> ExchangesViewKraken}}{{> ExchangesViewTestData}}
+		{{> ExchangesViewExKraken}}{{> ExchangesViewExTestData}}
 	</div>
 </template>
 
-<template name="ExchangesViewKraken">
-	<div id="exchanges-view-kraken" class="">
+<template name="ExchangesViewExKraken">
+	<div id="exchanges-view-ex-kraken" class="">
 		<h2 id="component-title">
 			Kraken.com
 		</h2>
@@ -45,7 +45,7 @@
 		</div>
 		{{else}}
 		<div id="dataview-data">
-			{{#if viewAsTable}} {{> ExchangesViewKrakenTable}} {{/if}}
+			{{#if viewAsTable}} {{> ExchangesViewExKrakenTable}} {{/if}}
 		</div>
 		{{/if}}
 		{{else}}
@@ -56,7 +56,7 @@
 	</div>
 </template>
 
-<template name="ExchangesViewKrakenTable">
+<template name="ExchangesViewExKrakenTable">
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
@@ -75,12 +75,12 @@
 			</tr>
 		</thead>
 		<tbody id="dataview-table-items">
-			{{#each tableItems}} {{> ExchangesViewKrakenTableItems}} {{/each}}
+			{{#each tableItems}} {{> ExchangesViewExKrakenTableItems}} {{/each}}
 		</tbody>
 	</table>
 </template>
 
-<template name="ExchangesViewKrakenTableItems">
+<template name="ExchangesViewExKrakenTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
 			{{name}}
@@ -99,8 +99,8 @@
 	</tr>
 </template>
 
-<template name="ExchangesViewTestData">
-	<div id="exchanges-view-test-data" class="">
+<template name="ExchangesViewExTestData">
+	<div id="exchanges-view-ex-test-data" class="">
 		<h2 id="component-title">
 			Test Data
 		</h2>
@@ -134,7 +134,7 @@
 		</div>
 		{{else}}
 		<div id="dataview-data">
-			{{#if viewAsTable}} {{> ExchangesViewTestDataTable}} {{/if}}
+			{{#if viewAsTable}} {{> ExchangesViewExTestDataTable}} {{/if}}
 		</div>
 		{{/if}}
 		{{else}}
@@ -145,7 +145,7 @@
 	</div>
 </template>
 
-<template name="ExchangesViewTestDataTable">
+<template name="ExchangesViewExTestDataTable">
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
@@ -164,12 +164,12 @@
 			</tr>
 		</thead>
 		<tbody id="dataview-table-items">
-			{{#each tableItems}} {{> ExchangesViewTestDataTableItems}} {{/each}}
+			{{#each tableItems}} {{> ExchangesViewExTestDataTableItems}} {{/each}}
 		</tbody>
 	</table>
 </template>
 
-<template name="ExchangesViewTestDataTableItems">
+<template name="ExchangesViewExTestDataTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
 			{{name}}

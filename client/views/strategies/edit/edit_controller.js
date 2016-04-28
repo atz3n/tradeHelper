@@ -36,7 +36,7 @@ this.StrategiesEditController = RouteController.extend({
 		var data = {
 			params: this.params || {},
 			strategy: Strategies.findOne({_id:this.params.strategyId}, {}),
-			pluginbundles: Pluginbundles.find({},{})
+			pluginbundles: PluginBundles.find({},{})
 		};
 		
 

@@ -88,7 +88,7 @@ Template.PluginbundlesEditEditForm.events({
 			function(values) {
 				
 
-				values.bundlePlugins = pageSession.get("bundlePluginsCrudItems"); Pluginbundles.update({ _id: t.data.pluginbundle._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				values.bundlePlugins = pageSession.get("bundlePluginsCrudItems"); PluginBundles.update({ _id: t.data.pluginbundle._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 

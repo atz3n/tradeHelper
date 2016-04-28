@@ -29,19 +29,19 @@ var privateRoutes = [
 	"pluginbundles.details",
 	"pluginbundles.edit",
 	"plugins",
-	"plugins.insert_swing",
-	"plugins.details_swing",
-	"plugins.edit_swing",
-	"plugins.insert_dummy",
-	"plugins.details_dummy",
-	"plugins.edit_dummy",
+	"plugins.insert_pl_swing",
+	"plugins.details_pl_swing",
+	"plugins.edit_pl_swing",
+	"plugins.insert_pl_dummy",
+	"plugins.details_pl_dummy",
+	"plugins.edit_pl_dummy",
 	"exchanges",
-	"exchanges.insert_kraken",
-	"exchanges.edit_kraken",
-	"exchanges.details_kraken",
-	"exchanges.insert_test_data",
-	"exchanges.edit_test_data",
-	"exchanges.details_test_data",
+	"exchanges.insert_ex_kraken",
+	"exchanges.edit_ex_kraken",
+	"exchanges.details_ex_kraken",
+	"exchanges.insert_ex_test_data",
+	"exchanges.edit_ex_test_data",
+	"exchanges.details_ex_test_data",
 	"settings",
 	"info",
 	"history",
@@ -240,19 +240,19 @@ Router.map(function () {
 	this.route("pluginbundles.details", {path: "/pluginbundles/details/:pluginbundleId", controller: "PluginbundlesDetailsController"});
 	this.route("pluginbundles.edit", {path: "/pluginbundles/edit/:pluginbundleId", controller: "PluginbundlesEditController"});
 	this.route("plugins", {path: "/plugins", controller: "PluginsController"});
-	this.route("plugins.insert_swing", {path: "/plugins/insert_swing", controller: "PluginsInsertSwingController"});
-	this.route("plugins.details_swing", {path: "/plugins/details_swing/:swingId", controller: "PluginsDetailsSwingController"});
-	this.route("plugins.edit_swing", {path: "/plugins/edit_swing/:swingId", controller: "PluginsEditSwingController"});
-	this.route("plugins.insert_dummy", {path: "/plugins/insert_dummy", controller: "PluginsInsertDummyController"});
-	this.route("plugins.details_dummy", {path: "/plugins/details_dummy/:dummyId", controller: "PluginsDetailsDummyController"});
-	this.route("plugins.edit_dummy", {path: "/plugins/edit_dummy/:dummyId", controller: "PluginsEditDummyController"});
+	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
+	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});
+	this.route("plugins.edit_pl_swing", {path: "/plugins/edit_pl_swing/:plSwingId", controller: "PluginsEditPlSwingController"});
+	this.route("plugins.insert_pl_dummy", {path: "/plugins/insert_pl_dummy", controller: "PluginsInsertPlDummyController"});
+	this.route("plugins.details_pl_dummy", {path: "/plugins/details_pl_dummy/:plDummyId", controller: "PluginsDetailsPlDummyController"});
+	this.route("plugins.edit_pl_dummy", {path: "/plugins/edit_pl_dummy/:plDummyId", controller: "PluginsEditPlDummyController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
-	this.route("exchanges.insert_kraken", {path: "/exchanges/insert_kraken", controller: "ExchangesInsertKrakenController"});
-	this.route("exchanges.edit_kraken", {path: "/exchanges/edit_kraken/:krakenId", controller: "ExchangesEditKrakenController"});
-	this.route("exchanges.details_kraken", {path: "/exchanges/details_kraken/:krakenId", controller: "ExchangesDetailsKrakenController"});
-	this.route("exchanges.insert_test_data", {path: "/exchanges/insert_test_data", controller: "ExchangesInsertTestDataController"});
-	this.route("exchanges.edit_test_data", {path: "/exchanges/edit_test_data/:testDataId", controller: "ExchangesEditTestDataController"});
-	this.route("exchanges.details_test_data", {path: "/exchanges/details_test_data/:testDataId", controller: "ExchangesDetailsTestDataController"});
+	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
+	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});
+	this.route("exchanges.details_ex_kraken", {path: "/exchanges/details_ex_kraken/:exKrakenId", controller: "ExchangesDetailsExKrakenController"});
+	this.route("exchanges.insert_ex_test_data", {path: "/exchanges/insert_ex_test_data", controller: "ExchangesInsertExTestDataController"});
+	this.route("exchanges.edit_ex_test_data", {path: "/exchanges/edit_ex_test_data/:exTestDataId", controller: "ExchangesEditExTestDataController"});
+	this.route("exchanges.details_ex_test_data", {path: "/exchanges/details_ex_test_data/:exTestDataId", controller: "ExchangesDetailsExTestDataController"});
 	this.route("settings", {path: "/settings", controller: "SettingsController"});
 	this.route("info", {path: "/info", controller: "InfoController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});

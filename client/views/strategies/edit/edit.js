@@ -13,7 +13,7 @@ Template.StrategiesEdit.helpers({
 });
 
 Template.StrategiesEditEditForm.rendered = function() {
-	pageSession.set("pluginsCrudItems", this.data.strategy.plugins || []);
+	pageSession.set("pluginBundlesCrudItems", this.data.strategy.pluginBundles || []);
 
 
 	pageSession.set("strategiesEditEditFormInfoMessage", "");
@@ -88,7 +88,7 @@ Template.StrategiesEditEditForm.events({
 			function(values) {
 				
 
-				values.plugins = pageSession.get("pluginsCrudItems"); Strategies.update({ _id: t.data.strategy._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				values.pluginBundles = pageSession.get("pluginBundlesCrudItems"); Strategies.update({ _id: t.data.strategy._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 
@@ -112,7 +112,7 @@ Template.StrategiesEditEditForm.events({
 		/*BACK_REDIRECT*/
 	}, 
 
-	'click .field-plugins .crud-table-row .delete-icon': function(e, t) { e.preventDefault(); var self = this; bootbox.dialog({ message: 'Delete? Are you sure?', title: 'Delete', animate: false, buttons: { success: { label: 'Yes', className: 'btn-success', callback: function() { var items = pageSession.get('pluginsCrudItems'); var index = -1; _.find(items, function(item, i) { if(item._id == self._id) { index = i; return true; }; }); if(index >= 0) items.splice(index, 1); pageSession.set('pluginsCrudItems', items); } }, danger: { label: 'No', className: 'btn-default' } } }); return false; }
+	'click .field-plugin-bundles .crud-table-row .delete-icon': function(e, t) { e.preventDefault(); var self = this; bootbox.dialog({ message: 'Delete? Are you sure?', title: 'Delete', animate: false, buttons: { success: { label: 'Yes', className: 'btn-success', callback: function() { var items = pageSession.get('pluginBundlesCrudItems'); var index = -1; _.find(items, function(item, i) { if(item._id == self._id) { index = i; return true; }; }); if(index >= 0) items.splice(index, 1); pageSession.set('pluginBundlesCrudItems', items); } }, danger: { label: 'No', className: 'btn-default' } } }); return false; }
 });
 
 Template.StrategiesEditEditForm.helpers({
@@ -122,17 +122,17 @@ Template.StrategiesEditEditForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("strategiesEditEditFormErrorMessage");
 	}, 
-		"pluginsCrudItems": function() {
-		return pageSession.get("pluginsCrudItems");
+		"pluginBundlesCrudItems": function() {
+		return pageSession.get("pluginBundlesCrudItems");
 	}
 });
 
 
-Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.rendered = function() {
+Template.StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertForm.rendered = function() {
 	
 
-	pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", "");
-	pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", "");
+	pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormInfoMessage", "");
+	pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -160,25 +160,25 @@ Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.ren
 	$("input[autofocus]").focus();
 };
 
-Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.events({
+Template.StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", "");
-		pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", "");
+		pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormInfoMessage", "");
+		pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormMode = "insert";
+			var strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormMode = "insert";
 			if(!t.find("#form-cancel-button")) {
-				switch(strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormMode) {
+				switch(strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage", message);
+						pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormInfoMessage", message);
 					}; break;
 				}
 			}
@@ -189,7 +189,7 @@ Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.eve
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage", message);
+			pageSession.set("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -203,7 +203,7 @@ Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.eve
 			function(values) {
 				
 
-				var data = pageSession.get("pluginsCrudItems") || []; values._id = Random.id(); data.push(values); pageSession.set("pluginsCrudItems", data); $("#field-plugins-insert-form").modal("hide"); e.currentTarget.reset();
+				var data = pageSession.get("pluginBundlesCrudItems") || []; values._id = Random.id(); data.push(values); pageSession.set("pluginBundlesCrudItems", data); $("#field-plugin-bundles-insert-form").modal("hide"); e.currentTarget.reset();
 			}
 		);
 
@@ -212,7 +212,7 @@ Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.eve
 	"click #form-cancel-button": function(e, t) {
 		e.preventDefault();
 
-		$("#field-plugins-insert-form").modal("hide"); t.find("form").reset();
+		$("#field-plugin-bundles-insert-form").modal("hide"); t.find("form").reset();
 
 		/*CANCEL_REDIRECT*/
 	},
@@ -230,12 +230,12 @@ Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.eve
 	
 });
 
-Template.StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm.helpers({
+Template.StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormInfoMessage");
+		return pageSession.get("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("strategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertFormErrorMessage");
+		return pageSession.get("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage");
 	}
 	
 });

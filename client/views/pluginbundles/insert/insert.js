@@ -88,7 +88,7 @@ Template.PluginbundlesInsertInsertForm.events({
 			function(values) {
 				
 
-				values.bundlePlugins = pageSession.get("bundlePluginsCrudItems"); newId = Pluginbundles.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
+				values.bundlePlugins = pageSession.get("bundlePluginsCrudItems"); newId = PluginBundles.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 

@@ -19,8 +19,8 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("krakens"),
-			Meteor.subscribe("test_datas")
+			Meteor.subscribe("ex_krakens"),
+			Meteor.subscribe("ex_test_datas")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,8 +35,8 @@ this.ExchangesController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			krakens: Krakens.find({}, {}),
-			test_datas: TestDatas.find({}, {})
+			ex_krakens: ExKrakens.find({}, {}),
+			ex_test_datas: ExTestDatas.find({}, {})
 		};
 		
 

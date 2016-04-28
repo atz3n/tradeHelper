@@ -161,7 +161,7 @@ Template.PluginbundlesView.events({
 Template.PluginbundlesView.helpers({
 
 	"insertButtonClass": function() {
-		return Pluginbundles.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+		return PluginBundles.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
 	},
 
 	"isEmpty": function() {
@@ -240,7 +240,7 @@ Template.PluginbundlesViewTableItems.events({
 		var values = {};
 		values[fieldName] = !this[fieldName];
 
-		Pluginbundles.update({ _id: this._id }, { $set: values });
+		PluginBundles.update({ _id: this._id }, { $set: values });
 
 		return false;
 	},
@@ -257,7 +257,7 @@ Template.PluginbundlesViewTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						Pluginbundles.remove({ _id: me._id });
+						PluginBundles.remove({ _id: me._id });
 					}
 				},
 				danger: {
@@ -278,10 +278,10 @@ Template.PluginbundlesViewTableItems.events({
 Template.PluginbundlesViewTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return Pluginbundles.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return PluginBundles.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return Pluginbundles.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return PluginBundles.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	}
 });

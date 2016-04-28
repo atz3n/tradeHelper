@@ -7,11 +7,11 @@
 			</div>
 		</div>
 		{{> StrategiesEditEditForm}}
-		<div class="modal crud-insert-form-container" id="field-plugins-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal crud-insert-form-container" id="field-plugin-bundles-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-body">
-						{{> StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm}}
+						{{> StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertForm}}
 					</div>
 				</div>
 			</div>
@@ -60,8 +60,8 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-plugins">
-				<label for="plugins">
+			<div class="form-group  field-plugin-bundles">
+				<label for="pluginBundles">
 					Plugin Bundles (logical connected via 'or')
 				</label>
 				<div class="input-div">
@@ -69,14 +69,14 @@
 						<thead>
 							<tr class="crud-table-controls">
 								<td colspan="1">
-									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-plugins-insert-form">
+									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-plugin-bundles-insert-form">
 										<span class="fa fa-plus">
 										</span>
 										Add
 									</button>
 								</td>
 							</tr>
-							{{#if pluginsCrudItems}}
+							{{#if pluginBundlesCrudItems}}
 							<tr class="crud-table-header">
 								<th>
 									Plugin Bundle
@@ -88,7 +88,7 @@
 							{{/if}}
 						</thead>
 						<tbody>
-							{{#each pluginsCrudItems}}
+							{{#each pluginBundlesCrudItems}}
 							<tr class="crud-table-row">
 								<td>
 									{{bundleId}}
@@ -123,8 +123,8 @@
 	</div>
 </template>
 
-<template name="StrategiesEditFieldPluginsInsertFormContainerFieldPluginsInsertForm">
-	<div id="strategies-edit-field-plugins-insert-form-container-field-plugins-insert-form" class="">
+<template name="StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertForm">
+	<div id="strategies-edit-field-plugin-bundles-insert-form-container-field-plugin-bundles-insert-form" class="">
 		<h2 id="component-title">
 			Insert
 		</h2>

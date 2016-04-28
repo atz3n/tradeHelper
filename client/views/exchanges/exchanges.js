@@ -12,14 +12,14 @@ Template.Exchanges.helpers({
 	
 });
 
-var ExchangesViewKrakenItems = function(cursor) {
+var ExchangesViewExKrakenItems = function(cursor) {
 	if(!cursor) {
 		return [];
 	}
 
-	var searchString = pageSession.get("ExchangesViewKrakenSearchString");
-	var sortBy = pageSession.get("ExchangesViewKrakenSortBy");
-	var sortAscending = pageSession.get("ExchangesViewKrakenSortAscending");
+	var searchString = pageSession.get("ExchangesViewExKrakenSearchString");
+	var sortBy = pageSession.get("ExchangesViewExKrakenSortBy");
+	var sortAscending = pageSession.get("ExchangesViewExKrakenSortAscending");
 	if(typeof(sortAscending) == "undefined") sortAscending = true;
 
 	var raw = cursor.fetch();
@@ -59,8 +59,8 @@ var ExchangesViewKrakenItems = function(cursor) {
 	return filtered;
 };
 
-var ExchangesViewKrakenExport = function(cursor, fileType) {
-	var data = ExchangesViewKrakenItems(cursor);
+var ExchangesViewExKrakenExport = function(cursor, fileType) {
+	var data = ExchangesViewExKrakenItems(cursor);
 	var exportFields = [];
 
 	var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -71,12 +71,12 @@ var ExchangesViewKrakenExport = function(cursor, fileType) {
 }
 
 
-Template.ExchangesViewKraken.rendered = function() {
-	pageSession.set("ExchangesViewKrakenStyle", "table");
+Template.ExchangesViewExKraken.rendered = function() {
+	pageSession.set("ExchangesViewExKrakenStyle", "table");
 	
 };
 
-Template.ExchangesViewKraken.events({
+Template.ExchangesViewExKraken.events({
 	"submit #dataview-controls": function(e, t) {
 		return false;
 	},
@@ -89,7 +89,7 @@ Template.ExchangesViewKraken.events({
 			if(searchInput) {
 				searchInput.focus();
 				var searchString = searchInput.val();
-				pageSession.set("ExchangesViewKrakenSearchString", searchString);
+				pageSession.set("ExchangesViewExKrakenSearchString", searchString);
 			}
 
 		}
@@ -105,7 +105,7 @@ Template.ExchangesViewKraken.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					var searchString = searchInput.val();
-					pageSession.set("ExchangesViewKrakenSearchString", searchString);
+					pageSession.set("ExchangesViewExKrakenSearchString", searchString);
 				}
 
 			}
@@ -120,7 +120,7 @@ Template.ExchangesViewKraken.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					searchInput.val("");
-					pageSession.set("ExchangesViewKrakenSearchString", "");
+					pageSession.set("ExchangesViewExKrakenSearchString", "");
 				}
 
 			}
@@ -132,100 +132,100 @@ Template.ExchangesViewKraken.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("exchanges.insert_kraken", {});
+		Router.go("exchanges.insert_ex_kraken", {});
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		ExchangesViewKrakenExport(this.krakens, "csv");
+		ExchangesViewExKrakenExport(this.ex_krakens, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		ExchangesViewKrakenExport(this.krakens, "csv");
+		ExchangesViewExKrakenExport(this.ex_krakens, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		ExchangesViewKrakenExport(this.krakens, "tsv");
+		ExchangesViewExKrakenExport(this.ex_krakens, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		ExchangesViewKrakenExport(this.krakens, "json");
+		ExchangesViewExKrakenExport(this.ex_krakens, "json");
 	}
 
 	
 });
 
-Template.ExchangesViewKraken.helpers({
+Template.ExchangesViewExKraken.helpers({
 
 	"insertButtonClass": function() {
-		return Krakens.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+		return ExKrakens.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
 	},
 
 	"isEmpty": function() {
-		return !this.krakens || this.krakens.count() == 0;
+		return !this.ex_krakens || this.ex_krakens.count() == 0;
 	},
 	"isNotEmpty": function() {
-		return this.krakens && this.krakens.count() > 0;
+		return this.ex_krakens && this.ex_krakens.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.krakens && pageSession.get("ExchangesViewKrakenSearchString") && ExchangesViewKrakenItems(this.krakens).length == 0;
+		return this.ex_krakens && pageSession.get("ExchangesViewExKrakenSearchString") && ExchangesViewExKrakenItems(this.ex_krakens).length == 0;
 	},
 	"searchString": function() {
-		return pageSession.get("ExchangesViewKrakenSearchString");
+		return pageSession.get("ExchangesViewExKrakenSearchString");
 	},
 	"viewAsTable": function() {
-		return pageSession.get("ExchangesViewKrakenStyle") == "table";
+		return pageSession.get("ExchangesViewExKrakenStyle") == "table";
 	},
 	"viewAsList": function() {
-		return pageSession.get("ExchangesViewKrakenStyle") == "list";
+		return pageSession.get("ExchangesViewExKrakenStyle") == "list";
 	},
 	"viewAsGallery": function() {
-		return pageSession.get("ExchangesViewKrakenStyle") == "gallery";
+		return pageSession.get("ExchangesViewExKrakenStyle") == "gallery";
 	}
 
 	
 });
 
 
-Template.ExchangesViewKrakenTable.rendered = function() {
+Template.ExchangesViewExKrakenTable.rendered = function() {
 	
 };
 
-Template.ExchangesViewKrakenTable.events({
+Template.ExchangesViewExKrakenTable.events({
 	"click .th-sortable": function(e, t) {
 		e.preventDefault();
-		var oldSortBy = pageSession.get("ExchangesViewKrakenSortBy");
+		var oldSortBy = pageSession.get("ExchangesViewExKrakenSortBy");
 		var newSortBy = $(e.target).attr("data-sort");
 
-		pageSession.set("ExchangesViewKrakenSortBy", newSortBy);
+		pageSession.set("ExchangesViewExKrakenSortBy", newSortBy);
 		if(oldSortBy == newSortBy) {
-			var sortAscending = pageSession.get("ExchangesViewKrakenSortAscending") || false;
-			pageSession.set("ExchangesViewKrakenSortAscending", !sortAscending);
+			var sortAscending = pageSession.get("ExchangesViewExKrakenSortAscending") || false;
+			pageSession.set("ExchangesViewExKrakenSortAscending", !sortAscending);
 		} else {
-			pageSession.set("ExchangesViewKrakenSortAscending", true);
+			pageSession.set("ExchangesViewExKrakenSortAscending", true);
 		}
 	}
 });
 
-Template.ExchangesViewKrakenTable.helpers({
+Template.ExchangesViewExKrakenTable.helpers({
 	"tableItems": function() {
-		return ExchangesViewKrakenItems(this.krakens);
+		return ExchangesViewExKrakenItems(this.ex_krakens);
 	}
 });
 
 
-Template.ExchangesViewKrakenTableItems.rendered = function() {
+Template.ExchangesViewExKrakenTableItems.rendered = function() {
 	
 };
 
-Template.ExchangesViewKrakenTableItems.events({
+Template.ExchangesViewExKrakenTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("exchanges.details_kraken", {krakenId: this._id});
+		Router.go("exchanges.details_exkraken", {exKrakenId: this._id});
 		return false;
 	},
 
@@ -240,7 +240,7 @@ Template.ExchangesViewKrakenTableItems.events({
 		var values = {};
 		values[fieldName] = !this[fieldName];
 
-		Krakens.update({ _id: this._id }, { $set: values });
+		ExKrakens.update({ _id: this._id }, { $set: values });
 
 		return false;
 	},
@@ -257,7 +257,7 @@ Template.ExchangesViewKrakenTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						Krakens.remove({ _id: me._id });
+						ExKrakens.remove({ _id: me._id });
 					}
 				},
 				danger: {
@@ -270,30 +270,30 @@ Template.ExchangesViewKrakenTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("exchanges.edit_kraken", {krakenId: this._id});
+		Router.go("exchanges.edit_ex_kraken", {exKrakenId: this._id});
 		return false;
 	}
 });
 
-Template.ExchangesViewKrakenTableItems.helpers({
+Template.ExchangesViewExKrakenTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return Krakens.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return ExKrakens.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return Krakens.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return ExKrakens.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	}
 });
 
-var ExchangesViewTestDataItems = function(cursor) {
+var ExchangesViewExTestDataItems = function(cursor) {
 	if(!cursor) {
 		return [];
 	}
 
-	var searchString = pageSession.get("ExchangesViewTestDataSearchString");
-	var sortBy = pageSession.get("ExchangesViewTestDataSortBy");
-	var sortAscending = pageSession.get("ExchangesViewTestDataSortAscending");
+	var searchString = pageSession.get("ExchangesViewExTestDataSearchString");
+	var sortBy = pageSession.get("ExchangesViewExTestDataSortBy");
+	var sortAscending = pageSession.get("ExchangesViewExTestDataSortAscending");
 	if(typeof(sortAscending) == "undefined") sortAscending = true;
 
 	var raw = cursor.fetch();
@@ -333,8 +333,8 @@ var ExchangesViewTestDataItems = function(cursor) {
 	return filtered;
 };
 
-var ExchangesViewTestDataExport = function(cursor, fileType) {
-	var data = ExchangesViewTestDataItems(cursor);
+var ExchangesViewExTestDataExport = function(cursor, fileType) {
+	var data = ExchangesViewExTestDataItems(cursor);
 	var exportFields = [];
 
 	var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -345,12 +345,12 @@ var ExchangesViewTestDataExport = function(cursor, fileType) {
 }
 
 
-Template.ExchangesViewTestData.rendered = function() {
-	pageSession.set("ExchangesViewTestDataStyle", "table");
+Template.ExchangesViewExTestData.rendered = function() {
+	pageSession.set("ExchangesViewExTestDataStyle", "table");
 	
 };
 
-Template.ExchangesViewTestData.events({
+Template.ExchangesViewExTestData.events({
 	"submit #dataview-controls": function(e, t) {
 		return false;
 	},
@@ -363,7 +363,7 @@ Template.ExchangesViewTestData.events({
 			if(searchInput) {
 				searchInput.focus();
 				var searchString = searchInput.val();
-				pageSession.set("ExchangesViewTestDataSearchString", searchString);
+				pageSession.set("ExchangesViewExTestDataSearchString", searchString);
 			}
 
 		}
@@ -379,7 +379,7 @@ Template.ExchangesViewTestData.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					var searchString = searchInput.val();
-					pageSession.set("ExchangesViewTestDataSearchString", searchString);
+					pageSession.set("ExchangesViewExTestDataSearchString", searchString);
 				}
 
 			}
@@ -394,7 +394,7 @@ Template.ExchangesViewTestData.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					searchInput.val("");
-					pageSession.set("ExchangesViewTestDataSearchString", "");
+					pageSession.set("ExchangesViewExTestDataSearchString", "");
 				}
 
 			}
@@ -406,100 +406,100 @@ Template.ExchangesViewTestData.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("exchanges.insert_test_data", {});
+		Router.go("exchanges.insert_ex_test_data", {});
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		ExchangesViewTestDataExport(this.test_datas, "csv");
+		ExchangesViewExTestDataExport(this.ex_test_datas, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		ExchangesViewTestDataExport(this.test_datas, "csv");
+		ExchangesViewExTestDataExport(this.ex_test_datas, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		ExchangesViewTestDataExport(this.test_datas, "tsv");
+		ExchangesViewExTestDataExport(this.ex_test_datas, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		ExchangesViewTestDataExport(this.test_datas, "json");
+		ExchangesViewExTestDataExport(this.ex_test_datas, "json");
 	}
 
 	
 });
 
-Template.ExchangesViewTestData.helpers({
+Template.ExchangesViewExTestData.helpers({
 
 	"insertButtonClass": function() {
-		return TestDatas.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+		return ExTestDatas.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
 	},
 
 	"isEmpty": function() {
-		return !this.test_datas || this.test_datas.count() == 0;
+		return !this.ex_test_datas || this.ex_test_datas.count() == 0;
 	},
 	"isNotEmpty": function() {
-		return this.test_datas && this.test_datas.count() > 0;
+		return this.ex_test_datas && this.ex_test_datas.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.test_datas && pageSession.get("ExchangesViewTestDataSearchString") && ExchangesViewTestDataItems(this.test_datas).length == 0;
+		return this.ex_test_datas && pageSession.get("ExchangesViewExTestDataSearchString") && ExchangesViewExTestDataItems(this.ex_test_datas).length == 0;
 	},
 	"searchString": function() {
-		return pageSession.get("ExchangesViewTestDataSearchString");
+		return pageSession.get("ExchangesViewExTestDataSearchString");
 	},
 	"viewAsTable": function() {
-		return pageSession.get("ExchangesViewTestDataStyle") == "table";
+		return pageSession.get("ExchangesViewExTestDataStyle") == "table";
 	},
 	"viewAsList": function() {
-		return pageSession.get("ExchangesViewTestDataStyle") == "list";
+		return pageSession.get("ExchangesViewExTestDataStyle") == "list";
 	},
 	"viewAsGallery": function() {
-		return pageSession.get("ExchangesViewTestDataStyle") == "gallery";
+		return pageSession.get("ExchangesViewExTestDataStyle") == "gallery";
 	}
 
 	
 });
 
 
-Template.ExchangesViewTestDataTable.rendered = function() {
+Template.ExchangesViewExTestDataTable.rendered = function() {
 	
 };
 
-Template.ExchangesViewTestDataTable.events({
+Template.ExchangesViewExTestDataTable.events({
 	"click .th-sortable": function(e, t) {
 		e.preventDefault();
-		var oldSortBy = pageSession.get("ExchangesViewTestDataSortBy");
+		var oldSortBy = pageSession.get("ExchangesViewExTestDataSortBy");
 		var newSortBy = $(e.target).attr("data-sort");
 
-		pageSession.set("ExchangesViewTestDataSortBy", newSortBy);
+		pageSession.set("ExchangesViewExTestDataSortBy", newSortBy);
 		if(oldSortBy == newSortBy) {
-			var sortAscending = pageSession.get("ExchangesViewTestDataSortAscending") || false;
-			pageSession.set("ExchangesViewTestDataSortAscending", !sortAscending);
+			var sortAscending = pageSession.get("ExchangesViewExTestDataSortAscending") || false;
+			pageSession.set("ExchangesViewExTestDataSortAscending", !sortAscending);
 		} else {
-			pageSession.set("ExchangesViewTestDataSortAscending", true);
+			pageSession.set("ExchangesViewExTestDataSortAscending", true);
 		}
 	}
 });
 
-Template.ExchangesViewTestDataTable.helpers({
+Template.ExchangesViewExTestDataTable.helpers({
 	"tableItems": function() {
-		return ExchangesViewTestDataItems(this.test_datas);
+		return ExchangesViewExTestDataItems(this.ex_test_datas);
 	}
 });
 
 
-Template.ExchangesViewTestDataTableItems.rendered = function() {
+Template.ExchangesViewExTestDataTableItems.rendered = function() {
 	
 };
 
-Template.ExchangesViewTestDataTableItems.events({
+Template.ExchangesViewExTestDataTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("exchanges.details_test_data", {testDataId: this._id});
+		Router.go("exchanges.details_ex_test_data", {exTestDataId: this._id});
 		return false;
 	},
 
@@ -514,7 +514,7 @@ Template.ExchangesViewTestDataTableItems.events({
 		var values = {};
 		values[fieldName] = !this[fieldName];
 
-		TestDatas.update({ _id: this._id }, { $set: values });
+		ExTestDatas.update({ _id: this._id }, { $set: values });
 
 		return false;
 	},
@@ -531,7 +531,7 @@ Template.ExchangesViewTestDataTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						TestDatas.remove({ _id: me._id });
+						ExTestDatas.remove({ _id: me._id });
 					}
 				},
 				danger: {
@@ -544,18 +544,18 @@ Template.ExchangesViewTestDataTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("exchanges.edit_test_data", {testDataId: this._id});
+		Router.go("exchanges.edit_ex_test_data", {exTestDataId: this._id});
 		return false;
 	}
 });
 
-Template.ExchangesViewTestDataTableItems.helpers({
+Template.ExchangesViewExTestDataTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return TestDatas.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return ExTestDatas.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return TestDatas.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return ExTestDatas.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	}
 });

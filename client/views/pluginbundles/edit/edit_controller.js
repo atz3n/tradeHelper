@@ -20,8 +20,8 @@ this.PluginbundlesEditController = RouteController.extend({
 
 		var subs = [
 			Meteor.subscribe("pluginbundle", this.params.pluginbundleId),
-			Meteor.subscribe("swings"),
-			Meteor.subscribe("dummys")
+			Meteor.subscribe("pl_swings"),
+			Meteor.subscribe("pl_dummys")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -36,9 +36,9 @@ this.PluginbundlesEditController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pluginbundle: Pluginbundles.findOne({_id:this.params.pluginbundleId}, {}),
-			swings: Swings.find({},{}),
-			dummys: Dummys.find({},{})
+			pluginbundle: PluginBundles.findOne({_id:this.params.pluginbundleId}, {}),
+			pl_swings: PlSwings.find({},{}),
+			pl_dummys: PlDummys.find({},{})
 		};
 		
 

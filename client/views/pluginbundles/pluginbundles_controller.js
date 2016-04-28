@@ -34,7 +34,7 @@ this.PluginbundlesController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pluginbundles: Pluginbundles.find({strategyId:this.params.strategyId}, {})
+			pluginbundles: PluginBundles.find({strategyId:this.params.strategyId}, {})
 		};
 		
 

@@ -34,7 +34,7 @@ this.PluginbundlesDetailsController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pluginbundle: Pluginbundles.findOne({_id:this.params.pluginbundleId}, {})
+			pluginbundle: PluginBundles.findOne({_id:this.params.pluginbundleId}, {})
 		};
 		
 

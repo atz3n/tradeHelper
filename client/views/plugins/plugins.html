@@ -6,14 +6,14 @@
 				</div>
 			</div>
 		</div>
-		{{> PluginsViewSwings}}{{> PluginsViewDummys}}
+		{{> PluginsViewPlSwings}}{{> PluginsViewPlDummys}}
 	</div>
 </template>
 
-<template name="PluginsViewSwings">
-	<div id="plugins-view-swings" class="">
+<template name="PluginsViewPlSwings">
+	<div id="plugins-view-pl-swings" class="">
 		<h2 id="component-title">
-			Swing
+			plSwing
 		</h2>
 		<form id="dataview-controls" class="form-inline">
 			<div id="dataview-controls-insert" class="form-group {{insertButtonClass}}">
@@ -45,7 +45,7 @@
 		</div>
 		{{else}}
 		<div id="dataview-data">
-			{{#if viewAsTable}} {{> PluginsViewSwingsTable}} {{/if}}
+			{{#if viewAsTable}} {{> PluginsViewPlSwingsTable}} {{/if}}
 		</div>
 		{{/if}}
 		{{else}}
@@ -56,15 +56,15 @@
 	</div>
 </template>
 
-<template name="PluginsViewSwingsTable">
+<template name="PluginsViewPlSwingsTable">
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
 				<th class="th-sortable" data-sort="name">
 					Name
 				</th>
-				<th class="th-sortable" data-sort="platformId">
-					Platform
+				<th class="th-sortable" data-sort="exchangeId">
+					Exchange
 				</th>
 				<th class="th-sortable" data-sort="lnpnp">
 					Open Long Position [%]
@@ -93,18 +93,18 @@
 			</tr>
 		</thead>
 		<tbody id="dataview-table-items">
-			{{#each tableItems}} {{> PluginsViewSwingsTableItems}} {{/each}}
+			{{#each tableItems}} {{> PluginsViewPlSwingsTableItems}} {{/each}}
 		</tbody>
 	</table>
 </template>
 
-<template name="PluginsViewSwingsTableItems">
+<template name="PluginsViewPlSwingsTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
 		<td>
-			{{platformId}}
+			{{exchangeId}}
 		</td>
 		<td>
 			{{lnpnp}}
@@ -135,8 +135,8 @@
 	</tr>
 </template>
 
-<template name="PluginsViewDummys">
-	<div id="plugins-view-dummys" class="">
+<template name="PluginsViewPlDummys">
+	<div id="plugins-view-pl-dummys" class="">
 		<h2 id="component-title">
 			Dummy
 		</h2>
@@ -170,7 +170,7 @@
 		</div>
 		{{else}}
 		<div id="dataview-data">
-			{{#if viewAsTable}} {{> PluginsViewDummysTable}} {{/if}}
+			{{#if viewAsTable}} {{> PluginsViewPlDummysTable}} {{/if}}
 		</div>
 		{{/if}}
 		{{else}}
@@ -181,7 +181,7 @@
 	</div>
 </template>
 
-<template name="PluginsViewDummysTable">
+<template name="PluginsViewPlDummysTable">
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
@@ -200,12 +200,12 @@
 			</tr>
 		</thead>
 		<tbody id="dataview-table-items">
-			{{#each tableItems}} {{> PluginsViewDummysTableItems}} {{/each}}
+			{{#each tableItems}} {{> PluginsViewPlDummysTableItems}} {{/each}}
 		</tbody>
 	</table>
 </template>
 
-<template name="PluginsViewDummysTableItems">
+<template name="PluginsViewPlDummysTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
 			{{name}}

@@ -35,7 +35,8 @@ this.StrategiesInsertController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pluginbundles: Pluginbundles.find({},{})
+			strategies_empty: Strategies.findOne({_id:null}, {}),
+			pluginbundles: PluginBundles.find({},{})
 		};
 		
 

@@ -13,7 +13,7 @@ Template.StrategiesDetails.helpers({
 });
 
 Template.StrategiesDetailsDetailsForm.rendered = function() {
-	pageSession.set("pluginsCrudItems", this.data.strategy.plugins || []);
+	pageSession.set("pluginBundlesCrudItems", this.data.strategy.pluginBundles || []);
 
 
 	pageSession.set("strategiesDetailsDetailsFormInfoMessage", "");
@@ -122,7 +122,7 @@ Template.StrategiesDetailsDetailsForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("strategiesDetailsDetailsFormErrorMessage");
 	}, 
-		"pluginsCrudItems": function() {
-		return pageSession.get("pluginsCrudItems");
+		"pluginBundlesCrudItems": function() {
+		return pageSession.get("pluginBundlesCrudItems");
 	}
 });
