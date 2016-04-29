@@ -1,5 +1,5 @@
-Meteor.publish("pluginbundles", function(strategyId) {
-	return PluginBundles.find({strategyId:strategyId,ownerId:this.userId}, {});
+Meteor.publish("pluginbundles", function() {
+	return PluginBundles.find({ownerId:this.userId}, {});
 });
 
 Meteor.publish("pluginbundles_empty", function() {

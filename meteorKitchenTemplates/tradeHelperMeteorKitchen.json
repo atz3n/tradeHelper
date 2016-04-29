@@ -89,6 +89,7 @@
                 "lookup_field": "name",
                 "lookup_key": "_id",
                 "required": true
+                
               }
             ],
             "required": true
@@ -114,7 +115,7 @@
             "type": "string",
             "required": true
           },
-         {
+          {
             "name": "exchangeId",
             "title": "Exchange",
             "type": "string",
@@ -122,8 +123,21 @@
             "lookup_query_name": "exKrakens",
             "lookup_field": "name",
             "lookup_key": "_id",
-            "required": true
-           	
+            "required": true,
+            "show_in_dataview": false,
+            "show_in_read_only_form": false,
+            "exportable": false,
+            "join_collection": "exKrakens",
+            "join_fields": [
+              "name"
+            ],
+            "join_container": "exKrakenCont"
+          },
+          {
+            "name": "exKrakenCont.name",
+            "title": "Exchange",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
           },
           {
             "name": "lnpnp",
@@ -332,7 +346,7 @@
         "name": "plDummy",
         "collection": "plDummys",
         "filter": {
-          "_id": ":test1Id"
+          "_id": ":plDummyId"
         },
         "find_one": true
       },
@@ -450,9 +464,7 @@
       {
         "name": "pluginbundles",
         "collection": "pluginBundles",
-        "filter": {
-          "strategyId": ":strategyId"
-        }
+        "filter": {}
       },
       {
         "name": "pluginbundles_empty",

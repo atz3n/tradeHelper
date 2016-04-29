@@ -19,7 +19,7 @@ this.PluginsDetailsPlDummyController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_dummy", this.params.test1Id)
+			Meteor.subscribe("pl_dummy", this.params.plDummyId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +34,7 @@ this.PluginsDetailsPlDummyController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_dummy: PlDummys.findOne({_id:this.params.test1Id}, {})
+			pl_dummy: PlDummys.findOne({_id:this.params.plDummyId}, {})
 		};
 		
 
