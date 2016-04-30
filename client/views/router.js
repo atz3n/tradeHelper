@@ -48,6 +48,7 @@ var privateRoutes = [
 	"develop",
 	"develop.details_settings",
 	"develop.edit_settings",
+	"playground",
 	"admin",
 	"admin.users",
 	"admin.users.details",
@@ -259,6 +260,7 @@ Router.map(function () {
 	this.route("develop", {path: "/develop", controller: "DevelopController"});
 	this.route("develop.details_settings", {path: "/develop/details_settings/:settingId", controller: "DevelopDetailsSettingsController"});
 	this.route("develop.edit_settings", {path: "/develop/edit_settings/:settingId", controller: "DevelopEditSettingsController"});
+	this.route("playground", {path: "/playground", controller: "PlaygroundController"});
 	this.route("admin", {path: "/admin", controller: "AdminController"});
 	this.route("admin.users", {path: "/admin/users", controller: "AdminUsersController"});
 	this.route("admin.users.details", {path: "/admin/users/details/:userId", controller: "AdminUsersDetailsController"});
