@@ -39,17 +39,17 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-exchange-id">
-				<label for="exchangeId">
+			<div class="form-group  field-exchange">
+				<label for="exchange">
 					Exchange
 				</label>
 				<div class="input-div">
-					<select class="form-control" name="exchangeId" data-type="string" required="required">
+					<select class="form-control" name="exchange" data-type="string" required="required">
 						{{#each ex_krakens}}
-						<option value="{{_id}}" {{optionIsSelected ../pl_swing.exchangeId _id}}>							{{name}}</option>
+						<option value="{{_id}}" {{optionIsSelected ../pl_swing.exchange _id}}>							{{name}}</option>
 						{{/each}}
 						{{#each ex_test_datas}}
-						<option value="{{_id}}" {{optionIsSelected ../pl_swing.exchangeId _id}}>							{{name}}</option>
+						<option value="{{_id}}" {{optionIsSelected ../pl_test_datas.exchange _id}}>							{{name}}</option>
 						{{/each}}
 					</select>
 					<span id="help-text" class="help-block">

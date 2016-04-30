@@ -41,7 +41,7 @@
             "input": "crud",
             "crud_fields": [
               {
-                "name": "bundleId",
+                "name": "bundle",
                 "title": "Plugin Bundle",
                 "type": "string",
                 "input": "select",
@@ -81,7 +81,7 @@
             "input": "crud",
             "crud_fields": [
               {
-                "name": "pluginId",
+                "name": "plugin",
                 "title": "Plugin",
                 "type": "string",
                 "input": "select",
@@ -116,7 +116,7 @@
             "required": true
           },
           {
-            "name": "exchangeId",
+            "name": "exchange",
             "title": "Exchange",
             "type": "string",
             "input": "select",
@@ -197,7 +197,9 @@
         ],
         "roles_allowed_to_delete": [
           "owner"
-        ]
+        ],
+        "before_insert_code": "doc.type = 'plSwing';"
+        
       },
       {
         "name": "plDummys",
@@ -223,7 +225,8 @@
         ],
         "roles_allowed_to_delete": [
           "owner"
-        ]
+        ],
+        "before_insert_code": "doc.type = 'plDummy';"
       },
       {
         "name": "exKrakens",
@@ -265,7 +268,8 @@
         ],
         "roles_allowed_to_delete": [
           "owner"
-        ]
+        ],
+        "before_insert_code": "doc.type = 'exKraken';"
       },
       {
         "name": "exTestDatas",
@@ -293,7 +297,8 @@
         ],
         "roles_allowed_to_delete": [
           "owner"
-        ]
+        ],
+        "before_insert_code": "doc.type = 'exTestData';"
       },
       {
         "name": "settings",
@@ -789,7 +794,7 @@
           "components": [
             {
               "name": "viewPlSwings",
-              "title": "plSwing",
+              "title": "Swing",
               "type": "data_view",
               "text_if_empty": "No Swing configured",
               "query_name": "plSwings",

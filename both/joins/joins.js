@@ -1,3 +1,3 @@
 // PlSwings
-PlSwings.join(ExKrakens, "exchangeId", "exKrakenCont", ["name"]);
-PlSwings.join(ExTestDatas, "exchangeId", "exTestDataCont", ["name"]);
+PlSwings.join(ExKrakens, "exchange", "exKrakenCont", ["name"]);
+PlSwings.join(ExTestDatas, "exchange", "exTestDataCont", ["name"]);

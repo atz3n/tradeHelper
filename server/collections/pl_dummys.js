@@ -20,6 +20,7 @@ PlDummys.before.insert(function(userId, doc) {
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;
+doc.type = 'plDummy';
 });
 
 PlDummys.before.update(function(userId, doc, fieldNames, modifier, options) {

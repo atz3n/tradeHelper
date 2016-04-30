@@ -20,6 +20,7 @@ ExTestDatas.before.insert(function(userId, doc) {
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;
+doc.type = 'exTestData';
 });
 
 ExTestDatas.before.update(function(userId, doc, fieldNames, modifier, options) {

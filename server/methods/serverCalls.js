@@ -2,7 +2,6 @@ Meteor.methods({
 
     startStrategy: function(strategyId) {
 
-    	var strategy = Strategies.find({_id: strategyId}).fetch();
-    	console.log(strategy)
+        console.log(getStrategyObject(strategyId).pluginBundles[1].bundlePlugins[0].type);
     }
 });

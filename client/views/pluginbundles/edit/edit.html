@@ -79,7 +79,7 @@
 							{{#each bundlePluginsCrudItems}}
 							<tr class="crud-table-row">
 								<td>
-									{{pluginId}}
+									{{plugin}}
 								</td>
 								<td class="td-icon delete-icon">
 									<span class="fa fa-trash-o" title="Delete">
@@ -128,12 +128,12 @@
 				{{infoMessage}}
 			</div>
 			{{/if}}
-			<div class="form-group  field-plugin-id">
-				<label for="pluginId">
+			<div class="form-group  field-plugin">
+				<label for="plugin">
 					Plugin
 				</label>
 				<div class="input-div">
-					<select class="form-control" name="pluginId" data-type="string" required="required" autofocus="autofocus">
+					<select class="form-control" name="plugin" data-type="string" required="required" autofocus="autofocus">
 						{{#each pl_swings}}
 						<option value="{{_id}}">							{{name}}</option>
 						{{/each}}
