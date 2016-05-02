@@ -46,19 +46,19 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="Ether/Euro" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Ether/Euro"}}>
+							<input type="radio" value="eth_eur" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "eth_eur"}}>
 							Ether/Euro
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Ether/Bitcoin" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Ether/Bitcoin"}}>
+							<input type="radio" value="eth_btc" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "eth_btc"}}>
 							Ether/Bitcoin
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Bitcoin/Euro" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Bitcoin/Euro"}}>
+							<input type="radio" value="btc_eur" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "btc_eur"}}>
 							Bitcoin/Euro
 						</label>
 					</div>

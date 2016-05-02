@@ -245,15 +245,15 @@
             "input_items": [
               {
                 "title": "Ether/Euro",
-                "value": "eth_eur"
+                "value": "Ether/Euro"
               },
               {
                 "title": "Ether/Bitcoin",
-                "value": "eth_btc"
+                "value": "Ether/Bitcoin"
               },
               {
                 "title": "Bitcoin/Euro",
-                "value": "btc_eur"
+                "value": "Bitcoin/Euro"
               }
             ],
             "required": true
@@ -965,7 +965,7 @@
                   "value": "this._id"
                 }
               ],
-              "details_route": "exchanges.detailsExkraken",
+              "details_route": "exchanges.detailsExKraken",
               "details_route_params": [
                 {
                   "name": "exKrakenId",

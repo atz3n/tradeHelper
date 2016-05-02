@@ -9,19 +9,28 @@ Template.Playground.events({
 
         /*++++++++++ startButton ++++++++++*/
         if ($(event.target).prop("name") == "startButton") {
-            Meteor.call("startStrategy", Strategies.findOne({})._id,  function(e) {
-                if (e)
-                    console.log(e);
-                else
-                    console.log("worked");
-            });
 
+            var temp = Strategies.find().fetch();
+            for (i = 0; i < temp.length; i++) {
+
+                Meteor.call("startStrategy", temp[i]._id, function(e) {
+                    if (e)
+                        console.log(e);
+                    else
+                        console.log("worked");
+                });
+            };
 
 
             /*++++++++++ stopButton ++++++++++*/
         } else if ($(event.target).prop("name") == "stopButton") {
 
-
+             Meteor.call("stopStrategy", 'dummy', function(e) {
+                    if (e)
+                        console.log(e);
+                    else
+                        console.log("worked");
+                });
 
 
             /*++++++++++ resetButton ++++++++++*/

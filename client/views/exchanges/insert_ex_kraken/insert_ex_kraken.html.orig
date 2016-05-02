@@ -1,4 +1,4 @@
-<template name="ExchangesEditExKraken">
+<template name="ExchangesInsertExKraken">
 	<div class="page-container container" id="content">
 		<div class="row" id="title_row">
 			<div class="col-md-12">
@@ -6,14 +6,14 @@
 				</div>
 			</div>
 		</div>
-		{{> ExchangesEditExKrakenEditForm}}
+		{{> ExchangesInsertExKrakenInsertForm}}
 	</div>
 </template>
 
-<template name="ExchangesEditExKrakenEditForm">
-	<div id="exchanges-edit-ex-kraken-edit-form" class="">
+<template name="ExchangesInsertExKrakenInsertForm">
+	<div id="exchanges-insert-ex-kraken-insert-form" class="">
 		<h2 id="component-title">
-			Edit Settings
+			New Settings
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -32,7 +32,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="{{ex_kraken.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -46,19 +46,19 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="Ether/Euro" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Ether/Euro"}}>
+							<input type="radio" value="eth_eur" name="pair" data-type="string" checked>
 							Ether/Euro
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Ether/Bitcoin" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Ether/Bitcoin"}}>
+							<input type="radio" value="eth_btc" name="pair" data-type="string">
 							Ether/Bitcoin
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Bitcoin/Euro" name="pair" data-type="string" {{itemIsChecked ex_kraken.pair "Bitcoin/Euro"}}>
+							<input type="radio" value="btc_eur" name="pair" data-type="string">
 							Bitcoin/Euro
 						</label>
 					</div>

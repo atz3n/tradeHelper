@@ -225,7 +225,7 @@ Template.ExchangesViewExKrakenTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("exchanges.details_ex_kraken", {exKrakenId: this._id});
+		Router.go("exchanges.details_exkraken", {exKrakenId: this._id});
 		return false;
 	},
 

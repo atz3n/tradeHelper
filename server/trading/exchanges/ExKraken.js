@@ -15,8 +15,7 @@
  */
 
 
-// import { Instance } from '../dir/example.js';
-// import './example.js';
+import { KrakenApi } from '../../apis/KrakenApi.js'
 
 
 /***********************************************************************
@@ -30,7 +29,12 @@
   Public Static Variable
  ***********************************************************************/
 
-// ClassName.Variable = 'Value';
+ExKraken.ERROR_STRING = 'KrakenError';
+ExKraken.Pair = KrakenApi.Pair;
+
+ExKraken.ConfigDefault = {
+  pair: ExKraken.Pair.btc_eur,
+}
 
 
 /***********************************************************************
@@ -55,7 +59,7 @@
   Class
  ***********************************************************************/
 
-export function ClassName(ConstrParam) {
+export function ExKraken(ConstrParam) {
 
   /***********************************************************************
     Inheritances
@@ -68,8 +72,8 @@ export function ClassName(ConstrParam) {
     Private Instance Variable
    ***********************************************************************/
   
-  // var _variable = 'Value';
-
+  var _config = Object.assign({}, ExKraken.ConfigDefault);
+  var _courseData;
 
   /***********************************************************************
     Public Instance Variable
@@ -82,18 +86,58 @@ export function ClassName(ConstrParam) {
     Private Instance Function
    ***********************************************************************/
 
-  // var _functionName = function(param) {
-  //   return 'Value';
-  // }
-  
 
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
-  // this.functionName = function(param) {
-  //   return 'Value';
-  // }
+  this.update = function() {
+    var data = KrakenApi.getTicker(_config.pair);
+
+    if(data === KrakenApi.ERROR_STRING){
+      return false;
+    }
+
+    _courseData = data.p;
+    return true;
+  }
+  
+
+  this.setConfig = function(configuration) {
+    _config = Object.assign({}, configuration);
+    return true;
+  }
+
+
+
+
+
+this.getConfig = function() {
+    return _config;
+}
+
+
+this.getStatus = function() {
+}
+
+
+this.getInfo = function() {
+}
+
+
+this.getCourse = function() {
+    return _courseData;
+}
+
+this.buy = function() {
+  /* TODO: implementing buy mechanism */
+    return true;
+}
+
+this.sell = function() {
+  /* TODO: implementing sell mechanism */
+  return true;    
+}
 
 
   /***********************************************************************
