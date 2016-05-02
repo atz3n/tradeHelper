@@ -15,6 +15,7 @@
  */
 
 
+import { IExchange } from '../../apis/IExchange.js';
 import { KrakenApi } from '../../apis/KrakenApi.js'
 
 
@@ -33,6 +34,7 @@ ExKraken.ERROR_STRING = 'KrakenError';
 ExKraken.Pair = KrakenApi.Pair;
 
 ExKraken.ConfigDefault = {
+  id: 'undefined',
   pair: ExKraken.Pair.btc_eur,
 }
 
@@ -65,7 +67,7 @@ export function ExKraken(ConstrParam) {
     Inheritances
    ***********************************************************************/
 
-   // InheritancesClass.apply(this);
+   IExchange.apply(this);
    
 
   /***********************************************************************
@@ -98,7 +100,7 @@ export function ExKraken(ConstrParam) {
       return false;
     }
 
-    _courseData = data.p;
+    _price = data.p;
     return true;
   }
   
@@ -125,8 +127,8 @@ this.getInfo = function() {
 }
 
 
-this.getCourse = function() {
-    return _courseData;
+this.getPrice = function() {
+    return _price;
 }
 
 this.buy = function() {
@@ -138,6 +140,15 @@ this.sell = function() {
   /* TODO: implementing sell mechanism */
   return true;    
 }
+
+
+this.getInstInfo = function() {
+  return {
+    id: _config.id,
+    type: "ExKraken"
+  }
+}
+
 
 
   /***********************************************************************

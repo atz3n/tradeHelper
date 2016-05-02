@@ -39,6 +39,7 @@ var _positionsInit = {
  ***********************************************************************/
 
 PlSwing.ConfigDefault = {
+  id: 'undefined',
   longNoPosNotifyPerc: 5, // no position -> buy
   longAfterTopSellNotifyPerc: 5, // long position -> sell after top
   shortNoPosNotifyPerc: 5, // no position -> sell
@@ -109,7 +110,7 @@ export function PlSwing(logger) {
    ***********************************************************************/
 
   var _log = function(message){
-    if(_logger !== 'undefined')
+    if(typeof _logger !== 'undefined')
       _logger.debug('PlSwing: ' + message);
   }
 
@@ -193,7 +194,7 @@ export function PlSwing(logger) {
   }
 
 
-  this.getData = function() {
+  this.getInfo = function() {
     return Object.assign({}, _data);
   }
 
@@ -277,5 +278,13 @@ export function PlSwing(logger) {
 
   this.setSellNotifyFunc = function(sellNotifyFunction) {
       _sellNotifyFunc = sellNotifyFunction;
+  }
+
+
+  this.getInstInfo = function() {
+    return {
+      id: _config.id,
+      type: "PlSwing"
+    }
   }
 }

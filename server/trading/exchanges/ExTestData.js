@@ -12,8 +12,7 @@
  */
 
 
-// import { Instance } from '../dir/example.js';
-// import './example.js';
+import { IExchange } from '../../apis/IExchange.js';
 
 
 /***********************************************************************
@@ -27,15 +26,16 @@
   Public Static Variable
  ***********************************************************************/
 
-ExTestData.courseType = {
+ExTestData.priceType = {
   sinus: 'sin',
-  input: 'inp'
+  data: 'dat'
 }
 
 ExTestData.ConfigDefault = {
-  courseType: ExTestData.courseType.sin,
+  id: 'undefined',
+  priceType: ExTestData.priceType.sin,
   counter: 0,
-  inputData: [],
+  data: [],
   gain: 1
 }
 
@@ -69,7 +69,7 @@ export function ExTestData() {
     Inheritances
    ***********************************************************************/
 
-  // InheritancesClass.apply(this);
+  IExchange.apply(this);
 
 
   /***********************************************************************
@@ -109,7 +109,9 @@ export function ExTestData() {
 
   this.setConfig = function(config) {
     _config = Object.assign({}, config);
-    _dataArray = _config.inputData;
+
+    _counter = _config._counter;
+    _dataArray = _config.data;
   }
 
 
@@ -124,25 +126,24 @@ export function ExTestData() {
   this.getInfo = function() {}
 
 
-  this.getCourse = function() {
-    var course;
+  this.getPrice = function() {
+    var price;
 
-    switch (_config.courseType) {
+    switch (_config.priceType) {
 
-      case ExTestData.courseType.sinus:
-        course = _config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1);
+      case ExTestData.priceType.sinus:
+        price = _config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1);
         break;
 
-      case ExTestData.courseType.input:
-        course = _dataArray[_counter % _dataArray.length];
+      case ExTestData.priceType.input:
+        price = _config.gain * _dataArray[_counter % _dataArray.length];
         break;
 
       default:
-        course = 0;
+        price = 0;
     }
 
-    return course;
-
+    return price;
   }
 
 
@@ -150,5 +151,13 @@ export function ExTestData() {
   this.sell = function() {}
 
   this.buy = function() {}
+
+
+  this.getInstInfo = function() {
+    return {
+      id: _config.id,
+      type: "ExTestData"
+    }
+  }
 
 }

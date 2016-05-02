@@ -1,3 +1,5 @@
+import {SchM} from './lib/SchM.js';
+
 var verifyEmail = false;
 
 Accounts.config({ sendVerificationEmail: verifyEmail });
@@ -110,6 +112,7 @@ Meteor.startup(function() {
 	}
 
 	
+	SchM.startSchedules();
 });
 
 Meteor.methods({

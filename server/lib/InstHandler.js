@@ -14,6 +14,8 @@
  * 12-Apr-2016 : Initial version
  * 15-Apr-2016 : renamed functions (Obj -> Object)
  *               added getObjects function
+ * 02-May-2016 : added getObjectByIdx function
+ *               added getObjectsArray function
  */
 
 
@@ -42,7 +44,7 @@ export function InstHandler() {
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-  
+
   /**
    * internal array that holds all objects
    * @type {Array}
@@ -74,8 +76,8 @@ export function InstHandler() {
 
     /* saves obj in a free element space or overrides it (if same id was found) */
     _objArray.every(function(element, index, array) {
-    	var idx = 0;
-      if(index < array.length){
+      var idx = 0;
+      if (index < array.length) {
         if (element === 'undefined' || array[index]['id'] === id) {
           array[index] = new Object();
           array[index]['obj'] = obj;
@@ -107,17 +109,17 @@ export function InstHandler() {
    */
   this.removeObject = function(id) {
     var found = false;
-    
+
 
     /* get element index of object */
-    var idx = _objArray.findIndex(function(element, index, array){
-      if(element['id'] === id)
+    var idx = _objArray.findIndex(function(element, index, array) {
+      if (element['id'] === id)
         found = true;
-        return true;
+      return true;
     });
 
     /* remove element */
-    if(found === true){
+    if (found === true) {
       _objArray.delete(idx);
       return true;
     }
@@ -131,19 +133,19 @@ export function InstHandler() {
    * @param  {string} id id of object which should be returned
    * @return {Object}    object which should be returned (returns 'undefined' if not found)
    */
-  this.getObject = function(id){
+  this.getObject = function(id) {
     var found = false;
-    
+
     /* get element index of object */
-    var idx = _objArray.findIndex(function(element, index, array){
-      if(element['id'] === id){
+    var idx = _objArray.findIndex(function(element, index, array) {
+      if (element['id'] === id) {
         found = true;
         return true;
       }
     });
 
     /* return object */
-    if(found === true){
+    if (found === true) {
       return _objArray[idx]['obj'];
     }
 
@@ -152,12 +154,26 @@ export function InstHandler() {
 
 
   /**
+   * returns an object selected by its index
+   * @param  {integer} index of object which should be returned
+   * @return {Object}    object which should be returned (returns 'undefined' if not found)
+   */
+  this.getObjectByIdx = function(idx) {
+    if (typeof _objArray[idx] === 'undefined') {
+      return 'undefined';
+    }
+
+    return _objArray[idx]['obj'];
+  }
+
+
+  /**
    * clears the internal array (deletes all elements)
    * @return {bool} true if successful
    */
-  this.clear = function(){
-  	_objArray = new Object();
-  	return true;
+  this.clear = function() {
+    _objArray = new Object();
+    return true;
   }
 
 
@@ -165,14 +181,22 @@ export function InstHandler() {
    * Returns all objects in an Array
    * @return {Array} array to be returned
    */
-  this.getObjects = function(){
+  this.getObjects = function() {
     tmp = new Array();
 
-    for(i = 0 ; i < _objArray.length ; i++){
+    for (i = 0; i < _objArray.length; i++) {
       tmp[i] = _objArray[i]['obj'];
     }
 
     return tmp;
   }
-}
 
+
+  /**
+   * Returns the entire object array including id's
+   * @return {Array} array to be returned
+   */
+  this.getObjectsArray = function() {
+    return _objArray;
+  }
+}

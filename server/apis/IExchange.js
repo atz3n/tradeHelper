@@ -42,7 +42,7 @@ IExchange.prototype.getInfo = function() {
 }
 
 
-IExchange.prototype.getCourse = function() {
+IExchange.prototype.getPrice = function() {
     throw new Error('This method must be overwritten!');
 }
 
@@ -56,6 +56,12 @@ IExchange.prototype.sell = function() {
     throw new Error('This method must be overwritten!');
 }
 
+
 IExchange.prototype.buy = function() {
+    throw new Error('This method must be overwritten!');
+}
+
+
+IExchange.prototype.getInstInfo = function() {
     throw new Error('This method must be overwritten!');
 }

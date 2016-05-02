@@ -281,11 +281,41 @@
             "required": true
           },
           {
-            "name": "data",
-            "title": "Test Data",
+            "name": "gain",
+            "title": "Gain (multiplier)",
             "type": "float",
-            "input": "textarea",
+            "default": 1,
             "required": true
+          },
+          {
+            "name": "counter",
+            "title": "Counter (starts with this value)",
+            "type": "float",
+            "default": 0,
+            "required": true
+          },
+          {
+            "name": "priceType",
+            "title": "Price Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "Sinus",
+                "value": "Sinus"
+              },
+              {
+                "title": "Data",
+                "value": "Data"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "data",
+            "title": "Data",
+            "type": "float",
+            "input": "textarea"
           }
         ],
         "owner_field": "ownerId",

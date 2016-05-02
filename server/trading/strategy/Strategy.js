@@ -19,6 +19,7 @@ import { InstHandler } from '../../lib/InstHandler.js';
 import { PlSwing } from '../plugins/PlSwing.js';
 import { ExKraken } from '../exchanges/ExKraken.js';
 import { ExTestData } from '../exchanges/ExTestData.js';
+import { SchM } from '../../lib/SchM.js';
 
 
 
@@ -58,7 +59,7 @@ import { ExTestData } from '../exchanges/ExTestData.js';
   Class
  ***********************************************************************/
 
-export function Strategy(strategySettings) {
+export function Strategy(strategyDescription) {
 
   /***********************************************************************
     Inheritances
@@ -71,8 +72,7 @@ export function Strategy(strategySettings) {
     Private Instance Variable
    ***********************************************************************/
 
-  var _config = '';
-  var _strSetting = '';
+  var _strDesc = '';
   var _plugins = new InstHandler();
   var _exchanges = new InstHandler();
 
@@ -88,8 +88,74 @@ export function Strategy(strategySettings) {
     Private Instance Function
    ***********************************************************************/
 
-  var _buyNotifyFunc = function() {
-    return 'Value';
+  var _updateFunc = function() {
+    for (k = 0; k < _exchanges.getObjects().length; k++) {
+      _exchanges.getObjectByIdx(k).update();
+    }
+
+    for (k = 0; k < _plugins.getObjects().length; k++) {
+      _plugins.getObjectByIdx(k).inst.update(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
+    }
+  }
+
+
+
+  var _createPlSwing = function(plugin) {
+    var conf = Object.assign({}, PlSwing.ConfigDefault);
+    conf.id = plugin._id;
+    conf.longNoPosNotifyPerc = plugin.lnpnp;
+    conf.longAfterTopSellNotifyPerc = plugin.latsnp;
+    conf.shortNoPosNotifyPerc = plugin.snpnp;
+    conf.shortAfterBottomBuyNotifyPerc = plugin.sabbnp;
+    conf.enableShort = plugin.enShort;
+    conf.enableLong = plugin.enLong;
+
+    _plugins.addObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
+    _plugins.getObject(plugin._id).inst.setConfig(conf);
+  }
+
+
+  var _createExKraken = function(exchange) {
+    var conf = Object.assign({}, ExKraken.ConfigDefault);
+    conf.id = exchange._id;
+    switch (exchange.pair) {
+      case "Ether/Euro":
+        conf.pair = ExKraken.Pair.eth_eur;
+        break;
+      case "Ether/Bitcoin":
+        conf.pair = ExKraken.Pair.eth_btc;
+        break;
+      case "Bitcoin/Euro":
+        conf.pair = ExKraken.Pair.btc_eur;
+        break;
+      default:
+        conf.pair = ExKraken.Pair.btc_eur;
+    }
+
+    _exchanges.addObject(exchange._id, new ExKraken());
+    _exchanges.getObject(exchange._id).setConfig(conf);
+  }
+
+
+  var _createExTestData = function(exchange) {
+    var conf = Object.assign({}, ExTestData.ConfigDefault);
+    conf.id = exchange._id;
+    conf.counter = exchange.counter;
+    conf.gain = exchange.gain;
+    conf.data = exchange.data;
+    switch (exchange.priceType) {
+      case "Sinus":
+        conf.priceType = ExTestData.priceType.sinus;
+        break;
+      case "Data":
+        conf.priceType = ExTestData.priceType.data;
+        break;
+      default:
+        conf.priceType = ExTestData.priceType.sinus;
+    }
+
+    _exchanges.addObject(exchange._id, new ExTestData());
+    _exchanges.getObject(exchange._id).setConfig(conf);
   }
 
 
@@ -98,8 +164,24 @@ export function Strategy(strategySettings) {
    ***********************************************************************/
 
   this.develop = function() {
-    return _strSetting;
+    return _strDesc;
 
+  }
+
+  this.start = function() {
+    for (k = 0; k < _exchanges.getObjects().length; k++) {
+      _exchanges.getObjectByIdx(k).update();
+    }
+
+    for (k = 0; k < _plugins.getObjects().length; k++) {
+      _plugins.getObjectByIdx(k).inst.start(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
+    }
+
+    SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' sec', _updateFunc);
+  }
+
+  this.stop = function(){
+    SchM.stopSchedule(_strDesc._id);
   }
 
 
@@ -108,62 +190,34 @@ export function Strategy(strategySettings) {
    ***********************************************************************/
 
   var _constructor = function(param) {
-    _strSetting = Object.assign({}, param);
+    _strDesc = Object.assign({}, param);
 
-    /* set config */
-    _config = {
-      updateTime: _strSetting.updateTime
-    }
 
     /* create plugin and exchange instances */
-    for (i = 0; i < _strSetting.pluginBundles.length; i++) {
-      for (j = 0; j < _strSetting.pluginBundles[i].bundlePlugins.length; j++) {
-        var plugin = _strSetting.pluginBundles[i].bundlePlugins[j];
+    for (i = 0; i < _strDesc.pluginBundles.length; i++) {
+      for (j = 0; j < _strDesc.pluginBundles[i].bundlePlugins.length; j++) {
+        var plugin = _strDesc.pluginBundles[i].bundlePlugins[j];
 
 
         /* create not yet created plugin instances */
         if (_plugins.getObject(plugin._id) === 'undefined') {
 
+          /* swing */
           if (plugin.type === "plSwing") {
-            var conf = Object.assign({}, PlSwing.ConfigDefault);
-            conf.longNoPosNotifyPerc = plugin.lnpnp;
-            conf.longAfterTopSellNotifyPerc = plugin.latsnp;
-            conf.shortNoPosNotifyPerc = plugin.snpnp;
-            conf.shortAfterBottomBuyNotifyPerc = plugin.sabbnp;
-            conf.enableShort = plugin.enShort;
-            conf.enableLong = plugin.enLong;
-
-            _plugins.addObject(plugin._id, new PlSwing());
-            _plugins.getObject(plugin._id).setConfig(conf);
+            _createPlSwing(plugin);
           }
 
 
           /* create not yet created exchange instances */
           if (_exchanges.getObject(plugin.exchange._id) === 'undefined') {
 
+            /* kraken.com */
             if (plugin.exchange.type === 'exKraken') {
-              var conf = Object.assign({}, ExKraken.ConfigDefault);
-              switch (plugin.exchange.pair) {
-                case "Ether/Euro":
-                  conf.pair = ExKraken.Pair.eth_eur;
-                  break;
-                case "Ether/Bitcoin":
-                  conf.pair = ExKraken.Pair.eth_btc;
-                  break;
-                case "Bitcoin/Euro":
-                  conf.pair = ExKraken.Pair.btc_eur;
-                  break;
-                default:
-                  conf.pair = ExKraken.Pair.btc_eur;
-              }
+              _createExKraken(plugin.exchange);
 
-              _exchanges.addObject(plugin.exchange._id, new ExKraken());
-              _exchanges.getObject(plugin.exchange._id).setConfig(conf);
-
-
+              /* test data */
             } else if (plugin.exchange.type === 'exTestData') {
-              // var conf = Object.assign({}, exTestData.ConfigDefault);
-              _exchanges.addObject(plugin.exchange._id, new ExTestData());
+              _createExTestData(plugin.exchange);
             }
           }
         }
@@ -171,5 +225,5 @@ export function Strategy(strategySettings) {
     }
   }
 
-  _constructor(strategySettings)
+  _constructor(strategyDescription)
 }

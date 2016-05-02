@@ -37,7 +37,7 @@ IPlugin.prototype.getStatus = function() {
 }
 
 
-IPlugin.prototype.getData = function() {
+IPlugin.prototype.getInfo = function() {
     throw new Error('This method must be overwritten!');
 }
 
@@ -78,5 +78,10 @@ IPlugin.prototype.setBuyNotification = function() {
 
 
 IPlugin.prototype.setSellNotifyFunc = function() {
+    throw new Error('This method must be overwritten!');
+}
+
+
+IPlugin.prototype.getInstInfo = function() {
     throw new Error('This method must be overwritten!');
 }

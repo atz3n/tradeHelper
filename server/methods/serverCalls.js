@@ -3,21 +3,39 @@ import { InstHandler } from '../lib/InstHandler.js';
 
 strategies = new InstHandler();
 
+
 Meteor.methods({
 
-    startStrategy: function(strategyId) {
+  startStrategy: function(strategyId) {
 
-        strategies.addObject(strategyId, new Strategy(getStrategyObject(strategyId)));
-
-        // console.log(getStrategyObject(strategyId).pluginBundles[1].bundlePlugins[0].type);
-    },
-
-    stopStrategy: function(strategyId) {
-        var temp = strategies.getObjects();
-        for (i = 0; i < temp.length; i++) {
-
-            console.log(temp[i].develop().pluginBundles[0].bundlePlugins);
-        }
-
+    if (strategies.getObject(strategyId) === 'undefined') {
+      strategies.addObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
+      strategies.getObject(strategyId).inst.start();
+    } else if (strategies.getObject(strategyId).startFlag === false) {
+      strategies.addObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
+      strategies.getObject(strategyId).inst.start();
     }
+
+  },
+
+  stopStrategy: function(strategyId) {
+
+    if (strategies.getObject(strategyId) !== 'undefined') {
+      if (strategies.getObject(strategyId).startFlag === true) {
+        strategies.getObject(strategyId).inst.stop();
+        strategies.getObject(strategyId).startFlag = false;
+      }
+    }
+
+  },
+
+  strategyDevelop: function() {
+
+    var temp = strategies.getObjects();
+    for (i = 0; i < temp.length; i++) {
+
+      console.log(temp[i].inst.develop().pluginBundles[0].bundlePlugins);
+    }
+
+  }
 });
