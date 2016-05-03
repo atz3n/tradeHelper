@@ -15,7 +15,10 @@
  * 15-Apr-2016 : renamed functions (Obj -> Object)
  *               added getObjects function
  * 02-May-2016 : added getObjectByIdx function
- *               added getObjectsArray function
+ *               added getObjectsArray function 
+ * 03-May-2016 : changed removeObject function
+ *             : renamed addObject to setObject function
+ *             : added setObjectByIdx function
  */
 
 
@@ -65,12 +68,12 @@ export function InstHandler() {
    ***********************************************************************/
 
   /**
-   * adds an object to the internal array
-   * @param {string} id  id which will be attached to the object
+   * adds/sets an object to/from the internal array
+   * @param {string} id  id which (will be)/is attached to the object
    * @param {Object} obj object which should be stored
    * @return {bool}      true if successful
    */
-  this.addObject = function(id, obj) {
+  this.setObject = function(id, obj) {
     var added = false;
 
 
@@ -102,6 +105,20 @@ export function InstHandler() {
   }
 
 
+/**
+ * sets an object from the internal array
+ * @param {integer} idx index of object array
+ * @param {Object} obj object which should be stored
+ */
+  this.setObjectByIdx = function(idx, obj) {
+    if(idx >= _objArray.length || idx < 0)
+      return false
+
+    _objArray[idx]['obj'] = obj;
+    return true;
+  }
+
+
   /**
    * removes an element from the internal array
    * @param  {string} id id of object which should be removed
@@ -110,23 +127,23 @@ export function InstHandler() {
   this.removeObject = function(id) {
     var found = false;
 
-
     /* get element index of object */
     var idx = _objArray.findIndex(function(element, index, array) {
-      if (element['id'] === id)
+      if (element['id'] === id) {
         found = true;
-      return true;
+        return true;
+      }
     });
 
-    /* remove element */
+    /* delete */
     if (found === true) {
-      _objArray.delete(idx);
+      _objArray[idx] = 'undefined';
       return true;
     }
 
     return false;
   }
-
+  
 
   /**
    * returns an object

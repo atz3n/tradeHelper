@@ -14,10 +14,18 @@ Template.Playground.events({
       for (i = 0; i < temp.length; i++) {
 
         Meteor.call("startStrategy", temp[i]._id, function(e) {
-          if (e)
-            console.log(e);
-          else
-            console.log("worked");
+          if (e) console.log(e);
+        });
+      };
+
+
+      /*++++++++++ pauseButton ++++++++++*/
+    } else if ($(event.target).prop("name") == "pauseButton") {
+
+      var temp = Strategies.find().fetch();
+      for (i = 0; i < temp.length; i++) {
+        Meteor.call("pauseStrategy", temp[i]._id, function(e) {
+          if (e) console.log(e);
         });
       };
 
@@ -28,28 +36,16 @@ Template.Playground.events({
       var temp = Strategies.find().fetch();
       for (i = 0; i < temp.length; i++) {
         Meteor.call("stopStrategy", temp[i]._id, function(e) {
-          if (e)
-            console.log(e);
-          else
-            console.log("worked");
+          if (e) console.log(e);
         });
       };
-
-
-      /*++++++++++ resetButton ++++++++++*/
-    } else if ($(event.target).prop("name") == "resetButton") {
-
-
 
 
       /*++++++++++ dummyButton ++++++++++*/
     } else if ($(event.target).prop("name") == "dummyButton") {
 
       Meteor.call("strategyDevelop", function(e) {
-        if (e)
-          console.log(e);
-        else
-          console.log("worked");
+        if (e) console.log(e);
       });
 
     }

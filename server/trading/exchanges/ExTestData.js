@@ -109,8 +109,7 @@ export function ExTestData() {
 
   this.setConfig = function(config) {
     _config = Object.assign({}, config);
-
-    _counter = _config._counter;
+    _counter = _config.counter;
     _dataArray = _config.data;
   }
 
@@ -130,6 +129,7 @@ export function ExTestData() {
     var price;
 
     switch (_config.priceType) {
+
 
       case ExTestData.priceType.sinus:
         price = _config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1);

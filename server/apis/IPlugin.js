@@ -72,7 +72,7 @@ IPlugin.prototype.sold = function() {
 }
 
 
-IPlugin.prototype.setBuyNotification = function() {
+IPlugin.prototype.setBuyNotifyFunc = function() {
     throw new Error('This method must be overwritten!');
 }
 

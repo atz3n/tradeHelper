@@ -9,16 +9,14 @@ Meteor.methods({
   startStrategy: function(strategyId) {
 
     if (strategies.getObject(strategyId) === 'undefined') {
-      strategies.addObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
+      strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
       strategies.getObject(strategyId).inst.start();
     } else if (strategies.getObject(strategyId).startFlag === false) {
-      strategies.addObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
       strategies.getObject(strategyId).inst.start();
     }
-
   },
 
-  stopStrategy: function(strategyId) {
+  pauseStrategy: function(strategyId) {
 
     if (strategies.getObject(strategyId) !== 'undefined') {
       if (strategies.getObject(strategyId).startFlag === true) {
@@ -29,12 +27,23 @@ Meteor.methods({
 
   },
 
+  stopStrategy: function(strategyId) {
+
+    if (strategies.getObject(strategyId) !== 'undefined') {
+      strategies.getObject(strategyId).inst.stop();
+      // console.log(strategies.getObjectsArray().delete(0));
+      // strategies.getObjectsArray()[0]
+      strategies.removeObject(strategyId);
+    }
+
+  },
+
   strategyDevelop: function() {
 
     var temp = strategies.getObjects();
     for (i = 0; i < temp.length; i++) {
 
-      console.log(temp[i].inst.develop().pluginBundles[0].bundlePlugins);
+      console.log(temp[i].inst.develop());
     }
 
   }

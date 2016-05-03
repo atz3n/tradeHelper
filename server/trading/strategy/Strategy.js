@@ -75,6 +75,7 @@ export function Strategy(strategyDescription) {
   var _strDesc = '';
   var _plugins = new InstHandler();
   var _exchanges = new InstHandler();
+  var _notifyMaskedValues = new Array(); // Mask: none: 1 ; buy: 1 << 1 (2) ; sell: 1 << 2 (4)
 
 
   /***********************************************************************
@@ -89,15 +90,83 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function() {
+    _clearNotifyValues();
+
     for (k = 0; k < _exchanges.getObjects().length; k++) {
       _exchanges.getObjectByIdx(k).update();
     }
 
     for (k = 0; k < _plugins.getObjects().length; k++) {
       _plugins.getObjectByIdx(k).inst.update(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
+      console.log(_plugins.getObjectByIdx(k).inst.getInfo());
+    }
+   
+    _evalNotifyValues();
+  }
+
+
+  var _buyNotification = function(instInfo) {
+    for (i = 0; i < _notifyMaskedValues.length; i++) {
+      if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
+        _notifyMaskedValues[i].setObject(instInfo.id, 'buy');
+      }
     }
   }
 
+
+  var _sellNotification = function(instInfo) {
+    for (i = 0; i < _notifyMaskedValues.length; i++) {
+      if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
+        _notifyMaskedValues[i].setObject(instInfo.id, 'sell');
+      }
+    }
+  }
+
+
+  var _evalNotifyValues = function() {
+    var finalDecision = 0;
+    var pluginBundleVals = new Array(_notifyMaskedValues.length);
+    pluginBundleVals.fill(0);
+
+
+    for( i = 0 ; i < _notifyMaskedValues.length ; i++){
+      
+      /* shrink and connected plugins */
+      for(j = 0 ; j < _notifyMaskedValues[i].getObjectsArray().length ; j++){
+        pluginBundleVals[i] |= _notifyMaskedValues[i].getObjectByIdx(j);
+      }
+
+      if(pluginBundleVals[i] !== 4 || pluginBundleVals[i] !== 2){
+        pluginBundleVals[i] = 1;
+      }
+
+      /* get final decision */
+      finalDecision |= pluginBundleVals[i]
+    }
+
+    if(finalDecision < 6 && finalDecision > 1){
+      finalDecision >>= 1;
+
+      /* buy */
+      if(finalDecision === 1){
+        console.log('buy');
+      }
+
+      /* sell */
+      if(finalDecision === 2){
+        console.log('sell');
+      }
+    }
+  }
+
+
+  var _clearNotifyValues = function() {
+    for (i = 0; i < _notifyMaskedValues.length; i++) {
+      for (j = 0; j < _notifyMaskedValues[0].getObjectsArray().length; j++) {
+        _notifyMaskedValues[i].setObjectByIdx(j, 1);
+      }
+    }
+  }
 
 
   var _createPlSwing = function(plugin) {
@@ -110,7 +179,7 @@ export function Strategy(strategyDescription) {
     conf.enableShort = plugin.enShort;
     conf.enableLong = plugin.enLong;
 
-    _plugins.addObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
+    _plugins.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
     _plugins.getObject(plugin._id).inst.setConfig(conf);
   }
 
@@ -132,7 +201,7 @@ export function Strategy(strategyDescription) {
         conf.pair = ExKraken.Pair.btc_eur;
     }
 
-    _exchanges.addObject(exchange._id, new ExKraken());
+    _exchanges.setObject(exchange._id, new ExKraken());
     _exchanges.getObject(exchange._id).setConfig(conf);
   }
 
@@ -154,7 +223,7 @@ export function Strategy(strategyDescription) {
         conf.priceType = ExTestData.priceType.sinus;
     }
 
-    _exchanges.addObject(exchange._id, new ExTestData());
+    _exchanges.setObject(exchange._id, new ExTestData());
     _exchanges.getObject(exchange._id).setConfig(conf);
   }
 
@@ -180,7 +249,7 @@ export function Strategy(strategyDescription) {
     SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' sec', _updateFunc);
   }
 
-  this.stop = function(){
+  this.stop = function() {
     SchM.stopSchedule(_strDesc._id);
   }
 
@@ -195,8 +264,16 @@ export function Strategy(strategyDescription) {
 
     /* create plugin and exchange instances */
     for (i = 0; i < _strDesc.pluginBundles.length; i++) {
+
+      /* create notify handler to create plugin structure */
+      _notifyMaskedValues[i] = new InstHandler();
+
       for (j = 0; j < _strDesc.pluginBundles[i].bundlePlugins.length; j++) {
         var plugin = _strDesc.pluginBundles[i].bundlePlugins[j];
+
+        /* add plugin id for evaluation */
+        console.log(plugin._id)
+        _notifyMaskedValues[i].setObject(plugin._id, 1);
 
 
         /* create not yet created plugin instances */
@@ -206,6 +283,9 @@ export function Strategy(strategyDescription) {
           if (plugin.type === "plSwing") {
             _createPlSwing(plugin);
           }
+
+          _plugins.getObject(plugin._id).inst.setBuyNotifyFunc(_buyNotification);
+          _plugins.getObject(plugin._id).inst.setSellNotifyFunc(_sellNotification);
 
 
           /* create not yet created exchange instances */

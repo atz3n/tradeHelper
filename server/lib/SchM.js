@@ -91,7 +91,7 @@ SchM.createSchedule = function(id, time, cyclicFunction) {
   var tmp = later.parse.text(time);
   if(tmp.error != -1) return false;
   
-  _schedules.addObject(id, new Schedule());
+  _schedules.setObject(id, new Schedule());
   _schedules.getObject(id).createSchedule(id, time, cyclicFunction);
   
   return true; 

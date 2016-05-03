@@ -141,7 +141,7 @@ export function PlSwing(logger) {
             _log('Short Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
 
             _tmpPos = 'short';
-            _sellNotifyFunc();
+            _sellNotifyFunc(this.getInstInfo());
           }
         }
 
@@ -151,7 +151,7 @@ export function PlSwing(logger) {
             _log('Long Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
             
             _tmpPos = 'long';
-            _buyNotifyFunc();
+            _buyNotifyFunc(this.getInstInfo());
           }
         }
 
@@ -164,7 +164,7 @@ export function PlSwing(logger) {
           _log('Short Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'short';
-          _buyNotifyFunc();
+          _buyNotifyFunc(this.getInstInfo());
         }
       }
 
@@ -174,7 +174,7 @@ export function PlSwing(logger) {
           _log('Long Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'long';
-          _sellNotifyFunc();
+          _sellNotifyFunc(this.getInstInfo());
         }
       }
     }

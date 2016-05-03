@@ -230,15 +230,15 @@ export function Logger(name) {
     var tmp = new InstHandler()
 
     if (_consoleLg !== null) {
-      tmp.addObject('1', _consoleLg);
+      tmp.setObject('1', _consoleLg);
     }
 
     if (_fileLg !== null) {
-      tmp.addObject('2', _fileLg);
+      tmp.setObject('2', _fileLg);
     }
 
     if (_dbLg !== null) {
-      tmp.addObject('3', _dbLg);
+      tmp.setObject('3', _dbLg);
     }
 
     _logger = new winston.Logger({
