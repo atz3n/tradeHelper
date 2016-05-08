@@ -8,6 +8,7 @@ Meteor.methods({
 
   startStrategy: function(strategyId) {
 
+// console.log(getStrategyObject(strategyId).pluginBundles[0].bundlePlugins)
     if (strategies.getObject(strategyId) === 'undefined') {
       strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
       strategies.getObject(strategyId).inst.start();
@@ -41,7 +42,7 @@ Meteor.methods({
   strategyDevelop: function() {
 
     var temp = strategies.getObjects();
-    for (i = 0; i < temp.length; i++) {
+    for (var i = 0; i < temp.length; i++) {
 
       console.log(temp[i].inst.develop());
     }

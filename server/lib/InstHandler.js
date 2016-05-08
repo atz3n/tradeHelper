@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 1.1.0
+ * @version 1.2.1
  *
  * 
  * CHANGES:
@@ -19,6 +19,8 @@
  * 03-May-2016 : changed removeObject function
  *             : renamed addObject to setObject function
  *             : added setObjectByIdx function
+ * 06-May-2016 : fixed bug in setObject function
+ * 08-May-2016 : changed for loop variable declaration
  */
 
 
@@ -78,25 +80,22 @@ export function InstHandler() {
 
 
     /* saves obj in a free element space or overrides it (if same id was found) */
-    _objArray.every(function(element, index, array) {
-      var idx = 0;
-      if (index < array.length) {
-        if (element === 'undefined' || array[index]['id'] === id) {
-          array[index] = new Object();
-          array[index]['obj'] = obj;
-          // array[index]['obj'] = Object.assign({}, obj);
-          array[index]['id'] = id;
-          added = true;
-          return true;
-        }
+    for (var i = 0; i < _objArray.length; i++) {
+
+      if (_objArray[i] === 'undefined' || _objArray[i]['id'] === id) {
+        _objArray[i] = new Object();
+        _objArray[i]['obj'] = obj;
+        _objArray[i]['id'] = id;
+        added = true;
+        break;
       }
-    });
+
+    }
 
     /* if no space is available, push obj to the end */
     if (added === false) {
       _objArray[_objArray.length] = new Object();
       _objArray[_objArray.length - 1]['obj'] = obj;
-      // _objArray[_objArray.length - 1]['obj'] = Object.assign({}, obj);
       _objArray[_objArray.length - 1]['id'] = id;
       return true;
     }
@@ -105,13 +104,13 @@ export function InstHandler() {
   }
 
 
-/**
- * sets an object from the internal array
- * @param {integer} idx index of object array
- * @param {Object} obj object which should be stored
- */
+  /**
+   * sets an object from the internal array
+   * @param {integer} idx index of object array
+   * @param {Object} obj object which should be stored
+   */
   this.setObjectByIdx = function(idx, obj) {
-    if(idx >= _objArray.length || idx < 0)
+    if (idx >= _objArray.length || idx < 0)
       return false
 
     _objArray[idx]['obj'] = obj;
@@ -143,7 +142,7 @@ export function InstHandler() {
 
     return false;
   }
-  
+
 
   /**
    * returns an object
@@ -201,7 +200,7 @@ export function InstHandler() {
   this.getObjects = function() {
     tmp = new Array();
 
-    for (i = 0; i < _objArray.length; i++) {
+    for (var i = 0; i < _objArray.length; i++) {
       tmp[i] = _objArray[i]['obj'];
     }
 

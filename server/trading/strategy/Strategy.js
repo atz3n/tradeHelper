@@ -75,7 +75,13 @@ export function Strategy(strategyDescription) {
   var _strDesc = '';
   var _plugins = new InstHandler();
   var _exchanges = new InstHandler();
-  var _notifyMaskedValues = new Array(); // Mask: none: 1 ; buy: 1 << 1 (2) ; sell: 1 << 2 (4)
+
+  var _noneMask = 1; //none: 1
+  var _buyMask = 2; //buy: 1 << 1 (2)
+  var _sellMask = 4; //sell: 1 << 2 (4)
+  var _notifyMaskedValues = new Array();
+
+  var _notifyFunc = function() {};
 
 
   /***********************************************************************
@@ -92,32 +98,35 @@ export function Strategy(strategyDescription) {
   var _updateFunc = function() {
     _clearNotifyValues();
 
-    for (k = 0; k < _exchanges.getObjects().length; k++) {
-      _exchanges.getObjectByIdx(k).update();
+    for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
+      _exchanges.getObjectByIdx(i).update();
     }
 
-    for (k = 0; k < _plugins.getObjects().length; k++) {
-      _plugins.getObjectByIdx(k).inst.update(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
-      console.log(_plugins.getObjectByIdx(k).inst.getInfo());
+    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+      _plugins.getObjectByIdx(i).inst.update(_exchanges.getObject(_plugins.getObjectByIdx(i).exId).getPrice());
+      console.log(_plugins.getObjectByIdx(i).inst.getInfo());
     }
-   
+
     _evalNotifyValues();
+
   }
 
 
   var _buyNotification = function(instInfo) {
-    for (i = 0; i < _notifyMaskedValues.length; i++) {
+    console.log(instInfo.id);
+
+    for (var i = 0; i < _notifyMaskedValues.length; i++) {
       if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
-        _notifyMaskedValues[i].setObject(instInfo.id, 'buy');
+        _notifyMaskedValues[i].setObject(instInfo.id, _buyMask);
       }
     }
   }
 
 
   var _sellNotification = function(instInfo) {
-    for (i = 0; i < _notifyMaskedValues.length; i++) {
+    for (var i = 0; i < _notifyMaskedValues.length; i++) {
       if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
-        _notifyMaskedValues[i].setObject(instInfo.id, 'sell');
+        _notifyMaskedValues[i].setObject(instInfo.id, _sellMask);
       }
     }
   }
@@ -129,41 +138,57 @@ export function Strategy(strategyDescription) {
     pluginBundleVals.fill(0);
 
 
-    for( i = 0 ; i < _notifyMaskedValues.length ; i++){
-      
-      /* shrink and connected plugins */
-      for(j = 0 ; j < _notifyMaskedValues[i].getObjectsArray().length ; j++){
+    for (var i = 0; i < _notifyMaskedValues.length; i++) {
+
+      /* shrink 'and' connected plugins */
+      for (var j = 0; j < _notifyMaskedValues[i].getObjectsArray().length; j++) {
         pluginBundleVals[i] |= _notifyMaskedValues[i].getObjectByIdx(j);
       }
+      console.log('pluginBundleVals[' + i + '] before: ' + pluginBundleVals[i])
 
-      if(pluginBundleVals[i] !== 4 || pluginBundleVals[i] !== 2){
-        pluginBundleVals[i] = 1;
+      if (pluginBundleVals[i] !== _buyMask && pluginBundleVals[i] !== _sellMask) {
+        pluginBundleVals[i] = _noneMask;
       }
+      console.log('pluginBundleVals[' + i + '] after: ' + pluginBundleVals[i])
 
       /* get final decision */
-      finalDecision |= pluginBundleVals[i]
+      finalDecision |= pluginBundleVals[i];
+
     }
 
-    if(finalDecision < 6 && finalDecision > 1){
-      finalDecision >>= 1;
+    /* evaluate final decision */
+    if (finalDecision < (_buyMask + _sellMask) && // buy + sell notification is not valid
+      finalDecision > _noneMask) { // only none means no notification needed
+
+      /* eliminate none flag */
+      finalDecision &= ~_noneMask;
+
+      /* set notify function parameter */
+      param = {
+        action: 'none'
+      };
 
       /* buy */
-      if(finalDecision === 1){
-        console.log('buy');
+      if (finalDecision === _buyMask) {
+        param.action = 'buy';
+        _notifyFunc(param);
+        console.log('buy')
       }
 
       /* sell */
-      if(finalDecision === 2){
-        console.log('sell');
+      if (finalDecision === _sellMask) {
+        param.action = 'sell';
+        _notifyFunc(param);
+        console.log('sell')
       }
     }
   }
 
 
   var _clearNotifyValues = function() {
-    for (i = 0; i < _notifyMaskedValues.length; i++) {
-      for (j = 0; j < _notifyMaskedValues[0].getObjectsArray().length; j++) {
-        _notifyMaskedValues[i].setObjectByIdx(j, 1);
+    for (var i = 0; i < _notifyMaskedValues.length; i++) {
+      for (var j = 0; j < _notifyMaskedValues[i].getObjectsArray().length; j++) {
+        _notifyMaskedValues[i].setObjectByIdx(j, _noneMask);
       }
     }
   }
@@ -237,17 +262,24 @@ export function Strategy(strategyDescription) {
 
   }
 
+
+  this.setNotifyFunction = function(notifyFunction){
+    _notifyFunc = notifyFunction;
+  }
+
+
   this.start = function() {
-    for (k = 0; k < _exchanges.getObjects().length; k++) {
+    for (var k = 0; k < _exchanges.getObjects().length; k++) {
       _exchanges.getObjectByIdx(k).update();
     }
 
-    for (k = 0; k < _plugins.getObjects().length; k++) {
+    for (var k = 0; k < _plugins.getObjects().length; k++) {
       _plugins.getObjectByIdx(k).inst.start(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
     }
 
     SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' sec', _updateFunc);
   }
+
 
   this.stop = function() {
     SchM.stopSchedule(_strDesc._id);
@@ -263,17 +295,17 @@ export function Strategy(strategyDescription) {
 
 
     /* create plugin and exchange instances */
-    for (i = 0; i < _strDesc.pluginBundles.length; i++) {
+    for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
 
       /* create notify handler to create plugin structure */
       _notifyMaskedValues[i] = new InstHandler();
 
-      for (j = 0; j < _strDesc.pluginBundles[i].bundlePlugins.length; j++) {
+      for (var j = 0; j < _strDesc.pluginBundles[i].bundlePlugins.length; j++) {
         var plugin = _strDesc.pluginBundles[i].bundlePlugins[j];
 
         /* add plugin id for evaluation */
-        console.log(plugin._id)
-        _notifyMaskedValues[i].setObject(plugin._id, 1);
+        // console.log(plugin._id)
+        _notifyMaskedValues[i].setObject(plugin._id, _noneMask);
 
 
         /* create not yet created plugin instances */
@@ -302,6 +334,9 @@ export function Strategy(strategyDescription) {
           }
         }
       }
+    }
+    for(var i = 0 ; i < _notifyMaskedValues.length ; i++){
+        console.log(_notifyMaskedValues[i].getObjects())
     }
   }
 

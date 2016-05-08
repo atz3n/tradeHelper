@@ -11,7 +11,7 @@ this.getStrategyObject = function(strategyId) {
 
     /* get plugin bundles from db and save them in strategy variable */
     var bundles = strategy.pluginBundles;
-    for (i = 0; i < bundles.length; i++) {
+    for (var i = 0; i < bundles.length; i++) {
 
         bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
 
