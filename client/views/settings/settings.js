@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.Settings.rendered = function() {
-	
+	console.log(Settings.findOne())
 };
 
 Template.Settings.events({

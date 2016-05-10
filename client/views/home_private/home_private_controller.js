@@ -19,6 +19,7 @@ this.HomePrivateController = RouteController.extend({
 		
 
 		var subs = [
+		Meteor.subscribe("settings_first")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {

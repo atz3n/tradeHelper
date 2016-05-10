@@ -1,0 +1,1 @@
+this.globalReact = new ReactiveDict();

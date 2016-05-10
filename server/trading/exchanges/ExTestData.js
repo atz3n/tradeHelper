@@ -125,6 +125,11 @@ export function ExTestData() {
   this.getInfo = function() {}
 
 
+  this.getPairUnits = function() {
+    return {counter: '', denominator: ''};
+  }
+
+
   this.getPrice = function() {
     var price;
 

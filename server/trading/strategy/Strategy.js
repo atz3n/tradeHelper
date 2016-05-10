@@ -82,7 +82,10 @@ export function Strategy(strategyDescription) {
   var _notifyMaskedValues = new Array();
 
   var _notifyFunc = function() {};
+  var _updateCallFunc = function() {};
 
+  var _state = 'out';
+  
 
   /***********************************************************************
     Public Instance Variable
@@ -96,10 +99,13 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function() {
+    var prices = [];
+
     _clearNotifyValues();
 
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
       _exchanges.getObjectByIdx(i).update();
+      prices[i] = {exId: _exchanges.getObjectId(i), price: _exchanges.getObjectByIdx(i).getPrice(), units: _exchanges.getObjectByIdx(i).getPairUnits()};
     }
 
     for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
@@ -109,6 +115,22 @@ export function Strategy(strategyDescription) {
 
     _evalNotifyValues();
 
+    _callUpdateCallFunc(prices);
+  }
+
+
+
+
+  var _callUpdateCallFunc = function(prices) {
+
+    var info = {
+      strategyId: _strDesc._id,
+      state: _state
+    };
+
+    info = Object.assign({ prices }, info);
+
+    _updateCallFunc(info);
   }
 
 
@@ -144,12 +166,12 @@ export function Strategy(strategyDescription) {
       for (var j = 0; j < _notifyMaskedValues[i].getObjectsArray().length; j++) {
         pluginBundleVals[i] |= _notifyMaskedValues[i].getObjectByIdx(j);
       }
-      console.log('pluginBundleVals[' + i + '] before: ' + pluginBundleVals[i])
+      // console.log('pluginBundleVals[' + i + '] before: ' + pluginBundleVals[i])
 
       if (pluginBundleVals[i] !== _buyMask && pluginBundleVals[i] !== _sellMask) {
         pluginBundleVals[i] = _noneMask;
       }
-      console.log('pluginBundleVals[' + i + '] after: ' + pluginBundleVals[i])
+      // console.log('pluginBundleVals[' + i + '] after: ' + pluginBundleVals[i])
 
       /* get final decision */
       finalDecision |= pluginBundleVals[i];
@@ -165,6 +187,7 @@ export function Strategy(strategyDescription) {
 
       /* set notify function parameter */
       param = {
+        strategyId: _strDesc._id,
         action: 'none'
       };
 
@@ -263,8 +286,12 @@ export function Strategy(strategyDescription) {
   }
 
 
-  this.setNotifyFunction = function(notifyFunction){
+  this.setNotifyFunction = function(notifyFunction) {
     _notifyFunc = notifyFunction;
+  }
+
+  this.setUpdateCallFunction = function(updateCallFunction) {
+    _updateCallFunc = updateCallFunction;
   }
 
 
@@ -335,8 +362,8 @@ export function Strategy(strategyDescription) {
         }
       }
     }
-    for(var i = 0 ; i < _notifyMaskedValues.length ; i++){
-        console.log(_notifyMaskedValues[i].getObjects())
+    for (var i = 0; i < _notifyMaskedValues.length; i++) {
+      console.log(_notifyMaskedValues[i].getObjects())
     }
   }
 

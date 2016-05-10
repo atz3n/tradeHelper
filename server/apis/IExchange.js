@@ -42,6 +42,11 @@ IExchange.prototype.getInfo = function() {
 }
 
 
+IExchange.prototype.getPairUnits = function() {
+    throw new Error('This method must be overwritten!');
+}
+
+
 IExchange.prototype.getPrice = function() {
     throw new Error('This method must be overwritten!');
 }

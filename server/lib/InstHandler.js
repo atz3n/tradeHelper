@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 1.2.1
+ * @version 1.3.0
  *
  * 
  * CHANGES:
@@ -21,6 +21,8 @@
  *             : added setObjectByIdx function
  * 06-May-2016 : fixed bug in setObject function
  * 08-May-2016 : changed for loop variable declaration
+ * 10-May-2016 : added getObjectId function
+ *               added getObjectArray function
  */
 
 
@@ -183,6 +185,20 @@ export function InstHandler() {
   }
 
 
+/**
+ * returns the id of an object selected by its index
+ * @param  {integer} idx of object whichs id should be returned
+ * @return {string}     id of found object
+ */
+  this.getObjectId = function(idx) {
+    if (typeof _objArray[idx] === 'undefined') {
+      return 'undefined';
+    }
+
+    return _objArray[idx]['id'];
+  }
+
+
   /**
    * clears the internal array (deletes all elements)
    * @return {bool} true if successful
@@ -205,6 +221,20 @@ export function InstHandler() {
     }
 
     return tmp;
+  }
+
+
+  /**
+   * Returns the object array including its id selected by its index
+   * @param  {integer} idx of object array which should be returned
+   * @return {Array} array to be returned
+   */
+  this.getObjectArray = function(idx) {
+    if (typeof _objArray[idx] === 'undefined') {
+      return 'undefined';
+    }
+
+    return _objArray[idx];
   }
 
 

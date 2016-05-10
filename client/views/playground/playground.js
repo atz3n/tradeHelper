@@ -3,7 +3,7 @@ pageSession.set("text", "empty");
 Template.Playground.rendered = function() {
 
 };
-
+var cnt = 0;
 Template.Playground.events({
   'click button': function(event, instance) {
 
@@ -43,10 +43,12 @@ Template.Playground.events({
 
       /*++++++++++ dummyButton ++++++++++*/
     } else if ($(event.target).prop("name") == "dummyButton") {
-
-      Meteor.call("strategyDevelop", function(e) {
-        if (e) console.log(e);
-      });
+      cnt++;
+      globalReact.set("updateInfos", cnt);
+        // console.log(Settings.findOne())
+      // Meteor.call("strategyDevelop", function(e) {
+      //   if (e) console.log(e);
+      // });
 
     }
   }
@@ -54,6 +56,8 @@ Template.Playground.events({
 
 Template.Playground.helpers({
   text: function() {
-    return pageSession.get("text");
+    return JSON.stringify(globalReact.get("updateInfos"));
+    // return globalReact.get("updateInfos").prices[0].price;
+    // return pageSession.get("text");
   }
 });

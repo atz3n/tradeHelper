@@ -67,22 +67,23 @@ export function ExKraken(ConstrParam) {
     Inheritances
    ***********************************************************************/
 
-   IExchange.apply(this);
-   
+  IExchange.apply(this);
+
 
   /***********************************************************************
     Private Instance Variable
    ***********************************************************************/
-  
+
   var _config = Object.assign({}, ExKraken.ConfigDefault);
   var _courseData;
+  var _pairUnits = { counter: 'none', denominator: 'none' };
 
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-   
-   // this.Variable = 'Value'; 
-  
+
+  // this.Variable = 'Value'; 
+
 
   /***********************************************************************
     Private Instance Function
@@ -96,17 +97,105 @@ export function ExKraken(ConstrParam) {
   this.update = function() {
     var data = KrakenApi.getTicker(_config.pair);
 
-    if(data === KrakenApi.ERROR_STRING){
+    if (data === KrakenApi.ERROR_STRING) {
       return false;
     }
 
-    _price = data.p;
+    _price = data.p[1];
     return true;
   }
-  
+
 
   this.setConfig = function(configuration) {
     _config = Object.assign({}, configuration);
+
+
+    switch (_config.pair) {
+      case ExKraken.Pair.btc_eur:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'EUR';
+        break;
+      case ExKraken.Pair.eth_btc:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'BTC';
+        break;
+      case ExKraken.Pair.eth_cad:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'CAD';
+        break;
+      case ExKraken.Pair.eth_eur:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'EUR';
+        break;
+      case ExKraken.Pair.eth_gbp:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'GBP';
+        break;
+      case ExKraken.Pair.eth_jpy:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'JPY';
+        break;
+      case ExKraken.Pair.eth_usd:
+        _pairUnits.counter = 'ETH';
+        _pairUnits.denominator = 'USD';
+        break;
+      case ExKraken.Pair.ltc_cad:
+        _pairUnits.counter = 'LTC';
+        _pairUnits.denominator = 'CAD';
+        break;
+      case ExKraken.Pair.ltc_eur:
+        _pairUnits.counter = 'LTC';
+        _pairUnits.denominator = 'EUR';
+        break;
+      case ExKraken.Pair.ltc_usd:
+        _pairUnits.counter = 'LTC';
+        _pairUnits.denominator = 'USD';
+        break;
+      case ExKraken.Pair.btc_ltc:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'LTC';
+        break;
+      case ExKraken.Pair.btc_nmc:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'NMC';
+        break;
+      case ExKraken.Pair.btc_xdg:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'XDG';
+        break;
+      case ExKraken.Pair.btc_xlm:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'XLM';
+        break;
+      case ExKraken.Pair.btc_xrp:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'XRP';
+        break;
+      case ExKraken.Pair.btc_cad:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'CAD';
+        break;
+      case ExKraken.Pair.btc_eur:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'EUR';
+        break;
+      case ExKraken.Pair.btc_gbp:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'GBP';
+        break;
+      case ExKraken.Pair.btc_jpy:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'JPY';
+        break;
+      case ExKraken.Pair.btc_usd:
+        _pairUnits.counter = 'BTC';
+        _pairUnits.denominator = 'USD';
+        break;
+      default:
+        _pairUnits.counter = 'none';
+        _pairUnits.denominator = 'none';
+    }
+
     return true;
   }
 
@@ -114,40 +203,44 @@ export function ExKraken(ConstrParam) {
 
 
 
-this.getConfig = function() {
+  this.getConfig = function() {
     return _config;
-}
-
-
-this.getStatus = function() {
-}
-
-
-this.getInfo = function() {
-}
-
-
-this.getPrice = function() {
-    return _price;
-}
-
-this.buy = function() {
-  /* TODO: implementing buy mechanism */
-    return true;
-}
-
-this.sell = function() {
-  /* TODO: implementing sell mechanism */
-  return true;    
-}
-
-
-this.getInstInfo = function() {
-  return {
-    id: _config.id,
-    type: "ExKraken"
   }
-}
+
+
+  this.getStatus = function() {}
+
+
+  this.getInfo = function() {}
+
+
+  this.getPairUnits = function() {
+    return _pairUnits;
+  }
+
+
+  this.getPrice = function() {
+    console.log('Price called')
+    return _price;
+  }
+
+  this.buy = function() {
+    /* TODO: implementing buy mechanism */
+    return true;
+  }
+
+  this.sell = function() {
+    /* TODO: implementing sell mechanism */
+    return true;
+  }
+
+
+  this.getInstInfo = function() {
+    return {
+      id: _config.id,
+      type: "ExKraken"
+    }
+  }
 
 
 
@@ -155,8 +248,8 @@ this.getInstInfo = function() {
     Constructor
    ***********************************************************************/
 
-   // var _constructor = function(param){
-   // }
+  // var _constructor = function(param){
+  // }
 
-   // _constructor(ConstrParam)
+  // _constructor(ConstrParam)
 }
