@@ -17,10 +17,10 @@ PlSwings.before.insert(function(userId, doc) {
 	doc.createdBy = userId;
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
+	doc.type = 'plSwing';
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;
-doc.type = 'plSwing';
 });
 
 PlSwings.before.update(function(userId, doc, fieldNames, modifier, options) {

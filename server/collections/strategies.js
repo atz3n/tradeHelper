@@ -17,6 +17,7 @@ Strategies.before.insert(function(userId, doc) {
 	doc.createdBy = userId;
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
+	doc.status = 'stopped';
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;

@@ -17,10 +17,10 @@ ExTestDatas.before.insert(function(userId, doc) {
 	doc.createdBy = userId;
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
+	doc.type = 'exTestData';
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;
-doc.type = 'exTestData';
 });
 
 ExTestDatas.before.update(function(userId, doc, fieldNames, modifier, options) {
