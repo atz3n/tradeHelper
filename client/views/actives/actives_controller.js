@@ -1,5 +1,5 @@
-this.HomePrivateController = RouteController.extend({
-	template: "HomePrivate",
+this.ActivesController = RouteController.extend({
+	template: "Actives",
 	
 
 	yieldTemplates: {
@@ -19,6 +19,7 @@ this.HomePrivateController = RouteController.extend({
 		
 
 		var subs = [
+			Meteor.subscribe("strategies_active")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -32,10 +33,9 @@ this.HomePrivateController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			strategies_active: Strategies.find({status:"activated"}, {})
 		};
-		
-
 		
 
 		return data;

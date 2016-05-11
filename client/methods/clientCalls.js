@@ -17,7 +17,6 @@ Meteor.ClientCall.methods({
 
 	update: function(infos){
 		globalReact.set('updateInfos', infos);
-		console.log(infos)
 		return true;
 	}
 

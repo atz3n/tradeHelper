@@ -19,7 +19,8 @@ var publicRoutes = [
 var privateRoutes = [
 	"home_private",
 	"charts",
-	"controls",
+	"actives",
+	"actives.details",
 	"strategies",
 	"strategies.insert",
 	"strategies.details",
@@ -231,7 +232,8 @@ Router.map(function () {
 	this.route("reset_password", {path: "/reset_password/:resetPasswordToken", controller: "ResetPasswordController"});
 	this.route("home_private", {path: "/home_private", controller: "HomePrivateController"});
 	this.route("charts", {path: "/charts", controller: "ChartsController"});
-	this.route("controls", {path: "/controls", controller: "ControlsController"});
+	this.route("actives", {path: "/actives", controller: "ActivesController"});
+	this.route("actives.details", {path: "/actives/details/:strategyId", controller: "ActivesDetailsController"});
 	this.route("strategies", {path: "/strategies", controller: "StrategiesController"});
 	this.route("strategies.insert", {path: "/strategies/insert", controller: "StrategiesInsertController"});
 	this.route("strategies.details", {path: "/strategies/details/:strategyId", controller: "StrategiesDetailsController"});

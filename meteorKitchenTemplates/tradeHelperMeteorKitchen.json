@@ -481,6 +481,13 @@
         "filter": {}
       },
       {
+        "name": "strategiesActive",
+        "collection": "strategies",
+        "filter": {
+          "status":  "activated"
+          }
+      },
+      {
         "name": "strategies_empty",
         "collection": "strategies",
         "filter": {
@@ -644,7 +651,47 @@
           "type": "page"
         },
         {
-          "name": "controls",
+          "name": "actives",
+          "components": [
+            {
+              "name": "view",
+              "title": "Active Strategies",
+              "type": "data_view",
+              "text_if_empty": "No Strategy activated",
+              "query_name": "strategiesActive",
+              "query_params": [],
+              "details_route": "actives.details",
+              "details_route_params": [
+                {
+                  "name": "strategyId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            
+            {
+              "name": "details",
+              "route_params": [
+                "strategyId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details and Controls",
+                  "layout": "horizontal",
+                  "query_name": "strategy",
+                  "query_params": [],
+                  "close_route": "actives",
+                  "back_route": "actives"
+                }
+              ]
+            }
+            
+          ],
           "type": "page"
         },
         {
@@ -1533,9 +1580,9 @@
               "icon_class": "fa fa-line-chart"
             },
             {
-              "title": "Controls",
-              "route": "controls",
-              "icon_class": "fa fa-gamepad"
+              "title": "Actives",
+              "route": "actives",
+              "icon_class": "fa fa-play"
             },
             {
               "title": "Strategies",

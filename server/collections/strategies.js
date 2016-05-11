@@ -18,7 +18,7 @@ Strategies.before.insert(function(userId, doc) {
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
 	doc.status = 'stopped';
-
+	doc.paused = false;
 	
 	if(!doc.ownerId) doc.ownerId = userId;
 });

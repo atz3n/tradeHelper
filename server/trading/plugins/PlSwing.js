@@ -186,11 +186,16 @@ export function PlSwing(logger) {
   }
 
 
-  this.getStatus = function() {
+  this.getState = function() {
     if(_positions.long || _positions.short)
       return 'in';
     else
       return 'out';
+  }
+
+
+  this.getStatus = function() {
+    return 'OK';
   }
 
 

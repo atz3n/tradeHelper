@@ -84,8 +84,15 @@ export function Strategy(strategyDescription) {
   var _notifyFunc = function() {};
   var _updateCallFunc = function() {};
 
-  var _state = 'out';
-  
+  var _data = {
+    strategyId: '',
+    strategyName: '',
+    state: 'out',
+    inPrices: [],
+    plugins: [],
+    exchanges: []
+  };
+
 
   /***********************************************************************
     Public Instance Variable
@@ -99,38 +106,27 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function() {
-    var prices = [];
-
     _clearNotifyValues();
 
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
-      _exchanges.getObjectByIdx(i).update();
-      prices[i] = {exId: _exchanges.getObjectId(i), price: _exchanges.getObjectByIdx(i).getPrice(), units: _exchanges.getObjectByIdx(i).getPairUnits()};
+      var tmp = _exchanges.getObjectByIdx(i);
+      tmp.update();
+
+      _data.exchanges[i].price = tmp.getPrice();
+      _data.exchanges[i].info = tmp.getInfo();
     }
 
     for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-      _plugins.getObjectByIdx(i).inst.update(_exchanges.getObject(_plugins.getObjectByIdx(i).exId).getPrice());
-      console.log(_plugins.getObjectByIdx(i).inst.getInfo());
+      var tmp = _plugins.getObjectByIdx(i);
+      tmp.inst.update(_exchanges.getObject(tmp.exId).getPrice());
+
+      _data.plugins[i].state = tmp.inst.getState();
+      _data.plugins[i].info = tmp.inst.getInfo();
     }
 
     _evalNotifyValues();
 
-    _callUpdateCallFunc(prices);
-  }
-
-
-
-
-  var _callUpdateCallFunc = function(prices) {
-
-    var info = {
-      strategyId: _strDesc._id,
-      state: _state
-    };
-
-    info = Object.assign({ prices }, info);
-
-    _updateCallFunc(info);
+    _updateCallFunc(_data);
   }
 
 
@@ -166,12 +162,10 @@ export function Strategy(strategyDescription) {
       for (var j = 0; j < _notifyMaskedValues[i].getObjectsArray().length; j++) {
         pluginBundleVals[i] |= _notifyMaskedValues[i].getObjectByIdx(j);
       }
-      // console.log('pluginBundleVals[' + i + '] before: ' + pluginBundleVals[i])
 
       if (pluginBundleVals[i] !== _buyMask && pluginBundleVals[i] !== _sellMask) {
         pluginBundleVals[i] = _noneMask;
       }
-      // console.log('pluginBundleVals[' + i + '] after: ' + pluginBundleVals[i])
 
       /* get final decision */
       finalDecision |= pluginBundleVals[i];
@@ -286,6 +280,11 @@ export function Strategy(strategyDescription) {
   }
 
 
+  this.getData = function() {
+    return _data;
+  }
+
+
   this.setNotifyFunction = function(notifyFunction) {
     _notifyFunc = notifyFunction;
   }
@@ -318,37 +317,57 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _constructor = function(param) {
+    var plCnt = 0;
+    var exCnt = 0;
     _strDesc = Object.assign({}, param);
+
+    _data.strategyId = _strDesc._id;
+    _data.strategyName = _strDesc.name;
 
 
     /* create plugin and exchange instances */
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
 
-      /* create notify handler to create plugin structure */
+      /* create notify handler to emulate plugin structure */
       _notifyMaskedValues[i] = new InstHandler();
 
       for (var j = 0; j < _strDesc.pluginBundles[i].bundlePlugins.length; j++) {
         var plugin = _strDesc.pluginBundles[i].bundlePlugins[j];
 
         /* add plugin id for evaluation */
-        // console.log(plugin._id)
         _notifyMaskedValues[i].setObject(plugin._id, _noneMask);
 
 
         /* create not yet created plugin instances */
         if (_plugins.getObject(plugin._id) === 'undefined') {
 
+
+          /******** Plugin Creation Functions ********/
+
           /* swing */
           if (plugin.type === "plSwing") {
             _createPlSwing(plugin);
           }
 
-          _plugins.getObject(plugin._id).inst.setBuyNotifyFunc(_buyNotification);
-          _plugins.getObject(plugin._id).inst.setSellNotifyFunc(_sellNotification);
+          /******** Plugin Creation Functions ********/
+
+
+          var tmpPl = _plugins.getObject(plugin._id).inst;
+          tmpPl.setBuyNotifyFunc(_buyNotification);
+          tmpPl.setSellNotifyFunc(_sellNotification);
+
+          /* initialize plugin elements of data information variable */
+          _data.plugins[plCnt] = {};
+          _data.plugins[plCnt].name = plugin.name;
+          _data.plugins[plCnt].instInfo = tmpPl.getInstInfo();
+          plCnt++;
 
 
           /* create not yet created exchange instances */
           if (_exchanges.getObject(plugin.exchange._id) === 'undefined') {
+
+
+            /******** Exchange Creation Functions ********/
 
             /* kraken.com */
             if (plugin.exchange.type === 'exKraken') {
@@ -358,12 +377,21 @@ export function Strategy(strategyDescription) {
             } else if (plugin.exchange.type === 'exTestData') {
               _createExTestData(plugin.exchange);
             }
+
+            /******** Exchange Creation Functions ********/
+
+
+            /* initialize exchange elements of data information variable */
+            var tmpEx = _exchanges.getObject(plugin.exchange._id);
+            _data.exchanges[exCnt] = {};
+            _data.inPrices[exCnt] = {};
+            _data.exchanges[exCnt].name = plugin.exchange.name;
+            _data.exchanges[exCnt].instInfo = tmpEx.getInstInfo();
+            _data.exchanges[exCnt].units = tmpEx.getPairUnits();
+            exCnt++;
           }
         }
       }
-    }
-    for (var i = 0; i < _notifyMaskedValues.length; i++) {
-      console.log(_notifyMaskedValues[i].getObjects())
     }
   }
 

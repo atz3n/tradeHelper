@@ -119,7 +119,9 @@ export function ExTestData() {
   }
 
 
-  this.getStatus = function() {}
+  this.getStatus = function() {
+    return 'OK';
+  }
 
 
   this.getInfo = function() {}

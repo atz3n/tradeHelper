@@ -37,6 +37,11 @@ IPlugin.prototype.getStatus = function() {
 }
 
 
+IPlugin.prototype.getState = function() {
+    throw new Error('This method must be overwritten!');
+}
+
+
 IPlugin.prototype.getInfo = function() {
     throw new Error('This method must be overwritten!');
 }

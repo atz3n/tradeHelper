@@ -38,7 +38,6 @@ Meteor.methods({
 
   startStrategy: function(strategyId) {
 
-// console.log(getStrategyObject(strategyId).pluginBundles[0].bundlePlugins)
     if (strategies.getObject(strategyId) === 'undefined') {
       strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
       strategies.getObject(strategyId).inst.setNotifyFunction(notification);
@@ -66,20 +65,26 @@ Meteor.methods({
 
     if (strategies.getObject(strategyId) !== 'undefined') {
       strategies.getObject(strategyId).inst.stop();
-      // console.log(strategies.getObjectsArray().delete(0));
-      // strategies.getObjectsArray()[0]
       strategies.removeObject(strategyId);
     }
 
   },
 
+  getStrategyData: function(strategyId) {
+    if (strategies.getObject(strategyId) !== 'undefined') {
+      console.log(strategies.getObject(strategyId).inst.getData());
+      return strategies.getObject(strategyId).inst.getData();
+    }
+  },
+
   strategyDevelop: function() {
 
-    var temp = strategies.getObjects();
-    for (var i = 0; i < temp.length; i++) {
+    // var temp = strategies.getObjects();
+    // for (var i = 0; i < temp.length; i++) {
 
-      console.log(temp[i].inst.develop());
-    }
+    //   console.log(temp[i].inst.develop());
+    // }
 
+    PlDummys.remove({});
   }
 });

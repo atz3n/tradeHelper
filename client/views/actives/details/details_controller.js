@@ -1,5 +1,5 @@
-this.ControlsController = RouteController.extend({
-	template: "Controls",
+this.ActivesDetailsController = RouteController.extend({
+	template: "ActivesDetails",
 	
 
 	yieldTemplates: {
@@ -19,6 +19,7 @@ this.ControlsController = RouteController.extend({
 		
 
 		var subs = [
+			Meteor.subscribe("strategy", this.params.strategyId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -32,7 +33,8 @@ this.ControlsController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			strategy: Strategies.findOne({_id:this.params.strategyId}, {})
 		};
 		
 

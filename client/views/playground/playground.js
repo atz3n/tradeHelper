@@ -1,8 +1,20 @@
 var pageSession = new ReactiveDict();
-pageSession.set("text", "empty");
-Template.Playground.rendered = function() {
 
+
+Template.Playground.rendered = function() {
+  Meteor.ClientCall.setClientId(Meteor.userId());
+
+  var temp = Strategies.find().fetch();
+  for (i = 0; i < temp.length; i++) {
+
+    Meteor.call("getStrategyData",temp[i]._id, function(e, r) {
+      if (e) console.log(e);
+      else globalReact.set("updateInfos", r);
+    });
+  };
 };
+
+
 var cnt = 0;
 Template.Playground.events({
   'click button': function(event, instance) {
@@ -45,10 +57,9 @@ Template.Playground.events({
     } else if ($(event.target).prop("name") == "dummyButton") {
       cnt++;
       globalReact.set("updateInfos", cnt);
-        // console.log(Settings.findOne())
-      // Meteor.call("strategyDevelop", function(e) {
-      //   if (e) console.log(e);
-      // });
+      Meteor.call("strategyDevelop", function(e) {
+        if (e) console.log(e);
+      });
 
     }
   }
