@@ -17,7 +17,7 @@ Strategies.before.insert(function(userId, doc) {
 	doc.createdBy = userId;
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
-	doc.status = 'stopped';
+	doc.active = false;
 	doc.paused = false;
 	
 	if(!doc.ownerId) doc.ownerId = userId;
@@ -32,7 +32,7 @@ Strategies.before.update(function(userId, doc, fieldNames, modifier, options) {
 });
 
 Strategies.before.remove(function(userId, doc) {
-	
+	ActiveDatas.remove({strategyId: doc._id});
 });
 
 Strategies.after.insert(function(userId, doc) {

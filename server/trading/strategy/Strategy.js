@@ -88,6 +88,7 @@ export function Strategy(strategyDescription) {
     strategyId: '',
     strategyName: '',
     state: 'out',
+    position: 'none',
     inPrices: [],
     plugins: [],
     exchanges: []

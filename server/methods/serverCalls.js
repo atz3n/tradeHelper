@@ -5,11 +5,12 @@ strategies = new InstHandler();
 
 var oIdNfy = '';
 var strIdNfy = '';
-function notification(infos){
-  
+
+function notification(infos) {
+
   /* to search as less as possible for the ownerId (cost a lot of time) */
-  if(strIdNfy !== infos.strategyId){
-    oIdNfy = Strategies.findOne({_id: infos.strategyId}).ownerId;
+  if (strIdNfy !== infos.strategyId) {
+    oIdNfy = Strategies.findOne({ _id: infos.strategyId }).ownerId;
     strIdNfy = infos.strategyId;
   }
 
@@ -19,15 +20,16 @@ function notification(infos){
 
 var oIdUpd = '';
 var strIdUpd = '';
-function update(infos){
-  
-  /* to search as less as possible for the ownerId (cost a lot of time) */
-  if(strIdUpd !== infos.strategyId){
-    oIdUpd = Strategies.findOne({_id: infos.strategyId}).ownerId;
-    strIdUpd = infos.strategyId;
-  }
 
-  Meteor.ClientCall.apply(oIdUpd, 'update', [infos], function(error, result) {});
+function update(infos) {
+
+  if(typeof ActiveDatas.findOne({strategyId: infos.strategyId}) === 'undefined'){
+    ActiveDatas.insert(infos);
+    ActiveDatas.update({strategyId: infos.strategyId}, {$set: {ownerId: Strategies.findOne({ _id: infos.strategyId }).ownerId}});
+  } else {
+    ActiveDatas.update({strategyId: infos.strategyId}, {$set: infos});
+  }
+  console.log(infos)
 }
 
 
@@ -46,8 +48,11 @@ Meteor.methods({
     } else if (strategies.getObject(strategyId).startFlag === false) {
       strategies.getObject(strategyId).inst.start();
       strategies.getObject(strategyId).startFlag = true;
+    } else {
+      return false;
     }
 
+    return true;
   },
 
   pauseStrategy: function(strategyId) {
@@ -57,8 +62,11 @@ Meteor.methods({
         strategies.getObject(strategyId).inst.stop();
         strategies.getObject(strategyId).startFlag = false;
       }
+    } else {
+      return false;
     }
 
+    return true;
   },
 
   stopStrategy: function(strategyId) {
@@ -66,13 +74,17 @@ Meteor.methods({
     if (strategies.getObject(strategyId) !== 'undefined') {
       strategies.getObject(strategyId).inst.stop();
       strategies.removeObject(strategyId);
+      ActiveDatas.remove({strategyId: strategyId});
+    } else {
+      return false;
     }
 
+    return true;
   },
 
   getStrategyData: function(strategyId) {
     if (strategies.getObject(strategyId) !== 'undefined') {
-      console.log(strategies.getObject(strategyId).inst.getData());
+      // console.log(strategies.getObject(strategyId).inst.getData());
       return strategies.getObject(strategyId).inst.getData();
     }
   },

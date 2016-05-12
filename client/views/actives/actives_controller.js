@@ -19,7 +19,8 @@ this.ActivesController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("strategies_active")
+			Meteor.subscribe("strategies_active"),
+			Meteor.subscribe("active_datas")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,10 +35,10 @@ this.ActivesController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			strategies_active: Strategies.find({status:"activated"}, {})
+			strategies_active: Strategies.find({active: true}, {}),
+			active_datas: ActiveDatas.find({},{})
 		};
 		
-
 		return data;
 	},
 

@@ -66,6 +66,25 @@
         ]
       },
       {
+        "name": "activeDatas",
+        "fields": [
+          {
+            "name": "data",
+            "type": "string"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "nobody"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
         "name": "pluginBundles",
         "fields": [
           {
@@ -476,6 +495,19 @@
         "find_one": true
       },
       {
+        "name": "activeDatas",
+        "collection": "activeDatas",
+        "filter": {}
+      },
+      {
+        "name": "activeData",
+        "collection": "activeDatas",
+        "filter": {
+          "_id": ":activeDataId"
+        },
+        "find_one": true
+      },
+      {
         "name": "strategies",
         "collection": "strategies",
         "filter": {}
@@ -663,7 +695,7 @@
               "details_route": "actives.details",
               "details_route_params": [
                 {
-                  "name": "strategyId",
+                  "name": "activeDataId",
                   "value": "this._id"
                 }
               ]
@@ -674,7 +706,7 @@
             {
               "name": "details",
               "route_params": [
-                "strategyId"
+                "activeDataId"
               ],
               "components": [
                 {
@@ -683,7 +715,7 @@
                   "mode": "read_only",
                   "title": "Details and Controls",
                   "layout": "horizontal",
-                  "query_name": "strategy",
+                  "query_name": "activeData",
                   "query_params": [],
                   "close_route": "actives",
                   "back_route": "actives"

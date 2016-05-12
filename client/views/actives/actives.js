@@ -12,8 +12,8 @@ Template.Actives.helpers({
 
 });
 
-var ActivesViewItems = function(cursor) {
-  if (!cursor) {
+var ActivesViewItems = function(strQue, datQue) {
+  if (!strQue || !datQue) {
     return [];
   }
 
@@ -22,7 +22,43 @@ var ActivesViewItems = function(cursor) {
   var sortAscending = pageSession.get("ActivesViewSortAscending");
   if (typeof(sortAscending) == "undefined") sortAscending = true;
 
-  var raw = cursor.fetch();
+  var strRaw = strQue.fetch();
+  var datRaw = datQue.fetch();
+
+
+  var raw = strRaw
+  for (var i = 0; i < strRaw.length; i++) {
+
+    var datId = datRaw.findIndex(function(element, index, array) {
+      if (element.strategyId == strRaw[i]._id)
+        return true;
+    });
+
+    raw[i].state = datRaw[datId].state;
+    raw[i].position = datRaw[datId].position;
+
+    if (raw[i].state == 'out') {
+      raw[i].totalIn = '-';
+      raw[i].winLoss = '-';
+
+      raw[i].current = '';
+      for (var j = 0; j < datRaw[datId].exchanges.length; j++) {
+        if (j !== 0) raw[i].current += ' ; ';
+        raw[i].current += Math.round( datRaw[datId].exchanges[j].price * 10000 ) / 10000;
+
+        if (datRaw[datId].exchanges[j].units.counter != '' && datRaw[datId].exchanges[j].units.denominator != '')
+          raw[i].current += ' ' + datRaw[datId].exchanges[j].units.counter + '/' + datRaw[datId].exchanges[j].units.denominator;
+      }
+    }
+
+    if (raw[i].state == 'in') {
+      raw[i].totalIn = '-';
+      raw[i].winLoss = '-';
+      raw[i].current = '-';
+    }
+
+  }
+
 
   // filter
   var filtered = [];
@@ -31,7 +67,7 @@ var ActivesViewItems = function(cursor) {
   } else {
     searchString = searchString.replace(".", "\\.");
     var regEx = new RegExp(searchString, "i");
-    var searchFields = ["name", "updateTime", "pluginBundles"];
+    var searchFields = ["name", "totalIn", "current", "winLoss", "position", "state"];
     filtered = _.filter(raw, function(item) {
       var match = false;
       _.each(searchFields, function(field) {
@@ -60,7 +96,7 @@ var ActivesViewItems = function(cursor) {
 };
 
 var ActivesViewExport = function(cursor, fileType) {
-  var data = ActivesViewItems(cursor);
+  var data = ActivesViewItems(cursor, cursor2);
   var exportFields = [];
 
   var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -169,7 +205,7 @@ Template.ActivesView.helpers({
     return this.strategies_active && this.strategies_active.count() > 0;
   },
   "isNotFound": function() {
-    return this.strategies_active && pageSession.get("ActivesViewSearchString") && ActivesViewItems(this.strategies_active).length == 0;
+    return this.strategies_active && pageSession.get("ActivesViewSearchString") && ActivesViewItems(this.strategies_active, this.active_datas).length == 0;
   },
   "searchString": function() {
     return pageSession.get("ActivesViewSearchString");
@@ -210,7 +246,7 @@ Template.ActivesViewTable.events({
 
 Template.ActivesViewTable.helpers({
   "tableItems": function() {
-    return ActivesViewItems(this.strategies_active);
+    return ActivesViewItems(this.strategies_active, this.active_datas);
   }
 });
 
@@ -246,7 +282,7 @@ Template.ActivesViewTableItems.events({
 
   "click #stop-button": function(e, t) {
     e.preventDefault();
-    var me = this;
+    var strId = this._id;
     bootbox.dialog({
       message: "Stop? Are you sure?",
       title: "Stop",
@@ -256,8 +292,13 @@ Template.ActivesViewTableItems.events({
           label: "Yes",
           className: "btn-success",
           callback: function() {
-            Strategies.update({ _id: me._id }, { $set: { status: 'stopped' } });
-            Strategies.update({ _id: me._id }, { $set: { paused: false } });
+            Meteor.call('stopStrategy', strId, function(e, r) {
+              if (e) console.log(e);
+              else if (r) {
+                Strategies.update({ _id: strId }, { $set: { active: false } });
+                Strategies.update({ _id: strId }, { $set: { paused: false } });
+              }
+            });
           }
         },
         danger: {
@@ -270,20 +311,27 @@ Template.ActivesViewTableItems.events({
   },
   "click #pausePlay-button": function(e, t) {
     e.preventDefault();
-    var me = this;
-    
-    if(Strategies.findOne({ _id: this._id }).paused)
-    	Strategies.update({ _id: me._id }, { $set: { paused: false } });
-    else
-    	Strategies.update({ _id: me._id }, { $set: { paused: true } });
-    
+    var strId = this._id;
+    if (Strategies.findOne({ _id: strId }).paused) {
+      Meteor.call('startStrategy', strId, function(e, r) {
+        if (e) console.log(e);
+        else if (r) Strategies.update({ _id: strId }, { $set: { paused: false } });
+      });
+    } else {
+      Meteor.call('pauseStrategy', strId, function(e, r) {
+        if (e) console.log(e);
+        else if (r) Strategies.update({ _id: strId }, { $set: { paused: true } });
+      });
+    }
+
     return false;
-  },
+  }
 });
 
 Template.ActivesViewTableItems.helpers({
   "checked": function(value) {
-    return value ? "checked" : "" },
+    return value ? "checked" : ""
+  },
 
   "strategyPaused": function() {
     if (Strategies.findOne({ _id: this._id }).paused)

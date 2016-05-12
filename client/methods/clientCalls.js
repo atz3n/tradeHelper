@@ -1,8 +1,4 @@
-
-
 Meteor.subscribe("settings_first");
-globalReact.set('updateInfos', 'none');
-
 
 
 Meteor.ClientCall.methods({
@@ -14,10 +10,5 @@ Meteor.ClientCall.methods({
 		}
 		return true;
 	},
-
-	update: function(infos){
-		globalReact.set('updateInfos', infos);
-		return true;
-	}
 
 });

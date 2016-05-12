@@ -3,7 +3,7 @@ Meteor.publish("strategies", function() {
 });
 
 Meteor.publish("strategies_active", function() {
-	return Strategies.find({status:"activated",ownerId:this.userId}, {});
+	return Strategies.find({active:true,ownerId:this.userId}, {});
 });
 
 Meteor.publish("strategies_empty", function() {

@@ -222,7 +222,6 @@ export function ExKraken(ConstrParam) {
 
 
   this.getPrice = function() {
-    console.log('Price called')
     return _price;
   }
 

@@ -56,11 +56,20 @@
 				<th class="th-sortable" data-sort="name">
 					Name
 				</th>
-				<th class="th-sortable" data-sort="updateTime">
-					Update Time [min]
+				<th class="th-sortable" data-sort="totalIn">
+					Total In
 				</th>
-				<th class="th-sortable" data-sort="pluginBundles">
-					Plugin Bundles (logical connected via 'or')
+				<th class="th-sortable" data-sort="current">
+					Price Current / Total Current
+				</th>
+				<th class="th-sortable" data-sort="winLoss">
+					Win / Loss [%]
+				</th>
+				<th class="th-sortable" data-sort="position">
+					Position
+				</th>
+				<th class="th-sortable" data-sort="state">
+					State
 				</th>
 			</tr>
 		</thead>
@@ -76,10 +85,19 @@
 			{{name}}
 		</td>
 		<td>
-			{{updateTime}}
+			{{totalIn}}
 		</td>
 		<td>
-			{{pluginBundles}}
+			{{current}}
+		</td>
+		<td>
+			{{winLoss}}
+		</td>
+		<td>
+			{{position}}
+		</td>
+		<td>
+			{{state}}
 		</td>
 		<td class="td-icon">
 			{{#if strategyPaused}}

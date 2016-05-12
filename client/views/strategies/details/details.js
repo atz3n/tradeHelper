@@ -119,12 +119,22 @@ Template.StrategiesDetailsDetailsForm.events({
 
   "click #form-activate-button": function(e, t) {
     e.preventDefault();
+    var strId = this.params.strategyId;
 
-    Strategies.update({ _id: this.params.strategyId }, { $set: { status: 'activated' } });
-    pageSession.set('activeState', 'activated');
+    // Strategies.update({ _id: this.params.strategyId }, { $set: { status: 'activated' } });
+    // pageSession.set('activeState', 'activated');
+
+
+    if (!Strategies.findOne({ _id: strId }).active) {
+      Meteor.call('startStrategy', strId, function(e, r) {
+        if (e) console.log(e);
+        else if (r) {
+          Strategies.update({ _id: strId }, { $set: { active: true } });
+          Strategies.update({ _id: strId }, { $set: { paused: false } });
+        }
+      });
+    }
   }
-
-
 });
 
 Template.StrategiesDetailsDetailsForm.helpers({
@@ -138,7 +148,7 @@ Template.StrategiesDetailsDetailsForm.helpers({
     return pageSession.get("pluginBundlesCrudItems");
   },
   "strategyActive": function() {
-    if (pageSession.get('activeState') == 'activated')
+    if (Strategies.findOne({ _id: this.params.strategyId }).active)
       return true;
     else
       return false;
