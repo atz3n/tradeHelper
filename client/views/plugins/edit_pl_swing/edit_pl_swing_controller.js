@@ -19,8 +19,6 @@ this.PluginsEditPlSwingController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_krakens"),
-			Meteor.subscribe("ex_test_datas"),
 			Meteor.subscribe("pl_swing", this.params.plSwingId)
 		];
 		var ready = true;
@@ -36,8 +34,6 @@ this.PluginsEditPlSwingController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			ex_krakens: ExKrakens.find({}, {}),
-			ex_test_datas: ExTestDatas.find({}, {}),
 			pl_swing: PlSwings.findOne({_id:this.params.plSwingId}, {})
 		};
 		

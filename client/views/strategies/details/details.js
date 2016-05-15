@@ -111,6 +111,11 @@ Template.StrategiesDetailsDetailsForm.events({
 
     Router.go("strategies", {});
   },
+    "click #form-goToActives-button": function(e, t) {
+    e.preventDefault();
+
+    Router.go("actives", {});
+  },
   "click #form-back-button": function(e, t) {
     e.preventDefault();
 
@@ -120,9 +125,6 @@ Template.StrategiesDetailsDetailsForm.events({
   "click #form-activate-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
-
-    // Strategies.update({ _id: this.params.strategyId }, { $set: { status: 'activated' } });
-    // pageSession.set('activeState', 'activated');
 
 
     if (!Strategies.findOne({ _id: strId }).active) {
@@ -145,7 +147,19 @@ Template.StrategiesDetailsDetailsForm.helpers({
     return pageSession.get("strategiesDetailsDetailsFormErrorMessage");
   },
   "pluginBundlesCrudItems": function() {
-    return pageSession.get("pluginBundlesCrudItems");
+    if(pageSession.get("pluginBundlesCrudItems")){
+      if(pageSession.get("pluginBundlesCrudItems").length > 0){
+        var ret = pageSession.get("pluginBundlesCrudItems");
+        
+        for(var i = 0 ; i < ret.length ; i++){
+          ret[i].bundle = getPluginBundleName(ret[i].bundle);
+        }
+
+        return ret;
+      }
+    }
+      
+  return pageSession.get("pluginBundlesCrudItems");
   },
   "strategyActive": function() {
     if (Strategies.findOne({ _id: this.params.strategyId }).active)

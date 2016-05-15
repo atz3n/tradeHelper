@@ -122,8 +122,20 @@ Template.StrategiesEditEditForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("strategiesEditEditFormErrorMessage");
 	}, 
-		"pluginBundlesCrudItems": function() {
-		return pageSession.get("pluginBundlesCrudItems");
+	"pluginBundlesCrudItems": function() {
+		if(pageSession.get("pluginBundlesCrudItems")){
+			if(pageSession.get("pluginBundlesCrudItems").length > 0){
+				var ret = pageSession.get("pluginBundlesCrudItems");
+				
+				for(var i = 0 ; i < ret.length ; i++){
+					ret[i].bundle = getPluginBundleName(ret[i].bundle);
+				}
+
+				return ret;
+			}
+		}
+			
+	return pageSession.get("pluginBundlesCrudItems");
 	}
 });
 
@@ -236,6 +248,9 @@ Template.StrategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesIn
 	},
 	"errorMessage": function() {
 		return pageSession.get("strategiesEditFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage");
+	},
+	"pluginBundles": function() {
+		return getPluginBundles();
 	}
 	
 });

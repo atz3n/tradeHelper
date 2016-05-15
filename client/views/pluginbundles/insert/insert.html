@@ -41,7 +41,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" data-type="string">
+					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -134,10 +134,7 @@
 				</label>
 				<div class="input-div">
 					<select class="form-control" name="plugin" data-type="string" required="required" autofocus="autofocus">
-						{{#each pl_swings}}
-						<option value="{{_id}}">							{{name}}</option>
-						{{/each}}
-						{{#each pl_dummys}}
+						{{#each plugins}}
 						<option value="{{_id}}">							{{name}}</option>
 						{{/each}}
 					</select>

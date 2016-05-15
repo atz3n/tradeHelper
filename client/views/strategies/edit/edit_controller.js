@@ -20,7 +20,6 @@ this.StrategiesEditController = RouteController.extend({
 
 		var subs = [
 			Meteor.subscribe("strategy", this.params.strategyId),
-			Meteor.subscribe("pluginbundles")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -36,7 +35,6 @@ this.StrategiesEditController = RouteController.extend({
 		var data = {
 			params: this.params || {},
 			strategy: Strategies.findOne({_id:this.params.strategyId}, {}),
-			pluginbundles: PluginBundles.find({},{})
 		};
 		
 

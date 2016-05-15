@@ -120,6 +120,8 @@ Template.PluginsDetailsPlSwingDetailsForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("pluginsDetailsPlSwingDetailsFormErrorMessage");
+	},
+	"exchangeName": function() {
+		return getExchangeName(this.pl_swing.exchange);
 	}
-	
 });

@@ -97,7 +97,6 @@ Template.PluginsInsertPlSwingInsertForm.events({
 		e.preventDefault();
 
 		
-
 		Router.go("plugins", {});
 	},
 	"click #form-close-button": function(e, t) {
@@ -120,6 +119,9 @@ Template.PluginsInsertPlSwingInsertForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("pluginsInsertPlSwingInsertFormErrorMessage");
+	},
+	"exchanges": function() {
+		return getExchanges();
 	}
 	
 });

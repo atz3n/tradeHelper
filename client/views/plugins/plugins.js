@@ -24,6 +24,12 @@ var PluginsViewPlSwingsItems = function(cursor) {
 
 	var raw = cursor.fetch();
 
+	for (var i = 0; i < raw.length; i++) {
+
+  	raw[i].exchangeName = getExchangeName(raw[i].exchange);
+  }
+
+
 	// filter
 	var filtered = [];
 	if(!searchString || searchString == "") {

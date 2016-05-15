@@ -56,8 +56,7 @@ Template.Playground.events({
       /*++++++++++ dummyButton ++++++++++*/
     } else if ($(event.target).prop("name") == "dummyButton") {
       cnt++;
-      globalReact.set("updateInfos", cnt);
-      Meteor.call("strategyDevelop", function(e) {
+      Meteor.call("develop", function(e) {
         if (e) console.log(e);
       });
 

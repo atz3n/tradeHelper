@@ -24,6 +24,16 @@ var StrategiesViewItems = function(cursor) {
 
 	var raw = cursor.fetch();
 
+  	for (var i = 0; i < raw.length; i++) {
+
+  	var tmp = '';
+    for (var j = 0; j < raw[i].pluginBundles.length; j++) {
+    	if(tmp != 0) tmp += ', ';
+    	tmp += getPluginBundleName(raw[i].pluginBundles[j].bundle);
+    }
+      raw[i].pluginBundlesString = tmp;
+  }
+
 	// filter
 	var filtered = [];
 	if(!searchString || searchString == "") {

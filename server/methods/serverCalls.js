@@ -89,14 +89,7 @@ Meteor.methods({
     }
   },
 
-  strategyDevelop: function() {
-
-    // var temp = strategies.getObjects();
-    // for (var i = 0; i < temp.length; i++) {
-
-    //   console.log(temp[i].inst.develop());
-    // }
-
-    PlDummys.remove({});
+  develop: function() {
+    console.log(PlSwings.findOne())
   }
 });

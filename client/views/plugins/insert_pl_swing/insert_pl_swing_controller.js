@@ -19,9 +19,7 @@ this.PluginsInsertPlSwingController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_krakens"),
-			Meteor.subscribe("ex_test_datas"),
-			Meteor.subscribe("pl_swings_empty")
+			Meteor.subscribe("ex_krakens")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -36,8 +34,6 @@ this.PluginsInsertPlSwingController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			ex_krakens: ExKrakens.find({}, {}),
-			ex_test_datas: ExTestDatas.find({}, {}),
 			pl_swings_empty: PlSwings.findOne({_id:null}, {})
 		};
 		

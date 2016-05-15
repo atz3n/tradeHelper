@@ -122,7 +122,19 @@ Template.PluginbundlesDetailsDetailsForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("pluginbundlesDetailsDetailsFormErrorMessage");
 	}, 
-		"bundlePluginsCrudItems": function() {
-		return pageSession.get("bundlePluginsCrudItems");
+	"bundlePluginsCrudItems": function() {
+		if(pageSession.get("bundlePluginsCrudItems")){
+			if(pageSession.get("bundlePluginsCrudItems").length > 0){
+				var ret = pageSession.get("bundlePluginsCrudItems");
+				
+				for(var i = 0 ; i < ret.length ; i++){
+					ret[i].plugin = getPluginName(ret[i].plugin);
+				}
+
+				return ret;
+			}
+		}
+			
+	return pageSession.get("bundlePluginsCrudItems");
 	}
 });

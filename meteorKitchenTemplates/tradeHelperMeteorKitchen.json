@@ -90,7 +90,8 @@
           {
             "name": "name",
             "title": "Name",
-            "type": "string"
+            "type": "string",
+            "required": true
           },
           {
             "name": "bundlePlugins",

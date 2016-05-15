@@ -45,10 +45,7 @@
 				</label>
 				<div class="input-div">
 					<select class="form-control" name="exchange" data-type="string" required="required">
-						{{#each ex_krakens}}
-						<option value="{{_id}}">							{{name}}</option>
-						{{/each}}
-						{{#each ex_test_datas}}
+						{{#each exchanges}}
 						<option value="{{_id}}">							{{name}}</option>
 						{{/each}}
 					</select>

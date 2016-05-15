@@ -123,6 +123,18 @@ Template.PluginbundlesEditEditForm.helpers({
 		return pageSession.get("pluginbundlesEditEditFormErrorMessage");
 	}, 
 		"bundlePluginsCrudItems": function() {
+		if(pageSession.get("bundlePluginsCrudItems")){
+				if(pageSession.get("bundlePluginsCrudItems").length > 0){
+					var ret = pageSession.get("bundlePluginsCrudItems");
+					
+					for(var i = 0 ; i < ret.length ; i++){
+						ret[i].plugin = getPluginName(ret[i].plugin);
+					}
+
+					return ret;
+				}
+			}
+				
 		return pageSession.get("bundlePluginsCrudItems");
 	}
 });
@@ -236,6 +248,9 @@ Template.PluginbundlesEditFieldBundlePluginsInsertFormContainerFieldBundlePlugin
 	},
 	"errorMessage": function() {
 		return pageSession.get("pluginbundlesEditFieldBundlePluginsInsertFormContainerFieldBundlePluginsInsertFormErrorMessage");
+	},
+	"plugins": function() {
+		return getPlugins();
 	}
 	
 });

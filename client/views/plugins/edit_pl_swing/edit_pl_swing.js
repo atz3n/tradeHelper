@@ -120,6 +120,13 @@ Template.PluginsEditPlSwingEditForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("pluginsEditPlSwingEditFormErrorMessage");
+	},
+	"exchanges": function() {
+		return getExchanges();
+	},
+	"exchangeName": function() {
+		return getExchangeName(this.pl_swing.exchange);
 	}
+	
 	
 });
