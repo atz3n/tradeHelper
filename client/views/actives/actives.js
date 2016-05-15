@@ -37,7 +37,7 @@ var ActivesViewItems = function(strQue, datQue) {
     raw[i].state = datRaw[datId].state;
     raw[i].position = datRaw[datId].position;
 
-    if (raw[i].state == 'out') {
+    if (raw[i].position === 'none') {
       raw[i].totalIn = '-';
       raw[i].winLoss = '-';
 
@@ -51,7 +51,7 @@ var ActivesViewItems = function(strQue, datQue) {
       }
     }
 
-    if (raw[i].state == 'in') {
+    if (raw[i].position !== 'none') {
       raw[i].totalIn = '-';
       raw[i].winLoss = '-';
       raw[i].current = '-';

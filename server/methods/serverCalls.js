@@ -8,7 +8,7 @@ var strIdNfy = '';
 
 function notification(infos) {
 
-  /* to search as less as possible for the ownerId (cost a lot of time) */
+  /* to search as less as possible for the ownerId */
   if (strIdNfy !== infos.strategyId) {
     oIdNfy = Strategies.findOne({ _id: infos.strategyId }).ownerId;
     strIdNfy = infos.strategyId;

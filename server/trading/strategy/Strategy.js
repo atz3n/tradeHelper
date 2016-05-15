@@ -191,6 +191,7 @@ export function Strategy(strategyDescription) {
         param.action = 'buy';
         _notifyFunc(param);
         console.log('buy')
+        _data.state = 'buy request';
       }
 
       /* sell */
@@ -198,6 +199,7 @@ export function Strategy(strategyDescription) {
         param.action = 'sell';
         _notifyFunc(param);
         console.log('sell')
+        _data.state = 'sell request';
       }
     }
   }
