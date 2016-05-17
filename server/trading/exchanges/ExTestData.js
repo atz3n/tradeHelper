@@ -36,7 +36,8 @@ ExTestData.ConfigDefault = {
   priceType: ExTestData.priceType.sin,
   counter: 0,
   data: [],
-  gain: 1
+  gain: 1,
+  amount: 1
 }
 
 
@@ -153,7 +154,13 @@ export function ExTestData() {
     return price;
   }
 
+  this.getActionPrice = function(){
+    return this.getPrice();
+  }
 
+  this.getAmount = function(){
+    return _config.amount;
+  }
 
   this.sell = function() {}
 

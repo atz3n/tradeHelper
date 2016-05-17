@@ -34,6 +34,23 @@
             "required": true
           },
           {
+            "name": "mode",
+            "title": "Mode",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "Automatic",
+                "value": "auto"
+              },
+              {
+                "title": "Manual",
+                "value": "manual"
+              }
+            ],
+            "required": true
+          },
+          {
             "name": "pluginBundles",
             "title": "Plugin Bundles (logical connected via 'or')",
             "type": "array",

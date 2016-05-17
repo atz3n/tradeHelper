@@ -91,7 +91,7 @@ export function Strategy(strategyDescription) {
     strategyName: '',
     state: 'out',
     position: 'none',
-    inPrices: [],
+    actionVals: [],
     plugins: [],
     exchanges: []
   };
@@ -192,59 +192,105 @@ export function Strategy(strategyDescription) {
       if (finalDecision === _buyMask) {
         param.action = 'buy';
         _notifyFunc(param);
+
         _data.state = 'buy request';
+
+        if (_strDesc.mode === 'auto') {
+          _buyFunction();
+        }
       }
 
       /* sell */
       if (finalDecision === _sellMask) {
         param.action = 'sell';
         _notifyFunc(param);
+
         _data.state = 'sell request';
+
+        if (_strDesc.mode === 'auto') {
+          _sellFunction();
+        }
       }
     }
   }
 
   var _buyFunction = function() {
     console.log('buying');
-    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-      var tmp = _plugins.getObjectByIdx(i);
+    if (_data.position !== 'long') {
 
-      tmp.inst.bought(_exchanges.getObject(tmp.exId).getPrice());
+      for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
+        var tmp = _exchanges.getObjectByIdx(i);
+        tmp.buy();
+
+        if (_data.position === 'none') {
+          _data.actionVals[i].inPrice = tmp.getActionPrice();
+          _data.actionVals[i].amount = tmp.getAmount();
+        }
+
+        if (_data.position === 'short') {
+          _data.actionVals[i].outPrice = tmp.getActionPrice();
+        }
+      }
+
+
+      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+        var tmp = _plugins.getObjectByIdx(i);
+
+        tmp.inst.bought(_exchanges.getObject(tmp.exId).getActionPrice());
+      }
+
+      if (_data.position === 'none') {
+        _data.position = 'long';
+        _data.state = 'in';
+      }
+
+      if (_data.position === 'short') {
+        _data.position = 'none';
+        _data.state = 'out';
+      }
+
+      _updateFunc();
     }
-
-    if (_data.position === 'none') {
-      _data.position = 'long';
-      _data.state = 'in';
-    }
-
-    if (_data.position === 'short') {
-      _data.position = 'none';
-      _data.state = 'out';
-    }
-
-    _updateFunc();
   }
 
 
   var _sellFunction = function() {
     console.log('selling');
-    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-      var tmp = _plugins.getObjectByIdx(i);
+    if (_data.position !== 'short') {
 
-      tmp.inst.sold(_exchanges.getObject(tmp.exId).getPrice());
+      for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
+        var tmp = _exchanges.getObjectByIdx(i);
+        tmp.sell();
+
+        if (_data.position === 'none') {
+          _data.actionVals[i].inPrice = tmp.getActionPrice();
+          _data.actionVals[i].amount = tmp.getAmount();
+        }
+
+        if (_data.position === 'long') {
+          _data.actionVals[i].outPrice = tmp.getActionPrice();
+        }
+      }
+
+
+      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+        var tmp = _plugins.getObjectByIdx(i);
+
+        tmp.inst.sold(_exchanges.getObject(tmp.exId).getPrice());
+      }
+
+      if (_data.position === 'none') {
+        _data.position = 'short';
+        _data.state = 'in';
+      }
+
+      if (_data.position === 'long') {
+        _data.position = 'none';
+        _data.state = 'out';
+      }
+
+      _updateFunc();
     }
-
-    if (_data.position === 'none') {
-      _data.position = 'short';
-      _data.state = 'in';
-    }
-
-    if (_data.position === 'long') {
-      _data.position = 'none';
-      _data.state = 'out';
-    }
-
-    _updateFunc();
   }
 
 
@@ -447,8 +493,9 @@ export function Strategy(strategyDescription) {
 
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
+            _data.actionVals[exCnt] = {};
+            _data.actionVals[exCnt].id = tmpEx.getInstInfo().id;
             _data.exchanges[exCnt] = {};
-            _data.inPrices[exCnt] = {};
             _data.exchanges[exCnt].name = plugin.exchange.name;
             _data.exchanges[exCnt].instInfo = tmpEx.getInstInfo();
             _data.exchanges[exCnt].units = tmpEx.getPairUnits();
@@ -457,6 +504,8 @@ export function Strategy(strategyDescription) {
         }
       }
     }
+
+    // console.log(_strDesc);
   }
 
   _constructor(strategyDescription)

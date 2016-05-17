@@ -38,25 +38,47 @@ var ActivesViewItems = function(strQue, datQue) {
     raw[i].position = datRaw[datId].position;
 
     if (raw[i].position === 'none') {
-      raw[i].totalIn = '-';
+      raw[i].volumeIn = '-';
       raw[i].winLoss = '-';
 
       raw[i].current = '';
       for (var j = 0; j < datRaw[datId].exchanges.length; j++) {
-        if (j !== 0) raw[i].current += ' ; ';
-        raw[i].current += Math.round(datRaw[datId].exchanges[j].price * 10000) / 10000;
+        var tmp = datRaw[datId].exchanges[j];
 
-        if (datRaw[datId].exchanges[j].units.counter != '' && datRaw[datId].exchanges[j].units.denominator != '')
-          raw[i].current += ' ' + datRaw[datId].exchanges[j].units.counter + '/' + datRaw[datId].exchanges[j].units.denominator;
+        if (j !== 0) raw[i].current += ', ';
+     
+        raw[i].current += Math.round(tmp.price * 10000) / 10000;
+
+        if (tmp.units.counter != '' && tmp.units.denominator != '')
+          raw[i].current += ' ' + tmp.units.counter + '/' + tmp.units.denominator;
       }
     }
 
     if (raw[i].position !== 'none') {
-      raw[i].totalIn = '-';
-      raw[i].winLoss = '-';
-      raw[i].current = '-';
-    }
+      raw[i].volumeIn = '';
+      raw[i].winLoss = '';
+      raw[i].current = '';
+      
+      for(var j = 0 ; j < datRaw[datId].actionVals.length ; j++){
+        var tmp = datRaw[datId].actionVals[j];
+        var tmp2 = datRaw[datId].exchanges[j];
 
+        if (j !== 0) raw[i].volumeIn += ', ';
+        if (j !== 0) raw[i].winLoss += ', ';
+        if (j !== 0) raw[i].current += ', ';
+
+        var volIn = tmp.inPrice * tmp.amount;
+        var Volcur = tmp2.price * tmp.amount;
+        raw[i].volumeIn += Math.round(volIn * 10000) / 10000;
+        raw[i].current += Math.round(Volcur * 10000) / 10000;  
+        raw[i].winLoss += Math.round(percentage(Volcur, volIn) * 1000) / 1000;  
+
+        if (tmp2.units.counter != '' && tmp2.units.denominator != ''){
+          raw[i].volumeIn += ' ' + tmp2.units.counter;
+          raw[i].current += ' ' + tmp2.units.counter;  
+        }
+      }
+    }
   }
 
 

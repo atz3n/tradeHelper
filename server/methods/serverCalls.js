@@ -29,7 +29,9 @@ function update(infos) {
   } else {
     ActiveDatas.update({ strategyId: infos.strategyId }, { $set: infos });
   }
-  console.log(infos)
+  console.log(JSON.stringify(infos));
+
+
 }
 
 

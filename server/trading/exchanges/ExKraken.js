@@ -225,6 +225,11 @@ export function ExKraken(ConstrParam) {
     return _price;
   }
 
+  this.getActionPrice = function() {
+    /* TODO: return bought or sold price */
+    return _price;
+  }
+
   this.buy = function() {
     /* TODO: implementing buy mechanism */
     return true;
@@ -243,6 +248,10 @@ export function ExKraken(ConstrParam) {
     }
   }
 
+  this.getAmount = function(){
+    /* TODO return amount */
+    return 0;
+  }
 
 
   /***********************************************************************

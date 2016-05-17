@@ -60,6 +60,29 @@
 					</span>
 				</div>
 			</div>
+			<div class="form-group  field-mode">
+				<label for="mode">
+					Mode
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="auto" name="mode" data-type="string" {{itemIsChecked strategy.mode "auto"}}>
+							Automatic
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="manual" name="mode" data-type="string" {{itemIsChecked strategy.mode "manual"}}>
+							Manual
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
 			<div class="form-group  field-plugin-bundles">
 				<label for="pluginBundles">
 					Plugin Bundles (logical connected via 'or')
