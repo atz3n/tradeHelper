@@ -44,7 +44,7 @@ var ActivesViewItems = function(strQue, datQue) {
       raw[i].current = '';
       for (var j = 0; j < datRaw[datId].exchanges.length; j++) {
         if (j !== 0) raw[i].current += ' ; ';
-        raw[i].current += Math.round( datRaw[datId].exchanges[j].price * 10000 ) / 10000;
+        raw[i].current += Math.round(datRaw[datId].exchanges[j].price * 10000) / 10000;
 
         if (datRaw[datId].exchanges[j].units.counter != '' && datRaw[datId].exchanges[j].units.denominator != '')
           raw[i].current += ' ' + datRaw[datId].exchanges[j].units.counter + '/' + datRaw[datId].exchanges[j].units.denominator;
@@ -292,7 +292,7 @@ Template.ActivesViewTableItems.events({
           label: "Yes",
           className: "btn-success",
           callback: function() {
-            Meteor.call('stopStrategy', strId, function(e, r) {
+            Meteor.call('strategyStop', strId, function(e, r) {
               if (e) console.log(e);
               else if (r) {
                 Strategies.update({ _id: strId }, { $set: { active: false } });
@@ -313,17 +313,26 @@ Template.ActivesViewTableItems.events({
     e.preventDefault();
     var strId = this._id;
     if (Strategies.findOne({ _id: strId }).paused) {
-      Meteor.call('startStrategy', strId, function(e, r) {
+      Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: false } });
       });
     } else {
-      Meteor.call('pauseStrategy', strId, function(e, r) {
+      Meteor.call('strategyPause', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: true } });
       });
     }
 
+    return false;
+  },
+  "click #refresh-button": function(e, t) {
+    e.preventDefault();
+    var strId = this._id;
+    Meteor.call('strategyRefresh', strId, function(e, r) {
+      if (e) console.log(e);
+    });
+    
     return false;
   }
 });

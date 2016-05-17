@@ -84,6 +84,8 @@ export function Strategy(strategyDescription) {
   var _notifyFunc = function() {};
   var _updateCallFunc = function() {};
 
+  var _action = '';
+
   var _data = {
     strategyId: '',
     strategyName: '',
@@ -190,7 +192,6 @@ export function Strategy(strategyDescription) {
       if (finalDecision === _buyMask) {
         param.action = 'buy';
         _notifyFunc(param);
-        console.log('buy')
         _data.state = 'buy request';
       }
 
@@ -198,10 +199,52 @@ export function Strategy(strategyDescription) {
       if (finalDecision === _sellMask) {
         param.action = 'sell';
         _notifyFunc(param);
-        console.log('sell')
         _data.state = 'sell request';
       }
     }
+  }
+
+  var _buyFunction = function() {
+    console.log('buying');
+    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+      var tmp = _plugins.getObjectByIdx(i);
+
+      tmp.inst.bought(_exchanges.getObject(tmp.exId).getPrice());
+    }
+
+    if (_data.position === 'none') {
+      _data.position = 'long';
+      _data.state = 'in';
+    }
+
+    if (_data.position === 'short') {
+      _data.position = 'none';
+      _data.state = 'out';
+    }
+
+    _updateFunc();
+  }
+
+
+  var _sellFunction = function() {
+    console.log('selling');
+    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+      var tmp = _plugins.getObjectByIdx(i);
+
+      tmp.inst.sold(_exchanges.getObject(tmp.exId).getPrice());
+    }
+
+    if (_data.position === 'none') {
+      _data.position = 'short';
+      _data.state = 'in';
+    }
+
+    if (_data.position === 'long') {
+      _data.position = 'none';
+      _data.state = 'out';
+    }
+
+    _updateFunc();
   }
 
 
@@ -292,6 +335,7 @@ export function Strategy(strategyDescription) {
     _notifyFunc = notifyFunction;
   }
 
+
   this.setUpdateCallFunction = function(updateCallFunction) {
     _updateCallFunc = updateCallFunction;
   }
@@ -307,11 +351,28 @@ export function Strategy(strategyDescription) {
     }
 
     SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' sec', _updateFunc);
+
+    _updateFunc();
   }
 
 
   this.stop = function() {
     SchM.stopSchedule(_strDesc._id);
+  }
+
+
+  this.refresh = function() {
+    _updateFunc();
+  }
+
+
+  this.buy = function() {
+    _buyFunction();
+  }
+
+
+  this.sell = function() {
+    _sellFunction();
   }
 
 

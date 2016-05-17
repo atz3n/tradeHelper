@@ -126,7 +126,7 @@ Template.ActivesDetailsDetailsForm.events({
           label: "Yes",
           className: "btn-success",
           callback: function() {
-            Meteor.call('stopStrategy', strId, function(e, r) {
+            Meteor.call('strategyStop', strId, function(e, r) {
               if (e) console.log(e);
               else if (r) {
                 Strategies.update({ _id: strId }, { $set: { active: false } });
@@ -148,16 +148,32 @@ Template.ActivesDetailsDetailsForm.events({
     var strId = this.params.strategyId;
 
     if (Strategies.findOne({ _id: strId }).paused) {
-      Meteor.call('startStrategy', strId, function(e, r) {
+      Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: false } });
       });
     } else {
-      Meteor.call('pauseStrategy', strId, function(e, r) {
+      Meteor.call('strategyPause', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: true } });
       });
     }
+  },
+  "click #form-buy-button": function(e, t) {
+    e.preventDefault();
+    var strId = this.params.strategyId;
+
+    Meteor.call('strategyBuy', strId, function(e, r) {
+      if (e) console.log(e);
+    });
+  },
+  "click #form-sell-button": function(e, t) {
+    e.preventDefault();
+    var strId = this.params.strategyId;
+
+    Meteor.call('strategySell', strId, function(e, r) {
+      if (e) console.log(e);
+    });
   }
 });
 

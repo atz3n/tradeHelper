@@ -23,11 +23,11 @@ var strIdUpd = '';
 
 function update(infos) {
 
-  if(typeof ActiveDatas.findOne({strategyId: infos.strategyId}) === 'undefined'){
+  if (typeof ActiveDatas.findOne({ strategyId: infos.strategyId }) === 'undefined') {
     ActiveDatas.insert(infos);
-    ActiveDatas.update({strategyId: infos.strategyId}, {$set: {ownerId: Strategies.findOne({ _id: infos.strategyId }).ownerId}});
+    ActiveDatas.update({ strategyId: infos.strategyId }, { $set: { ownerId: Strategies.findOne({ _id: infos.strategyId }).ownerId } });
   } else {
-    ActiveDatas.update({strategyId: infos.strategyId}, {$set: infos});
+    ActiveDatas.update({ strategyId: infos.strategyId }, { $set: infos });
   }
   console.log(infos)
 }
@@ -38,7 +38,7 @@ function update(infos) {
 
 Meteor.methods({
 
-  startStrategy: function(strategyId) {
+  strategyStart: function(strategyId) {
 
     if (strategies.getObject(strategyId) === 'undefined') {
       strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
@@ -55,7 +55,7 @@ Meteor.methods({
     return true;
   },
 
-  pauseStrategy: function(strategyId) {
+  strategyPause: function(strategyId) {
 
     if (strategies.getObject(strategyId) !== 'undefined') {
       if (strategies.getObject(strategyId).startFlag === true) {
@@ -69,12 +69,12 @@ Meteor.methods({
     return true;
   },
 
-  stopStrategy: function(strategyId) {
+  strategyStop: function(strategyId) {
 
     if (strategies.getObject(strategyId) !== 'undefined') {
       strategies.getObject(strategyId).inst.stop();
       strategies.removeObject(strategyId);
-      ActiveDatas.remove({strategyId: strategyId});
+      ActiveDatas.remove({ strategyId: strategyId });
     } else {
       return false;
     }
@@ -82,9 +82,40 @@ Meteor.methods({
     return true;
   },
 
-  getStrategyData: function(strategyId) {
+  strategyBuy: function(strategyId) {
+
     if (strategies.getObject(strategyId) !== 'undefined') {
-      // console.log(strategies.getObject(strategyId).inst.getData());
+      strategies.getObject(strategyId).inst.buy();
+    } else {
+      return false;
+    }
+
+    return true;
+  },
+
+  strategySell: function(strategyId) {
+
+    if (strategies.getObject(strategyId) !== 'undefined') {
+        strategies.getObject(strategyId).inst.sell();
+    } else {
+      return false;
+    }
+
+    return true;
+  },
+
+  strategyRefresh: function(strategyId) {
+    if (strategies.getObject(strategyId) !== 'undefined') {
+      strategies.getObject(strategyId).inst.refresh();
+    } else {
+      return false;
+    }
+
+    return true;
+  },
+
+  strategyGetData: function(strategyId) {
+    if (strategies.getObject(strategyId) !== 'undefined') {
       return strategies.getObject(strategyId).inst.getData();
     }
   },

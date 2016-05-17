@@ -128,7 +128,7 @@ Template.StrategiesDetailsDetailsForm.events({
 
 
     if (!Strategies.findOne({ _id: strId }).active) {
-      Meteor.call('startStrategy', strId, function(e, r) {
+      Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) {
           Strategies.update({ _id: strId }, { $set: { active: true } });

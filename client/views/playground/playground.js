@@ -25,7 +25,7 @@ Template.Playground.events({
       var temp = Strategies.find().fetch();
       for (i = 0; i < temp.length; i++) {
 
-        Meteor.call("startStrategy", temp[i]._id, function(e) {
+        Meteor.call("strategyStart", temp[i]._id, function(e) {
           if (e) console.log(e);
         });
       };
@@ -36,7 +36,7 @@ Template.Playground.events({
 
       var temp = Strategies.find().fetch();
       for (i = 0; i < temp.length; i++) {
-        Meteor.call("pauseStrategy", temp[i]._id, function(e) {
+        Meteor.call("strategyPause", temp[i]._id, function(e) {
           if (e) console.log(e);
         });
       };
@@ -47,7 +47,7 @@ Template.Playground.events({
 
       var temp = Strategies.find().fetch();
       for (i = 0; i < temp.length; i++) {
-        Meteor.call("stopStrategy", temp[i]._id, function(e) {
+        Meteor.call("strategyStop", temp[i]._id, function(e) {
           if (e) console.log(e);
         });
       };
