@@ -51,10 +51,6 @@ var processActiveData = function(data){
 
 
 Template.ActivesDetailsDetailsForm.rendered = function() {
-  pageSession.set("activeData", this.data.active_data || []);
-
-  pageSession.set("pluginBundlesCrudItems", this.data.strategy.pluginBundles || []);
-
 
   pageSession.set("activesDetailsDetailsFormInfoMessage", "");
   pageSession.set("activesDetailsDetailsFormErrorMessage", "");
@@ -187,7 +183,8 @@ Template.ActivesDetailsDetailsForm.events({
     e.preventDefault();
     var strId = this.params.strategyId;
 
-    if (Strategies.findOne({ _id: strId }).paused) {
+
+    if (documentArray(this.strategies_active, strId).paused) {
       Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: false } });
@@ -224,14 +221,12 @@ Template.ActivesDetailsDetailsForm.helpers({
   "errorMessage": function() {
     return pageSession.get("activesDetailsDetailsFormErrorMessage");
   },
-  "pluginBundlesCrudItems": function() {
-    return pageSession.get("pluginBundlesCrudItems");
-  },
   "activeData": function() {
+    console.log(processActiveData(this.active_data))
     return processActiveData(this.active_data);
   },
   "strategyPaused": function() {
-    if (Strategies.findOne({ _id: this.params.strategyId }).paused)
+    if (documentArray(this.strategies_active, this.params.strategyId).paused)
       return true;
     else
       return false;

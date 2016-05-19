@@ -13,3 +13,7 @@ logger
 -  meteor add meteorhacks:npm
 https://meteorhacks.com/logging-support-for-meteor.html
 https://www.npmjs.com/package/winston-mongodb
+
+
+Handlebar improvement
+- meteor add evenfrost:spacekit

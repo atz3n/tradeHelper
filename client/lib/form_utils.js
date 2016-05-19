@@ -332,3 +332,9 @@ this.bootboxDialog = function(template, data, options) {
 	options.message = div;
 	bootbox.dialog(options);
 };
+
+this.documentArray = function(collection, docId){
+	return collection.find(function(obj){
+      return obj._id === docId;
+    })
+}

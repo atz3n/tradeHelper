@@ -12,8 +12,6 @@
  */
 
 
-// import { Instance } from '../dir/example.js';
-// import '../../tools/miscFunctions.js';
 import { IPlugin } from '../../apis/IPlugin.js'
 
 
@@ -53,19 +51,9 @@ PlSwing.ConfigDefault = {
   Private Static Function
  ***********************************************************************/
 
-// var _variable = function(param){
-//   return 'Value';
-// }
-
-
 /***********************************************************************
   Public Static Function
  ***********************************************************************/
-
-// ClassName.function = function(param){
-//   return 'Value';
-// }
-
 
 /***********************************************************************
   Class
@@ -101,9 +89,6 @@ export function PlSwing(logger) {
   /***********************************************************************
     Public Instance Variable
    ***********************************************************************/
-
-  // this.Variable = 'Value'; 
-
 
   /***********************************************************************
     Private Instance Function
@@ -200,7 +185,14 @@ export function PlSwing(logger) {
 
 
   this.getInfo = function() {
-    return Object.assign({}, _data);
+    var info = {};
+    
+    info.current = cropFracDigits(_data.currentVal, 6);
+    info.frozen = cropFracDigits(_data.frozenVal, 6);
+    info.top = cropFracDigits(_data.topVal, 6);
+    info.bottom = cropFracDigits(_data.bottomVal, 6);
+
+    return info;
   }
 
 

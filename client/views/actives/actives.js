@@ -47,7 +47,7 @@ var ActivesViewItems = function(strQue, datQue) {
 
         if (j !== 0) raw[i].current += ', ';
      
-        raw[i].current += Math.round(tmp.price * 10000) / 10000;
+        raw[i].current += cropFracDigits(tmp.price, 4);
 
         if (tmp.units.counter != '' && tmp.units.denominator != '')
           raw[i].current += ' ' + tmp.units.counter + '/' + tmp.units.denominator;
@@ -69,9 +69,10 @@ var ActivesViewItems = function(strQue, datQue) {
 
         var volIn = tmp.inPrice * tmp.amount;
         var Volcur = tmp2.price * tmp.amount;
-        raw[i].volumeIn += Math.round(volIn * 10000) / 10000;
-        raw[i].current += Math.round(Volcur * 10000) / 10000;  
-        raw[i].winLoss += Math.round(percentage(Volcur, volIn) * 1000) / 1000;  
+
+        raw[i].volumeIn += cropFracDigits(volIn, 4);
+        raw[i].current += cropFracDigits(Volcur, 4);
+        raw[i].winLoss += cropFracDigits(percentage(Volcur, volIn), 4);
 
         if (tmp2.units.counter != '' && tmp2.units.denominator != ''){
           raw[i].volumeIn += ' ' + tmp2.units.counter;
@@ -334,7 +335,9 @@ Template.ActivesViewTableItems.events({
   "click #pausePlay-button": function(e, t) {
     e.preventDefault();
     var strId = this._id;
-    if (Strategies.findOne({ _id: strId }).paused) {
+
+
+    if (this.paused) {
       Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) Strategies.update({ _id: strId }, { $set: { paused: false } });
