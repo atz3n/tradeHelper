@@ -187,6 +187,11 @@ Template.ActivesDetailsDetailsForm.helpers({
   "pluginBundlesCrudItems": function() {
     return pageSession.get("pluginBundlesCrudItems");
   },
+  // "strategyInfos": function() {
+  //   console.log(this);
+  //   // console.log(ActiveDatas.findOne({ strategyId: this.params.strategyId }));
+  //   return ActiveDatas.findOne({ strategyId: this.params.strategyId });
+  // },
   "strategyPaused": function() {
     if (Strategies.findOne({ _id: this.params.strategyId }).paused)
       return true;
