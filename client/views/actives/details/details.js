@@ -12,7 +12,47 @@ Template.ActivesDetails.helpers({
 
 });
 
+
+var processActiveData = function(data){
+
+  var pData = {};
+
+  pData.strategyName = data.strategyName;
+  pData.state = data.state;
+  pData.position = data.position;
+
+  pData.bundles = new Array(data.bundles.length);
+
+  for(var i = 0 ; i < data.bundles.length ; i++){
+    pData.bundles[i] = {};
+    pData.bundles[i].name = data.bundles[i].name;
+    pData.bundles[i].plugins = new Array(data.bundles[i].plugins.length);
+
+    for(var j = 0 ; j < data.bundles[i].plugins.length ; j++){
+      pData.bundles[i].plugins[j] = {};
+
+      for(var k = 0 ; k < data.plugins.length ; k++){
+        if(data.bundles[i].plugins[j].pId === data.plugins[k].instInfo.id){
+           pData.bundles[i].plugins[j] = data.plugins[k];
+        }
+      }
+
+      for(var k = 0 ; k < data.exchanges.length ; k++){
+        if(data.bundles[i].plugins[j].eId === data.exchanges[k].instInfo.id){
+           pData.bundles[i].plugins[j].exchange = data.exchanges[k];
+        }
+      }
+    }
+  }
+
+  return pData;
+}
+
+
+
 Template.ActivesDetailsDetailsForm.rendered = function() {
+  pageSession.set("activeData", this.data.active_data || []);
+
   pageSession.set("pluginBundlesCrudItems", this.data.strategy.pluginBundles || []);
 
 
@@ -187,11 +227,9 @@ Template.ActivesDetailsDetailsForm.helpers({
   "pluginBundlesCrudItems": function() {
     return pageSession.get("pluginBundlesCrudItems");
   },
-  // "strategyInfos": function() {
-  //   console.log(this);
-  //   // console.log(ActiveDatas.findOne({ strategyId: this.params.strategyId }));
-  //   return ActiveDatas.findOne({ strategyId: this.params.strategyId });
-  // },
+  "activeData": function() {
+    return processActiveData(this.active_data);
+  },
   "strategyPaused": function() {
     if (Strategies.findOne({ _id: this.params.strategyId }).paused)
       return true;

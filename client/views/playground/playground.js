@@ -7,7 +7,7 @@ Template.Playground.rendered = function() {
   var temp = Strategies.find().fetch();
   for (i = 0; i < temp.length; i++) {
 
-    Meteor.call("getStrategyData",temp[i]._id, function(e, r) {
+    Meteor.call("strategyGetData",temp[i]._id, function(e, r) {
       if (e) console.log(e);
       else globalReact.set("updateInfos", r);
     });
@@ -55,8 +55,9 @@ Template.Playground.events({
 
       /*++++++++++ dummyButton ++++++++++*/
     } else if ($(event.target).prop("name") == "dummyButton") {
-      cnt++;
-      Meteor.call("develop", function(e) {
+
+      var temp = Strategies.findOne()
+      Meteor.call("develop", temp._id, function(e) {
         if (e) console.log(e);
       });
 

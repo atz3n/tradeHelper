@@ -1,141 +1,145 @@
 <template name="ActivesDetails">
-	<div class="page-container container" id="content">
-		<div class="row" id="title_row">
-			<div class="col-md-12">
-				<div id="page_menu" class="pull-right">
-				</div>
-			</div>
-		</div>
-		{{> ActivesDetailsDetailsForm}}
-	</div>
+  <div class="page-container container" id="content">
+    <div class="row" id="title_row">
+      <div class="col-md-12">
+        <div id="page_menu" class="pull-right">
+        </div>
+      </div>
+    </div>
+    {{> ActivesDetailsDetailsForm}}
+  </div>
 </template>
-
 <template name="ActivesDetailsDetailsForm">
-	<div id="actives-details-details-form" class="">
-		<h2 id="component-title">
+  <div id="actives-details-details-form" class="">
+    <h2 id="component-title">
 			<a href="#" id="form-back-button" class="btn btn-default" title="back">
 				<span class="fa fa-chevron-left">
 				</span>
 			</a>
 			Details and Controls
 		</h2>
-		<form role="form" class="form-horizontal">
-			{{#if errorMessage}}
-			<div class="alert alert-warning">
-				{{errorMessage}}
-			</div>
-			{{/if}}
-
-			{{#if infoMessage}}
-			<div class="alert alert-success">
-				{{infoMessage}}
-			</div>
-			{{/if}}
-			<div class="form-group  field-name">
-				<label for="name" class="col-sm-3 control-label">
-					Name
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{active_data.strategyName}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group  field-update-time">
-				<label for="state" class="col-sm-3 control-label">
-					State
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{active_data.state}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group  field-update-time">
-				<label for="position" class="col-sm-3 control-label">
-					Position
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{active_data.position}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group  field-plugin-bundles">
-				<label for="pluginBundles" class="col-sm-3 control-label">
-					Plugin Bundles (logical connected via 'or')
-				</label>
-				<div class="input-div col-sm-9">
-					<table class="table table-striped">
-						<thead>
-							{{#if pluginBundlesCrudItems}}
-							<tr class="crud-table-header">
-								<th>
-									Plugin Bundle
-								</th>
-							</tr>
-							{{/if}}
-						</thead>
-						<tbody>
-							{{#each pluginBundlesCrudItems}}
-							<tr class="crud-table-row">
-								<td>
-									{{bundle}}
-								</td>
-							</tr>
-							{{/each}}
-						</tbody>
-					</table>
-					<span id="help-text" class="help-block">
+    <form role="form" class="form-horizontal">
+      {{#if errorMessage}}
+      <div class="alert alert-warning">
+        {{errorMessage}}
+      </div>
+      {{/if}} {{#if infoMessage}}
+      <div class="alert alert-success">
+        {{infoMessage}}
+      </div>
+      {{/if}}
+      <div class="form-group  field-name">
+        <label for="name" class="col-sm-3 control-label">
+          Name
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{activeData.strategyName}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-update-time">
+        <label for="state" class="col-sm-3 control-label">
+          State
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{activeData.state}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-update-time">
+        <label for="position" class="col-sm-3 control-label">
+          Position
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{activeData.position}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-plugin-bundles">
+        <label for="pluginBundles" class="col-sm-3 control-label">
+          Plugin Bundles
+        </label>
+        <div class="input-div col-sm-9">
+          <table class="table table-striped">
+            <tbody>
+              {{#each activeData.bundles}}
+              <tr class="crud-table-row">
+                <td>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr class="crud-table-header">
+                        <th>
+                          {{name}}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each plugins}}
+                      <tr class="crud-table-row">
+                        <td>
+                          name &nbsp; &nbsp; &nbsp; &nbsp; {{name}}
+                        </td>
+                      </tr>
+                      <tr class="crud-table-row">
+                        <td>
+                          name: {{name}}
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+          <span id="help-text" class="help-block">
 					</span>
-					<span id="error-text" class="help-block">
+          <span id="error-text" class="help-block">
 					</span>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="submit-div col-sm-9 col-sm-offset-3">
-					<button id="form-buy-button" class="btn btn-info" type="submit">
-						<span class="fa fa-arrow-circle-down">
-						</span>
-						Buy
-					</button>
-					<button id="form-sell-button" class="btn btn-info" type="submit">
-						<span class="fa fa-arrow-circle-up">
-						</span>
-						Sell
-					</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="submit-div col-sm-9 col-sm-offset-3">
-					{{#if strategyPaused}}
-					<button id="form-pausePlay-button" class="btn btn-default" type="submit">
-						<span class="fa fa-play">
-						</span>
-						Play
-					</button>
-					{{else}}
-					<button id="form-pausePlay-button" class="btn btn-default" type="submit">
-						<span class="fa fa-pause">
-						</span>
-						Pause
-					</button>
-					{{/if}}
-					<button id="form-stop-button" class="btn btn-default" type="submit">
-						<span class="fa fa-stop">
-						</span>
-						Stop
-					</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="submit-div col-sm-9 col-sm-offset-3">
-					<a href="#" id="form-close-button" class="btn btn-primary">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="submit-div col-sm-9 col-sm-offset-3">
+          <button id="form-buy-button" class="btn btn-info" type="submit">
+            <span class="fa fa-arrow-circle-down">
+						</span> Buy
+          </button>
+          <button id="form-sell-button" class="btn btn-info" type="submit">
+            <span class="fa fa-arrow-circle-up">
+						</span> Sell
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="submit-div col-sm-9 col-sm-offset-3">
+          {{#if strategyPaused}}
+          <button id="form-pausePlay-button" class="btn btn-default" type="submit">
+            <span class="fa fa-play">
+						</span> Play
+          </button>
+          {{else}}
+          <button id="form-pausePlay-button" class="btn btn-default" type="submit">
+            <span class="fa fa-pause">
+						</span> Pause
+          </button>
+          {{/if}}
+          <button id="form-stop-button" class="btn btn-default" type="submit">
+            <span class="fa fa-stop">
+						</span> Stop
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="submit-div col-sm-9 col-sm-offset-3">
+          <a href="#" id="form-close-button" class="btn btn-primary">
 						OK
 					</a>
-				</div>
-			</div>
-		</form>
-	</div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
-

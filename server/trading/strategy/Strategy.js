@@ -93,7 +93,8 @@ export function Strategy(strategyDescription) {
     position: 'none',
     actionVals: [],
     plugins: [],
-    exchanges: []
+    exchanges: [],
+    bundles: []
   };
 
 
@@ -433,10 +434,16 @@ export function Strategy(strategyDescription) {
 
     _data.strategyId = _strDesc._id;
     _data.strategyName = _strDesc.name;
+    _data.bundles = new Array(_strDesc.pluginBundles.length);
 
 
     /* create plugin and exchange instances */
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
+      
+      _data.bundles[i] = {};
+      _data.bundles[i].name = _strDesc.pluginBundles[i].name;
+      _data.bundles[i].plugins = new Array(_strDesc.pluginBundles[i].bundlePlugins.length);
+
 
       /* create notify handler to emulate plugin structure */
       _notifyMaskedValues[i] = new InstHandler();
@@ -446,6 +453,9 @@ export function Strategy(strategyDescription) {
 
         /* add plugin id for evaluation */
         _notifyMaskedValues[i].setObject(plugin._id, _noneMask);
+
+
+        _data.bundles[i].plugins[j] = {"pId": plugin._id, "eId": plugin.exchange._id};
 
 
         /* create not yet created plugin instances */
