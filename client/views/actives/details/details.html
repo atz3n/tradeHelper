@@ -62,8 +62,22 @@
         <label for="pluginBundles" class="col-sm-3 control-label">
           Plugin Bundles
         </label>
+        <button id="form-bundle-button" class="btn btn-default btn-xs" type="submit">
+          {{#if showBundles}}
+          <span class="fa fa-angle-up">
+            </span> {{else}}
+          <span class="fa fa-angle-down">
+            </span> {{/if}}
+        </button>
+        <button id="form-expand-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-down"></span>
+        </button>
+        <button id="form-collapse-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-up"></span>
+        </button>
         <div class="input-div col-sm-9">
           <table class="table table-striped">
+            {{#if showBundles}}
             <tbody>
               {{#each activeData.bundles}}
               <tr class="crud-table-row">
@@ -77,61 +91,14 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each plugins}}
-                      <tr class="crud-table-row">
-                        <td>
-                          <table class="table table-striped">
-                            <thead>
-                              <tr class="crud-table-header">
-                                <th>
-                                  {{name}}
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr class="crud-table-row">
-                                <td>
-                                  Type:
-                                  <br> {{instInfo.type}}
-                                </td>
-                              </tr>
-                              <tr class="crud-table-row">
-                                <td>
-                                  State:
-                                  <br> {{state}}
-                                </td>
-                              </tr>
-                              <tr class="crud-table-row">
-                                <td>
-                                  Exchange:
-                                  <br> {{exchange.name}}
-                                </td>
-                              </tr>
-                              <tr class="crud-table-row">
-                                <td>
-                                  Exchange Type:
-                                  <br> {{exchange.instInfo.type}}
-                                </td>
-                              </tr>
-                              {{#each arrayify info}}
-                              <tr class="crud-table-row">
-                                <td>
-                                  {{name}}:
-                                  <br> {{value}}
-                                </td>
-                              </tr>
-                              {{/each}}
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      {{/each}}
+                      {{#each plugins}} {{> ActivesDetailsDetailsFormPlugins}} {{/each}}
                     </tbody>
                   </table>
                 </td>
               </tr>
               {{/each}}
             </tbody>
+            {{/if}}
           </table>
           <span id="help-text" class="help-block">
           </span>
@@ -179,4 +146,60 @@
       </div>
     </form>
   </div>
+</template>
+<template name="ActivesDetailsDetailsFormPlugins">
+  <tr class="crud-table-row">
+    <td>
+      <table class="table table-striped">
+        <thead>
+          <tr class="crud-table-header">
+            <th>
+              {{name}}
+              <button id="plugin-button" class="btn btn-default btn-xs" type="submit">
+                {{#if showPlugin}}
+                <span class="fa fa-angle-up"></span> {{else}}
+                <span class="fa fa-angle-down"></span> {{/if}}
+              </button>
+            </th>
+          </tr>
+        </thead>
+        {{#if showPlugin}}
+        <tbody>
+          <tr class="crud-table-row">
+            <td>
+              Type:
+              <br> {{instInfo.type}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              State:
+              <br> {{state}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Exchange:
+              <br> {{exchange.name}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Exchange Type:
+              <br> {{exchange.instInfo.type}}
+            </td>
+          </tr>
+          {{#each arrayify info}}
+          <tr class="crud-table-row">
+            <td>
+              {{name}}:
+              <br> {{value}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+        {{/if}}
+      </table>
+    </td>
+  </tr>
 </template>

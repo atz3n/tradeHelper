@@ -187,10 +187,10 @@ export function PlSwing(logger) {
   this.getInfo = function() {
     var info = {};
     
-    info.current = cropFracDigits(_data.currentVal, 6);
-    info.frozen = cropFracDigits(_data.frozenVal, 6);
-    info.top = cropFracDigits(_data.topVal, 6);
-    info.bottom = cropFracDigits(_data.bottomVal, 6);
+    info.Current = cropFracDigits(_data.currentVal, 6);
+    info.Frozen = cropFracDigits(_data.frozenVal, 6);
+    info.Top = cropFracDigits(_data.topVal, 6);
+    info.Bottom = cropFracDigits(_data.bottomVal, 6);
 
     return info;
   }
