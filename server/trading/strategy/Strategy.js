@@ -91,7 +91,6 @@ export function Strategy(strategyDescription) {
     strategyName: '',
     state: 'out',
     position: 'none',
-    actionVals: [],
     plugins: [],
     exchanges: [],
     bundles: []
@@ -224,12 +223,12 @@ export function Strategy(strategyDescription) {
         tmp.buy();
 
         if (_data.position === 'none') {
-          _data.actionVals[i].inPrice = tmp.getActionPrice();
-          _data.actionVals[i].amount = tmp.getAmount();
+          _data.exchanges[i].inPrice = tmp.getActionPrice();
+          _data.exchanges[i].amount = tmp.getAmount();
         }
 
         if (_data.position === 'short') {
-          _data.actionVals[i].outPrice = tmp.getActionPrice();
+          _data.exchanges[i].outPrice = tmp.getActionPrice();
         }
       }
 
@@ -264,12 +263,12 @@ export function Strategy(strategyDescription) {
         tmp.sell();
 
         if (_data.position === 'none') {
-          _data.actionVals[i].inPrice = tmp.getActionPrice();
-          _data.actionVals[i].amount = tmp.getAmount();
+          _data.exchanges[i].inPrice = tmp.getActionPrice();
+          _data.exchanges[i].amount = tmp.getAmount();
         }
 
         if (_data.position === 'long') {
-          _data.actionVals[i].outPrice = tmp.getActionPrice();
+          _data.exchanges[i].outPrice = tmp.getActionPrice();
         }
       }
 
@@ -503,8 +502,6 @@ export function Strategy(strategyDescription) {
 
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
-            _data.actionVals[exCnt] = {};
-            _data.actionVals[exCnt].id = tmpEx.getInstInfo().id;
             _data.exchanges[exCnt] = {};
             _data.exchanges[exCnt].name = plugin.exchange.name;
             _data.exchanges[exCnt].instInfo = tmpEx.getInstInfo();

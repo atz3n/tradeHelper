@@ -59,24 +59,23 @@ var ActivesViewItems = function(strQue, datQue) {
       raw[i].winLoss = '';
       raw[i].current = '';
       
-      for(var j = 0 ; j < datRaw[datId].actionVals.length ; j++){
-        var tmp = datRaw[datId].actionVals[j];
-        var tmp2 = datRaw[datId].exchanges[j];
+      for(var j = 0 ; j < datRaw[datId].exchanges.length ; j++){
+        var tmp = datRaw[datId].exchanges[j];
 
         if (j !== 0) raw[i].volumeIn += ', ';
         if (j !== 0) raw[i].winLoss += ', ';
         if (j !== 0) raw[i].current += ', ';
 
         var volIn = tmp.inPrice * tmp.amount;
-        var Volcur = tmp2.price * tmp.amount;
+        var VolCur = tmp.price * tmp.amount;
 
         raw[i].volumeIn += cropFracDigits(volIn, 4);
-        raw[i].current += cropFracDigits(Volcur, 4);
-        raw[i].winLoss += cropFracDigits(percentage(Volcur, volIn), 4);
+        raw[i].current += cropFracDigits(VolCur, 4);
+        raw[i].winLoss += cropFracDigits(percentage(VolCur, volIn), 4);
 
-        if (tmp2.units.counter != '' && tmp2.units.denominator != ''){
-          raw[i].volumeIn += ' ' + tmp2.units.counter;
-          raw[i].current += ' ' + tmp2.units.counter;  
+        if (tmp.units.counter != '' && tmp.units.denominator != ''){
+          raw[i].volumeIn += ' ' + tmp.units.counter;
+          raw[i].current += ' ' + tmp.units.counter;  
         }
       }
     }

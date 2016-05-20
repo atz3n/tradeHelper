@@ -22,6 +22,45 @@ var processActiveData = function(data){
   pData.state = data.state;
   pData.position = data.position;
 
+
+  pData.exchanges = new Array(data.exchanges.length);
+  for(var i = 0 ; i < data.exchanges.length ; i++) {
+    pData.exchanges[i] = {};
+    pE = pData.exchanges[i];
+    e = data.exchanges[i];
+
+    pE.name = e.name;
+    pE.type = e.instInfo.type;
+    pE.price = cropFracDigits(e.price, 6);
+
+    if(pData.state === 'none'){
+      pE.inPrice = '-';
+      pE.amount = '-';
+      pE.volume = '-';
+      pE.winLoss = '-';
+    }
+
+    if(pData.state !== 'none'){
+      pE.inPrice = e.inPrice;
+      pE.amount = e.amount;
+
+      var volIn = pE.inPrice * pE.amount;
+      var volCur = pE.price * pE.amount;
+
+      pE.volumeIn = cropFracDigits(volIn, 6);
+      pE.volumeCur = cropFracDigits(volCur, 6);
+      pE.winLoss = cropFracDigits(percentage(volCur, volIn), 6);
+
+      if (e.units.counter != '' && e.units.denominator != ''){
+          pE.volumeIn += ' ' + e.units.counter;
+          pE.volumeCur += ' ' + e.units.counter;
+      }
+    }
+    pE.price = cropFracDigits(pE.price, 6);
+    if (e.units.counter != '' && e.units.denominator != '')
+      pE.price += ' ' + e.units.counter + '/' + e.units.denominator;
+  }
+
   pData.bundles = new Array(data.bundles.length);
 
   for(var i = 0 ; i < data.bundles.length ; i++){
@@ -37,6 +76,7 @@ var processActiveData = function(data){
            pData.bundles[i].plugins[j] = Object.assign({}, data.plugins[k]);
         }
       }
+
       pData.bundles[i].plugins[j].num = cnt;
       cnt++;
 

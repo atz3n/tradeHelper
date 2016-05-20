@@ -58,6 +58,22 @@
           </p>
         </div>
       </div>
+      <div class="form-group  field-exchanges">
+        <label for="exchanges" class="col-sm-3 control-label">
+          Exchanges
+        </label>
+        <div class="input-div col-sm-9">
+          <table class="table table-striped">
+            <tbody>
+              {{#each activeData.exchanges}} {{> ActivesDetailsDetailsFormExchanges}} {{/each}}
+            </tbody>
+          </table>
+          <span id="help-text" class="help-block">
+          </span>
+          <span id="error-text" class="help-block">
+          </span>
+        </div>
+      </div>
       <div class="form-group  field-plugin-bundles">
         <label for="pluginBundles" class="col-sm-3 control-label">
           Plugin Bundles
@@ -183,12 +199,6 @@
               <br> {{exchange.name}}
             </td>
           </tr>
-          <tr class="crud-table-row">
-            <td>
-              Exchange Type:
-              <br> {{exchange.instInfo.type}}
-            </td>
-          </tr>
           {{#each arrayify info}}
           <tr class="crud-table-row">
             <td>
@@ -199,6 +209,66 @@
           {{/each}}
         </tbody>
         {{/if}}
+      </table>
+    </td>
+  </tr>
+</template>
+
+<template name="ActivesDetailsDetailsFormExchanges">
+  <tr class="crud-table-row">
+    <td>
+      <table class="table table-striped">
+        <thead>
+          <tr class="crud-table-header">
+            <th>
+              {{name}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="crud-table-row">
+            <td>
+              Type:
+              <br> {{type}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Amount:
+              <br> {{amount}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Price In:
+              <br> {{inPrice}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Volume In:
+              <br> {{volumeIn}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Price Current:
+              <br> {{price}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Volume Current:
+              <br> {{volumeCur}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Win / Loss:
+              <br> {{winLoss}}
+            </td>
+          </tr>
+        </tbody>
       </table>
     </td>
   </tr>
