@@ -16,7 +16,8 @@ Template.ActivesDetails.helpers({
 var processActiveData = function(data){
 
   var pData = {};
-  var cnt = 0;
+  var cntPl = 0;
+  var cntEx = 0;
 
   pData.strategyName = data.strategyName;
   pData.state = data.state;
@@ -25,6 +26,7 @@ var processActiveData = function(data){
 
   pData.exchanges = new Array(data.exchanges.length);
   for(var i = 0 ; i < data.exchanges.length ; i++) {
+   
     pData.exchanges[i] = {};
     pE = pData.exchanges[i];
     e = data.exchanges[i];
@@ -32,6 +34,9 @@ var processActiveData = function(data){
     pE.name = e.name;
     pE.type = e.instInfo.type;
     pE.price = cropFracDigits(e.price, 6);
+    pE.num = data._id +  cntEx;
+    cntEx++;
+
 
     if(pData.state === 'none'){
       pE.inPrice = '-';
@@ -70,15 +75,15 @@ var processActiveData = function(data){
 
     for(var j = 0 ; j < data.bundles[i].plugins.length ; j++){
       pData.bundles[i].plugins[j] = {};
-
+      
       for(var k = 0 ; k < data.plugins.length ; k++){
         if(data.bundles[i].plugins[j].pId === data.plugins[k].instInfo.id){
            pData.bundles[i].plugins[j] = Object.assign({}, data.plugins[k]);
         }
       }
 
-      pData.bundles[i].plugins[j].num = cnt;
-      cnt++;
+      pData.bundles[i].plugins[j].num = data._id + cntPl;
+      cntPl++;
 
       for(var k = 0 ; k < data.exchanges.length ; k++){
         if(data.bundles[i].plugins[j].eId === data.exchanges[k].instInfo.id){
@@ -87,7 +92,6 @@ var processActiveData = function(data){
       }
     }
   }
-
   return  pData;
 }
 
@@ -97,9 +101,17 @@ var setPluginSessionVar = function(data, state){
   var cnt = 0;
   for(var i = 0 ; i < data.bundles.length ; i++){
     for(var j = 0 ; j < data.bundles[i].plugins.length ; j++){
-      pageSession.set('showPl' + cnt, state);
+      pageSession.set('showPl' + data._id + cnt, state);
       cnt ++;
     }
+  }
+}
+
+var setExchangeSessionVar = function(data, state){
+  var cnt = 0;
+  for(var i = 0 ; i < data.exchanges.length ; i++){
+    pageSession.set('showEx' + data._id + cnt, state);
+    cnt ++;
   }
 }
 
@@ -110,7 +122,9 @@ Template.ActivesDetailsDetailsForm.rendered = function() {
   pageSession.set("activesDetailsDetailsFormInfoMessage", "");
   pageSession.set("activesDetailsDetailsFormErrorMessage", "");
   pageSession.set('showBundles', false);
+  pageSession.set('showExchanges', false);
   setPluginSessionVar(this.data.active_data, false);
+  setExchangeSessionVar(this.data.active_data, false);
 
   $(".input-group.date").each(function() {
     var format = $(this).find("input[type='text']").attr("data-format");
@@ -205,20 +219,37 @@ Template.ActivesDetailsDetailsForm.events({
 
     Router.go("actives", {});
   },
-  "click #form-bundle-button": function(e, t) {
+  "click #form-exchanges-button": function(e, t) {
     e.preventDefault();
     
+    pageSession.set('showExchanges', !pageSession.get('showExchanges'));
+  },
+  "click #form-collapseExchanges-button": function(e, t) {
+    e.preventDefault();
+
+    setExchangeSessionVar(this.active_data, false);
+    pageSession.set('showExchanges', false);
+  },
+  "click #form-expandExchanges-button": function(e, t) {
+    e.preventDefault();
+
+    setExchangeSessionVar(this.active_data, true);
+    pageSession.set('showExchanges', true);
+  },
+  "click #form-bundle-button": function(e, t) {
+    e.preventDefault();
     pageSession.set('showBundles', !pageSession.get('showBundles'));
   },
-  "click #form-collapse-button": function(e, t) {
+  "click #form-collapseBundles-button": function(e, t) {
     e.preventDefault();
 
     setPluginSessionVar(this.active_data, false);
+    pageSession.set('showBundles', false);
   },
-  "click #form-expand-button": function(e, t) {
+  "click #form-expandBundles-button": function(e, t) {
     e.preventDefault();
-    
     setPluginSessionVar(this.active_data, true);
+    pageSession.set('showBundles', true);
   },
   "click #form-stop-button": function(e, t) {
     e.preventDefault();
@@ -297,6 +328,9 @@ Template.ActivesDetailsDetailsForm.helpers({
   "showBundles": function() {
     return pageSession.get('showBundles');
   },
+  "showExchanges": function() {
+    return pageSession.get('showExchanges');
+  },
   "strategyPaused": function() {
     if (documentArray(this.strategies_active, this.params.strategyId).paused)
       return true;
@@ -306,8 +340,27 @@ Template.ActivesDetailsDetailsForm.helpers({
 });
 
 
-Template.ActivesDetailsDetailsFormPlugins.rendered = function() {
 
+Template.ActivesDetailsDetailsFormExchanges.rendered = function() {
+};
+
+Template.ActivesDetailsDetailsFormExchanges.events({
+  "click #exchange-button": function(e, t) {
+    e.preventDefault();
+
+    pageSession.set('showEx' + this.num, !pageSession.get('showEx' + this.num));
+  }
+});
+
+Template.ActivesDetailsDetailsFormExchanges.helpers({
+  "showExchange": function(){
+    return pageSession.get('showEx' + this.num);
+  }
+});
+
+
+
+Template.ActivesDetailsDetailsFormPlugins.rendered = function() {
 };
 
 Template.ActivesDetailsDetailsFormPlugins.events({
@@ -319,7 +372,7 @@ Template.ActivesDetailsDetailsFormPlugins.events({
 });
 
 Template.ActivesDetailsDetailsFormPlugins.helpers({
-"showPlugin": function(){
-  return pageSession.get('showPl' + this.num);
-}
+  "showPlugin": function(){
+    return pageSession.get('showPl' + this.num);
+  }
 });

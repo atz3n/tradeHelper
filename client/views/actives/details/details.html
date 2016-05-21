@@ -62,11 +62,26 @@
         <label for="exchanges" class="col-sm-3 control-label">
           Exchanges
         </label>
+        <button id="form-exchanges-button" class="btn btn-default btn-xs" type="submit">
+          {{#if showExchanges}}
+          <span class="fa fa-angle-up">
+            </span> {{else}}
+          <span class="fa fa-angle-down">
+            </span> {{/if}}
+        </button>
+        <button id="form-expandExchanges-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-down"></span>
+        </button>
+        <button id="form-collapseExchanges-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-up"></span>
+        </button>
         <div class="input-div col-sm-9">
           <table class="table table-striped">
+          {{#if showExchanges}}
             <tbody>
               {{#each activeData.exchanges}} {{> ActivesDetailsDetailsFormExchanges}} {{/each}}
             </tbody>
+            {{/if}}
           </table>
           <span id="help-text" class="help-block">
           </span>
@@ -85,10 +100,10 @@
           <span class="fa fa-angle-down">
             </span> {{/if}}
         </button>
-        <button id="form-expand-button" class="btn btn-default btn-xs" type="submit">
+        <button id="form-expandBundles-button" class="btn btn-default btn-xs" type="submit">
           <span class="fa fa-angle-double-down"></span>
         </button>
-        <button id="form-collapse-button" class="btn btn-default btn-xs" type="submit">
+        <button id="form-collapseBundles-button" class="btn btn-default btn-xs" type="submit">
           <span class="fa fa-angle-double-up"></span>
         </button>
         <div class="input-div col-sm-9">
@@ -222,9 +237,15 @@
           <tr class="crud-table-header">
             <th>
               {{name}}
+              <button id="exchange-button" class="btn btn-default btn-xs" type="submit">
+                {{#if showExchange}}
+                <span class="fa fa-angle-up"></span> {{else}}
+                <span class="fa fa-angle-down"></span> {{/if}}
+              </button>
             </th>
           </tr>
         </thead>
+        {{#if showExchange}}
         <tbody>
           <tr class="crud-table-row">
             <td>
@@ -269,6 +290,7 @@
             </td>
           </tr>
         </tbody>
+        {{/if}}
       </table>
     </td>
   </tr>
