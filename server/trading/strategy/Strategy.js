@@ -22,38 +22,21 @@ import { ExTestData } from '../exchanges/ExTestData.js';
 import { SchM } from '../../lib/SchM.js';
 
 
-
 /***********************************************************************
   Private Static Variable
  ***********************************************************************/
-
-// var _variable = 'Value';
-
 
 /***********************************************************************
   Public Static Variable
  ***********************************************************************/
 
-
-
-
 /***********************************************************************
   Private Static Function
  ***********************************************************************/
 
-// var _variable = function(param){
-//   return 'Value';
-// }
-
-
 /***********************************************************************
   Public Static Function
  ***********************************************************************/
-
-// ClassName.function = function(param){
-//   return 'Value';
-// }
-
 
 /***********************************************************************
   Class
@@ -64,9 +47,6 @@ export function Strategy(strategyDescription) {
   /***********************************************************************
     Inheritances
    ***********************************************************************/
-
-  // InheritancesClass.apply(this);
-
 
   /***********************************************************************
     Private Instance Variable
@@ -101,9 +81,6 @@ export function Strategy(strategyDescription) {
     Public Instance Variable
    ***********************************************************************/
 
-  // this.Variable = 'Value'; 
-
-
   /***********************************************************************
     Private Instance Function
    ***********************************************************************/
@@ -117,6 +94,7 @@ export function Strategy(strategyDescription) {
 
       _data.exchanges[i].price = tmp.getPrice();
       _data.exchanges[i].info = tmp.getInfo();
+      _data.exchanges[i].time = new Date();
     }
 
     for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
@@ -225,10 +203,12 @@ export function Strategy(strategyDescription) {
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
           _data.exchanges[i].amount = tmp.getAmount();
+          _data.exchanges[i].inTime = new Date();
         }
 
         if (_data.position === 'short') {
           _data.exchanges[i].outPrice = tmp.getActionPrice();
+          _data.exchanges[i].outTime = new Date();
         }
       }
 
@@ -265,10 +245,12 @@ export function Strategy(strategyDescription) {
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
           _data.exchanges[i].amount = tmp.getAmount();
+          _data.exchanges[i].inTime = new Date();
         }
 
         if (_data.position === 'long') {
           _data.exchanges[i].outPrice = tmp.getActionPrice();
+          _data.exchanges[i].outTime = new Date();
         }
       }
 
@@ -396,14 +378,18 @@ export function Strategy(strategyDescription) {
       _plugins.getObjectByIdx(k).inst.start(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
     }
 
-    SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' sec', _updateFunc);
+    if(_strDesc.timeUnit !== 'none'){
+      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc);
+    }
 
     _updateFunc();
   }
 
 
   this.stop = function() {
-    SchM.stopSchedule(_strDesc._id);
+    if(_strDesc.timeUnit !== 'none'){
+      SchM.stopSchedule(_strDesc._id);
+    }
   }
 
 

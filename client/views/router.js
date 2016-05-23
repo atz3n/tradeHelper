@@ -46,6 +46,7 @@ var privateRoutes = [
 	"settings",
 	"info",
 	"history",
+	"history.details",
 	"develop",
 	"develop.details_settings",
 	"develop.edit_settings",
@@ -259,6 +260,7 @@ Router.map(function () {
 	this.route("settings", {path: "/settings", controller: "SettingsController"});
 	this.route("info", {path: "/info", controller: "InfoController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
+	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
 	this.route("develop", {path: "/develop", controller: "DevelopController"});
 	this.route("develop.details_settings", {path: "/develop/details_settings/:settingId", controller: "DevelopDetailsSettingsController"});
 	this.route("develop.edit_settings", {path: "/develop/edit_settings/:settingId", controller: "DevelopEditSettingsController"});

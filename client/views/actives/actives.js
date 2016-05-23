@@ -69,9 +69,9 @@ var ActivesViewItems = function(strQue, datQue) {
         var volIn = tmp.inPrice * tmp.amount;
         var VolCur = tmp.price * tmp.amount;
 
-        raw[i].volumeIn += cropFracDigits(volIn, 4);
-        raw[i].current += cropFracDigits(VolCur, 4);
-        raw[i].winLoss += cropFracDigits(percentage(VolCur, volIn), 4);
+        raw[i].volumeIn += cropFracDigits(volIn, 3);
+        raw[i].current += cropFracDigits(VolCur, 3);
+        raw[i].winLoss += cropFracDigits(percentage(VolCur, volIn), 2) + '%';
 
         if (tmp.units.counter != '' && tmp.units.denominator != ''){
           raw[i].volumeIn += ' ' + tmp.units.counter;
@@ -367,7 +367,7 @@ Template.ActivesViewTableItems.helpers({
   },
 
   "strategyPaused": function() {
-    if (Strategies.findOne({ _id: this._id }).paused)
+    if (this.paused)
       return true;
     else
       return false;

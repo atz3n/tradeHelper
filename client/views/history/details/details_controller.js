@@ -1,5 +1,5 @@
-this.HistoryController = RouteController.extend({
-	template: "History",
+this.HistoryDetailsController = RouteController.extend({
+	template: "HistoryDetails",
 	
 
 	yieldTemplates: {
@@ -19,7 +19,7 @@ this.HistoryController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("histories")
+			Meteor.subscribe("history", this.params.historyId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +34,7 @@ this.HistoryController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			histories: Histories.find({}, {})
+			history: Histories.findOne({_id:this.params.historyId}, {})
 		};
 		
 

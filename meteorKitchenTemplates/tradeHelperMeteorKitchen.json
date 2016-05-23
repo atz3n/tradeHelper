@@ -27,10 +27,67 @@
           },
           {
             "name": "updateTime",
-            "title": "Update Time [min]",
+            "title": "Update Time",
             "type": "integer",
-            "min": 1,
-            "default": 10,
+            "min": 0,
+            "default": 0,
+            "required": true
+          },
+          {
+            "name": "timeUnit",
+            "title": "Time Unit",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "None",
+                "value": "none"
+              },
+              {
+                "title": "Year",
+                "value": "year"
+              },
+              {
+                "title": "Months",
+                "value": "month"
+              },
+              {
+                "title": "Weeks",
+                "value": "week"
+              },
+              {
+                "title": "Week of the Year",
+                "value": "week of the year"
+              },
+              {
+                "title": "Days",
+                "value": "day"
+              },
+              {
+                "title": "Day of the Year",
+                "value": "day of the year"
+              },
+              {
+                "title": "Day of the Month",
+                "value": "day of the month"
+              },
+              {
+                "title": "Day of the Week",
+                "value": "day of the week"
+              },
+              {
+                "title": "Hours",
+                "value": "hours"
+              },
+              {
+                "title": "Minutes",
+                "value": "minutes"
+              },
+              {
+                "title": "Seconds",
+                "value": "seconds"
+              }
+            ],
             "required": true
           },
           {
@@ -84,6 +141,25 @@
       },
       {
         "name": "activeDatas",
+        "fields": [
+          {
+            "name": "data",
+            "type": "string"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "nobody"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
+      },
+      {
+        "name": "histories",
         "fields": [
           {
             "name": "data",
@@ -522,6 +598,19 @@
         "collection": "activeDatas",
         "filter": {
           "_id": ":activeDataId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "histories",
+        "collection": "histories",
+        "filter": {}
+      },
+      {
+        "name": "history",
+        "collection": "histories",
+        "filter": {
+          "_id": ":historyId"
         },
         "find_one": true
       },
@@ -1261,6 +1350,44 @@
         },
         {
           "name": "history",
+          "components": [
+            {
+              "name": "view",
+              "title": "Trade History",
+              "type": "data_view",
+              "text_if_empty": "No History available",
+              "query_name": "histories",
+              "query_params": [],
+              "details_route": "history.details",
+              "details_route_params": [
+                {
+                  "name": "historyId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "details",
+              "route_params": [
+                "historyId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Trade Details",
+                  "layout": "horizontal",
+                  "query_name": "history",
+                  "query_params": [],
+                  "close_route": "history",
+                  "back_route": "history"
+                }
+              ]
+            }
+          ],
           "type": "page"
         },
         {
@@ -1655,14 +1782,14 @@
               "icon_class": "fa fa-exchange"
             },
             {
-              "title": "Settings",
-              "route": "settings",
-              "icon_class": "fa fa-gears"
-            },
-            {
               "title": "History",
               "route": "history",
               "icon_class": "fa fa-history"
+            },
+            {
+              "title": "Settings",
+              "route": "settings",
+              "icon_class": "fa fa-gears"
             },
             {
               "title": "Info",

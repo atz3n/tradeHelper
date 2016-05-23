@@ -34,20 +34,24 @@ var processActiveData = function(data){
     pE.name = e.name;
     pE.type = e.instInfo.type;
     pE.price = cropFracDigits(e.price, 6);
+    pE.time = new Date(e.time);
+    pE.info = e.info;
     pE.num = data._id +  cntEx;
     cntEx++;
 
 
     if(pData.state === 'none'){
       pE.inPrice = '-';
+      pE.inTime = '-';
       pE.amount = '-';
       pE.volume = '-';
       pE.winLoss = '-';
     }
 
     if(pData.state !== 'none'){
-      pE.inPrice = e.inPrice;
+      pE.inPrice = cropFracDigits(e.inPrice, 6);
       pE.amount = e.amount;
+      pE.inTime = new Date(e.inTime)
 
       var volIn = pE.inPrice * pE.amount;
       var volCur = pE.price * pE.amount;
@@ -297,6 +301,14 @@ Template.ActivesDetailsDetailsForm.events({
       });
     }
   },
+  "click #form-refresh-button": function(e, t) {
+    e.preventDefault();
+    var strId = this.params.strategyId;
+    
+    Meteor.call('strategyRefresh', strId, function(e, r) {
+      if (e) console.log(e);
+    });
+  },
   "click #form-buy-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
@@ -324,6 +336,9 @@ Template.ActivesDetailsDetailsForm.helpers({
   },
   "activeData": function() {
     return processActiveData(this.active_data);
+  },
+  "strategyData": function() {
+    return documentArray(this.strategies_active, this.params.strategyId);
   },
   "showBundles": function() {
     return pageSession.get('showBundles');

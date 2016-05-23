@@ -6,6 +6,69 @@
 				</div>
 			</div>
 		</div>
+		{{> HistoryView}}
 	</div>
+</template>
+
+<template name="HistoryView">
+	<div id="history-view" class="">
+		<h2 id="component-title">
+			Trade History
+		</h2>
+		<form id="dataview-controls" class="form-inline">
+			<div id="dataview-controls-search">
+				{{#if isNotEmpty}}
+				<div id="dataview-controls-search-group" class="form-group">
+					<label class="sr-only" for="search">
+						Search
+					</label>
+					<input type="text" class="form-control" id="dataview-search-input" placeholder="Search" name="search" value="{{searchString}}" autofocus="autofocus">
+					<button type="button" id="dataview-search-button" class="btn btn-primary">
+						<span class="fa fa-search">
+						</span>
+					</button>
+				</div>
+				{{/if}}
+			</div>
+		</form>
+		{{#if isNotEmpty}}
+			{{#if isNotFound}}
+		<div class="alert alert-warning">
+			"{{searchString}}" not found.
+		</div>
+		{{else}}
+		<div id="dataview-data">
+			{{#if viewAsTable}} {{> HistoryViewTable}} {{/if}}
+		</div>
+		{{/if}}
+		{{else}}
+		<div class="alert alert-info">
+			No History available
+		</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="HistoryViewTable">
+	<table id="dataview-table" class="table table-striped table-hover">
+		<thead id="dataview-table-header">
+			<tr id="dataview-table-header-row">
+				<th class="th-sortable" data-sort="data">
+					data
+				</th>
+			</tr>
+		</thead>
+		<tbody id="dataview-table-items">
+			{{#each tableItems}} {{> HistoryViewTableItems}} {{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="HistoryViewTableItems">
+	<tr id="dataview-table-items-row">
+		<td>
+			{{data}}
+		</td>
+	</tr>
 </template>
 

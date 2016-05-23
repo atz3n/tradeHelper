@@ -6,8 +6,8 @@
 this.getStrategyObject = function(strategyId) {
 
 	/* get strategy from db */
-    var strategy = Strategies.find({ _id: strategyId }).fetch()[0];
-
+    var strategy = Strategies.findOne({ _id: strategyId });
+    
 
     /* get plugin bundles from db and save them in strategy variable */
     var bundles = strategy.pluginBundles;

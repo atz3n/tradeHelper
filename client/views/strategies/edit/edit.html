@@ -50,10 +50,35 @@
 			</div>
 			<div class="form-group  field-update-time">
 				<label for="updateTime">
-					Update Time [min]
+					Update Time
 				</label>
 				<div class="input-div">
-					<input type="text" name="updateTime" value="{{strategy.updateTime}}" class="form-control" required="required" data-type="integer" data-min="1">
+					<input type="text" name="updateTime" value="{{strategy.updateTime}}" class="form-control" required="required" data-type="integer" data-min="0">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-time-unit">
+				<label for="timeUnit">
+					Time Unit
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="timeUnit" data-type="string" required="required">
+						<option value="none" {{optionIsSelected strategy.timeUnit "none"}}>							None</option>
+						<option value="year" {{optionIsSelected strategy.timeUnit "year"}}>							Year</option>
+						<option value="month" {{optionIsSelected strategy.timeUnit "month"}}>							Months</option>
+						<option value="week" {{optionIsSelected strategy.timeUnit "week"}}>							Weeks</option>
+						<option value="week of the year" {{optionIsSelected strategy.timeUnit "week of the year"}}>							Week of the Year</option>
+						<option value="day" {{optionIsSelected strategy.timeUnit "day"}}>							Days</option>
+						<option value="day of the year" {{optionIsSelected strategy.timeUnit "day of the year"}}>							Day of the Year</option>
+						<option value="day of the month" {{optionIsSelected strategy.timeUnit "day of the month"}}>							Day of the Month</option>
+						<option value="day of the week" {{optionIsSelected strategy.timeUnit "day of the week"}}>							Day of the Week</option>
+						<option value="hours" {{optionIsSelected strategy.timeUnit "hours"}}>							Hours</option>
+						<option value="minutes" {{optionIsSelected strategy.timeUnit "minutes"}}>							Minutes</option>
+						<option value="seconds" {{optionIsSelected strategy.timeUnit "seconds"}}>							Seconds</option>
+					</select>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
