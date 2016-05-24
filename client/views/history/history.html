@@ -53,8 +53,23 @@
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
-				<th class="th-sortable" data-sort="data">
-					data
+				<th class="th-sortable" data-sort="name">
+					Strategy Name
+				</th>
+				<th class="th-sortable" data-sort="date">
+					Date
+				</th>
+				<th class="th-sortable" data-sort="volumeIn">
+					Volume In
+				</th>
+				<th class="th-sortable" data-sort="volumeOut">
+					Volume Out
+				</th>
+				<th class="th-sortable" data-sort="profit">
+					Profit
+				</th>
+				<th class="th-sortable" data-sort="position">
+					Position
 				</th>
 			</tr>
 		</thead>
@@ -67,7 +82,26 @@
 <template name="HistoryViewTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
-			{{data}}
+			{{strategyName}}
+		</td>
+		<td>
+			{{formatDate outTime MM/DD/YYYY}}
+		</td>
+		<td>
+			{{volumeIn}}
+		</td>
+		<td>
+			{{volumeOut}}
+		</td>
+		<td>
+			{{profit}}
+		</td>
+		<td>
+			{{position}}
+		</td>
+		<td class="td-icon">
+			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
+			</span>
 		</td>
 	</tr>
 </template>

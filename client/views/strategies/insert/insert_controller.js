@@ -19,7 +19,7 @@ this.StrategiesInsertController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("strategies_empty"),
+			Meteor.subscribe("strategies_empty")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {

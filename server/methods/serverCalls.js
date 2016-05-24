@@ -18,26 +18,6 @@ function notification(infos) {
 }
 
 
-var oIdUpd = '';
-var strIdUpd = '';
-
-function update(infos) {
-
-  if (typeof ActiveDatas.findOne({ strategyId: infos.strategyId }) === 'undefined') {
-    ActiveDatas.insert(infos);
-    ActiveDatas.update({ strategyId: infos.strategyId }, { $set: { ownerId: Strategies.findOne({ _id: infos.strategyId }).ownerId } });
-  } else {
-    ActiveDatas.update({ strategyId: infos.strategyId }, { $set: infos });
-  }
-  console.log(JSON.stringify(infos));
-
-
-}
-
-
-
-
-
 Meteor.methods({
 
   strategyStart: function(strategyId) {
@@ -45,7 +25,6 @@ Meteor.methods({
     if (strategies.getObject(strategyId) === 'undefined') {
       strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
       strategies.getObject(strategyId).inst.setNotifyFunction(notification);
-      strategies.getObject(strategyId).inst.setUpdateCallFunction(update);
       strategies.getObject(strategyId).inst.start();
     } else if (strategies.getObject(strategyId).startFlag === false) {
       strategies.getObject(strategyId).inst.start();

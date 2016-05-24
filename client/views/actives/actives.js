@@ -39,7 +39,7 @@ var ActivesViewItems = function(strQue, datQue) {
 
     if (raw[i].position === 'none') {
       raw[i].volumeIn = '-';
-      raw[i].winLoss = '-';
+      raw[i].profit = '-';
 
       raw[i].current = '';
       for (var j = 0; j < datRaw[datId].exchanges.length; j++) {
@@ -56,26 +56,29 @@ var ActivesViewItems = function(strQue, datQue) {
 
     if (raw[i].position !== 'none') {
       raw[i].volumeIn = '';
-      raw[i].winLoss = '';
+      raw[i].profit = '';
       raw[i].current = '';
       
       for(var j = 0 ; j < datRaw[datId].exchanges.length ; j++){
         var tmp = datRaw[datId].exchanges[j];
 
         if (j !== 0) raw[i].volumeIn += ', ';
-        if (j !== 0) raw[i].winLoss += ', ';
+        if (j !== 0) raw[i].profit += ', ';
         if (j !== 0) raw[i].current += ', ';
 
         var volIn = tmp.inPrice * tmp.amount;
-        var VolCur = tmp.price * tmp.amount;
+        var volCur = tmp.price * tmp.amount;
 
         raw[i].volumeIn += cropFracDigits(volIn, 3);
-        raw[i].current += cropFracDigits(VolCur, 3);
-        raw[i].winLoss += cropFracDigits(percentage(VolCur, volIn), 2) + '%';
+        raw[i].current += cropFracDigits(volCur, 3);
+
+        var tmpP = cropFracDigits(percentage(volCur, volIn), 2);
+        if(raw[i].position === 'short') tmpP *= -1;
+        raw[i].profit += tmpP + '%';
 
         if (tmp.units.counter != '' && tmp.units.denominator != ''){
-          raw[i].volumeIn += ' ' + tmp.units.counter;
-          raw[i].current += ' ' + tmp.units.counter;  
+          raw[i].volumeIn += tmp.units.counter;
+          raw[i].current += tmp.units.counter;  
         }
       }
     }
@@ -281,7 +284,6 @@ Template.ActivesViewTableItems.rendered = function() {
 Template.ActivesViewTableItems.events({
   "click td": function(e, t) {
     e.preventDefault();
-
     Router.go("actives.details", { strategyId: this._id });
     return false;
   },

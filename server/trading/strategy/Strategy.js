@@ -62,9 +62,10 @@ export function Strategy(strategyDescription) {
   var _notifyMaskedValues = new Array();
 
   var _notifyFunc = function() {};
-  var _updateCallFunc = function() {};
 
   var _action = '';
+
+  var _lastPosition = 'none';
 
   var _data = {
     strategyId: '',
@@ -73,7 +74,10 @@ export function Strategy(strategyDescription) {
     position: 'none',
     plugins: [],
     exchanges: [],
-    bundles: []
+    bundles: [],
+    curTime: '',
+    inTime: '',
+    outTime: '',
   };
 
 
@@ -85,35 +89,97 @@ export function Strategy(strategyDescription) {
     Private Instance Function
    ***********************************************************************/
 
-  var _updateFunc = function() {
-    _clearNotifyValues();
+  var _updateFunc = function(fullUpdate) {
+    if (fullUpdate) _clearNotifyValues();
+
+    _data.curTime = new Date();
 
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
       var tmp = _exchanges.getObjectByIdx(i);
-      tmp.update();
+      if (fullUpdate) tmp.update();
 
       _data.exchanges[i].price = tmp.getPrice();
       _data.exchanges[i].info = tmp.getInfo();
-      _data.exchanges[i].time = new Date();
     }
 
     for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
       var tmp = _plugins.getObjectByIdx(i);
-      tmp.inst.update(_exchanges.getObject(tmp.exId).getPrice());
+      if (fullUpdate) tmp.inst.update(_exchanges.getObject(tmp.exId).getPrice());
 
       _data.plugins[i].state = tmp.inst.getState();
       _data.plugins[i].info = tmp.inst.getInfo();
     }
 
-    _evalNotifyValues();
+    if (fullUpdate) _evalNotifyValues();
 
-    _updateCallFunc(_data);
+    _updateActiveData();
+
+    if (_lastPosition !== 'none' && _data.position === 'none') {
+      _updateHistory();
+      console.log('history update')
+    }
+
+    _lastPosition = _data.position;
+  }
+
+
+  var _updateActiveData = function() {
+
+    if (typeof ActiveDatas.findOne({ strategyId: _data.strategyId }) === 'undefined') {
+      ActiveDatas.insert(_data);
+    } else {
+      ActiveDatas.update({ strategyId: _data.strategyId }, { $set: _data });
+    }
+
+  }
+
+
+  var _updateHistory = function() {
+    var tmp = {};
+
+    console.log(JSON.stringify(_strDesc));
+    
+    tmp.inTime = _data.inTime;
+    tmp.outTime = _data.outTime;
+    tmp.strategyId = _data.strategyId;
+    tmp.ownerId = _data.ownerId;
+    tmp.strategyName = _data.strategyName;
+    tmp.position = _lastPosition;
+    tmp.bundles = JSON.parse(JSON.stringify(_data.bundles));
+
+    tmp.strConfig = {
+      updateTime: _strDesc.updateTime,
+      timeUnit: _strDesc.timeUnit,
+      mode: _strDesc.mode
+    };
+
+    tmp.plugins = [];
+    for (i in _data.plugins) {
+      tmp.plugins[i] = {};
+      tmp.plugins[i].name = _data.plugins[i].name;
+      tmp.plugins[i].instInfo = _data.plugins[i].instInfo;
+      tmp.plugins[i].config = _plugins.getObject(tmp.plugins[i].instInfo.id).inst.getConfig();
+    }
+
+    tmp.exchanges = [];
+    for (i in _data.exchanges) {
+      tmp.exchanges[i] = {};
+      tmp.exchanges[i].name = _data.exchanges[i].name;
+      tmp.exchanges[i].instInfo = _data.exchanges[i].instInfo;
+      tmp.exchanges[i].units = _data.exchanges[i].units;
+      tmp.exchanges[i].inPrice = _data.exchanges[i].inPrice;
+      tmp.exchanges[i].inTime = _data.exchanges[i].inTime;
+      tmp.exchanges[i].outPrice = _data.exchanges[i].outPrice;
+      tmp.exchanges[i].outTime = _data.exchanges[i].outTime;
+      tmp.exchanges[i].amount = _data.exchanges[i].amount;
+      tmp.exchanges[i].config = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
+    }
+    console.log(JSON.stringify(tmp));
+    Histories.insert(tmp);
   }
 
 
   var _buyNotification = function(instInfo) {
-    console.log(instInfo.id);
-
     for (var i = 0; i < _notifyMaskedValues.length; i++) {
       if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
         _notifyMaskedValues[i].setObject(instInfo.id, _buyMask);
@@ -173,7 +239,7 @@ export function Strategy(strategyDescription) {
 
         _data.state = 'buy request';
 
-        if (_strDesc.mode === 'auto') {
+        if (_strDesc.mode === 'auto' || (_strDesc.mode === 'semiAuto' && _data.position === 'short')) {
           _buyFunction();
         }
       }
@@ -185,16 +251,20 @@ export function Strategy(strategyDescription) {
 
         _data.state = 'sell request';
 
-        if (_strDesc.mode === 'auto') {
+        if (_strDesc.mode === 'auto' || (_strDesc.mode === 'semiAuto' && _data.position === 'long')) {
           _sellFunction();
         }
       }
     }
   }
 
+
   var _buyFunction = function() {
     console.log('buying');
     if (_data.position !== 'long') {
+
+      if (_data.position === 'none') _data.inTime = new Date();
+      if (_data.position === 'short') _data.outTime = new Date();
 
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
@@ -203,12 +273,10 @@ export function Strategy(strategyDescription) {
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
           _data.exchanges[i].amount = tmp.getAmount();
-          _data.exchanges[i].inTime = new Date();
         }
 
         if (_data.position === 'short') {
           _data.exchanges[i].outPrice = tmp.getActionPrice();
-          _data.exchanges[i].outTime = new Date();
         }
       }
 
@@ -229,7 +297,7 @@ export function Strategy(strategyDescription) {
         _data.state = 'out';
       }
 
-      _updateFunc();
+      _updateFunc(false);
     }
   }
 
@@ -238,6 +306,9 @@ export function Strategy(strategyDescription) {
     console.log('selling');
     if (_data.position !== 'short') {
 
+      if (_data.position === 'none') _data.inTime = new Date();
+      if (_data.position === 'long') _data.outTime = new Date();
+
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
         tmp.sell();
@@ -245,12 +316,10 @@ export function Strategy(strategyDescription) {
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
           _data.exchanges[i].amount = tmp.getAmount();
-          _data.exchanges[i].inTime = new Date();
         }
 
         if (_data.position === 'long') {
           _data.exchanges[i].outPrice = tmp.getActionPrice();
-          _data.exchanges[i].outTime = new Date();
         }
       }
 
@@ -271,7 +340,7 @@ export function Strategy(strategyDescription) {
         _data.state = 'out';
       }
 
-      _updateFunc();
+      _updateFunc(false);
     }
   }
 
@@ -325,9 +394,14 @@ export function Strategy(strategyDescription) {
   var _createExTestData = function(exchange) {
     var conf = Object.assign({}, ExTestData.ConfigDefault);
     conf.id = exchange._id;
-    conf.counter = exchange.counter;
+    conf.startVal = exchange.startVal;
+    conf.offset = exchange.offset;
+    conf.stepWidth = exchange.stepWidth;
     conf.gain = exchange.gain;
     conf.data = exchange.data;
+    conf.cUnit = exchange.counter;
+    conf.dUnit = exchange.denominator;
+    console.log(exchange)
     switch (exchange.priceType) {
       case "Sinus":
         conf.priceType = ExTestData.priceType.sinus;
@@ -364,11 +438,6 @@ export function Strategy(strategyDescription) {
   }
 
 
-  this.setUpdateCallFunction = function(updateCallFunction) {
-    _updateCallFunc = updateCallFunction;
-  }
-
-
   this.start = function() {
     for (var k = 0; k < _exchanges.getObjects().length; k++) {
       _exchanges.getObjectByIdx(k).update();
@@ -378,23 +447,23 @@ export function Strategy(strategyDescription) {
       _plugins.getObjectByIdx(k).inst.start(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
     }
 
-    if(_strDesc.timeUnit !== 'none'){
-      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc);
+    if (_strDesc.timeUnit !== 'none') {
+      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
     }
 
-    _updateFunc();
+    _updateFunc(false);
   }
 
 
   this.stop = function() {
-    if(_strDesc.timeUnit !== 'none'){
+    if (_strDesc.timeUnit !== 'none') {
       SchM.stopSchedule(_strDesc._id);
     }
   }
 
 
   this.refresh = function() {
-    _updateFunc();
+    _updateFunc(true);
   }
 
 
@@ -418,13 +487,14 @@ export function Strategy(strategyDescription) {
     _strDesc = Object.assign({}, param);
 
     _data.strategyId = _strDesc._id;
+    _data.ownerId = Strategies.findOne({ _id: _data.strategyId }).ownerId;
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
 
     /* create plugin and exchange instances */
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
-      
+
       _data.bundles[i] = {};
       _data.bundles[i].name = _strDesc.pluginBundles[i].name;
       _data.bundles[i].plugins = new Array(_strDesc.pluginBundles[i].bundlePlugins.length);
@@ -440,7 +510,7 @@ export function Strategy(strategyDescription) {
         _notifyMaskedValues[i].setObject(plugin._id, _noneMask);
 
 
-        _data.bundles[i].plugins[j] = {"pId": plugin._id, "eId": plugin.exchange._id};
+        _data.bundles[i].plugins[j] = { "pId": plugin._id, "eId": plugin.exchange._id };
 
 
         /* create not yet created plugin instances */

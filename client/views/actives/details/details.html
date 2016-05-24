@@ -44,17 +44,7 @@
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{strategyData.updateTime}}
-          </p>
-        </div>
-      </div>
-      <div class="form-group  field-time-unit">
-        <label for="timeUnit" class="col-sm-3 control-label">
-          Time Unit
-        </label>
-        <div class="input-div col-sm-9">
-          <p class="form-control-static">
-            {{strategyData.timeUnit}}
+            {{strategyData.updateTime}} {{strategyData.timeUnit}}
           </p>
         </div>
       </div>
@@ -68,7 +58,17 @@
           </p>
         </div>
       </div>
-      <div class="form-group  field-update-time">
+      <div class="form-group  field-position">
+        <label for="position" class="col-sm-3 control-label">
+          Position
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{activeData.position}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-state">
         <label for="state" class="col-sm-3 control-label">
           State
         </label>
@@ -78,13 +78,23 @@
           </p>
         </div>
       </div>
-      <div class="form-group  field-update-time">
-        <label for="position" class="col-sm-3 control-label">
-          Position
+      <div class="form-group  field-time-in">
+        <label for="state" class="col-sm-3 control-label">
+          Time In
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{activeData.position}}
+            {{activeData.inTime}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-time-current">
+        <label for="state" class="col-sm-3 control-label">
+          Time Current
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{activeData.curTime}}
           </p>
         </div>
       </div>
@@ -288,8 +298,14 @@
           </tr>
           <tr class="crud-table-row">
             <td>
-              Win / Loss:
-              <br> {{winLoss}}
+              Profit Percentage:
+              <br> {{profitPer}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Profit Total:
+              <br> {{profitTot}}
             </td>
           </tr>
           <tr class="crud-table-row">
@@ -306,32 +322,20 @@
           </tr>
           <tr class="crud-table-row">
             <td>
-              Volume In:
-              <br> {{volumeIn}}
-            </td>
-          </tr>
-           <tr class="crud-table-row">
-            <td>
-              Time In:
-              <br> {{inTime}}
-            </td>
-          </tr>
-          <tr class="crud-table-row">
-            <td>
               Price Current:
               <br> {{price}}
             </td>
           </tr>
           <tr class="crud-table-row">
             <td>
-              Volume Current:
-              <br> {{volumeCur}}
+              Volume In:
+              <br> {{volumeIn}}
             </td>
           </tr>
           <tr class="crud-table-row">
             <td>
-              Time Current:
-              <br> {{time}}
+              Volume Current:
+              <br> {{volumeCur}}
             </td>
           </tr>
           {{#each arrayify info}}

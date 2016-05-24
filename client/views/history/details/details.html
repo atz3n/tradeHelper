@@ -1,53 +1,313 @@
 <template name="HistoryDetails">
-	<div class="page-container container" id="content">
-		<div class="row" id="title_row">
-			<div class="col-md-12">
-				<div id="page_menu" class="pull-right">
-				</div>
-			</div>
-		</div>
-		{{> HistoryDetailsDetailsForm}}
-	</div>
+  <div class="page-container container" id="content">
+    <div class="row" id="title_row">
+      <div class="col-md-12">
+        <div id="page_menu" class="pull-right">
+        </div>
+      </div>
+    </div>
+    {{> HistoryDetailsDetailsForm}}
+  </div>
 </template>
-
 <template name="HistoryDetailsDetailsForm">
-	<div id="history-details-details-form" class="">
-		<h2 id="component-title">
-			<a href="#" id="form-back-button" class="btn btn-default" title="back">
-				<span class="fa fa-chevron-left">
-				</span>
-			</a>
-			Trade Details
-		</h2>
-		<form role="form" class="form-horizontal">
-			{{#if errorMessage}}
-			<div class="alert alert-warning">
-				{{errorMessage}}
-			</div>
-			{{/if}}
-
-			{{#if infoMessage}}
-			<div class="alert alert-success">
-				{{infoMessage}}
-			</div>
-			{{/if}}
-			<div class="form-group  field-data">
-				<label for="data" class="col-sm-3 control-label">
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{history.data}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="submit-div col-sm-9 col-sm-offset-3">
-					<a href="#" id="form-close-button" class="btn btn-primary">
-						OK
-					</a>
-				</div>
-			</div>
-		</form>
-	</div>
+  <div id="history-details-details-form" class="">
+    <h2 id="component-title">
+      <a href="#" id="form-back-button" class="btn btn-default" title="back">
+        <span class="fa fa-chevron-left">
+        </span>
+      </a>
+      Trade Details
+    </h2>
+    <form role="form" class="form-horizontal">
+      {{#if errorMessage}}
+      <div class="alert alert-warning">
+        {{errorMessage}}
+      </div>
+      {{/if}} {{#if infoMessage}}
+      <div class="alert alert-success">
+        {{infoMessage}}
+      </div>
+      {{/if}}
+      <div class="form-group  field-name">
+        <label for="name" class="col-sm-3 control-label">
+          Strategy Name
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.strategyName}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-name">
+        <label for="name" class="col-sm-3 control-label">
+          Strategy Id
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.strategyId}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-date">
+        <label for="date" class="col-sm-3 control-label">
+          Update Time
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.updateTime}} {{historyData.timeUnit}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-volume-in">
+        <label for="volumeIn" class="col-sm-3 control-label">
+          Mode
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.mode}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-volume-out">
+        <label for="volumeOut" class="col-sm-3 control-label">
+          Date In
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.inTime}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-profit">
+        <label for="profit" class="col-sm-3 control-label">
+          Date Out
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.outTime}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-position">
+        <label for="position" class="col-sm-3 control-label">
+          Position
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{historyData.position}}
+          </p>
+        </div>
+      </div>
+      <div class="form-group  field-exchanges">
+        <label for="exchanges" class="col-sm-3 control-label">
+          Exchanges
+        </label>
+        <button id="form-exchanges-button" class="btn btn-default btn-xs" type="submit">
+          {{#if showExchanges}}
+          <span class="fa fa-angle-up">
+            </span> {{else}}
+          <span class="fa fa-angle-down">
+            </span> {{/if}}
+        </button>
+        <button id="form-expandExchanges-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-down"></span>
+        </button>
+        <button id="form-collapseExchanges-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-up"></span>
+        </button>
+        <div class="input-div col-sm-9">
+          <table class="table table-striped">
+            {{#if showExchanges}}
+            <tbody>
+              {{#each historyData.exchanges}} {{> HistoryDetailsDetailsFormExchanges}} {{/each}}
+            </tbody>
+            {{/if}}
+          </table>
+          <span id="help-text" class="help-block">
+          </span>
+          <span id="error-text" class="help-block">
+          </span>
+        </div>
+      </div>
+      <div class="form-group  field-plugin-bundles">
+        <label for="pluginBundles" class="col-sm-3 control-label">
+          Plugin Bundles
+        </label>
+        <button id="form-bundle-button" class="btn btn-default btn-xs" type="submit">
+          {{#if showBundles}}
+          <span class="fa fa-angle-up">
+            </span> {{else}}
+          <span class="fa fa-angle-down">
+            </span> {{/if}}
+        </button>
+        <button id="form-expandBundles-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-down"></span>
+        </button>
+        <button id="form-collapseBundles-button" class="btn btn-default btn-xs" type="submit">
+          <span class="fa fa-angle-double-up"></span>
+        </button>
+        <div class="input-div col-sm-9">
+          <table class="table table-striped">
+            {{#if showBundles}}
+            <tbody>
+              {{#each historyData.bundles}}
+              <tr class="crud-table-row">
+                <td>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr class="crud-table-header">
+                        <th>
+                          {{name}}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each plugins}} {{> HistoryDetailsDetailsFormPlugins}} {{/each}}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+            {{/if}}
+          </table>
+          <span id="help-text" class="help-block">
+          </span>
+          <span id="error-text" class="help-block">
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="submit-div col-sm-9 col-sm-offset-3">
+          <a href="#" id="form-close-button" class="btn btn-primary">
+            OK
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
-
+<template name="HistoryDetailsDetailsFormPlugins">
+  <tr class="crud-table-row">
+    <td>
+      <table class="table table-striped">
+        <thead>
+          <tr class="crud-table-header">
+            <th>
+              {{name}}
+              <button id="plugin-button" class="btn btn-default btn-xs" type="submit">
+                {{#if showPlugin}}
+                <span class="fa fa-angle-up"></span> {{else}}
+                <span class="fa fa-angle-down"></span> {{/if}}
+              </button>
+            </th>
+          </tr>
+        </thead>
+        {{#if showPlugin}}
+        <tbody>
+          <tr class="crud-table-row">
+            <td>
+              Type:
+              <br> {{instInfo.type}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Exchange:
+              <br> {{exchange.name}}
+            </td>
+          </tr>
+          {{#each arrayify config}}
+          <tr class="crud-table-row">
+            <td>
+              {{name}}:
+              <br> {{value}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+        {{/if}}
+      </table>
+    </td>
+  </tr>
+</template>
+<template name="HistoryDetailsDetailsFormExchanges">
+  <tr class="crud-table-row">
+    <td>
+      <table class="table table-striped">
+        <thead>
+          <tr class="crud-table-header">
+            <th>
+              {{name}}
+              <button id="exchange-button" class="btn btn-default btn-xs" type="submit">
+                {{#if showExchange}}
+                <span class="fa fa-angle-up"></span> {{else}}
+                <span class="fa fa-angle-down"></span> {{/if}}
+              </button>
+            </th>
+          </tr>
+        </thead>
+        {{#if showExchange}}
+        <tbody>
+          <tr class="crud-table-row">
+            <td>
+              Type:
+              <br> {{type}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Profit Percentage:
+              <br> {{profitPer}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Profit Total:
+              <br> {{profitTot}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Amount:
+              <br> {{amount}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Price In:
+              <br> {{inPrice}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Price Out:
+              <br> {{outPrice}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Volume In:
+              <br> {{volumeIn}}
+            </td>
+          </tr>
+          <tr class="crud-table-row">
+            <td>
+              Volume Out:
+              <br> {{volumeOut}}
+            </td>
+          </tr>
+          {{#each arrayify config}}
+          <tr class="crud-table-row">
+            <td>
+              {{name}}:
+              <br> {{value}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+        {{/if}}
+      </table>
+    </td>
+  </tr>
+</template>

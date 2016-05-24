@@ -22,8 +22,11 @@ var processActiveData = function(data){
   pData.strategyName = data.strategyName;
   pData.state = data.state;
   pData.position = data.position;
+  pData.curTime = new Date (data.curTime);
 
-
+  if(pData.position !== 'none') pData.inTime = new Date(data.inTime);
+  else pData.inTime = '-'
+  
   pData.exchanges = new Array(data.exchanges.length);
   for(var i = 0 ; i < data.exchanges.length ; i++) {
    
@@ -34,37 +37,48 @@ var processActiveData = function(data){
     pE.name = e.name;
     pE.type = e.instInfo.type;
     pE.price = cropFracDigits(e.price, 6);
-    pE.time = new Date(e.time);
     pE.info = e.info;
     pE.num = data._id +  cntEx;
     cntEx++;
 
 
-    if(pData.state === 'none'){
+    if(pData.position === 'none'){
       pE.inPrice = '-';
       pE.inTime = '-';
       pE.amount = '-';
-      pE.volume = '-';
-      pE.winLoss = '-';
+      pE.volumeIn = '-';
+      pE.volumeCur = '-';
+      pE.profitPer = '-';
+      pE.profitTot = '-';
     }
 
-    if(pData.state !== 'none'){
+    if(pData.position !== 'none'){
       pE.inPrice = cropFracDigits(e.inPrice, 6);
       pE.amount = e.amount;
-      pE.inTime = new Date(e.inTime)
 
       var volIn = pE.inPrice * pE.amount;
       var volCur = pE.price * pE.amount;
 
       pE.volumeIn = cropFracDigits(volIn, 6);
       pE.volumeCur = cropFracDigits(volCur, 6);
-      pE.winLoss = cropFracDigits(percentage(volCur, volIn), 6);
+      pE.profitPer = cropFracDigits(percentage(volCur, volIn), 4);
+      pE.profitTot = cropFracDigits(volCur - volIn, 6);
 
+      if(pData.position === 'short') {
+        pE.profitTot *= -1;
+        pE.profitPer *= -1;
+      }
+
+      pE.profitPer += '%';
       if (e.units.counter != '' && e.units.denominator != ''){
-          pE.volumeIn += ' ' + e.units.counter;
-          pE.volumeCur += ' ' + e.units.counter;
+        pE.volumeIn +=  e.units.counter;
+        pE.volumeCur += e.units.counter;
+        pE.inPrice += ' ' + e.units.counter + '/' + e.units.denominator;
+        pE.amount += e.units.denominator;
+        pE.profitTot += e.units.counter;
       }
     }
+
     pE.price = cropFracDigits(pE.price, 6);
     if (e.units.counter != '' && e.units.denominator != '')
       pE.price += ' ' + e.units.counter + '/' + e.units.denominator;

@@ -97,12 +97,16 @@
             "input": "radio",
             "input_items": [
               {
-                "title": "Automatic",
-                "value": "auto"
-              },
-              {
                 "title": "Manual",
                 "value": "manual"
+              },
+              {
+                "title": "Semi-Automatic",
+                "value": "semiAuto"
+              },
+              {
+                "title": "Automatic",
+                "value": "auto"
               }
             ],
             "required": true
@@ -148,6 +152,9 @@
           }
         ],
         "owner_field": "ownerId",
+        "roles_allowed_to_insert": [
+          "nobody"
+        ],
         "roles_allowed_to_read": [
           "owner"
         ],
@@ -162,11 +169,40 @@
         "name": "histories",
         "fields": [
           {
-            "name": "data",
+            "name": "name",
+            "title": "Strategy Name",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "title": "Date",
+            "type": "date"
+          },
+          {
+            "name": "volumeIn",
+            "title": "Volume In",
+            "type": "string"
+          },
+          {
+            "name": "volumeOut",
+            "title": "Volume Out",
+            "type": "string"
+          },
+          {
+            "name": "profit",
+            "title": "Profit",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "title": "Position",
             "type": "string"
           }
         ],
         "owner_field": "ownerId",
+        "roles_allowed_to_insert": [
+          "nobody"
+        ],
         "roles_allowed_to_read": [
           "owner"
         ],
@@ -394,6 +430,25 @@
             "required": true
           },
           {
+            "name": "amount",
+            "title": "Simulated Amount",
+            "type": "float",
+            "default": 1,
+            "required": true
+          },
+          {
+            "name": "counter",
+            "title": "Counter Unit (don't mix up with counter value)",
+            "type": "string",
+            "default": "c"
+          },
+          {
+            "name": "denominator",
+            "title": "Denominator Unit",
+            "type": "string",
+            "default": "d"
+          },
+          {
             "name": "gain",
             "title": "Gain (multiplier)",
             "type": "float",
@@ -401,10 +456,24 @@
             "required": true
           },
           {
-            "name": "counter",
-            "title": "Counter (starts with this value)",
+            "name": "offset",
+            "title": "Offset",
+            "type": "float",
+            "default": 1,
+            "required": true
+          },
+          {
+            "name": "startVal",
+            "title": "Start Value (counter starts with this value)",
             "type": "float",
             "default": 0,
+            "required": true
+          },
+          {
+            "name": "stepWidth",
+            "title": "Step Width (counter inscreases by this value each time)",
+            "type": "integer",
+            "default": 1,
             "required": true
           },
           {

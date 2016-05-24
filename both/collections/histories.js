@@ -1,7 +1,7 @@
 this.Histories = new Mongo.Collection("histories");
 
 this.Histories.userCanInsert = function(userId, doc) {
-	return true;
+	return false;
 };
 
 this.Histories.userCanUpdate = function(userId, doc) {

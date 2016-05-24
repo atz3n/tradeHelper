@@ -167,7 +167,16 @@ export function PlSwing(logger) {
 
 
   this.getConfig = function() {
-    return Object.assign({}, _config);
+    var conf = {};
+    
+    conf.OpenLongPosition = _config.longNoPosNotifyPerc + '%';
+    conf.CloseLongPosition = _config.longAfterTopSellNotifyPerc + '%';
+    conf.OpenShortPosition = _config.shortNoPosNotifyPerc + '%';
+    conf.CloseShortPosition = _config.shortAfterBottomBuyNotifyPerc + '%';
+    conf.EnableLong = _config.enableLong
+    conf.EnableShort = _config.enableShort
+    
+    return conf;
   }
 
 

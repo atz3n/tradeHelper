@@ -27,17 +27,21 @@ import { IExchange } from '../../apis/IExchange.js';
  ***********************************************************************/
 
 ExTestData.priceType = {
-  sinus: 'sin',
-  data: 'dat'
+  sinus: 'Sinus',
+  data: 'Data'
 }
 
 ExTestData.ConfigDefault = {
   id: 'undefined',
   priceType: ExTestData.priceType.sin,
-  counter: 0,
+  startVal: 0,
   data: [],
   gain: 1,
-  amount: 1
+  amount: 1,
+  offset: 0,
+  stepWidth: 1,
+  cUnit: '',
+  dUnit: ''
 }
 
 
@@ -104,19 +108,29 @@ export function ExTestData() {
 
 
   this.update = function() {
-    _counter++;
+    _counter += _config.stepWidth;
   }
 
 
   this.setConfig = function(config) {
     _config = Object.assign({}, config);
-    _counter = _config.counter;
+    _counter = _config.startVal;
     _dataArray = _config.data;
   }
 
 
   this.getConfig = function() {
-    return _config;
+    var conf = {};
+
+    conf.PriceType = _config.priceType;
+    conf.StartValue = _config.startVal;
+    conf.Data = _config.data;
+    conf.Gain = _config.gain;
+    conf.Amount = _config.amount;
+    conf.Offset = _config.offset;
+    conf.StepWidth = _config.stepWidth;
+    
+    return conf;
   }
 
 
@@ -129,7 +143,7 @@ export function ExTestData() {
 
 
   this.getPairUnits = function() {
-    return {counter: '', denominator: ''};
+    return { counter: _config.cUnit, denominator: _config.dUnit };
   }
 
 
@@ -138,13 +152,12 @@ export function ExTestData() {
 
     switch (_config.priceType) {
 
-
       case ExTestData.priceType.sinus:
-        price = _config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1);
+        price = _config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1) + _config.offset;
         break;
 
       case ExTestData.priceType.input:
-        price = _config.gain * _dataArray[_counter % _dataArray.length];
+        price = _config.gain * _dataArray[_counter % _dataArray.length] + _config.offset;
         break;
 
       default:
@@ -154,11 +167,11 @@ export function ExTestData() {
     return price;
   }
 
-  this.getActionPrice = function(){
+  this.getActionPrice = function() {
     return this.getPrice();
   }
 
-  this.getAmount = function(){
+  this.getAmount = function() {
     return _config.amount;
   }
 
