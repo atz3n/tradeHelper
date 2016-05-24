@@ -24,6 +24,38 @@ var HistoryViewItems = function(cursor) {
 
 	var raw = cursor.fetch();
 
+
+	for(i in raw){
+
+		raw[i].volumeIn = '';
+    raw[i].profit = '';
+    raw[i].volumeOut = '';
+
+		for(j in raw[i].exchanges){
+			var tmp = raw[i].exchanges[j];
+
+      if (j != 0) raw[i].volumeIn += ', ';
+      if (j != 0) raw[i].profit += ', ';
+      if (j != 0) raw[i].volumeOut += ', ';
+
+      var volIn = tmp.inPrice * tmp.amount;
+      var VolOut = tmp.outPrice * tmp.amount;
+
+      raw[i].volumeIn += cropFracDigits(volIn, 3);
+      raw[i].volumeOut += cropFracDigits(VolOut, 3);
+      
+      raw[i].profit += cropFracDigits(percentage(VolOut, volIn), 2);
+      if(raw[i].position === 'short') raw[i].profit *= -1;
+      raw[i].profit += '%';
+
+      if (tmp.units.counter != '' && tmp.units.denominator != ''){
+        raw[i].volumeIn += tmp.units.counter;
+        raw[i].volumeOut += tmp.units.counter;  
+      }
+    }
+	}
+
+
 	// filter
 	var filtered = [];
 	if(!searchString || searchString == "") {
@@ -31,7 +63,7 @@ var HistoryViewItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["data"];
+		var searchFields = ["name", "date", "volumeIn", "volumeOut", "profit", "position"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {

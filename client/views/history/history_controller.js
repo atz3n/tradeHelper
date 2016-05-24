@@ -38,8 +38,6 @@ this.HistoryController = RouteController.extend({
 		};
 		
 
-		
-
 		return data;
 	},
 

@@ -153,13 +153,22 @@
 					Name
 				</th>
 				<th class="th-sortable" data-sort="amount">
-					Simulated Amount
-				</th>
-				<th class="th-sortable" data-sort="gain">
-					Gain (multiplier)
+					Amount
 				</th>
 				<th class="th-sortable" data-sort="counter">
-					Counter (starts with this value)
+					Unit
+				</th>
+				<th class="th-sortable" data-sort="gain">
+					Gain
+				</th>
+				<th class="th-sortable" data-sort="offset">
+					Offset
+				</th>
+				<th class="th-sortable" data-sort="startVal">
+					Start Value
+				</th>
+				<th class="th-sortable" data-sort="stepWidth">
+					Step Width
 				</th>
 				<th class="th-sortable" data-sort="priceType">
 					Price Type
@@ -190,10 +199,19 @@
 			{{amount}}
 		</td>
 		<td>
+			{{counter}}/{{denominator}}
+		</td>
+		<td>
 			{{gain}}
 		</td>
 		<td>
-			{{counter}}
+			{{offset}}
+		</td>
+		<td>
+			{{startVal}}
+		</td>
+		<td>
+			{{stepWidth}}
 		</td>
 		<td>
 			{{priceType}}

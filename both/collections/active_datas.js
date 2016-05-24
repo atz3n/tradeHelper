@@ -1,7 +1,7 @@
 this.ActiveDatas = new Mongo.Collection("activeDatas");
 
 this.ActiveDatas.userCanInsert = function(userId, doc) {
-	return true;
+	return false;
 };
 
 this.ActiveDatas.userCanUpdate = function(userId, doc) {

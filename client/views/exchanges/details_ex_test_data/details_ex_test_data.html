@@ -51,6 +51,16 @@
 					</p>
 				</div>
 			</div>
+			<div class="form-group  field-counter">
+				<label for="counter" class="col-sm-3 control-label">
+					Unit
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_test_data.counter}}/{{ex_test_data.denominator}}
+					</p>
+				</div>
+			</div>
 			<div class="form-group  field-gain">
 				<label for="gain" class="col-sm-3 control-label">
 					Gain (multiplier)
@@ -61,13 +71,33 @@
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-counter">
-				<label for="counter" class="col-sm-3 control-label">
-					Counter (starts with this value)
+			<div class="form-group  field-offset">
+				<label for="offset" class="col-sm-3 control-label">
+					Offset
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static">
-						{{ex_test_data.counter}}
+						{{ex_test_data.offset}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-start-val">
+				<label for="startVal" class="col-sm-3 control-label">
+					Start Value (counter starts with this value)
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_test_data.startVal}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-step-width">
+				<label for="stepWidth" class="col-sm-3 control-label">
+					Step Width (counter inscreases by this value each time)
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_test_data.stepWidth}}
 					</p>
 				</div>
 			</div>

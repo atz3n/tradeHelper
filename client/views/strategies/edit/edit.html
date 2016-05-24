@@ -92,14 +92,20 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="auto" name="mode" data-type="string" {{itemIsChecked strategy.mode "auto"}}>
-							Automatic
+							<input type="radio" value="manual" name="mode" data-type="string" {{itemIsChecked strategy.mode "manual"}}>
+							Manual
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="manual" name="mode" data-type="string" {{itemIsChecked strategy.mode "manual"}}>
-							Manual
+							<input type="radio" value="semiAuto" name="mode" data-type="string" {{itemIsChecked strategy.mode "semiAuto"}}>
+							Semi-Automatic
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="auto" name="mode" data-type="string" {{itemIsChecked strategy.mode "auto"}}>
+							Automatic
 						</label>
 					</div>
 					<span id="help-text" class="help-block">

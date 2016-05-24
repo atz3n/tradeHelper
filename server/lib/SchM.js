@@ -18,6 +18,7 @@
  * CHANGES:
  * 12-Apr-2016 : Initial version
  * 16-Apr-2016 : added '_' prefix to private statements
+ * 24-May-2016 : added possibility to forward parameters to callback function
  */
 
 import { InstHandler } from './InstHandler.js';
@@ -86,13 +87,13 @@ SchM.stopSchedules = function() {
  * @param {string} time             schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  * @param {function} cyclicFunction callback function that will be executed
  */
-SchM.createSchedule = function(id, time, cyclicFunction) {
+SchM.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
   /* check error */
   var tmp = later.parse.text(time);
   if(tmp.error != -1) return false;
   
   _schedules.setObject(id, new Schedule());
-  _schedules.getObject(id).createSchedule(id, time, cyclicFunction);
+  _schedules.getObject(id).createSchedule(id, time, cyclicFunction, cyclicFunctionParam);
   
   return true; 
 }
@@ -186,7 +187,8 @@ function Schedule() {
    */
   var _cycFuncParams = {
     _id: 'init',
-    _time: 'init'
+    _time: 'init',
+    _param: 'init'
   };
 
 
@@ -211,7 +213,7 @@ function Schedule() {
       },
       
       job: function() {
-        _cycFunc(); // set callback function
+        _cycFunc(_cycFuncParams._param); // set callback function
       }
     });
   }
@@ -223,14 +225,16 @@ function Schedule() {
 
   /**
    * Creates the schedule
-   * @param {string} id               id of schedule
-   * @param {string} time             schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
-   * @param {function} cyclicFunction callback function that will be executed
+   * @param {string} id                       id of schedule
+   * @param {string} time                     schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
+   * @param {function} cyclicFunction         callback function that will be executed
+   * @param {what ever} cyclicFunctionParam   parameters of callback function
    */
-  this.createSchedule = function(id, time, cyclicFunction) {
+  this.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
     _cycFunc = cyclicFunction;
     _cycFuncParams._id = id;
     _cycFuncParams._time = time;
+    _cycFuncParams._param = cyclicFunctionParam;
 
     _createSch();
   }

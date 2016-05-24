@@ -204,7 +204,9 @@ export function ExKraken(ConstrParam) {
 
 
   this.getConfig = function() {
-    return _config;
+    var tmp = Object.assign({}, _config);
+    delete tmp.id;
+    return tmp;
   }
 
 
