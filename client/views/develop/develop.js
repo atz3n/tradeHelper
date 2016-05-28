@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.Develop.rendered = function() {
-	
+	Session.set('activePage', 'develop');
 };
 
 Template.Develop.events({

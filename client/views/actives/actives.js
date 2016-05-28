@@ -1,6 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.Actives.rendered = function() {
+  Session.set('activePage', 'actives');
   Meteor.ClientCall.setClientId(Meteor.userId());
 };
 

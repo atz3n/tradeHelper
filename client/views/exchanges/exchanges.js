@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.Exchanges.rendered = function() {
-	
+	Session.set('activePage', 'exchanges');
 };
 
 Template.Exchanges.events({

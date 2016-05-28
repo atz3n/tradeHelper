@@ -45,7 +45,6 @@ Template.layout.events({
 });
 
 
-
 Template.PublicLayoutLeftMenu.rendered = function() {
 	$(".menu-item-collapse .dropdown-toggle").each(function() {
 		if($(this).find("li.active")) {

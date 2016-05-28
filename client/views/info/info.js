@@ -1,4 +1,5 @@
 Template.Info.rendered = function() {
+	Session.set('activePage', 'info');
 	$('table').addClass('table');
 };
 

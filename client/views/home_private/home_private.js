@@ -1,4 +1,5 @@
 Template.HomePrivate.rendered = function() {
+	Session.set('activePage', 'prHome');
 	Meteor.ClientCall.setClientId(Meteor.userId());
 	// Meteor.ClientCall.setClientId(Settings.findOne().ownerId)
 };

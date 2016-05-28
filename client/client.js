@@ -2,7 +2,7 @@ this.App = {};
 this.Helpers = {};
 
 Meteor.startup(function() {
-	
+	Session.set('activePage', 'default');
 });
 
 App.logout = function() {

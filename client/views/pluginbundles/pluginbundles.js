@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.Pluginbundles.rendered = function() {
-
+  Session.set('activePage', 'bundles');
 };
 
 Template.Pluginbundles.events({
