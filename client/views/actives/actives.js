@@ -74,12 +74,18 @@ var ActivesViewItems = function(strQue, datQue) {
         raw[i].current += cropFracDigits(volCur, 3);
 
         var tmpP = cropFracDigits(percentage(volCur, volIn), 2);
-        if(raw[i].position === 'short') tmpP *= -1;
-        raw[i].profit += tmpP + '%';
+        var tmpT = cropFracDigits(volCur - volIn, 2);
+        if(raw[i].position === 'short'){
+          tmpP *= -1;
+          tmpT *= -1;
+        } 
 
         if (tmp.units.counter != '' && tmp.units.denominator != ''){
           raw[i].volumeIn += tmp.units.counter;
           raw[i].current += tmp.units.counter;  
+          raw[i].profit += tmpT + tmp.units.counter + ' (' + tmpP + '%)';
+        } else {
+          raw[i].profit += tmpT + ' (' + tmpP + '%)';
         }
       }
     }

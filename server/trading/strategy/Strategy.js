@@ -116,7 +116,6 @@ export function Strategy(strategyDescription) {
 
     if (_lastPosition !== 'none' && _data.position === 'none') {
       _updateHistory();
-      console.log('history update')
     }
 
     _lastPosition = _data.position;
@@ -137,8 +136,6 @@ export function Strategy(strategyDescription) {
   var _updateHistory = function() {
     var tmp = {};
 
-    console.log(JSON.stringify(_strDesc));
-    
     tmp.inTime = _data.inTime;
     tmp.outTime = _data.outTime;
     tmp.strategyId = _data.strategyId;
@@ -174,7 +171,7 @@ export function Strategy(strategyDescription) {
       tmp.exchanges[i].amount = _data.exchanges[i].amount;
       tmp.exchanges[i].config = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
     }
-    console.log(JSON.stringify(tmp));
+
     Histories.insert(tmp);
   }
 
@@ -401,7 +398,7 @@ export function Strategy(strategyDescription) {
     conf.data = exchange.data;
     conf.cUnit = exchange.counter;
     conf.dUnit = exchange.denominator;
-    console.log(exchange)
+
     switch (exchange.priceType) {
       case "Sinus":
         conf.priceType = ExTestData.priceType.sinus;
@@ -567,8 +564,6 @@ export function Strategy(strategyDescription) {
         }
       }
     }
-
-    // console.log(_strDesc);
   }
 
   _constructor(strategyDescription)

@@ -234,6 +234,9 @@ export function PlSwing(logger) {
 
       if (typeof price !== 'undefined') {
         _data.frozenVal = price;
+        _data.currentVal = price;
+        _data.topVal = price;
+        _data.bottomVal = price;
       } else {
         _data.frozenVal = _data.currentVal;
       }
@@ -258,6 +261,9 @@ export function PlSwing(logger) {
 
       if (typeof price !== 'undefined') {
         _data.frozenVal = price;
+        _data.currentVal = price;
+        _data.topVal = price;
+        _data.bottomVal = price;
       } else {
         _data.frozenVal = _data.currentVal;
       }
