@@ -1,0 +1,2 @@
+- change chart.js with TradingView Chart
+- yahoo historical data integration

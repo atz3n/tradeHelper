@@ -18,3 +18,6 @@ https://www.npmjs.com/package/winston-mongodb
 Handlebar improvement
 - meteor add evenfrost:spacekit
 - meteor add session
+
+Charts
+- meteor add chart:chart
