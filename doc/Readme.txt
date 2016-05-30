@@ -21,3 +21,4 @@ Handlebar improvement
 
 Charts
 - meteor add chart:chart
+- meteor add perak:c3

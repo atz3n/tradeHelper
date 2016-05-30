@@ -16,7 +16,7 @@
         <span class="fa fa-chevron-left">
         </span>
       </a>
-      Details and Controls
+      Details, Chart & Controls
     </h2>
     <form role="form" class="form-horizontal">
       {{#if errorMessage}}
@@ -28,6 +28,8 @@
         {{infoMessage}}
       </div>
       {{/if}}
+      <h3>Details</h3>
+      <hr />
       <div class="form-group  field-name">
         <label for="name" class="col-sm-3 control-label">
           Name
@@ -101,20 +103,20 @@
       <div class="form-group  field-exchanges">
         <label for="exchanges" class="col-sm-3 control-label">
           Exchanges
-        </label>
-        <button id="form-exchanges-button" class="btn btn-default btn-xs" type="submit">
-          {{#if showExchanges}}
-          <span class="fa fa-angle-up">
+          <button id="form-exchanges-button" class="btn btn-default btn-xs" type="submit">
+            {{#if showExchanges}}
+            <span class="fa fa-angle-up">
             </span> {{else}}
-          <span class="fa fa-angle-down">
+            <span class="fa fa-angle-down">
             </span> {{/if}}
-        </button>
-        <button id="form-expandExchanges-button" class="btn btn-default btn-xs" type="submit">
-          <span class="fa fa-angle-double-down"></span>
-        </button>
-        <button id="form-collapseExchanges-button" class="btn btn-default btn-xs" type="submit">
-          <span class="fa fa-angle-double-up"></span>
-        </button>
+          </button>
+          <button id="form-expandExchanges-button" class="btn btn-default btn-xs" type="submit">
+            <span class="fa fa-angle-double-down"></span>
+          </button>
+          <button id="form-collapseExchanges-button" class="btn btn-default btn-xs" type="submit">
+            <span class="fa fa-angle-double-up"></span>
+          </button>
+        </label>
         <div class="input-div col-sm-9">
           <table class="table table-striped">
             {{#if showExchanges}}
@@ -131,21 +133,21 @@
       </div>
       <div class="form-group  field-plugin-bundles">
         <label for="pluginBundles" class="col-sm-3 control-label">
-          Plugin Bundles
-        </label>
-        <button id="form-bundle-button" class="btn btn-default btn-xs" type="submit">
-          {{#if showBundles}}
-          <span class="fa fa-angle-up">
+          Pl. Bundles
+          <button id="form-bundle-button" class="btn btn-default btn-xs" type="submit">
+            {{#if showBundles}}
+            <span class="fa fa-angle-up">
             </span> {{else}}
-          <span class="fa fa-angle-down">
+            <span class="fa fa-angle-down">
             </span> {{/if}}
-        </button>
-        <button id="form-expandBundles-button" class="btn btn-default btn-xs" type="submit">
-          <span class="fa fa-angle-double-down"></span>
-        </button>
-        <button id="form-collapseBundles-button" class="btn btn-default btn-xs" type="submit">
-          <span class="fa fa-angle-double-up"></span>
-        </button>
+          </button>
+          <button id="form-expandBundles-button" class="btn btn-default btn-xs" type="submit">
+            <span class="fa fa-angle-double-down"></span>
+          </button>
+          <button id="form-collapseBundles-button" class="btn btn-default btn-xs" type="submit">
+            <span class="fa fa-angle-double-up"></span>
+          </button>
+        </label>
         <div class="input-div col-sm-9">
           <table class="table table-striped">
             {{#if showBundles}}
@@ -177,8 +179,17 @@
           </span>
         </div>
       </div>
+      <h3>Chart</h3>
+      <hr />
       <div class="form-group">
-        <div class="submit-div col-sm-9 col-sm-offset-3">
+        <div class="submit-div col-sm-9">
+          {{> ActivesDetailsChartForm}}
+        </div>
+      </div>
+      <h3>Controls</h3>
+      <hr />
+      <div class="form-group">
+        <div class="submit-div col-sm-9">
           <button id="form-buy-button" class="btn btn-info" type="submit">
             <span class="fa fa-arrow-circle-down">
             </span> Buy
@@ -190,7 +201,7 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="submit-div col-sm-9 col-sm-offset-3">
+        <div class="submit-div col-sm-9">
           <button id="form-refresh-button" class="btn btn-default" type="submit">
             <span class="fa fa-refresh">
             </span> Refresh
@@ -212,8 +223,9 @@
           </button>
         </div>
       </div>
+      <hr />
       <div class="form-group">
-        <div class="submit-div col-sm-9 col-sm-offset-3">
+        <div class="submit-div col-sm-9">
           <a href="#" id="form-close-button" class="btn btn-primary">
             OK
           </a>
@@ -351,4 +363,7 @@
       </table>
     </td>
   </tr>
+</template>
+<template name="ActivesDetailsChartForm">
+  {{> c3 data=geigerChart}}
 </template>

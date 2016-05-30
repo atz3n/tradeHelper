@@ -405,3 +405,45 @@ Template.ActivesDetailsDetailsFormPlugins.helpers({
     return pageSession.get('showPl' + this.num);
   }
 });
+
+
+
+Template.ActivesDetailsChartForm.rendered = function() {
+
+};
+
+Template.ActivesDetailsChartForm.events({
+
+});
+
+Template.ActivesDetailsChartForm.helpers({
+  "geigerChart": function() {
+    var cols = [];
+    var col = ["Radiation"];
+    // var data = _.pluck(Sensors.find({ topic: "revspace/sensors/geiger" }).fetch(), "message");
+    var data = [];
+
+    for(var i = 0 ; i < 10 ; i++){
+      data[i] = random();
+    }
+
+    _.each(data, function(g) {
+      col.push(parseInt(g));
+    });
+    cols.push(col);
+    return {
+      data: {
+        columns: cols,
+        type: 'spline'
+      }
+    };
+  }
+});
+
+
+
+
+
+function random() {
+    return Math.floor((Math.random() * 100) + 1);
+}
