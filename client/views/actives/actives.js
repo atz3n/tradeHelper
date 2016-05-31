@@ -48,7 +48,7 @@ var ActivesViewItems = function(strQue, datQue) {
 
         if (j !== 0) raw[i].current += ', ';
      
-        raw[i].current += cropFracDigits(tmp.price, 4);
+        raw[i].current += cropFracDigits(tmp.price[tmp.price.length - 1], 4);
 
         if (tmp.units.counter != '' && tmp.units.denominator != '')
           raw[i].current += ' ' + tmp.units.counter + '/' + tmp.units.denominator;
@@ -68,7 +68,7 @@ var ActivesViewItems = function(strQue, datQue) {
         if (j !== 0) raw[i].current += ', ';
 
         var volIn = tmp.inPrice * tmp.amount;
-        var volCur = tmp.price * tmp.amount;
+        var volCur = tmp.price[tmp.price.length - 1] * tmp.amount;
 
         raw[i].volumeIn += cropFracDigits(volIn, 3);
         raw[i].current += cropFracDigits(volCur, 3);

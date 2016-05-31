@@ -1,3 +1,4 @@
+import { TimeFormat } from '../../../lib/TimeFormat.js';
 var pageSession = new ReactiveDict();
 
 Template.ActivesDetails.rendered = function() {
@@ -13,7 +14,7 @@ Template.ActivesDetails.helpers({
 });
 
 
-var processActiveData = function(data){
+var processActiveData = function(data) {
 
   var pData = {};
   var cntPl = 0;
@@ -22,27 +23,27 @@ var processActiveData = function(data){
   pData.strategyName = data.strategyName;
   pData.state = data.state;
   pData.position = data.position;
-  pData.curTime = new Date (data.curTime);
+  pData.curTime = new Date(data.curTime[data.curTime.length - 1]);
 
-  if(pData.position !== 'none') pData.inTime = new Date(data.inTime);
+  if (pData.position !== 'none') pData.inTime = new Date(data.inTime);
   else pData.inTime = '-'
-  
+
   pData.exchanges = new Array(data.exchanges.length);
-  for(var i = 0 ; i < data.exchanges.length ; i++) {
-   
+  for (var i = 0; i < data.exchanges.length; i++) {
+
     pData.exchanges[i] = {};
     pE = pData.exchanges[i];
     e = data.exchanges[i];
 
     pE.name = e.name;
     pE.type = e.instInfo.type;
-    pE.price = cropFracDigits(e.price, 6);
+    pE.price = cropFracDigits(e.price[e.price.length - 1], 6);
     pE.info = e.info;
-    pE.num = data._id +  cntEx;
+    pE.num = data._id + cntEx;
     cntEx++;
 
 
-    if(pData.position === 'none'){
+    if (pData.position === 'none') {
       pE.inPrice = '-';
       pE.inTime = '-';
       pE.amount = '-';
@@ -52,7 +53,7 @@ var processActiveData = function(data){
       pE.profitTot = '-';
     }
 
-    if(pData.position !== 'none'){
+    if (pData.position !== 'none') {
       pE.inPrice = cropFracDigits(e.inPrice, 6);
       pE.amount = e.amount;
 
@@ -64,14 +65,14 @@ var processActiveData = function(data){
       pE.profitPer = cropFracDigits(percentage(volCur, volIn), 4);
       pE.profitTot = cropFracDigits(volCur - volIn, 6);
 
-      if(pData.position === 'short') {
+      if (pData.position === 'short') {
         pE.profitTot *= -1;
         pE.profitPer *= -1;
       }
 
       pE.profitPer += '%';
-      if (e.units.counter != '' && e.units.denominator != ''){
-        pE.volumeIn +=  e.units.counter;
+      if (e.units.counter != '' && e.units.denominator != '') {
+        pE.volumeIn += e.units.counter;
         pE.volumeCur += e.units.counter;
         pE.inPrice += ' ' + e.units.counter + '/' + e.units.denominator;
         pE.amount += e.units.denominator;
@@ -86,50 +87,50 @@ var processActiveData = function(data){
 
   pData.bundles = new Array(data.bundles.length);
 
-  for(var i = 0 ; i < data.bundles.length ; i++){
+  for (var i = 0; i < data.bundles.length; i++) {
     pData.bundles[i] = {};
     pData.bundles[i].name = data.bundles[i].name;
     pData.bundles[i].plugins = new Array(data.bundles[i].plugins.length);
 
-    for(var j = 0 ; j < data.bundles[i].plugins.length ; j++){
+    for (var j = 0; j < data.bundles[i].plugins.length; j++) {
       pData.bundles[i].plugins[j] = {};
-      
-      for(var k = 0 ; k < data.plugins.length ; k++){
-        if(data.bundles[i].plugins[j].pId === data.plugins[k].instInfo.id){
-           pData.bundles[i].plugins[j] = Object.assign({}, data.plugins[k]);
+
+      for (var k = 0; k < data.plugins.length; k++) {
+        if (data.bundles[i].plugins[j].pId === data.plugins[k].instInfo.id) {
+          pData.bundles[i].plugins[j] = Object.assign({}, data.plugins[k]);
         }
       }
 
       pData.bundles[i].plugins[j].num = data._id + cntPl;
       cntPl++;
 
-      for(var k = 0 ; k < data.exchanges.length ; k++){
-        if(data.bundles[i].plugins[j].eId === data.exchanges[k].instInfo.id){
-           pData.bundles[i].plugins[j].exchange = Object.assign({}, data.exchanges[k]);
+      for (var k = 0; k < data.exchanges.length; k++) {
+        if (data.bundles[i].plugins[j].eId === data.exchanges[k].instInfo.id) {
+          pData.bundles[i].plugins[j].exchange = Object.assign({}, data.exchanges[k]);
         }
       }
     }
   }
-  return  pData;
+  return pData;
 }
 
 
 
-var setPluginSessionVar = function(data, state){
+var setPluginSessionVar = function(data, state) {
   var cnt = 0;
-  for(var i = 0 ; i < data.bundles.length ; i++){
-    for(var j = 0 ; j < data.bundles[i].plugins.length ; j++){
+  for (var i = 0; i < data.bundles.length; i++) {
+    for (var j = 0; j < data.bundles[i].plugins.length; j++) {
       pageSession.set('showPl' + data._id + cnt, state);
-      cnt ++;
+      cnt++;
     }
   }
 }
 
-var setExchangeSessionVar = function(data, state){
+var setExchangeSessionVar = function(data, state) {
   var cnt = 0;
-  for(var i = 0 ; i < data.exchanges.length ; i++){
+  for (var i = 0; i < data.exchanges.length; i++) {
     pageSession.set('showEx' + data._id + cnt, state);
-    cnt ++;
+    cnt++;
   }
 }
 
@@ -239,7 +240,7 @@ Template.ActivesDetailsDetailsForm.events({
   },
   "click #form-exchanges-button": function(e, t) {
     e.preventDefault();
-    
+
     pageSession.set('showExchanges', !pageSession.get('showExchanges'));
   },
   "click #form-collapseExchanges-button": function(e, t) {
@@ -318,7 +319,7 @@ Template.ActivesDetailsDetailsForm.events({
   "click #form-refresh-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
-    
+
     Meteor.call('strategyRefresh', strId, function(e, r) {
       if (e) console.log(e);
     });
@@ -370,8 +371,7 @@ Template.ActivesDetailsDetailsForm.helpers({
 
 
 
-Template.ActivesDetailsDetailsFormExchanges.rendered = function() {
-};
+Template.ActivesDetailsDetailsFormExchanges.rendered = function() {};
 
 Template.ActivesDetailsDetailsFormExchanges.events({
   "click #exchange-button": function(e, t) {
@@ -382,15 +382,14 @@ Template.ActivesDetailsDetailsFormExchanges.events({
 });
 
 Template.ActivesDetailsDetailsFormExchanges.helpers({
-  "showExchange": function(){
+  "showExchange": function() {
     return pageSession.get('showEx' + this.num);
   }
 });
 
 
 
-Template.ActivesDetailsDetailsFormPlugins.rendered = function() {
-};
+Template.ActivesDetailsDetailsFormPlugins.rendered = function() {};
 
 Template.ActivesDetailsDetailsFormPlugins.events({
   "click #plugin-button": function(e, t) {
@@ -401,7 +400,7 @@ Template.ActivesDetailsDetailsFormPlugins.events({
 });
 
 Template.ActivesDetailsDetailsFormPlugins.helpers({
-  "showPlugin": function(){
+  "showPlugin": function() {
     return pageSession.get('showPl' + this.num);
   }
 });
@@ -417,33 +416,72 @@ Template.ActivesDetailsChartForm.events({
 });
 
 Template.ActivesDetailsChartForm.helpers({
-  "geigerChart": function() {
-    var cols = [];
-    var col = ["Radiation"];
-    // var data = _.pluck(Sensors.find({ topic: "revspace/sensors/geiger" }).fetch(), "message");
-    var data = [];
+  "currChart": function() {
+      var aD = this.active_data;
+      var timeUnit = this.strategy.timeUnit;
+      var cols = [];
 
-    for(var i = 0 ; i < 10 ; i++){
-      data[i] = random();
-    }
 
-    _.each(data, function(g) {
-      col.push(parseInt(g));
-    });
-    cols.push(col);
-    return {
-      data: {
-        columns: cols,
-        type: 'spline'
+      var col = ['x'];
+      _.each(aD.curTime, function(d) { 
+        var tmp = '';
+        var date = new Date(d);
+
+        if(timeUnit === 'seconds'){
+          tmp = TimeFormat.getHours(date) + 
+          ':' + TimeFormat.getMinutes(date) +
+          ':' + TimeFormat.getSeconds(date);
+        } else if(timeUnit === 'minutes'){
+          tmp = TimeFormat.getDay(date) + 
+          '_' + TimeFormat.getHours(date) +
+          ':' + TimeFormat.getMinutes(date);
+        } else if(timeUnit === 'hours'){
+          tmp = TimeFormat.getMonth(date) +
+          '-' + TimeFormat.getDay(date) + 
+          '_' + TimeFormat.getHours(date);
+        } else {
+          tmp = TimeFormat.getYear(date) +
+          '-' + TimeFormat.getMonth(date) +
+          '-' + TimeFormat.getDay(date);
+        } 
+
+        col.push(tmp); 
+      });
+      cols.push(col);
+
+
+      for (i in aD.exchanges) {
+        var tmp = aD.exchanges[i];
+        var col = [tmp.name];
+
+        _.each(tmp.price, function(p) {
+          col.push(cropFracDigits(p, 6));
+        });
+        cols.push(col);
       }
-    };
-  }
+
+      var retVal = {
+        data: {
+          x: 'x',
+          columns: cols,
+          type: 'line'
+        },
+        point: {
+          // show: false
+        },
+        axis: {
+          x: {
+            type: 'category',
+            tick: {
+              centered: true,
+              culling: true,
+              fit: true,
+              multiline: false
+            }
+          }
+        }
+      };
+
+      return retVal;
+    }
 });
-
-
-
-
-
-function random() {
-    return Math.floor((Math.random() * 100) + 1);
-}

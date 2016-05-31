@@ -133,9 +133,6 @@
           <a class="navbar-brand" href="#">
             Trade Helper
           </a>
-        </div>
-        <div id="menu" class="collapse navbar-collapse">
-          {{> PrivateLayoutLeftMenu}}
           <p class="navbar-text">
             {{#if $eq $Session.activePage 'default'}}
             <span class="fa fa-sitemap">
@@ -165,6 +162,9 @@
             <span class="fa fa-inbox">
             </span> {{/if}}
           </p>
+        </div>
+        <div id="menu" class="collapse navbar-collapse">
+          {{> PrivateLayoutLeftMenu}}
           {{> PrivateLayoutRightMenu}}
         </div>
       </div>

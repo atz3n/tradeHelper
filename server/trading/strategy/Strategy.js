@@ -67,6 +67,7 @@ export function Strategy(strategyDescription) {
 
   var _lastPosition = 'none';
 
+  var _numOfChartData = 60;
   var _data = {
     strategyId: '',
     strategyName: '',
@@ -75,9 +76,9 @@ export function Strategy(strategyDescription) {
     plugins: [],
     exchanges: [],
     bundles: [],
-    curTime: '',
+    curTime: [],
     inTime: '',
-    outTime: '',
+    outTime: ''
   };
 
 
@@ -88,17 +89,19 @@ export function Strategy(strategyDescription) {
   /***********************************************************************
     Private Instance Function
    ***********************************************************************/
-
+var cnt = 0;
   var _updateFunc = function(fullUpdate) {
     if (fullUpdate) _clearNotifyValues();
 
-    _data.curTime = new Date();
+    if(_data.curTime.length >= _numOfChartData) _data.curTime.shift();
+    _data.curTime.push(new Date);
 
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
       var tmp = _exchanges.getObjectByIdx(i);
       if (fullUpdate) tmp.update();
 
-      _data.exchanges[i].price = tmp.getPrice();
+      if(_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
+      _data.exchanges[i].price.push(tmp.getPrice());
       _data.exchanges[i].info = tmp.getInfo();
     }
 
@@ -556,6 +559,7 @@ export function Strategy(strategyDescription) {
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
             _data.exchanges[exCnt] = {};
+            _data.exchanges[exCnt].price = [];
             _data.exchanges[exCnt].name = plugin.exchange.name;
             _data.exchanges[exCnt].instInfo = tmpEx.getInstInfo();
             _data.exchanges[exCnt].units = tmpEx.getPairUnits();
