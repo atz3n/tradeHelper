@@ -20,5 +20,4 @@ Handlebar improvement
 - meteor add session
 
 Charts
-- meteor add chart:chart
-- meteor add perak:c3
+- meteor add peernohell:c3

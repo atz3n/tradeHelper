@@ -1,5 +1,6 @@
 import { TimeFormat } from '../../../lib/TimeFormat.js';
 var pageSession = new ReactiveDict();
+var chart = '';
 
 Template.ActivesDetails.rendered = function() {
 
@@ -15,7 +16,7 @@ Template.ActivesDetails.helpers({
 
 
 var processActiveData = function(data) {
-
+  pageSession.set('reacData', data);
   var pData = {};
   var cntPl = 0;
   var cntEx = 0;
@@ -114,6 +115,137 @@ var processActiveData = function(data) {
   return pData;
 }
 
+var gridEnabled = false;
+var postloadChartFunc = function() {
+  var aD = pageSession.get('reacData');
+
+  if (!gridEnabled) {
+    if (aD.position !== 'none') {
+      chart.ygrids.remove();
+      
+      for (i in aD.exchanges) {
+        var tmp = aD.exchanges[i];
+
+        var label = tmp.name + ' in: ' + cropFracDigits(tmp.inPrice, 3);
+        if (tmp.units.counter != '' && tmp.units.denominator != '') {
+          label += tmp.units.counter + '/' + tmp.units.denominator;
+        }
+
+        chart.ygrids.add({
+          value: tmp.inPrice,
+          text: label,
+          position: 'start'
+        });
+      }
+
+      gridEnabled = true;
+    }
+  } else {
+    if (aD.position === 'none') {
+      chart.ygrids.remove();
+
+      if (aD.exchanges[0].outPrice) {
+
+        for (i in aD.exchanges) {
+          var tmp = aD.exchanges[i];
+
+
+          var label = tmp.name + ' out: ' + cropFracDigits(tmp.outPrice, 3);
+          if (tmp.units.counter != '' && tmp.units.denominator != '') {
+            label += tmp.units.counter + '/' + tmp.units.denominator;
+          }
+
+          chart.ygrids.add({
+            value: tmp.outPrice,
+            text: label,
+            position: 'start'
+          });
+        }
+      }
+      gridEnabled = false;
+    }
+  }
+}
+
+var setChartValues = function(self) {
+
+  var aD = self.active_data;
+  var timeUnit = self.strategy.timeUnit;
+  var cols = [];
+  var time = [];
+
+
+  var time = ['x'];
+  _.each(aD.curTime, function(d) {
+    var tmp = '';
+    var date = new Date(d);
+
+    if (timeUnit === 'seconds') {
+      tmp = TimeFormat.getHours(date) +
+        ':' + TimeFormat.getMinutes(date) +
+        ':' + TimeFormat.getSeconds(date);
+    } else if (timeUnit === 'minutes') {
+      tmp = TimeFormat.getDay(date) +
+        ' ' + TimeFormat.getHours(date) +
+        ':' + TimeFormat.getMinutes(date);
+    } else if (timeUnit === 'hours') {
+      tmp = TimeFormat.getMonth(date) +
+        '-' + TimeFormat.getDay(date) +
+        ' ' + TimeFormat.getHours(date);
+    } else {
+      tmp = TimeFormat.getYear(date) +
+        '-' + TimeFormat.getMonth(date) +
+        '-' + TimeFormat.getDay(date);
+    }
+
+    time.push(tmp);
+  });
+  cols.push(time);
+
+
+  for (i in aD.exchanges) {
+    var tmp = aD.exchanges[i];
+    var col = [tmp.name];
+    var inGrid = [];
+
+    _.each(tmp.price, function(p) {
+      col.push(cropFracDigits(p, 6));
+    });
+    cols.push(col);
+  }
+
+
+  var retVal = {
+    data: {
+      x: 'x',
+      columns: cols,
+      type: 'line'
+    },
+    // point: {
+    // show: false
+    // },
+    // subchart: {
+    //   show: true
+    // },
+    axis: {
+      x: {
+        type: 'category',
+        tick: {
+          centered: true,
+          culling: true,
+          multiline: false
+        }
+      }
+    },
+    grid: {
+      y: {
+        show: false,
+        lines: inGrid
+      }
+    }
+  };
+  Session.set('chartData', retVal);
+}
 
 
 var setPluginSessionVar = function(data, state) {
@@ -169,7 +301,7 @@ Template.ActivesDetailsDetailsForm.rendered = function() {
   $(".bootstrap-tagsinput").addClass("form-control");
   $("input[autofocus]").focus();
 };
-
+var cnt = 0;
 Template.ActivesDetailsDetailsForm.events({
   "submit": function(e, t) {
     e.preventDefault();
@@ -319,7 +451,7 @@ Template.ActivesDetailsDetailsForm.events({
   "click #form-refresh-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
-
+    Session.set('data1', ['data1', 30, 200, 100, 400, cnt++]);
     Meteor.call('strategyRefresh', strId, function(e, r) {
       if (e) console.log(e);
     });
@@ -327,7 +459,7 @@ Template.ActivesDetailsDetailsForm.events({
   "click #form-buy-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
-
+    chart.ygrids.add({ value: 350, text: 'test' });
     Meteor.call('strategyBuy', strId, function(e, r) {
       if (e) console.log(e);
     });
@@ -335,7 +467,7 @@ Template.ActivesDetailsDetailsForm.events({
   "click #form-sell-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
-
+    chart.ygrids.remove();
     Meteor.call('strategySell', strId, function(e, r) {
       if (e) console.log(e);
     });
@@ -350,6 +482,8 @@ Template.ActivesDetailsDetailsForm.helpers({
     return pageSession.get("activesDetailsDetailsFormErrorMessage");
   },
   "activeData": function() {
+    setChartValues(this);
+    Session.set('data1', ['data1', 30, 200, 100, 400, cnt++]);
     return processActiveData(this.active_data);
   },
   "strategyData": function() {
@@ -406,82 +540,19 @@ Template.ActivesDetailsDetailsFormPlugins.helpers({
 });
 
 
-
 Template.ActivesDetailsChartForm.rendered = function() {
+  var self = this;
+  var tmp = Session.get('chartData');
+  tmp.bindto = this.find('.chart');
 
+  chart = c3.generate(tmp)
+
+  this.autorun(function(tracker) {
+    chart.load(Session.get('chartData').data);
+    postloadChartFunc();
+  });
 };
 
-Template.ActivesDetailsChartForm.events({
+Template.ActivesDetailsChartForm.events({});
 
-});
-
-Template.ActivesDetailsChartForm.helpers({
-  "currChart": function() {
-      var aD = this.active_data;
-      var timeUnit = this.strategy.timeUnit;
-      var cols = [];
-
-
-      var col = ['x'];
-      _.each(aD.curTime, function(d) { 
-        var tmp = '';
-        var date = new Date(d);
-
-        if(timeUnit === 'seconds'){
-          tmp = TimeFormat.getHours(date) + 
-          ':' + TimeFormat.getMinutes(date) +
-          ':' + TimeFormat.getSeconds(date);
-        } else if(timeUnit === 'minutes'){
-          tmp = TimeFormat.getDay(date) + 
-          '_' + TimeFormat.getHours(date) +
-          ':' + TimeFormat.getMinutes(date);
-        } else if(timeUnit === 'hours'){
-          tmp = TimeFormat.getMonth(date) +
-          '-' + TimeFormat.getDay(date) + 
-          '_' + TimeFormat.getHours(date);
-        } else {
-          tmp = TimeFormat.getYear(date) +
-          '-' + TimeFormat.getMonth(date) +
-          '-' + TimeFormat.getDay(date);
-        } 
-
-        col.push(tmp); 
-      });
-      cols.push(col);
-
-
-      for (i in aD.exchanges) {
-        var tmp = aD.exchanges[i];
-        var col = [tmp.name];
-
-        _.each(tmp.price, function(p) {
-          col.push(cropFracDigits(p, 6));
-        });
-        cols.push(col);
-      }
-
-      var retVal = {
-        data: {
-          x: 'x',
-          columns: cols,
-          type: 'line'
-        },
-        point: {
-          // show: false
-        },
-        axis: {
-          x: {
-            type: 'category',
-            tick: {
-              centered: true,
-              culling: true,
-              fit: true,
-              multiline: false
-            }
-          }
-        }
-      };
-
-      return retVal;
-    }
-});
+Template.ActivesDetailsChartForm.helpers({});
