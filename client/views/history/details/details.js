@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.HistoryDetails.rendered = function() {
-
+  Session.set('activePage', 'history');
 };
 
 Template.HistoryDetails.events({

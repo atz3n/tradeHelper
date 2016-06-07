@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.StrategiesDetails.rendered = function() {
-	
+	Session.set('activePage', 'strategies');
 };
 
 Template.StrategiesDetails.events({

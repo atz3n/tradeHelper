@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.PluginsEditPlSwing.rendered = function() {
-	
+	Session.set('activePage', 'plugins');
 };
 
 Template.PluginsEditPlSwing.events({

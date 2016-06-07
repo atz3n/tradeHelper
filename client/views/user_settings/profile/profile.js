@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.UserSettingsProfile.rendered = function() {
-	
+	Session.set('activePage', 'user_settings');
 };
 
 Template.UserSettingsProfile.events({

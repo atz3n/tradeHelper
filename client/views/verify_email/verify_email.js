@@ -1,6 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.VerifyEmail.rendered = function() {
+  Session.set('activePage', 'user_settings');
 	pageSession.set("errorMessage", "");
 
   var verifyEmailToken = Router.current().params.verifyEmailToken;

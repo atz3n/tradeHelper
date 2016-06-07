@@ -3,7 +3,7 @@ var pageSession = new ReactiveDict();
 
 Template.Playground.rendered = function() {
   Session.set('activePage', 'playground');
-  Meteor.ClientCall.setClientId(Meteor.userId());
+  // Meteor.ClientCall.setClientId(Meteor.userId());
 
   var temp = Strategies.find().fetch();
   for (i = 0; i < temp.length; i++) {

@@ -1,2 +1,4 @@
-- change chart.js with TradingView Chart
+- change c3.js with TradingView Chart
 - yahoo historical data integration
+- add export function to history
+- 

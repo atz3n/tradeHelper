@@ -3,7 +3,7 @@ var pageSession = new ReactiveDict();
 var chart = '';
 
 Template.ActivesDetails.rendered = function() {
-
+  Session.set('activePage', 'actives');
 };
 
 Template.ActivesDetails.events({

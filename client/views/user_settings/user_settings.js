@@ -1,5 +1,5 @@
 Template.UserSettings.rendered = function() {
-	
+	Session.set('activePage', 'user_settings');
 };
 
 Template.UserSettings.events({

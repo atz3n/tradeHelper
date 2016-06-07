@@ -1,7 +1,7 @@
 var pageSession = new ReactiveDict();
 
 Template.PluginsInsertPlDummy.rendered = function() {
-	
+	Session.set('activePage', 'plugins');
 };
 
 Template.PluginsInsertPlDummy.events({

@@ -4,7 +4,7 @@ pageSession.set("errorMessage", "");
 pageSession.set("infoMessage", "");
 
 Template.UserSettingsChangePass.rendered = function() {
-	
+	Session.set('activePage', 'user_settings');
 	$("input[autofocus]").focus();
 };
 
