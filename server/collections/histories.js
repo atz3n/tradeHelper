@@ -30,6 +30,14 @@ Histories.before.update(function(userId, doc, fieldNames, modifier, options) {
 	
 });
 
+Histories.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 Histories.before.remove(function(userId, doc) {
 	
 });

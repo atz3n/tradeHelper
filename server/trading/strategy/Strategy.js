@@ -81,6 +81,9 @@ export function Strategy(strategyDescription) {
     outTime: ''
   };
 
+  var _notifyParam = {};
+  var _callNotifyFunc = false;
+
 
   /***********************************************************************
     Public Instance Variable
@@ -89,18 +92,21 @@ export function Strategy(strategyDescription) {
   /***********************************************************************
     Private Instance Function
    ***********************************************************************/
-var cnt = 0;
+
   var _updateFunc = function(fullUpdate) {
+    _callNotifyFunc = false;
+
+
     if (fullUpdate) _clearNotifyValues();
 
-    if(_data.curTime.length >= _numOfChartData) _data.curTime.shift();
+    if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
     _data.curTime.push(new Date);
 
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
       var tmp = _exchanges.getObjectByIdx(i);
       if (fullUpdate) tmp.update();
 
-      if(_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
+      if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
       _data.exchanges[i].price.push(tmp.getPrice());
       _data.exchanges[i].info = tmp.getInfo();
     }
@@ -116,7 +122,11 @@ var cnt = 0;
     if (fullUpdate) _evalNotifyValues();
 
     _updateActiveData();
-
+    
+    if(_callNotifyFunc){
+      _notifyFunc(notifyParam);
+    }
+    
     if (_lastPosition !== 'none' && _data.position === 'none') {
       _updateHistory();
     }
@@ -227,15 +237,15 @@ var cnt = 0;
       finalDecision &= ~_noneMask;
 
       /* set notify function parameter */
-      param = {
+      notifyParam = {
         strategyId: _strDesc._id,
         action: 'none'
       };
 
       /* buy */
       if (finalDecision === _buyMask) {
-        param.action = 'buy';
-        _notifyFunc(param);
+        notifyParam.action = 'buy';
+        _callNotifyFunc = true;
 
         _data.state = 'buy request';
 
@@ -246,8 +256,8 @@ var cnt = 0;
 
       /* sell */
       if (finalDecision === _sellMask) {
-        param.action = 'sell';
-        _notifyFunc(param);
+        notifyParam.action = 'sell';
+        _callNotifyFunc = true;
 
         _data.state = 'sell request';
 
@@ -297,7 +307,7 @@ var cnt = 0;
         _data.state = 'out';
       }
 
-      _updateFunc(false);
+      // _updateFunc(false);
     }
   }
 
@@ -340,7 +350,7 @@ var cnt = 0;
         _data.state = 'out';
       }
 
-      _updateFunc(false);
+      // _updateFunc(false);
     }
   }
 

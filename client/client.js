@@ -2,7 +2,7 @@ this.App = {};
 this.Helpers = {};
 
 Meteor.startup(function() {
-	Session.set('activePage', 'default');
+  Session.set('activePage', 'default'); 
 });
 
 App.logout = function() {
@@ -10,7 +10,7 @@ App.logout = function() {
 	});
 };
 
-this.menuItemClass = function(routeName) {
+this.menuItemClass = function(routeName, params) {
 	if(!routeGranted(routeName)) {
 		return "hidden";
 	}
@@ -23,6 +23,19 @@ this.menuItemClass = function(routeName) {
 		return "";
 	}
 
+	if(Router.current().route.getName() == routeName) {
+		if(params && params.hash && Router.current().data().params) {
+			var eq = true;
+			for(var key in params.hash) {
+				if(Router.current().data().params[key] != params.hash[key]) {
+					eq = false;
+				}
+			}
+			return eq ? "active" : "";
+		}
+		return "active";
+	}
+
 	var currentPath = Router.routes[Router.current().route.getName()].handler.path;
 	var routePath = Router.routes[routeName].handler.path;
 
@@ -33,8 +46,8 @@ this.menuItemClass = function(routeName) {
 	return currentPath.indexOf(routePath) === 0 ? "active" : "";
 };
 
-Helpers.menuItemClass = function(routeName) {
-	return menuItemClass(routeName);
+Helpers.menuItemClass = function(routeName, params) {
+	return menuItemClass(routeName, params);
 };
 
 Helpers.userFullName = function() {

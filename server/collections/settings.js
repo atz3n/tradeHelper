@@ -30,6 +30,14 @@ Settings.before.update(function(userId, doc, fieldNames, modifier, options) {
 	
 });
 
+Settings.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 Settings.before.remove(function(userId, doc) {
 	
 });

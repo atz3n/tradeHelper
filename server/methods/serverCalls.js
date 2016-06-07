@@ -102,7 +102,6 @@ Meteor.methods({
   },
 
   develop: function(strategyId) {
-    console.log('bla');
     console.log(strategyId);
     if (strategies.getObject(strategyId) !== 'undefined') {
       console.log(JSON.stringify(strategies.getObject(strategyId).inst.develop()))

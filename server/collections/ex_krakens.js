@@ -31,6 +31,14 @@ ExKrakens.before.update(function(userId, doc, fieldNames, modifier, options) {
 	
 });
 
+ExKrakens.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 ExKrakens.before.remove(function(userId, doc) {
 	
 });

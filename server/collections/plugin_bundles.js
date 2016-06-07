@@ -30,6 +30,14 @@ PluginBundles.before.update(function(userId, doc, fieldNames, modifier, options)
 	
 });
 
+PluginBundles.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 PluginBundles.before.remove(function(userId, doc) {
 	
 });

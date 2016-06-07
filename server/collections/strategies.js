@@ -31,6 +31,14 @@ Strategies.before.update(function(userId, doc, fieldNames, modifier, options) {
 	
 });
 
+Strategies.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 Strategies.before.remove(function(userId, doc) {
 	ActiveDatas.remove({strategyId: doc._id});
 });

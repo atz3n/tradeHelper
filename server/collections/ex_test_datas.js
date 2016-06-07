@@ -31,6 +31,14 @@ ExTestDatas.before.update(function(userId, doc, fieldNames, modifier, options) {
 	
 });
 
+ExTestDatas.before.upsert(function(userId, selector, modifier, options) {
+	modifier.$set = modifier.$set || {};
+	modifier.$set.modifiedAt = new Date();
+	modifier.$set.modifiedBy = userId;
+
+	/*BEFORE_UPSERT_CODE*/
+});
+
 ExTestDatas.before.remove(function(userId, doc) {
 	
 });

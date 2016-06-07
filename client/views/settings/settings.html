@@ -13,7 +13,7 @@
 <template name="SettingsEditForm">
 	<div id="settings-edit-form" class="">
 		<h2 id="component-title">
-			Edit Setting
+			Settings
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -27,12 +27,12 @@
 				{{infoMessage}}
 			</div>
 			{{/if}}
-			<div class="form-group  field-en-notification">
+			<div class="form-group  field-en-br-ntfctn">
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{settings_first.enNotification}}" name="enNotification" data-type="bool" autofocus="autofocus" {{itemIsChecked settings_first.enNotification true}}>
-							Enable Notifications
+							<input type="checkbox" value="{{booleanToYesNo settings_first.enBrNtfctn}}" name="enBrNtfctn" data-type="bool" autofocus="autofocus" {{itemIsChecked settings_first.enBrNtfctn true}}>
+							Enable Browser Notification Popup
 						</label>
 					</div>
 					<span id="help-text" class="help-block">
@@ -41,12 +41,40 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-dummy">
+			<div class="form-group  field-en-br-ntfctn-snd">
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{settings_first.dummy}}" name="dummy" data-type="bool" {{itemIsChecked settings_first.dummy true}}>
-							Dummy
+							<input type="checkbox" value="{{booleanToYesNo settings_first.enBrNtfctnSnd}}" name="enBrNtfctnSnd" data-type="bool" {{itemIsChecked settings_first.enBrNtfctnSnd true}}>
+							Enable Browser Notification Sound
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-app-ntfctn">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo settings_first.enAppNtfctn}}" name="enAppNtfctn" data-type="bool" {{itemIsChecked settings_first.enAppNtfctn true}}>
+							Enable App Notification
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-app-ntfctn-snd">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo settings_first.enAppNtfctnSnd}}" name="enAppNtfctnSnd" data-type="bool" {{itemIsChecked settings_first.enAppNtfctnSnd true}}>
+							Enable App Notification Sound
 						</label>
 					</div>
 					<span id="help-text" class="help-block">

@@ -69,6 +69,7 @@ mongo@1.1.7
 mongo-id@1.0.4
 mongo-livedata@1.0.12
 mrt:moment@2.8.1
+mystor:device-detection@0.2.0
 natestrauser:font-awesome@4.6.1
 nemo64:bootstrap@3.3.5_2
 nemo64:bootstrap-data@3.3.5

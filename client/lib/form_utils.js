@@ -161,49 +161,57 @@ this.validateForm = function(formObject, validationCallback, errorCallback, subm
 
 			// Check Integer, also min and max value
 			if(dataType == "INTEGER") {
-				var intValue = parseInt(fieldValue);
-				if(isNaN(intValue)) {
-					validationError(labelText + ": Invalid value entered");
-					return false;
-				}
+				if(fieldValue == "") {
+					fieldValue = null;
+				} else {
+					var intValue = parseInt(fieldValue);
+					if(isNaN(intValue)) {
+						validationError(labelText + ": Invalid value entered");
+						return false;
+					}
 
-				if(minValue && !isNaN(parseInt(minValue)) && intValue < parseInt(minValue)) {
-					if(maxValue && !isNaN(parseInt(maxValue)))
-						validationError(labelText + " must be between " + minValue + " and " + maxValue);
-					else
-						validationError(labelText + " must be equal or greater than " + minValue);
-					return false;
-				}
+					if(minValue && !isNaN(parseInt(minValue)) && intValue < parseInt(minValue)) {
+						if(maxValue && !isNaN(parseInt(maxValue)))
+							validationError(labelText + " must be between " + minValue + " and " + maxValue);
+						else
+							validationError(labelText + " must be equal or greater than " + minValue);
+						return false;
+					}
 
-				if(maxValue && !isNaN(parseInt(maxValue)) && intValue > parseInt(maxValue)) {
-					if(minValue && !isNaN(parseInt(minValue)))
-						validationError(labelText + " must be between " + minValue + " and " + maxValue);
-					else
-						validationError(labelText + " must be equal or less than " + maxValue);
-					return false;
+					if(maxValue && !isNaN(parseInt(maxValue)) && intValue > parseInt(maxValue)) {
+						if(minValue && !isNaN(parseInt(minValue)))
+							validationError(labelText + " must be between " + minValue + " and " + maxValue);
+						else
+							validationError(labelText + " must be equal or less than " + maxValue);
+						return false;
+					}
+					fieldValue = intValue;
 				}
-				fieldValue = intValue;
 			}
 
 			// Check Float, also Min and Max value
 			if(dataType == "FLOAT")
 			{
-				var floatValue = parseFloat(fieldValue);
-				if(isNaN(floatValue)) {
-					validationError(labelText + ": Invalid value entered");
-					return false;
-				}
+				if(fieldValue == "") {
+					fieldValue = null;
+				} else {
+					var floatValue = parseFloat(fieldValue);
+					if(isNaN(floatValue)) {
+						validationError(labelText + ": Invalid value entered");
+						return false;
+					}
 
-				if(minValue && !isNaN(parseFloat(minValue)) && floatValue < parseFloat(minValue)) {
-					validationError(labelText + " must be equal or greater than " + minValue);
-					return false;
-				}
+					if(minValue && !isNaN(parseFloat(minValue)) && floatValue < parseFloat(minValue)) {
+						validationError(labelText + " must be equal or greater than " + minValue);
+						return false;
+					}
 
-				if(maxValue && !isNaN(parseFloat(maxValue)) && floatValue > parseFloat(maxValue)) {
-					validationError(labelText + " must be equal or less than " + maxValue);
-					return false;
+					if(maxValue && !isNaN(parseFloat(maxValue)) && floatValue > parseFloat(maxValue)) {
+						validationError(labelText + " must be equal or less than " + maxValue);
+						return false;
+					}
+					fieldValue = floatValue;
 				}
-				fieldValue = floatValue;
 			}
 
 			// Check valid E-mail address
