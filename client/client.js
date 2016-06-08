@@ -3,6 +3,10 @@ this.Helpers = {};
 
 Meteor.startup(function() {
   Session.set('activePage', 'default'); 
+  
+  if(Meteor.userId() != null) {
+  	Meteor.ClientCall.setClientId(Meteor.userId());
+  }
 });
 
 App.logout = function() {

@@ -3,3 +3,6 @@ tradeHelperPushNotificationKey
 
 Api Key:
 AIzaSyCQ_LqmUwGTeOiO_hg4cwErJmHTqdQZwQU
+
+Sender Id:
+healthy-skill-127413

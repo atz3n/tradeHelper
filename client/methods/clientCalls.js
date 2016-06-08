@@ -17,10 +17,13 @@ Meteor.ClientCall.methods({
         title = aData.strategyName + ' ' + aData.state;
       }
       if (mode === 'semiAuto') {
-
+      	title = aData.strategyName + ' ' + aData.state;
       }
       if (mode === 'auto') {
-        title = aData.strategyName + ' ' + aData.position + ' ' + aData.state;
+      	if(aData.state === 'in')
+        	title = aData.strategyName + ' ' + aData.position + ' ' + aData.state;
+        else
+      		title = aData.strategyName + ' '  + aData.state;
       }
 
       var msg = "Price: ";
