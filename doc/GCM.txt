@@ -2,7 +2,10 @@ Api Key Name:
 tradeHelperPushNotificationKey
 
 Api Key:
-AIzaSyCQ_LqmUwGTeOiO_hg4cwErJmHTqdQZwQU
+AIzaSyDb7YHOP7hW3BQfjrvR7G7dYXQxO50gG4I
 
-Sender Id:
-healthy-skill-127413
+Project Id:
+tradehelperpushnotification
+
+Project Number:
+459851375103

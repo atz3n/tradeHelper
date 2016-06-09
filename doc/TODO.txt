@@ -6,3 +6,6 @@
 - activeData remove mechanism (collection)
 - add item required message (strategies and bundle plugins)
 - add amount field while manual buy/sell action
+- logging system
+- push notification
+- ssl connection
