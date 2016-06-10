@@ -57,22 +57,17 @@ IPlugin.prototype.stop = function() {
 }
 
 
-IPlugin.prototype.pause = function() {
-    throw new Error('This method must be overwritten!');
-}
-
-
 IPlugin.prototype.update = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-IPlugin.prototype.bought = function() {
+IPlugin.prototype.bought = function(price) {
     throw new Error('This method must be overwritten!');
 }
 
 
-IPlugin.prototype.sold = function() {
+IPlugin.prototype.sold = function(price) {
     throw new Error('This method must be overwritten!');
 }
 

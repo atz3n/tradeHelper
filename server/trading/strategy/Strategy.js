@@ -122,11 +122,11 @@ export function Strategy(strategyDescription) {
     if (fullUpdate) _evalNotifyValues();
 
     _updateActiveData();
-    
-    if(_callNotifyFunc){
+
+    if (_callNotifyFunc) {
       _notifyFunc(notifyParam);
     }
-    
+
     if (_lastPosition !== 'none' && _data.position === 'none') {
       _updateHistory();
     }
@@ -432,12 +432,6 @@ export function Strategy(strategyDescription) {
     Public Instance Function
    ***********************************************************************/
 
-  this.develop = function() {
-    return _strDesc;
-
-  }
-
-
   this.getData = function() {
     return _data;
   }
@@ -462,6 +456,16 @@ export function Strategy(strategyDescription) {
     }
 
     _updateFunc(false);
+  }
+
+
+  this.resume = function() {
+
+    if (_strDesc.timeUnit !== 'none') {
+      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
+    }
+
+    _updateFunc(true);
   }
 
 

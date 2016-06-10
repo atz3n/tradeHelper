@@ -2,10 +2,13 @@ Meteor.subscribe("settings_first");
 Meteor.subscribe("strategies");
 Meteor.subscribe("active_datas");
 
-
+// var ntfySnd = new buzz.sound('sounds/truck.ogg');
+var ntfySnd = new buzz.sound('sounds/Electronic_Chime-KevanGC.mp3');
 Meteor.ClientCall.methods({
 
   notification: function(infos) {
+
+    /* browser notification dialog */
     if (Settings.findOne().enBrNtfctn) {
       var mode = Strategies.find({ _id: infos.strategyId }).fetch()[0].mode;
       var aData = ActiveDatas.findOne({ strategyId: infos.strategyId });
@@ -17,13 +20,13 @@ Meteor.ClientCall.methods({
         title = aData.strategyName + ' ' + aData.state;
       }
       if (mode === 'semiAuto') {
-      	title = aData.strategyName + ' ' + aData.state;
+        title = aData.strategyName + ' ' + aData.state;
       }
       if (mode === 'auto') {
-      	if(aData.state === 'in')
-        	title = aData.strategyName + ' ' + aData.position + ' ' + aData.state;
+        if (aData.state === 'in')
+          title = aData.strategyName + ' ' + aData.position + ' ' + aData.state;
         else
-      		title = aData.strategyName + ' '  + aData.state;
+          title = aData.strategyName + ' ' + aData.state;
       }
 
       var msg = "Price: ";
@@ -55,12 +58,24 @@ Meteor.ClientCall.methods({
           }
         }
       });
-
-
-      if (Meteor.Device.isPhone()) {
-        setTimeout(function() { alert('Phone'); }, 1);
-      }
     }
+
+
+    /* browser notification sound */
+    if (Settings.findOne().enBrNtfctnSnd && !Meteor.isCordova) {
+      ntfySnd.play();
+    }
+
+
+    /* app notification dialog */
+    if (Settings.findOne().enAppNtfctn) {
+    }
+
+
+    /* app notification sound */
+    if (Settings.findOne().enAppNtfctnSnd ) {
+    }
+
     return true;
   }
 });

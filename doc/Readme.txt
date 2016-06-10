@@ -22,5 +22,5 @@ Handlebar improvement
 Charts
 - meteor add peernohell:c3
 
-Device Detection
-- meteor add mystor:device-detection
+Sound
+- meteor add brentjanderson:buzz

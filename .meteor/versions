@@ -11,6 +11,7 @@ blaze@2.1.7
 blaze-html-templates@1.0.4
 blaze-tools@1.0.8
 boilerplate-generator@1.0.8
+brentjanderson:buzz@1.1.10
 caching-compiler@1.0.4
 caching-html-compiler@1.0.6
 callback-hook@1.0.8
@@ -69,7 +70,6 @@ mongo@1.1.7
 mongo-id@1.0.4
 mongo-livedata@1.0.12
 mrt:moment@2.8.1
-mystor:device-detection@0.2.0
 natestrauser:font-awesome@4.6.1
 nemo64:bootstrap@3.3.5_2
 nemo64:bootstrap-data@3.3.5

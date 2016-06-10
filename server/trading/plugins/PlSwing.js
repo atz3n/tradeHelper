@@ -21,7 +21,6 @@ import { IPlugin } from '../../apis/IPlugin.js'
 
 var _dataInit = {
   currentVal: 0,
-  frozenVal: 0,
   topVal: 0,
   bottomVal: 0
 };
@@ -94,8 +93,8 @@ export function PlSwing(logger) {
     Private Instance Function
    ***********************************************************************/
 
-  var _log = function(message){
-    if(typeof _logger !== 'undefined')
+  var _log = function(message) {
+    if (typeof _logger !== 'undefined')
       _logger.debug('PlSwing: ' + message);
   }
 
@@ -122,8 +121,8 @@ export function PlSwing(logger) {
 
         /* open short */
         if (_config.enableShort) {
-          if (Math.abs(percentage(_data.currentVal, _data.frozenVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.frozenVal) {
-            _log('Short Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+          if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.topVal) {
+            _log('Short Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
             _tmpPos = 'short';
             _sellNotifyFunc(this.getInstInfo());
@@ -132,9 +131,9 @@ export function PlSwing(logger) {
 
         /* open long */
         if (_config.enableLong) {
-          if (Math.abs(percentage(_data.currentVal, _data.frozenVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.frozenVal) {
-            _log('Long Open, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
-            
+          if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.bottomVal) {
+            _log('Long Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+
             _tmpPos = 'long';
             _buyNotifyFunc(this.getInstInfo());
           }
@@ -146,7 +145,7 @@ export function PlSwing(logger) {
       /* close short */
       if (!_positions.long && _positions.short) {
         if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.shortAfterBottomBuyNotifyPerc) {
-          _log('Short Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+          _log('Short Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'short';
           _buyNotifyFunc(this.getInstInfo());
@@ -156,7 +155,7 @@ export function PlSwing(logger) {
       /* close long */
       if (_positions.long && !_positions.short) {
         if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.longAfterTopSellNotifyPerc) {
-          _log('Long Close, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+          _log('Long Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'long';
           _sellNotifyFunc(this.getInstInfo());
@@ -168,20 +167,20 @@ export function PlSwing(logger) {
 
   this.getConfig = function() {
     var conf = {};
-    
+
     conf.OpenLongPosition = _config.longNoPosNotifyPerc + '%';
     conf.CloseLongPosition = _config.longAfterTopSellNotifyPerc + '%';
     conf.OpenShortPosition = _config.shortNoPosNotifyPerc + '%';
     conf.CloseShortPosition = _config.shortAfterBottomBuyNotifyPerc + '%';
     conf.EnableLong = _config.enableLong
     conf.EnableShort = _config.enableShort
-    
+
     return conf;
   }
 
 
   this.getState = function() {
-    if(_positions.long || _positions.short)
+    if (_positions.long || _positions.short)
       return 'in';
     else
       return 'out';
@@ -195,10 +194,9 @@ export function PlSwing(logger) {
 
   this.getInfo = function() {
     var info = {};
-    
-    info.Current = cropFracDigits(_data.currentVal, 6);
-    info.Frozen = cropFracDigits(_data.frozenVal, 6);
+
     info.Top = cropFracDigits(_data.topVal, 6);
+    info.Current = cropFracDigits(_data.currentVal, 6);
     info.Bottom = cropFracDigits(_data.bottomVal, 6);
 
     return info;
@@ -208,7 +206,6 @@ export function PlSwing(logger) {
   this.start = function(price) {
     _log('start tracking');
     _data.currentVal = price;
-    _data.frozenVal = price;
     _data.bottomVal = price;
     _data.topVal = price;
     _active = true;
@@ -223,34 +220,22 @@ export function PlSwing(logger) {
   }
 
 
-  this.pause = function() {
-    _log('pause tracking');
-    _active = false;
-  }
-
-
   this.bought = function(price) {
     if (_active) {
-
-      if (typeof price !== 'undefined') {
-        _data.frozenVal = price;
-        _data.currentVal = price;
-        _data.topVal = price;
-        _data.bottomVal = price;
-      } else {
-        _data.frozenVal = _data.currentVal;
-      }
+      _data.currentVal = price;
+      _data.topVal = price;
+      _data.bottomVal = price;
 
       if (_tmpPos == 'short') {
         _positions.short = false;
 
-        _log('Short Closed, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+        _log('Short Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
       }
 
       if (_tmpPos == 'long') {
         _positions.long = true;
 
-        _log('Long Opened, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+        _log('Long Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
       }
     }
   }
@@ -258,26 +243,20 @@ export function PlSwing(logger) {
 
   this.sold = function(price) {
     if (_active) {
-
-      if (typeof price !== 'undefined') {
-        _data.frozenVal = price;
-        _data.currentVal = price;
-        _data.topVal = price;
-        _data.bottomVal = price;
-      } else {
-        _data.frozenVal = _data.currentVal;
-      }
+      _data.currentVal = price;
+      _data.topVal = price;
+      _data.bottomVal = price;
 
       if (_tmpPos == 'short') {
         _positions.short = true;
 
-        _log('Short Opened, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+        _log('Short Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
       }
 
       if (_tmpPos == 'long') {
         _positions.long = false;
 
-        _log('Long Closed, ' + 'pos long: ' +  _positions.long + ', pos short: ' + _positions.short);
+        _log('Long Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
       }
     }
   }
@@ -289,7 +268,7 @@ export function PlSwing(logger) {
 
 
   this.setSellNotifyFunc = function(sellNotifyFunction) {
-      _sellNotifyFunc = sellNotifyFunction;
+    _sellNotifyFunc = sellNotifyFunction;
   }
 
 

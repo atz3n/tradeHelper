@@ -13,7 +13,6 @@ function notification(infos) {
     oIdNfy = Strategies.findOne({ _id: infos.strategyId }).ownerId;
     strIdNfy = infos.strategyId;
   }
-
   Meteor.ClientCall.apply(oIdNfy, 'notification', [infos], function(error, result) {});
 }
 
@@ -27,7 +26,7 @@ Meteor.methods({
       strategies.getObject(strategyId).inst.setNotifyFunction(notification);
       strategies.getObject(strategyId).inst.start();
     } else if (strategies.getObject(strategyId).startFlag === false) {
-      strategies.getObject(strategyId).inst.start();
+      strategies.getObject(strategyId).inst.resume();
       strategies.getObject(strategyId).startFlag = true;
     } else {
       return false;

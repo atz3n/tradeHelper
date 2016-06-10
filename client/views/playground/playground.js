@@ -23,45 +23,24 @@ Template.Playground.events({
     /*++++++++++ startButton ++++++++++*/
     if ($(event.target).prop("name") == "startButton") {
 
-      var temp = Strategies.find().fetch();
-      for (i = 0; i < temp.length; i++) {
-
-        Meteor.call("strategyStart", temp[i]._id, function(e) {
-          if (e) console.log(e);
-        });
-      };
-
 
       /*++++++++++ pauseButton ++++++++++*/
     } else if ($(event.target).prop("name") == "pauseButton") {
 
-      var temp = Strategies.find().fetch();
-      for (i = 0; i < temp.length; i++) {
-        Meteor.call("strategyPause", temp[i]._id, function(e) {
-          if (e) console.log(e);
-        });
-      };
 
 
       /*++++++++++ stopButton ++++++++++*/
     } else if ($(event.target).prop("name") == "stopButton") {
 
-      var temp = Strategies.find().fetch();
-      for (i = 0; i < temp.length; i++) {
-        Meteor.call("strategyStop", temp[i]._id, function(e) {
-          if (e) console.log(e);
-        });
-      };
 
 
       /*++++++++++ dummyButton ++++++++++*/
     } else if ($(event.target).prop("name") == "dummyButton") {
-
-      var temp = Strategies.findOne()
-      Meteor.call("develop", temp._id, function(e) {
-        if (e) console.log(e);
-      });
-
+      // new Audio('/sounds/Electronic_Chime-KevanGC.mp3');
+      new buzz.sound('sounds/Electronic_Chime-KevanGC.mp3').play();
+      // var s = new buzz.sound('sounds/Electronic_Chime-KevanGC.mp3');
+      // var s = new buzz.sound('sounds/truck.ogg');
+      s.play();
     }
   }
 });
