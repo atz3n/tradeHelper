@@ -18,6 +18,7 @@ PlSwings.before.insert(function(userId, doc) {
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
 	doc.type = 'plSwing';
+	doc.actives = 0;
 
 	
 	if(!doc.ownerId) doc.ownerId = userId;

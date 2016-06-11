@@ -282,6 +282,11 @@ Template.StrategiesViewTableItems.events({
 		e.preventDefault();
 		Router.go("strategies.edit", {strategyId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -293,5 +298,9 @@ Template.StrategiesViewTableItems.helpers({
 
 	"deleteButtonClass": function() {
 		return Strategies.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.active) return "warning";
+		else return "default";
 	}
 });

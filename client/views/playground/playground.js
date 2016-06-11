@@ -3,26 +3,18 @@ var pageSession = new ReactiveDict();
 
 Template.Playground.rendered = function() {
   Session.set('activePage', 'playground');
-  // Meteor.ClientCall.setClientId(Meteor.userId());
-
-  var temp = Strategies.find().fetch();
-  for (i = 0; i < temp.length; i++) {
-
-    Meteor.call("strategyGetData",temp[i]._id, function(e, r) {
-      if (e) console.log(e);
-      else globalReact.set("updateInfos", r);
-    });
-  };
 };
 
 
 var cnt = 0;
+testCol = new Mongo.Collection(null);
+
 Template.Playground.events({
   'click button': function(event, instance) {
 
     /*++++++++++ startButton ++++++++++*/
     if ($(event.target).prop("name") == "startButton") {
-
+      // testCol.insert('')
 
       /*++++++++++ pauseButton ++++++++++*/
     } else if ($(event.target).prop("name") == "pauseButton") {
@@ -47,8 +39,5 @@ Template.Playground.events({
 
 Template.Playground.helpers({
   text: function() {
-    return JSON.stringify(globalReact.get("updateInfos"));
-    // return globalReact.get("updateInfos").prices[0].price;
-    // return pageSession.get("text");
   }
 });

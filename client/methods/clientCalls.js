@@ -47,7 +47,7 @@ Meteor.ClientCall.methods({
         buttons: {
           success: {
             label: "Goto",
-            className: "btn-info",
+            className: "btn-warning",
             callback: function() {
               Router.go("actives.details", { strategyId: aData.strategyId });
             }

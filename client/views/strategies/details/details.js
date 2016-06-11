@@ -128,8 +128,9 @@ Template.StrategiesDetailsDetailsForm.events({
       Meteor.call('strategyStart', strId, function(e, r) {
         if (e) console.log(e);
         else if (r) {
-          Strategies.update({ _id: strId }, { $set: { active: true } });
-          Strategies.update({ _id: strId }, { $set: { paused: false } });
+          setActiveState(strId, true);
+          // Strategies.update({ _id: strId }, { $set: { active: true } });
+          // Strategies.update({ _id: strId }, { $set: { paused: false } });
         }
       });
     }

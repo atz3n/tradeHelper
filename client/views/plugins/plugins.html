@@ -66,18 +66,6 @@
 				<th class="th-sortable" data-sort="exchange">
 					Exchange
 				</th>
-				<th class="th-sortable" data-sort="lnpnp">
-					Open Long Position [%]
-				</th>
-				<th class="th-sortable" data-sort="latsnp">
-					Close Long Position [%]
-				</th>
-				<th class="th-sortable" data-sort="snpnp">
-					Open Short Positon [%]
-				</th>
-				<th class="th-sortable" data-sort="sabbnp">
-					Close Short Position [%]
-				</th>
 				<th class="th-sortable" data-sort="enLong">
 					Enable Long
 				</th>
@@ -99,7 +87,7 @@
 </template>
 
 <template name="PluginsViewPlSwingsTableItems">
-	<tr id="dataview-table-items-row">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
@@ -107,23 +95,12 @@
 		{{exchangeName}}
 		</td>
 		<td>
-			{{lnpnp}}
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enLong" {{checked enLong}} disabled>
 		</td>
 		<td>
-			{{latsnp}}
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enShort" {{checked enShort}} disabled>
 		</td>
-		<td>
-			{{snpnp}}
-		</td>
-		<td>
-			{{sabbnp}}
-		</td>
-		<td>
-			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enLong" {{checked enLong}}>
-		</td>
-		<td>
-			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enShort" {{checked enShort}}>
-		</td>
+		{{#if $eq actives 0}}
 		<td class="td-icon">
 			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">
 			</span>
@@ -132,6 +109,13 @@
 			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
 			</span>
 		</td>
+		{{else}}
+		<td></td>
+		<td class="td-icon">
+			<span id="actives-button" class="fa fa-flash" title="Go to Actives">
+			</span>
+		</td>
+		{{/if}}
 	</tr>
 </template>
 
@@ -206,13 +190,14 @@
 </template>
 
 <template name="PluginsViewPlDummysTableItems">
-	<tr id="dataview-table-items-row">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
 		<td>
 			{{dummyCont}}
 		</td>
+		{{#if $eq actives 0}}
 		<td class="td-icon">
 			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">
 			</span>
@@ -221,6 +206,13 @@
 			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
 			</span>
 		</td>
+		{{else}}
+		<td></td>
+		<td class="td-icon">
+			<span id="actives-button" class="fa fa-flash" title="Go to Actives">
+			</span>
+		</td>
+		{{/if}}
 	</tr>
 </template>
 

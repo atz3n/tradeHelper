@@ -272,6 +272,11 @@ Template.ExchangesViewExKrakenTableItems.events({
 		e.preventDefault();
 		Router.go("exchanges.edit_ex_kraken", {exKrakenId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -283,6 +288,10 @@ Template.ExchangesViewExKrakenTableItems.helpers({
 
 	"deleteButtonClass": function() {
 		return ExKrakens.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
 	}
 });
 
@@ -546,6 +555,11 @@ Template.ExchangesViewExTestDataTableItems.events({
 		e.preventDefault();
 		Router.go("exchanges.edit_ex_test_data", {exTestDataId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -554,8 +568,11 @@ Template.ExchangesViewExTestDataTableItems.helpers({
 	"editButtonClass": function() {
 		return ExTestDatas.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
-
 	"deleteButtonClass": function() {
 		return ExTestDatas.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
 	}
 });

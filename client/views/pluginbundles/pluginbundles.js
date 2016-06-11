@@ -280,6 +280,11 @@ Template.PluginbundlesViewTableItems.events({
     e.preventDefault();
     Router.go("pluginbundles.edit", { pluginbundleId: this._id });
     return false;
+  },
+  "click #actives-button": function(e, t) {
+    e.preventDefault();
+    Router.go("actives");
+    return false;
   }
 });
 
@@ -292,5 +297,9 @@ Template.PluginbundlesViewTableItems.helpers({
 
   "deleteButtonClass": function() {
     return PluginBundles.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+  },
+  "rowClass": function() {
+    if(this.actives > 0) return "warning";
+    else return "default";
   }
 });

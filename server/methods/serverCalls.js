@@ -94,12 +94,6 @@ Meteor.methods({
     return true;
   },
 
-  strategyGetData: function(strategyId) {
-    if (strategies.getObject(strategyId) !== 'undefined') {
-      return strategies.getObject(strategyId).inst.getData();
-    }
-  },
-
   develop: function(strategyId) {
     console.log(strategyId);
     if (strategies.getObject(strategyId) !== 'undefined') {

@@ -17,7 +17,8 @@ PluginBundles.before.insert(function(userId, doc) {
 	doc.createdBy = userId;
 	doc.modifiedAt = doc.createdAt;
 	doc.modifiedBy = doc.createdBy;
-
+	doc.actives = 0;
+	
 	
 	if(!doc.ownerId) doc.ownerId = userId;
 });

@@ -325,8 +325,7 @@ Template.ActivesViewTableItems.events({
             Meteor.call('strategyStop', strId, function(e, r) {
               if (e) console.log(e);
               else if (r) {
-                Strategies.update({ _id: strId }, { $set: { active: false } });
-                Strategies.update({ _id: strId }, { $set: { paused: false } });
+                setActiveState(strId, false);
               }
             });
           }
@@ -379,5 +378,9 @@ Template.ActivesViewTableItems.helpers({
       return true;
     else
       return false;
+  },
+  "rowClass": function() {
+    if(this.position !== 'none') return 'info';
+    else return 'default';
   }
 });

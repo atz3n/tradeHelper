@@ -24,10 +24,9 @@ var PluginsViewPlSwingsItems = function(cursor) {
 
 	var raw = cursor.fetch();
 
-	for (var i = 0; i < raw.length; i++) {
-
-  	raw[i].exchangeName = getExchangeName(raw[i].exchange);
-  }
+	for (i in raw) {
+  		raw[i].exchangeName = getExchangeName(raw[i].exchange);
+  	}
 
 
 	// filter
@@ -278,6 +277,11 @@ Template.PluginsViewPlSwingsTableItems.events({
 		e.preventDefault();
 		Router.go("plugins.edit_pl_swing", {plSwingId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -289,6 +293,10 @@ Template.PluginsViewPlSwingsTableItems.helpers({
 
 	"deleteButtonClass": function() {
 		return PlSwings.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
 	}
 });
 
@@ -552,6 +560,11 @@ Template.PluginsViewPlDummysTableItems.events({
 		e.preventDefault();
 		Router.go("plugins.edit_pl_dummy", {plDummyId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -563,5 +576,9 @@ Template.PluginsViewPlDummysTableItems.helpers({
 
 	"deleteButtonClass": function() {
 		return PlDummys.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
 	}
 });

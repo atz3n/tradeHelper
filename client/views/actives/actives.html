@@ -80,7 +80,7 @@
 </template>
 
 <template name="ActivesViewTableItems">
-	<tr id="dataview-table-items-row">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
@@ -105,10 +105,10 @@
 		</td>
 		<td class="td-icon">
 			{{#if strategyPaused}}
-			<span id="pausePlay-button" class="fa fa-play" title="PausePlay">
+			<span id="pausePlay-button" class="fa fa-play" title="Play">
 			</span>
 			{{else}}
-			<span id="pausePlay-button" class="fa fa-pause" title="PausePlay">
+			<span id="pausePlay-button" class="fa fa-pause" title="Pause">
 			</span>
 			{{/if}}
 		</td>

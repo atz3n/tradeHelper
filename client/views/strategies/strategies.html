@@ -90,7 +90,7 @@
 </template>
 
 <template name="StrategiesViewTableItems">
-	<tr id="dataview-table-items-row">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
@@ -106,6 +106,7 @@
 		<td>
 			{{pluginBundlesString}}
 		</td>
+		{{#if $ne active true}}
 		<td class="td-icon">
 			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">
 			</span>
@@ -114,6 +115,13 @@
 			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
 			</span>
 		</td>
+		{{else}}
+		<td></td>
+		<td class="td-icon">
+			<span id="actives-button" class="fa fa-flash" title="Go to Actives">
+			</span>
+		</td>
+		{{/if}}
 	</tr>
 </template>
 
