@@ -1,5 +1,4 @@
 allow-deny@1.0.3
-anti:methods@0.4.0
 autopublish@1.0.6
 autoupdate@1.2.7
 babel-compiler@6.6.1
@@ -49,7 +48,6 @@ modules@0.5.2
 modules-runtime@0.6.2
 mongo@1.1.6
 mongo-id@1.0.3
-mongo-livedata@1.0.11
 npm-container@1.2.0
 npm-mongo@1.4.42
 observe-sequence@1.0.10
