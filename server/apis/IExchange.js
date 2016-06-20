@@ -15,68 +15,68 @@
   Interface
  ***********************************************************************/
 
-export function Iindicator(){};
+export function IExchange(){};
 
 
 /***********************************************************************
   Function Prototypes
  ***********************************************************************/
 
-Iindicator.prototype.setConfig = function() {
+IExchange.prototype.setConfig = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.getConfig = function() {
+IExchange.prototype.getConfig = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.getStatus = function() {
+IExchange.prototype.getStatus = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.getData = function() {
+IExchange.prototype.getInfo = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.start = function() {
+IExchange.prototype.getPairUnits = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.stop = function() {
+IExchange.prototype.getAmount = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.pause = function() {
+IExchange.prototype.getPrice = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.update = function() {
+IExchange.prototype.getActionPrice = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.bought = function() {
+IExchange.prototype.update = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.sold = function() {
+IExchange.prototype.sell = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.setBuyNotification = function() {
+IExchange.prototype.buy = function() {
     throw new Error('This method must be overwritten!');
 }
 
 
-Iindicator.prototype.setSellNotifyFunc = function() {
+IExchange.prototype.getInstInfo = function() {
     throw new Error('This method must be overwritten!');
 }

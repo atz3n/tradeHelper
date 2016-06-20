@@ -1,23 +1,23 @@
-
 <body>
-  <h1>Trade helper</h1>
+  <h1>Exchange Development</h1>
 
-
-
-  <button name="buyButton">Buy</button>
-  <button name="sellButton">Sell</button>
-  <button name="setButton">Set</button>
-  <button name="resetButton">Reset</button>
-  <form class="set-time">
-    <input type="text" name="text" placeholder="Set update time in seconds" />
+  <form class="input">
+    <input type="text" name="text" placeholder="set value" />
   </form>
-  <p>Pair:      {{pairValue}}</p>
-  <p>High:      {{highValue}}</p>
-  <p>Frozen:   {{frozenValue}}</p>
-  <p>Low:       {{lowValue}}</p>
-  <p>Current:   {{currValue}}</p>
-  <p>PercDiff:  {{pDiffValue}}</p>
-  <p>AbsDiff:   {{aDiffValue}}</p>
-
-
+  
+  <button name="setConfigButton">setConfig</button>
+  <button name="getConfigButton">getConfig</button>
+  <button name="getStatusButton">getStatus</button>
+  <button name="getInfoButton">getInfo</button>
+  <button name="getPairUnitsButton">getPairUnits</button>
+  <button name="getAmountButton">getAmount</button>
+  <button name="getPriceButton">getPrice</button>
+  <button name="getActionPriceButton">getActionPrice</button>
+  <button name="updateButton">update</button>
+  <button name="sellButton">sell</button>
+  <button name="buyButton">buy</button>
+  <button name="getInstInfoButton">getInstInfo</button>
+  
+  <p>Info: {{info}}</p>
+  <p>Error: {{error}}</p>
 </body>

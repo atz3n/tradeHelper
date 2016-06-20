@@ -1,5 +1,0 @@
-Api Key Name:
-tradeHelperPushNotificationKey
-
-Api Key:
-AIzaSyCQ_LqmUwGTeOiO_hg4cwErJmHTqdQZwQU
