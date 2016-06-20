@@ -24,3 +24,6 @@ Charts
 
 Sound
 - meteor add brentjanderson:buzz
+
+kranken api
+- packages.json -> "kraken-api": "0.1.7"

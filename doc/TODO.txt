@@ -2,10 +2,11 @@
 - yahoo historical data integration
 - add export function to history
 - notification system
-- block edit and remove strategy and related items while active
 - activeData remove mechanism (collection)
 - add item required message (strategies and bundle plugins)
 - add amount field while manual buy/sell action
 - logging system
 - push notification
 - ssl connection
+- amount field in Swing configuration
+- change creation of actives to pause state

@@ -62,7 +62,7 @@ this.setActiveState = function(strId, enabled) {
           if (enabled) ExKrakens.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives + 1 } });
           else if (tempEx.actives >= 1) ExKrakens.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
         }
-        console.log(tempEx)
+
         /* ExTestDatas */
         if (typeof tempEx === "undefined") {
           tempEx = ExTestDatas.find({ _id: exchange }).fetch()[0];
@@ -71,7 +71,6 @@ this.setActiveState = function(strId, enabled) {
             else if (tempEx.actives >= 1) ExTestDatas.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
           }
         }
-        console.log(tempEx)
       }
     }
   }

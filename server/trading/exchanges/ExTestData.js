@@ -175,9 +175,9 @@ export function ExTestData() {
     return _config.amount;
   }
 
-  this.sell = function() {}
+  this.sell = function() {return true;}
 
-  this.buy = function() {}
+  this.buy = function() {return true;}
 
 
   this.getInstInfo = function() {
