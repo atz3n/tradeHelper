@@ -1,64 +1,58 @@
 // import{Exchange} from '../trading/exchanges/ExXXX.js';
 
 
-
+var exchange = {};
 
 Meteor.methods({
-  setConfig: function(config){
+  create: function(){
 
+  },
+
+  setConfig: function(config){
+    exchange.setConfig(config);
   },
 
   getConfig: function(){
-    return 'config';
+    return exchange.getConfig();
   },
 
   getStatus: function(){
-
-    return 'status';
+    return exchange.getStatus();
   },
 
   getInfo: function(){
-
-    return 'info';
+    return exchange.getInfo();
   },
 
   getPairUnits: function(){
-
-    return 'pairUnit';
+    return exchange.getPairUnits();
   },
 
   getAmount: function(){
-
-    return 'amount';
+    return exchange.getAmount;
   },
 
   getPrice: function(){
-
-    return 'price';
+    return exchange.getPrice();
   },
 
   getActionPrice: function(){
-
-    return 'actionPrice';
+    return exchange.getActionPrice();
   },
 
   update: function(){
-
-    return 'update';
+    return exchange.update();
   },
 
   sell: function(){
-
-    return 'sell';
+    return exchange.sell();
   },
 
   buy: function(){
-
-    return 'buy';
+    return exchange.buy();
   },
 
   getInstInfo: function(){
-
-    return 'instInfo';
+    return exchange.getInstInfo();
   }
 });

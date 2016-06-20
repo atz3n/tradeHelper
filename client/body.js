@@ -22,7 +22,14 @@ Template.body.events({
   'click button': function(event, instance) {
     
     /*++++++++++ setConfigButton ++++++++++*/
-    if ($(event.target).prop("name") == "setConfigButton") {
+    if ($(event.target).prop("name") == "createButton") {
+
+      Meteor.call('create', function (error, result) {
+        if(error) pageSession.set('error', error);
+      });
+
+    /*++++++++++ setConfigButton ++++++++++*/
+    } else if ($(event.target).prop("name") == "setConfigButton") {
 
       Meteor.call('setConfig', 1, function (error, result) {
         if(error) pageSession.set('error', error);
