@@ -47,7 +47,7 @@ IExchange.prototype.getPairUnits = function() {
 }
 
 
-IExchange.prototype.getAmount = function() {
+IExchange.prototype.getVolume = function() {
     throw new Error('This method must be overwritten!');
 }
 

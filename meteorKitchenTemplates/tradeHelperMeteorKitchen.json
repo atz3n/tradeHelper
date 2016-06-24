@@ -430,10 +430,10 @@
             "required": true
           },
           {
-            "name": "amount",
-            "title": "Simulated Amount",
+            "name": "quoteAmount",
+            "title": "Simulated Amount of Quote Value to trade with",
             "type": "float",
-            "default": 1,
+            "default": 100,
             "required": true
           },
           {

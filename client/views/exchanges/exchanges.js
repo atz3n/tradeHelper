@@ -314,7 +314,7 @@ var ExchangesViewExTestDataItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "amount", "base", "quote", "gain", "offset", "startVal", "stepWidth", "priceType", "data"];
+		var searchFields = ["name", "quoteAmount", "base", "quote", "gain", "offset", "startVal", "stepWidth", "priceType", "data"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -568,6 +568,7 @@ Template.ExchangesViewExTestDataTableItems.helpers({
 	"editButtonClass": function() {
 		return ExTestDatas.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
+
 	"deleteButtonClass": function() {
 		return ExTestDatas.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	},

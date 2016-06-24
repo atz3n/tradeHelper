@@ -39,18 +39,19 @@ var processHistoryData = function(data){
     pE.type = e.instInfo.type;
     pE.inPrice = cropFracDigits(e.inPrice, 6);
     pE.outPrice = cropFracDigits(e.outPrice, 6);
-    pE.amount = e.amount;
+    pE.volume = e.volume;
     pE.num = data._id +  cntEx;
     pE.config = Object.assign({}, e.config);
     cntEx++;
 
-    var volIn = pE.inPrice * pE.amount;
-    var volOut = pE.outPrice * pE.amount;
+    var cosIn = pE.inPrice * pE.volume;
+    var cosOut = pE.outPrice * pE.volume;
 
-    pE.volumeIn = cropFracDigits(volIn, 6);
-    pE.volumeOut = cropFracDigits(volOut, 6);
-    pE.profitTot = cropFracDigits(volOut - volIn, 6);
-    pE.profitPer = cropFracDigits(percentage(volOut, volIn), 4);
+    pE.costIn = cropFracDigits(cosIn, 6);
+    pE.costOut = cropFracDigits(cosOut, 6);
+    pE.profitTot = cropFracDigits(cosOut - cosIn, 6);
+    pE.profitPer = cropFracDigits(percentage(cosOut, cosIn), 4);
+    pE.volume = cropFracDigits(pE.volume, 6);
 
     if(pData.position === 'short') {
       pE.profitTot *= -1;
@@ -59,12 +60,12 @@ var processHistoryData = function(data){
 
     pE.profitPer += '%';
     if (e.units.base != '' && e.units.quote != ''){
-      pE.inPrice += ' ' + e.units.base + '/' + e.units.quote;
-      pE.outPrice += ' ' + e.units.base + '/' + e.units.quote;
-      pE.volumeIn += e.units.base;
-      pE.volumeOut += e.units.base;
-      pE.amount += e.units.quote;
-      pE.profitTot += e.units.base;
+      pE.inPrice += ' ' + e.units.quote;
+      pE.outPrice += ' ' + e.units.quote;
+      pE.costIn += ' ' + e.units.quote;
+      pE.costOut += ' ' + e.units.quote;
+      pE.volume += ' ' + e.units.base;
+      pE.profitTot += ' ' + e.units.quote;
     }
   }
 

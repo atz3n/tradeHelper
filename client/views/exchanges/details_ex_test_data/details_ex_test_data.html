@@ -36,28 +36,38 @@
 					Name
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-name">
 						{{ex_test_data.name}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-amount">
-				<label for="amount" class="col-sm-3 control-label">
-					Simulated Amount
+			<div class="form-group  field-quote-amount">
+				<label for="quoteAmount" class="col-sm-3 control-label">
+					Simulated Amount of Quote Value to trade with
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{ex_test_data.amount}}
+					<p class="form-control-static  control-field-quote-amount">
+						{{ex_test_data.quoteAmount}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-counter">
-				<label for="counter" class="col-sm-3 control-label">
-					Unit
+			<div class="form-group  field-base">
+				<label for="base" class="col-sm-3 control-label">
+					Base Unit
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{ex_test_data.base}}/{{ex_test_data.quote}}
+					<p class="form-control-static  control-field-base">
+						{{ex_test_data.base}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-quote">
+				<label for="quote" class="col-sm-3 control-label">
+					Quote Unit
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-quote">
+						{{ex_test_data.quote}}
 					</p>
 				</div>
 			</div>
@@ -66,7 +76,7 @@
 					Gain (multiplier)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-gain">
 						{{ex_test_data.gain}}
 					</p>
 				</div>
@@ -76,7 +86,7 @@
 					Offset
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-offset">
 						{{ex_test_data.offset}}
 					</p>
 				</div>
@@ -86,7 +96,7 @@
 					Start Value (counter starts with this value)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-start-val">
 						{{ex_test_data.startVal}}
 					</p>
 				</div>
@@ -96,7 +106,7 @@
 					Step Width (counter inscreases by this value each time)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-step-width">
 						{{ex_test_data.stepWidth}}
 					</p>
 				</div>
@@ -106,7 +116,7 @@
 					Price Type
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-price-type">
 						{{ex_test_data.priceType}}
 					</p>
 				</div>
@@ -116,13 +126,13 @@
 					Data
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-data">
 						{{ex_test_data.data}}
 					</p>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="submit-div col-sm-9">
+				<div class="submit-div col-sm-9 col-sm-offset-3">
 					<a href="#" id="form-close-button" class="btn btn-primary">
 						OK
 					</a>

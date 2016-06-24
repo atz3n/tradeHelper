@@ -27,34 +27,34 @@ var HistoryViewItems = function(cursor) {
 
   for (i in raw) {
 
-    raw[i].volumeIn = '';
+    raw[i].costIn = '';
     raw[i].profit = '';
-    raw[i].volumeOut = '';
+    raw[i].costOut = '';
 
     for (j in raw[i].exchanges) {
       var tmp = raw[i].exchanges[j];
 
-      if (j != 0) raw[i].volumeIn += ', ';
+      if (j != 0) raw[i].costIn += ', ';
       if (j != 0) raw[i].profit += ', ';
-      if (j != 0) raw[i].volumeOut += ', ';
+      if (j != 0) raw[i].costOut += ', ';
 
-      var volIn = tmp.inPrice * tmp.amount;
-      var VolOut = tmp.outPrice * tmp.amount;
+      var cosIn = tmp.inPrice * tmp.volume;
+      var cosOut = tmp.outPrice * tmp.volume;
 
-      raw[i].volumeIn += cropFracDigits(volIn, 3);
-      raw[i].volumeOut += cropFracDigits(VolOut, 3);
+      raw[i].costIn += cropFracDigits(cosIn, 3);
+      raw[i].costOut += cropFracDigits(cosOut, 3);
 
-      var tmpP = cropFracDigits(percentage(VolOut, volIn), 2);
-      var tmpT = cropFracDigits(VolOut - volIn, 2);
+      var tmpP = cropFracDigits(percentage(cosOut, cosIn), 2);
+      var tmpT = cropFracDigits(cosOut - cosIn, 2);
       if (raw[i].position === 'short') {
       	tmpP *= -1;
         tmpT *= -1;
       }
 
       if (tmp.units.base != '' && tmp.units.quote != '') {
-        raw[i].volumeIn += tmp.units.base;
-        raw[i].volumeOut += tmp.units.base;
-        raw[i].profit += tmpT + tmp.units.base + ' (' + tmpP + '%)';
+        raw[i].costIn += tmp.units.quote;
+        raw[i].costOut += tmp.units.quote;
+        raw[i].profit += tmpT + tmp.units.quote + ' (' + tmpP + '%)';
       } else {
         raw[i].profit += tmpT + ' (' + tmpP + '%)';
       }
@@ -69,7 +69,7 @@ var HistoryViewItems = function(cursor) {
   } else {
     searchString = searchString.replace(".", "\\.");
     var regEx = new RegExp(searchString, "i");
-    var searchFields = ["name", "date", "volumeIn", "volumeOut", "profit", "position"];
+    var searchFields = ["name", "date", "costIn", "costOut", "profit", "position"];
     filtered = _.filter(raw, function(item) {
       var match = false;
       _.each(searchFields, function(field) {

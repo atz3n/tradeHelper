@@ -38,7 +38,7 @@ var ActivesViewItems = function(strQue, datQue) {
     raw[i].position = datRaw[datId].position;
 
     if (raw[i].position === 'none') {
-      raw[i].volumeIn = '-';
+      raw[i].costIn = '-';
       raw[i].profit = '-';
 
       raw[i].current = '';
@@ -50,39 +50,39 @@ var ActivesViewItems = function(strQue, datQue) {
         raw[i].current += cropFracDigits(tmp.price[tmp.price.length - 1], 4);
 
         if (tmp.units.base != '' && tmp.units.quote != '')
-          raw[i].current += ' ' + tmp.units.base + '/' + tmp.units.quote;
+          raw[i].current += ' ' + tmp.units.quote + '/' + tmp.units.base;
       }
     }
 
     if (raw[i].position !== 'none') {
-      raw[i].volumeIn = '';
+      raw[i].costIn = '';
       raw[i].profit = '';
       raw[i].current = '';
       
       for(var j = 0 ; j < datRaw[datId].exchanges.length ; j++){
         var tmp = datRaw[datId].exchanges[j];
 
-        if (j !== 0) raw[i].volumeIn += ', ';
+        if (j !== 0) raw[i].costIn += ', ';
         if (j !== 0) raw[i].profit += ', ';
         if (j !== 0) raw[i].current += ', ';
 
-        var volIn = tmp.inPrice * tmp.amount;
-        var volCur = tmp.price[tmp.price.length - 1] * tmp.amount;
+        var cosIn = tmp.inPrice * tmp.volume;
+        var cosCur = tmp.price[tmp.price.length - 1] * tmp.volume;
 
-        raw[i].volumeIn += cropFracDigits(volIn, 3);
-        raw[i].current += cropFracDigits(volCur, 3);
+        raw[i].costIn += cropFracDigits(cosIn, 3);
+        raw[i].current += cropFracDigits(cosCur, 3);
 
-        var tmpP = cropFracDigits(percentage(volCur, volIn), 2);
-        var tmpT = cropFracDigits(volCur - volIn, 2);
+        var tmpP = cropFracDigits(percentage(cosCur, cosIn), 2);
+        var tmpT = cropFracDigits(cosCur - cosIn, 2);
         if(raw[i].position === 'short'){
           tmpP *= -1;
           tmpT *= -1;
         } 
 
         if (tmp.units.base != '' && tmp.units.quote != ''){
-          raw[i].volumeIn += tmp.units.base;
-          raw[i].current += tmp.units.base;  
-          raw[i].profit += tmpT + tmp.units.base + ' (' + tmpP + '%)';
+          raw[i].costIn += tmp.units.quote;
+          raw[i].current += tmp.units.quote;  
+          raw[i].profit += tmpT + tmp.units.quote + ' (' + tmpP + '%)';
         } else {
           raw[i].profit += tmpT + ' (' + tmpP + '%)';
         }

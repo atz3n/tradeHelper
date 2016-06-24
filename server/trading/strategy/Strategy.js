@@ -181,7 +181,7 @@ export function Strategy(strategyDescription) {
       tmp.exchanges[i].inTime = _data.exchanges[i].inTime;
       tmp.exchanges[i].outPrice = _data.exchanges[i].outPrice;
       tmp.exchanges[i].outTime = _data.exchanges[i].outTime;
-      tmp.exchanges[i].amount = _data.exchanges[i].amount;
+      tmp.exchanges[i].volume = _data.exchanges[i].volume;
       tmp.exchanges[i].config = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
     }
 
@@ -282,7 +282,7 @@ export function Strategy(strategyDescription) {
 
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
-          _data.exchanges[i].amount = tmp.getAmount();
+          _data.exchanges[i].volume = tmp.getVolume();
         }
 
         if (_data.position === 'short') {
@@ -325,7 +325,7 @@ export function Strategy(strategyDescription) {
 
         if (_data.position === 'none') {
           _data.exchanges[i].inPrice = tmp.getActionPrice();
-          _data.exchanges[i].amount = tmp.getAmount();
+          _data.exchanges[i].volume = tmp.getVolume();
         }
 
         if (_data.position === 'long') {
@@ -409,8 +409,9 @@ export function Strategy(strategyDescription) {
     conf.stepWidth = exchange.stepWidth;
     conf.gain = exchange.gain;
     conf.data = exchange.data;
-    conf.cUnit = exchange.base;
-    conf.dUnit = exchange.quote;
+    conf.bUnit = exchange.base;
+    conf.qUnit = exchange.quote;
+    conf.qAmount = exchange.quoteAmount;
 
     switch (exchange.priceType) {
       case "Sinus":

@@ -47,24 +47,25 @@ var processActiveData = function(data) {
     if (pData.position === 'none') {
       pE.inPrice = '-';
       pE.inTime = '-';
-      pE.amount = '-';
-      pE.volumeIn = '-';
-      pE.volumeCur = '-';
+      pE.volume = '-';
+      pE.costIn = '-';
+      pE.costCur = '-';
       pE.profitPer = '-';
       pE.profitTot = '-';
     }
 
     if (pData.position !== 'none') {
       pE.inPrice = cropFracDigits(e.inPrice, 6);
-      pE.amount = e.amount;
+      pE.volume = e.volume;
 
-      var volIn = pE.inPrice * pE.amount;
-      var volCur = pE.price * pE.amount;
+      var cosIn = pE.inPrice * pE.volume;
+      var cosCur = pE.price * pE.volume;
 
-      pE.volumeIn = cropFracDigits(volIn, 6);
-      pE.volumeCur = cropFracDigits(volCur, 6);
-      pE.profitPer = cropFracDigits(percentage(volCur, volIn), 4);
-      pE.profitTot = cropFracDigits(volCur - volIn, 6);
+      pE.costIn = cropFracDigits(cosIn, 6);
+      pE.costCur = cropFracDigits(cosCur, 6);
+      pE.profitPer = cropFracDigits(percentage(cosCur, cosIn), 4);
+      pE.profitTot = cropFracDigits(cosCur - cosIn, 6);
+      pE.volume = cropFracDigits(pE.volume, 6);
 
       if (pData.position === 'short') {
         pE.profitTot *= -1;
@@ -73,17 +74,17 @@ var processActiveData = function(data) {
 
       pE.profitPer += '%';
       if (e.units.base != '' && e.units.quote != '') {
-        pE.volumeIn += e.units.base;
-        pE.volumeCur += e.units.base;
-        pE.inPrice += ' ' + e.units.base + '/' + e.units.quote;
-        pE.amount += e.units.quote;
-        pE.profitTot += e.units.base;
+        pE.costIn += ' ' + e.units.quote;
+        pE.costCur += ' ' + e.units.quote;
+        pE.inPrice += ' ' + e.units.quote;
+        pE.volume += ' ' + e.units.base;
+        pE.profitTot += ' ' + e.units.quote;
       }
     }
 
     pE.price = cropFracDigits(pE.price, 6);
     if (e.units.base != '' && e.units.quote != '')
-      pE.price += ' ' + e.units.base + '/' + e.units.quote;
+      pE.price += ' ' + e.units.quote;
   }
 
   pData.bundles = new Array(data.bundles.length);
@@ -128,7 +129,7 @@ var postloadChartFunc = function() {
 
         var label = tmp.name + ' in: ' + cropFracDigits(tmp.inPrice, 3);
         if (tmp.units.base != '' && tmp.units.quote != '') {
-          label += tmp.units.base + '/' + tmp.units.quote;
+          label += ' ' +  tmp.units.quote;
         }
 
         chart.ygrids.add({
@@ -152,7 +153,7 @@ var postloadChartFunc = function() {
 
           var label = tmp.name + ' out: ' + cropFracDigits(tmp.outPrice, 3);
           if (tmp.units.base != '' && tmp.units.quote != '') {
-            label += tmp.units.base + '/' + tmp.units.quote;
+            label += ' ' + tmp.units.quote;
           }
 
           chart.ygrids.add({
