@@ -28,6 +28,18 @@ getTradePairInfos = function() {
 
 
 /***********************************************************************
+  Error Type
+ ***********************************************************************/
+
+ExError = {
+    ok: 'OK',
+    srvConError: 'SERVER_CONNECTION_ERROR',
+    toLessBalance: 'BALANCE_TO_LESS',
+    error: 'ERROR'
+}
+
+
+/***********************************************************************
   Function Prototypes
  ***********************************************************************/
 
@@ -56,7 +68,7 @@ IExchange.prototype.getPairUnits = function() {
 }
 
 
-IExchange.prototype.getAmount = function() {
+IExchange.prototype.getVolume = function() {
     throw new Error('This method must be overwritten!');
 }
 

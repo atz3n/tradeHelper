@@ -33,7 +33,9 @@ Template.body.events({
       var tmp = {
         key: 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi',
         secret: '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==',
-        pair: 'XETHZEUR'
+        pair: 'XETHZEUR',
+        quoteAmountType: 'percentage',
+        qAmount: conf
       };
       
       Meteor.call('setConfig', tmp, function(error, result) {
@@ -77,10 +79,10 @@ Template.body.events({
       });
 
 
-      /*++++++++++ getAmountButton ++++++++++*/
-    } else if ($(event.target).prop("name") == "getAmountButton") {
+      /*++++++++++ getVolumeButton ++++++++++*/
+    } else if ($(event.target).prop("name") == "getVolumeButton") {
 
-      Meteor.call('getAmount', function(error, result) {
+      Meteor.call('getVolume', function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
         else pageSession.set('info', JSON.stringify(result));
       });

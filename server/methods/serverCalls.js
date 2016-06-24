@@ -32,9 +32,9 @@ Meteor.methods({
     return exchange.getPairUnits();
   },
 
-  getAmount: function(){
-    console.log('getAmount')
-    return exchange.getAmount();
+  getVolume: function(){
+    console.log('getVolume')
+    return exchange.getVolume();
   },
 
   getPrice: function(){
@@ -55,7 +55,9 @@ Meteor.methods({
   },
 
   buy: function(){
-    return exchange.buy();
+    console.log('buy');
+    console.log(exchange.buy())
+    return true;
   },
 
   getInstInfo: function(){

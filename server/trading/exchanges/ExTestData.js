@@ -37,11 +37,11 @@ ExTestData.ConfigDefault = {
   startVal: 0,
   data: [],
   gain: 1,
-  amount: 1,
+  qAmount: 100,
   offset: 0,
   stepWidth: 1,
-  cUnit: '',
-  dUnit: ''
+  bUnit: '',
+  qUnit: ''
 }
 
 
@@ -126,7 +126,7 @@ export function ExTestData() {
     conf.StartValue = _config.startVal;
     conf.Data = _config.data;
     conf.Gain = _config.gain;
-    conf.Amount = _config.amount;
+    conf.QuoteAmount = _config.qAmount + ' ' + _config.qUnit;
     conf.Offset = _config.offset;
     conf.StepWidth = _config.stepWidth;
     
@@ -143,7 +143,7 @@ export function ExTestData() {
 
 
   this.getPairUnits = function() {
-    return { counter: _config.cUnit, denominator: _config.dUnit };
+    return { base: _config.bUnit, quote: _config.qUnit };
   }
 
 
@@ -171,8 +171,8 @@ export function ExTestData() {
     return this.getPrice();
   }
 
-  this.getAmount = function() {
-    return _config.amount;
+  this.getVolume = function() {
+    return _config.qAmount / this.getPrice();
   }
 
   this.sell = function() {return true;}
