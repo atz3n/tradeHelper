@@ -409,8 +409,8 @@ export function Strategy(strategyDescription) {
     conf.stepWidth = exchange.stepWidth;
     conf.gain = exchange.gain;
     conf.data = exchange.data;
-    conf.cUnit = exchange.counter;
-    conf.dUnit = exchange.denominator;
+    conf.cUnit = exchange.base;
+    conf.dUnit = exchange.quote;
 
     switch (exchange.priceType) {
       case "Sinus":

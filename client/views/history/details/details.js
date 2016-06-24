@@ -58,13 +58,13 @@ var processHistoryData = function(data){
     }
 
     pE.profitPer += '%';
-    if (e.units.counter != '' && e.units.denominator != ''){
-      pE.inPrice += ' ' + e.units.counter + '/' + e.units.denominator;
-      pE.outPrice += ' ' + e.units.counter + '/' + e.units.denominator;
-      pE.volumeIn += e.units.counter;
-      pE.volumeOut += e.units.counter;
-      pE.amount += e.units.denominator;
-      pE.profitTot += e.units.counter;
+    if (e.units.base != '' && e.units.quote != ''){
+      pE.inPrice += ' ' + e.units.base + '/' + e.units.quote;
+      pE.outPrice += ' ' + e.units.base + '/' + e.units.quote;
+      pE.volumeIn += e.units.base;
+      pE.volumeOut += e.units.base;
+      pE.amount += e.units.quote;
+      pE.profitTot += e.units.base;
     }
   }
 

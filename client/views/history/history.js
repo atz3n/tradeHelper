@@ -51,10 +51,10 @@ var HistoryViewItems = function(cursor) {
         tmpT *= -1;
       }
 
-      if (tmp.units.counter != '' && tmp.units.denominator != '') {
-        raw[i].volumeIn += tmp.units.counter;
-        raw[i].volumeOut += tmp.units.counter;
-        raw[i].profit += tmpT + tmp.units.counter + ' (' + tmpP + '%)';
+      if (tmp.units.base != '' && tmp.units.quote != '') {
+        raw[i].volumeIn += tmp.units.base;
+        raw[i].volumeOut += tmp.units.base;
+        raw[i].profit += tmpT + tmp.units.base + ' (' + tmpP + '%)';
       } else {
         raw[i].profit += tmpT + ' (' + tmpP + '%)';
       }

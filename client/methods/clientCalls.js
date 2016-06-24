@@ -36,8 +36,8 @@ Meteor.ClientCall.methods({
         if (k != 0) msg += ', ';
         msg += cropFracDigits(tmp.price[tmp.price.length - 1], 3);
 
-        if (tmp.units.counter !== '' && tmp.units.denominator !== '') {
-          msg += ' ' + tmp.units.counter + '/' + tmp.units.denominator;
+        if (tmp.units.base !== '' && tmp.units.quote !== '') {
+          msg += ' ' + tmp.units.base + '/' + tmp.units.quote;
         }
       }
       bootbox.dialog({

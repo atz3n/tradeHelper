@@ -72,18 +72,18 @@ var processActiveData = function(data) {
       }
 
       pE.profitPer += '%';
-      if (e.units.counter != '' && e.units.denominator != '') {
-        pE.volumeIn += e.units.counter;
-        pE.volumeCur += e.units.counter;
-        pE.inPrice += ' ' + e.units.counter + '/' + e.units.denominator;
-        pE.amount += e.units.denominator;
-        pE.profitTot += e.units.counter;
+      if (e.units.base != '' && e.units.quote != '') {
+        pE.volumeIn += e.units.base;
+        pE.volumeCur += e.units.base;
+        pE.inPrice += ' ' + e.units.base + '/' + e.units.quote;
+        pE.amount += e.units.quote;
+        pE.profitTot += e.units.base;
       }
     }
 
     pE.price = cropFracDigits(pE.price, 6);
-    if (e.units.counter != '' && e.units.denominator != '')
-      pE.price += ' ' + e.units.counter + '/' + e.units.denominator;
+    if (e.units.base != '' && e.units.quote != '')
+      pE.price += ' ' + e.units.base + '/' + e.units.quote;
   }
 
   pData.bundles = new Array(data.bundles.length);
@@ -127,8 +127,8 @@ var postloadChartFunc = function() {
         var tmp = aD.exchanges[i];
 
         var label = tmp.name + ' in: ' + cropFracDigits(tmp.inPrice, 3);
-        if (tmp.units.counter != '' && tmp.units.denominator != '') {
-          label += tmp.units.counter + '/' + tmp.units.denominator;
+        if (tmp.units.base != '' && tmp.units.quote != '') {
+          label += tmp.units.base + '/' + tmp.units.quote;
         }
 
         chart.ygrids.add({
@@ -151,8 +151,8 @@ var postloadChartFunc = function() {
 
 
           var label = tmp.name + ' out: ' + cropFracDigits(tmp.outPrice, 3);
-          if (tmp.units.counter != '' && tmp.units.denominator != '') {
-            label += tmp.units.counter + '/' + tmp.units.denominator;
+          if (tmp.units.base != '' && tmp.units.quote != '') {
+            label += tmp.units.base + '/' + tmp.units.quote;
           }
 
           chart.ygrids.add({

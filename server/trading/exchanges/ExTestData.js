@@ -143,7 +143,7 @@ export function ExTestData() {
 
 
   this.getPairUnits = function() {
-    return { counter: _config.cUnit, denominator: _config.dUnit };
+    return { base: _config.cUnit, quote: _config.dUnit };
   }
 
 

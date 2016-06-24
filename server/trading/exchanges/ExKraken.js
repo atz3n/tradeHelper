@@ -76,7 +76,7 @@ export function ExKraken(ConstrParam) {
 
   var _config = Object.assign({}, ExKraken.ConfigDefault);
   var _courseData;
-  var _pairUnits = { counter: 'none', denominator: 'none' };
+  var _pairUnits = { base: 'none', quote: 'none' };
 
   /***********************************************************************
     Public Instance Variable
@@ -112,88 +112,88 @@ export function ExKraken(ConstrParam) {
 
     switch (_config.pair) {
       case ExKraken.Pair.btc_eur:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'EUR';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'EUR';
         break;
       case ExKraken.Pair.eth_btc:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'BTC';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'BTC';
         break;
       case ExKraken.Pair.eth_cad:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'CAD';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'CAD';
         break;
       case ExKraken.Pair.eth_eur:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'EUR';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'EUR';
         break;
       case ExKraken.Pair.eth_gbp:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'GBP';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'GBP';
         break;
       case ExKraken.Pair.eth_jpy:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'JPY';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'JPY';
         break;
       case ExKraken.Pair.eth_usd:
-        _pairUnits.counter = 'ETH';
-        _pairUnits.denominator = 'USD';
+        _pairUnits.base = 'ETH';
+        _pairUnits.quote = 'USD';
         break;
       case ExKraken.Pair.ltc_cad:
-        _pairUnits.counter = 'LTC';
-        _pairUnits.denominator = 'CAD';
+        _pairUnits.base = 'LTC';
+        _pairUnits.quote = 'CAD';
         break;
       case ExKraken.Pair.ltc_eur:
-        _pairUnits.counter = 'LTC';
-        _pairUnits.denominator = 'EUR';
+        _pairUnits.base = 'LTC';
+        _pairUnits.quote = 'EUR';
         break;
       case ExKraken.Pair.ltc_usd:
-        _pairUnits.counter = 'LTC';
-        _pairUnits.denominator = 'USD';
+        _pairUnits.base = 'LTC';
+        _pairUnits.quote = 'USD';
         break;
       case ExKraken.Pair.btc_ltc:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'LTC';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'LTC';
         break;
       case ExKraken.Pair.btc_nmc:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'NMC';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'NMC';
         break;
       case ExKraken.Pair.btc_xdg:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'XDG';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'XDG';
         break;
       case ExKraken.Pair.btc_xlm:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'XLM';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'XLM';
         break;
       case ExKraken.Pair.btc_xrp:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'XRP';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'XRP';
         break;
       case ExKraken.Pair.btc_cad:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'CAD';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'CAD';
         break;
       case ExKraken.Pair.btc_eur:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'EUR';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'EUR';
         break;
       case ExKraken.Pair.btc_gbp:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'GBP';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'GBP';
         break;
       case ExKraken.Pair.btc_jpy:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'JPY';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'JPY';
         break;
       case ExKraken.Pair.btc_usd:
-        _pairUnits.counter = 'BTC';
-        _pairUnits.denominator = 'USD';
+        _pairUnits.base = 'BTC';
+        _pairUnits.quote = 'USD';
         break;
       default:
-        _pairUnits.counter = 'none';
-        _pairUnits.denominator = 'none';
+        _pairUnits.base = 'none';
+        _pairUnits.quote = 'none';
     }
 
     return true;

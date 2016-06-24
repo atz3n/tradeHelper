@@ -49,8 +49,8 @@ var ActivesViewItems = function(strQue, datQue) {
      
         raw[i].current += cropFracDigits(tmp.price[tmp.price.length - 1], 4);
 
-        if (tmp.units.counter != '' && tmp.units.denominator != '')
-          raw[i].current += ' ' + tmp.units.counter + '/' + tmp.units.denominator;
+        if (tmp.units.base != '' && tmp.units.quote != '')
+          raw[i].current += ' ' + tmp.units.base + '/' + tmp.units.quote;
       }
     }
 
@@ -79,10 +79,10 @@ var ActivesViewItems = function(strQue, datQue) {
           tmpT *= -1;
         } 
 
-        if (tmp.units.counter != '' && tmp.units.denominator != ''){
-          raw[i].volumeIn += tmp.units.counter;
-          raw[i].current += tmp.units.counter;  
-          raw[i].profit += tmpT + tmp.units.counter + ' (' + tmpP + '%)';
+        if (tmp.units.base != '' && tmp.units.quote != ''){
+          raw[i].volumeIn += tmp.units.base;
+          raw[i].current += tmp.units.base;  
+          raw[i].profit += tmpT + tmp.units.base + ' (' + tmpP + '%)';
         } else {
           raw[i].profit += tmpT + ' (' + tmpP + '%)';
         }

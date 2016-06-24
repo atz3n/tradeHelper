@@ -314,7 +314,7 @@ var ExchangesViewExTestDataItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "amount", "counter", "denominator", "gain", "offset", "startVal", "stepWidth", "priceType", "data"];
+		var searchFields = ["name", "amount", "base", "quote", "gain", "offset", "startVal", "stepWidth", "priceType", "data"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
