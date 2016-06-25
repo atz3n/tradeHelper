@@ -10,12 +10,12 @@ Meteor.methods({
   },
 
   setConfig: function(config){
-    console.log(config)
-    exchange.setConfig(config);
     console.log('setConfig');
+    return exchange.setConfig(config);
   },
 
   getConfig: function(){
+    console.log('getConfig');
     return exchange.getConfig();
   },
 
@@ -29,6 +29,7 @@ Meteor.methods({
   },
 
   getPairUnits: function(){
+    console.log('getPairUnits');
     return exchange.getPairUnits();
   },
 
@@ -38,10 +39,12 @@ Meteor.methods({
   },
 
   getPrice: function(){
+    console.log('getPrice')
     return exchange.getPrice();
   },
 
   getActionPrice: function(){
+    console.log('getActionPrice')
     return exchange.getActionPrice();
   },
 
@@ -51,16 +54,17 @@ Meteor.methods({
   },
 
   sell: function(){
+    console.log('sell');
     return exchange.sell();
   },
 
   buy: function(){
     console.log('buy');
-    console.log(exchange.buy())
-    return true;
+    return exchange.buy();
   },
 
   getInstInfo: function(){
+    console.log('getInstInfo');
     return exchange.getInstInfo();
   },
 

@@ -40,6 +40,7 @@ Template.body.events({
       
       Meteor.call('setConfig', tmp, function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
+        else pageSession.set('info', JSON.stringify(result));
       });
 
 

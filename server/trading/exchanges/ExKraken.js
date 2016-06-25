@@ -39,7 +39,8 @@ ExKraken.ConfigDefault = {
   secret: 'undefined',
   pair: 'undefined',
   quoteAmountType: 'undefined',
-  qAmount: 'undefined'
+  qAmount: 'undefined',
+  hotMode: false
 }
 
 
@@ -57,18 +58,18 @@ ExKraken.ConfigDefault = {
  ***********************************************************************/
 
 ExKraken.getTradePairInfos = function() {
-  var future = new Future(); // to make async callback synchronous
+  return Async.runSync(function(done) {
 
-  new KrakenClient().api('AssetPairs', {}, function(error, data) {
-    if (error) {
-      console.log(error);
-      future.return(ExError.srvConError);
-    } else {
-      future.return(data.result);
-    }
+    new KrakenClient().api('AssetPairs', {}, function(error, data) {
+      if (error) {
+        console.log(error);
+        done(ExError.srvConError, null);
+      } else {
+        done(ExError.ok, data.result);
+      }
+    });
+
   });
-
-  return future.wait();
 }
 
 
@@ -93,7 +94,8 @@ export function ExKraken(ConstrParam) {
   var _pairUnits = { base: 'none', quote: 'none' };
   var _price = 0;
   var _aPrice = 0;
-  var _scale
+  var _volume = 0;
+  var _cropFactor = 6;
 
   var _kraken = {};
 
@@ -114,35 +116,39 @@ export function ExKraken(ConstrParam) {
    ***********************************************************************/
 
   this.update = function() {
-    var future = new Future(); // to make async callback synchronous
+    return Async.runSync(function(done) {
 
-    _kraken.api('Ticker', { "pair": _config.pair }, function(error, data) {
-      if (error) {
-        console.log(error);
-        future.return(ExError.srvConError);
-      } else {
-        _price = data.result[_config.pair].p[1];
-        future.return(ExError.ok);
-      }
+      _kraken.api('Ticker', { "pair": _config.pair }, function(error, data) {
+        if (error) {
+          console.log(error);
+          done(ExError.srvConError, null);
+        } else {
+          _price = data.result[_config.pair].p[1];
+          done(ExError.ok, null);
+        }
+      });
+
     });
-
-    return future.wait();
   }
 
 
   this.setConfig = function(configuration) {
-    _config = Object.assign({}, configuration);
-    _kraken = new KrakenClient(_config.key, _config.secret);
+    return Async.runSync(function(done) {
 
-    tmp = ExKraken.getTradePairInfos();
+      _config = Object.assign({}, configuration);
+      _kraken = new KrakenClient(_config.key, _config.secret);
 
-    if (tmp !== ExError.srvConError) {
-      _pairUnits.base = tmp[_config.pair].base;
-      _pairUnits.quote = tmp[_config.pair].quote;
-      return ExError.ok;
-    } else {
-      return tmp;
-    }
+      tmp = ExKraken.getTradePairInfos();
+
+      if (tmp.error !== ExError.srvConError) {
+        _pairUnits.base = tmp.result[_config.pair].base;
+        _pairUnits.quote = tmp.result[_config.pair].quote;
+        done(ExError.ok, null);
+      } else {
+        done(tmp.error, null);
+      }
+
+    });
   }
 
 
@@ -164,7 +170,9 @@ export function ExKraken(ConstrParam) {
         console.log(error);
         future.return('error');
       } else {
-        future.return();
+        console.log('called');
+        future.return('bls');
+        return future.wait();
         // future.return(data.result);
         console.log(data.result.trades)
           // console.log(data)
@@ -190,52 +198,55 @@ export function ExKraken(ConstrParam) {
   }
 
   this.getActionPrice = function() {
-    /* TODO: return bought or sold price */
+    if (!_config.hotMode) {
+      return _aPrice;
+    }
     return 1;
   }
 
   this.buy = function() {
-    var state = 'error';
-    var future = new Future(); // to make async callback synchronous
+    return Async.runSync(function(done) {
 
-    _kraken.api('Balance', null, function(error, data) {
-      if (error) {
-        console.log(error);
-        future.return(ExError.srvConError);
-      } else {
-        if (_config.quoteAmountType !== 'value' && _config.quoteAmountType !== 'percentage') {
-          future.return(ExError.error);
+      _kraken.api('Balance', null, function(error, data) {
+        if (error) {
+          console.log(error);
+          done(ExError.srvConError, null);
         } else {
+          if (_config.quoteAmountType !== 'value' && _config.quoteAmountType !== 'percentage') {
+            return done(ExError.error, null);
+          }
+
           var balance = data.result[_pairUnits.quote];
           var volume = 0;
           var error = false;
 
           if (_config.quoteAmountType === 'value') {
             if (balance < _config.qAmount * 1.01) {
-              error = true;
-              future.return(ExError.toLessBalance);
-            } else {
-              volume = cropFracDigits(_config.qAmount / _price, 6);
+              return done(ExError.toLessBalance, null);
             }
+
+            volume = cropFracDigits(_config.qAmount / _price, _cropFactor);
+
+
           } else if (_config.quoteAmountType === 'percentage') {
             if (balance < balance * (_config.qAmount / 100) * 1.01) {
-              error = true;
-              future.return(ExError.toLessBalance);
-            } else {
-              volume = cropFracDigits(balance * (_config.qAmount / 100) / _price, 6);
+              return done(ExError.toLessBalance, null);
             }
-          } 
 
-          if (!error) {
-            console.log('price: ' + _price);
-            console.log('volume: ' + volume);
-            console.log('cost: ' + _price * volume);
-            future.return(ExError.ok);
+            volume = cropFracDigits(balance * (_config.qAmount / 100) / _price, _cropFactor);
           }
+
+          if (!_config.hotMode) {
+            _aPrice = _price;
+            _volume = volume;
+          }
+          console.log('price: ' + _price);
+          console.log('volume: ' + _volume);
+          console.log('cost: ' + _price * _volume);
+          done(ExError.ok, null);
         }
-      }
-      console.log(future.wait())
-      return 'future.wait()';
+      });
+
     });
   }
 
@@ -255,21 +266,10 @@ export function ExKraken(ConstrParam) {
   }
 
   this.getVolume = function() {
-    var future = new Future(); // to make async callback synchronous
-
-    _kraken.api('Balance', null, function(error, data) {
-      if (error) {
-        console.log(error);
-        future.return('error');
-      } else {
-        // future.return(data.result);
-        // console.log(data)
-        console.log(data.result[_pairUnits.quote])
-        future.return();
-      }
-    });
-
-    return future.wait();
+    if (!_config.hotMode) {
+      return _volume;
+    }
+    return 1;
   }
 
   this.setAmount = function() {
