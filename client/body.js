@@ -31,11 +31,13 @@ Template.body.events({
       /*++++++++++ setConfigButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setConfigButton") {
       var tmp = {
+        id: '123456',
         key: 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi',
         secret: '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==',
         pair: 'XETHZEUR',
         quoteAmountType: 'percentage',
-        qAmount: conf
+        qAmount: conf,
+        hotMode: true
       };
       
       Meteor.call('setConfig', tmp, function(error, result) {

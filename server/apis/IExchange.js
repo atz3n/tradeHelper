@@ -35,7 +35,9 @@ ExError = {
     ok: 'OK',
     srvConError: 'SERVER_CONNECTION_ERROR',
     toLessBalance: 'BALANCE_TO_LESS',
-    error: 'ERROR'
+    error: 'ERROR',
+    parseError: 'PARSE_ERROR',
+    notImpl: 'NOT_YET_IMPLEMENTED'
 }
 
 

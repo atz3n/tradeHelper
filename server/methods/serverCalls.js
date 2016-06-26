@@ -20,6 +20,7 @@ Meteor.methods({
   },
 
   getStatus: function(){
+    console.log('getStatus');
     return exchange.getStatus();
   },
 
@@ -55,12 +56,12 @@ Meteor.methods({
 
   sell: function(){
     console.log('sell');
-    return exchange.sell();
+    return exchange.sell('long');
   },
 
   buy: function(){
     console.log('buy');
-    return exchange.buy();
+    return exchange.buy('long');
   },
 
   getInstInfo: function(){
