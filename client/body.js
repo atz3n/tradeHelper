@@ -37,7 +37,7 @@ Template.body.events({
         pair: 'XETHZEUR',
         quoteAmountType: 'percentage',
         qAmount: conf,
-        hotMode: true
+        hotMode: false
       };
       
       Meteor.call('setConfig', tmp, function(error, result) {
