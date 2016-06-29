@@ -32,9 +32,13 @@ ExKraken.ConfigDefault = {
   key: 'undefined',
   secret: 'undefined',
   pair: 'undefined',
-  quoteAmountType: 'undefined',
+  quoteAmountType: 'undefined', // value (total amount), percentage (relative to available amount)
   qAmount: 'undefined',
-  hotMode: false
+  hotMode: false,
+  priceType: 'undefined', // 24Average (24 Average from kraken Api), tradesAvarage (self calculated avarage depend on trAvType)
+  trAvType: 'undefined', // quantity (number of last trades), time (seconds in the past)
+  trAvNum: 0,
+  trAvSec: 0,
 }
 
 
@@ -97,43 +101,50 @@ export function ExKraken(ConstrParam) {
     Private Instance Function
    ***********************************************************************/
 
-  var _calcVolume = function() {
+  var _syncApiCall = function(method, params) {
     return Async.runSync(function(done) {
-
-      _kraken.api('Balance', null, function(error, data) {
+      _kraken.api(method, params, function(error, data) {
         if (error) {
           console.log(error);
           done(ExError.srvConError, null);
         } else {
-          if (_config.quoteAmountType !== 'value' && _config.quoteAmountType !== 'percentage') {
-            console.log('err1');
-            return done(ExError.error, null);
-          }
-
-          var tmp = parseFloat(data.result[_pairUnits.quote]);
-          if (isNaN(tmp)) return done(ExError.parseError, null)
-
-          var balance = tmp;
-          var volume = 0;
-
-          if (_config.quoteAmountType === 'value') {
-            if (balance < _config.qAmount * 1.01) {
-              return done(ExError.toLessBalance, null);
-            }
-
-            return done(ExError.ok, cropFracDigits(_config.qAmount / _price, _cropFactor));
-
-          } else if (_config.quoteAmountType === 'percentage') {
-            if (balance < balance * (_config.qAmount / 100) * 1.01) {
-              return done(ExError.toLessBalance, null);
-            }
-
-            return done(ExError.ok, cropFracDigits(balance * (_config.qAmount / 100) / _price, _cropFactor));
-          }
+          done(ExError.ok, data.result);
         }
       });
-
     });
+  }
+
+  var _calcVolume = function() {
+
+    var sRet = _syncApiCall('Balance', null);
+    if (sRet.error !== ExError.ok) return sRet;
+
+    if (_config.quoteAmountType !== 'value' && _config.quoteAmountType !== 'percentage') {
+      return errHandle(ExError.error, null);
+    }
+
+    var tmp = parseFloat(sRet.result[_pairUnits.quote]);
+    if (isNaN(tmp)) return errHandle(ExError.parseError, null)
+
+    var balance = tmp;
+    var volume = 0;
+
+    if (_config.quoteAmountType === 'value') {
+      if (balance < _config.qAmount * 1.01) {
+        return errHandle(ExError.toLessBalance, null);
+      }
+
+      return errHandle(ExError.ok, cropFracDigits(_config.qAmount / _price, _cropFactor));
+    }
+
+
+    if (_config.quoteAmountType === 'percentage') {
+      if (balance < balance * (_config.qAmount / 100) * 1.01) {
+        return errHandle(ExError.toLessBalance, null);
+      }
+
+      return errHandle(ExError.ok, cropFracDigits(balance * (_config.qAmount / 100) / _price, _cropFactor));
+    }
   }
 
 
@@ -142,24 +153,77 @@ export function ExKraken(ConstrParam) {
    ***********************************************************************/
 
   this.update = function() {
-    return Async.runSync(function(done) {
-      
-      /* TODO add price calculation based on last trades  */
+    _config.priceType = '24Average';
 
-      _kraken.api('Ticker', { pair: _config.pair }, function(error, data) {
-        if (error) {
-          console.log(error);
-          done(ExError.srvConError, null);
-        } else {
-          var tmp = parseFloat(data.result[_config.pair].p[1]);
-          if (isNaN(tmp)) return done(ExError.parseError, null);
 
-          _price = tmp;
-          done(ExError.ok, null);
+    if (_config.priceType === '24Average') {
+
+      var sRet = _syncApiCall('Ticker', { pair: _config.pair });
+      if (sRet.error !== ExError.ok) return sRet;
+
+      var tmp = parseFloat(sRet.result[_config.pair].p[1]);
+      if (isNaN(tmp)) return errHandle(ExError.parseError, null);
+
+      _price = tmp;
+
+      return errHandle(ExError.ok, null);
+    }
+
+
+    if (_config.priceType === 'tradesAvarage') {
+      var sRet = _syncApiCall('Trades', { pair: _config.pair });
+      if (sRet.error !== ExError.ok) return sRet;
+
+
+      if (_config.trAvType === 'time') {
+        var trArray = sRet.result[_config.pair];
+
+        var curSec = parseInt(String(trArray[trArray.length - 1][2]).split('.')[0]);
+        if (isNaN(curSec)) return errHandle(ExError.parseError, null);
+
+        var error = false;
+        var tmp = trArray.slice(trArray.indexOf(trArray.find(function(trade) {
+          var trSec = parseInt(String(trade[2]).split('.')[0]);
+          if (isNaN(trSec)) { error = true;
+            return true; }
+
+          return trSec >= curSec - _config.trAvSec;
+        })));
+        if (error) return errHandle(ExError.parseError, null);
+
+
+        var meanArray = [];
+        for (i in tmp) {
+          meanArray[i] = parseFloat(tmp[i][0]);
+          if (isNaN(meanArray[i])) return errHandle(ExError.parseError, null);
         }
-      });
 
-    });
+        _price = average(meanArray);
+
+        return errHandle(ExError.ok, null);
+      }
+
+      if (_config.trAvType === 'quantity') {
+        var trArray = sRet.result[_config.pair];
+
+        var tmp = trArray.slice(-_config.trAvNum);
+
+
+        var meanArray = [];
+        for (i in tmp) {
+          meanArray[i] = parseFloat(tmp[i][0]);
+          if (isNaN(meanArray[i])) return errHandle(ExError.parseError, null);
+        }
+
+        _price = average(meanArray);
+
+        return errHandle(ExError.ok, null);
+      }
+
+      return errHandle(ExError.error, null);
+    }
+
+    return errHandle(ExError.error, null);
   }
 
 
@@ -168,20 +232,17 @@ export function ExKraken(ConstrParam) {
     _config = Object.assign({}, configuration);
     _kraken = new KrakenClient(_config.key, _config.secret);
 
-    tmp = ExKraken.getTradePairInfos();
+    tRet = ExKraken.getTradePairInfos();
+    if (tRet.error !== ExError.ok) return tRet;
 
-    if (tmp.error === ExError.ok) {
-      var tmp2 = parseInt(tmp.result[_config.pair].lot_decimals);
-      if (isNaN(tmp2)) return errHandle(ExError.parseError, null);
+    var cF = parseInt(tRet.result[_config.pair].lot_decimals);
+    if (isNaN(cF)) return errHandle(ExError.parseError, null);
 
-      _pairUnits.base = tmp.result[_config.pair].base;
-      _pairUnits.quote = tmp.result[_config.pair].quote;
-      _cropFactor = tmp2;
+    _pairUnits.base = tRet.result[_config.pair].base;
+    _pairUnits.quote = tRet.result[_config.pair].quote;
+    _cropFactor = cF;
 
-      return errHandle(ExError.ok, null);
-    } else {
-      return tmp;
-    }
+    return errHandle(ExError.ok, null);
   }
 
 
@@ -194,6 +255,47 @@ export function ExKraken(ConstrParam) {
 
 
   this.getStatus = function() {
+    var sRet = _syncApiCall('Trades', { pair: _config.pair });
+    if (sRet.error !== ExError.ok) return sRet;
+
+    var trArray = sRet.result[_config.pair];
+
+    _config.trAvNum = 7;
+    var tmp = trArray.slice(-_config.trAvNum);
+
+
+    var meanArray = [];
+    for (i in tmp) {
+      meanArray[i] = parseFloat(tmp[i][0]);
+      if (isNaN(meanArray[i])) return errHandle(ExError.parseError, null);
+    }
+
+    // _price = average(meanArray);
+
+    console.log(trArray)
+    console.log(tmp)
+
+    console.log(average(meanArray))
+      // console.log(trArray)
+      // console.log(meanArray)
+      // console.log(tmp)
+      // console.log(trArray.indexOf(tmp))
+      // console.log(curSec - _config.trAvSec)
+      // console.log(curSec)
+
+    // console.log(sRet.result.last)
+    // console.log(trArray[trArray.length - 1])
+    // var arr2 = trArray.slice(-5);
+    // console.log(trArray.length)
+    // console.log(arr2)
+
+
+    // console.log(trArray[trArray.length - 1])
+    // console.log(String(trArray[0][2]).length)
+    // console.log(new Date(parseInt(String(trArray[0][2]).split('.')[0]) * 1000))
+
+
+
     return errHandle(ExError.ok, null);
   }
 
@@ -239,7 +341,7 @@ export function ExKraken(ConstrParam) {
             trading_agreement: 'agree',
             pair: _config.pair,
             ordertype: 'market',
-            volume: 0.01,
+            volume: 0.05,
             type: 'buy'
           };
 
@@ -269,12 +371,10 @@ export function ExKraken(ConstrParam) {
         /* TODO implement buy mechanism */
         return errHandle(ExError.notImpl, null);
       }
-
-
-    } else {
-      /* wrong parameter */
-      return errHandle(ExError.error, null);
     }
+
+    /* wrong parameter */
+    return errHandle(ExError.error, null);
   }
 
 
@@ -324,12 +424,10 @@ export function ExKraken(ConstrParam) {
         console.log(tmp);
         return errHandle(ExError.ok, null);
       }
-
-
-    } else {
-      /* wrong parameter */
-      return errHandle(ExError.error, null);
     }
+
+    /* wrong parameter */
+    return errHandle(ExError.error, null);
   }
 
 
@@ -340,7 +438,7 @@ export function ExKraken(ConstrParam) {
 
   this.getVolume = function() {
     if (!_config.hotMode) {
-      return errHandle(ExError.ok, volume);
+      return errHandle(ExError.ok, _volume);
     }
     return errHandle(ExError.ok, 1);
   }
