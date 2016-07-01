@@ -165,21 +165,41 @@ Template.body.events({
     if (event.target.qAmount) {
       config.qAmount = event.target.qAmount.value;
       event.target.qAmount.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.qAmount.value = config.qAmount;
+      }, 200);
     }
 
     if (event.target.trAvVal) {
       config.trAvVal = event.target.trAvVal.value;
       event.target.trAvVal.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.trAvVal.value = config.trAvVal;
+      }, 200);
     }
 
     if (event.target.conErrorCycles) {
       config.conErrorCycles = event.target.conErrorCycles.value;
       event.target.conErrorCycles.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.conErrorCycles.value = config.conErrorCycles;
+      }, 200);
     }
-    
+
     if (event.target.conErrorWaitTime) {
       config.conErrorWaitTime = event.target.conErrorWaitTime.value;
       event.target.conErrorWaitTime.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.conErrorWaitTime.value = config.conErrorWaitTime;
+      }, 200);
+    }
+
+    if (event.target.orderCheckWaitSec) {
+      config.orderCheckWaitSec = event.target.orderCheckWaitSec.value;
+      event.target.orderCheckWaitSec.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.orderCheckWaitSec.value = config.orderCheckWaitSec;
+      }, 200);
     }
   },
 
@@ -200,6 +220,7 @@ Template.body.events({
     if ($(event.target).prop("name") == "priceType") {
       config.priceType = $(event.target).prop("value");
     }
+
     if ($(event.target).prop("name") == "trAvType") {
       config.trAvType = $(event.target).prop("value");
     }

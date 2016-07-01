@@ -62,12 +62,8 @@ ExKraken.getTradePairInfos = function() {
   return Async.runSync(function(done) {
 
     new KrakenClient().api('AssetPairs', null, function(error, data) {
-      if (error) {
-        console.log(error);
-        done(ExError.srvConError, null);
-      } else {
-        done(ExError.ok, data.result);
-      }
+      if (error) done(ExError.srvConError, error);
+      else done(ExError.ok, data.result);
     });
 
   });
@@ -190,7 +186,6 @@ export function ExKraken(ConstrParam) {
       if (oRet.error !== ExError.ok) return oRet;
 
       if (!valOnly) _orderId = oRet.result.txid;
-      console.log(_orderId)
       return errHandle(ExError.ok, null);
     }
 
@@ -199,11 +194,8 @@ export function ExKraken(ConstrParam) {
 
 
   var _checkOrderFinished = function() {
-    _orderId = ['OAF67X-CUXPF-V5PSZW'];
     var sRet = _syncApiCall('ClosedOrders', { start: _orderId[0] });
     if (sRet.error !== ExError.ok) return sRet;
-
-    // console.log(sRet.result)
 
     if (Object.keys(sRet.result.closed).length === 0) {
       return errHandle(ExError.ok, false)
@@ -354,17 +346,8 @@ export function ExKraken(ConstrParam) {
   }
 
 
-  // this.getInfo = function() {
-  //   return errHandle(ExError.ok, null);
-  // }
   this.getInfo = function() {
-    console.log(_cycFuncCallWrap(function() {
-      console.log('test');
-      Meteor._sleepForMs(1 * 1000);
-      return errHandle(ExError.ok, null);
-    }));
-
-    return errHandle(ExError.ok, null);
+    return errHandle(ExError.notImpl, null);
   }
 
 
@@ -383,15 +366,14 @@ export function ExKraken(ConstrParam) {
   }
 
 
-  this.buy = function(position) {
-    // this.buy = async function(position) {
+  this.buy = async function(position) {
     if (position === 'long') {
 
       var cRet = _cycFuncCallWrap(function() {
         return _calcVolume();
       });
       if (cRet.error !== ExError.ok) {
-        _boughtNotifyFunc(this.getInstInfo(), cRet);
+        _boughtNotifyFunc(this.getInstInfo().result, cRet);
         return;
       }
 
@@ -400,7 +382,7 @@ export function ExKraken(ConstrParam) {
         return _setOrder('buy', _config.orderType, cRet.result, _price, false);
       });
       if (oRet.error !== ExError.ok) {
-        _boughtNotifyFunc(this.getInstInfo(), oRet);
+        _boughtNotifyFunc(this.getInstInfo().result, oRet);
         return;
       }
 
@@ -413,11 +395,11 @@ export function ExKraken(ConstrParam) {
           return _checkOrderFinished();
         });
         if (coRet.error !== ExError.ok) {
-          _boughtNotifyFunc(this.getInstInfo(), coRet);
+          _boughtNotifyFunc(this.getInstInfo().result, coRet);
           return;
         }
         if (coRet.result) {
-          _boughtNotifyFunc(this.getInstInfo(), coRet);
+          _boughtNotifyFunc(this.getInstInfo().result, coRet);
           return;
         }
 
@@ -443,13 +425,50 @@ export function ExKraken(ConstrParam) {
   }
 
 
-  this.sell = function(position) {
+  this.sell = async function(position) {
     if (position === 'long') {
+
+      var oRet = _cycFuncCallWrap(function() {
+        return _setOrder('sell', _config.orderType, _volume, _price, false);
+      });
+      if (oRet.error !== ExError.ok) {
+        _soldNotifyFunc(this.getInstInfo().result, oRet);
+        return;
+      }
+
+
+      Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
+
+
+      while (true) {
+        var coRet = _cycFuncCallWrap(function() {
+          return _checkOrderFinished();
+        });
+        if (coRet.error !== ExError.ok) {
+          _soldNotifyFunc(this.getInstInfo().result, coRet);
+          return;
+        }
+        if (coRet.result) {
+          _soldNotifyFunc(this.getInstInfo().result, coRet);
+          return;
+        }
+
+        Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
+      }
 
 
 
     } else if (position === 'short') {
+      if (!_config.hotMode) {
+        _volume = 0;
+        _aPrice = _price;
 
+        return errHandle(ExError.ok, null);
+      } else {
+
+        /* TODO implement sell mechanism */
+        return errHandle(ExError.notImpl, null);
+      }
     }
 
     /* wrong parameter */
@@ -474,12 +493,6 @@ export function ExKraken(ConstrParam) {
 
   this.getVolume = function() {
     return errHandle(ExError.ok, _volume);
-  }
-
-
-  this.setQuoteAmount = function() {
-    /* TODO return amount */
-    return errHandle(ExError.notImpl, null);
   }
 
 

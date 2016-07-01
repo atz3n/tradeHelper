@@ -8,12 +8,16 @@ var bFunc = function(instInfo, errObject){
   console.log('bought');
   console.log(instInfo);
   console.log(errObject);
+  console.log('vol: ' + exchange.getVolume().result);
+  console.log('aPrice: ' + exchange.getActionPrice().result);
 }
 
 var sFunc = function(instInfo, errObject){
   console.log('sold');
   console.log(instInfo);
   console.log(errObject);
+  console.log('vol: ' + exchange.getVolume().result);
+  console.log('aPrice: ' + exchange.getActionPrice().result);
 }
 
 
