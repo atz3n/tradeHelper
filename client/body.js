@@ -1,5 +1,7 @@
 var pageSession = new ReactiveDict();
 var conf = '';
+var config = {};
+
 /***********************************************************************
   Helper Template
  ***********************************************************************/
@@ -19,7 +21,9 @@ Template.body.helpers({
  ***********************************************************************/
 
 Template.body.events({
-  'click button': function(event, instance) {
+  'click button': function(event) {
+
+    // console.log(event)
 
     /*++++++++++ createButton ++++++++++*/
     if ($(event.target).prop("name") == "createButton") {
@@ -30,17 +34,13 @@ Template.body.events({
 
       /*++++++++++ setConfigButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setConfigButton") {
-      var tmp = {
-        id: '123456',
-        key: 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi',
-        secret: '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==',
-        pair: 'XETHZEUR',
-        quoteAmountType: 'percentage',
-        qAmount: conf,
-        hotMode: false
-      };
-      
-      Meteor.call('setConfig', tmp, function(error, result) {
+      config.id = '123456';
+      config.key = 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi';
+      config.secret = '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==';
+      config.pair = 'XETHZEUR';
+
+      console.log(config);
+      Meteor.call('setConfig', config, function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
         else pageSession.set('info', JSON.stringify(result));
       });
@@ -158,10 +158,50 @@ Template.body.events({
       /* do nothing */
     }
   },
+
   'submit .input': function(event) {
     event.preventDefault();
-    conf = event.target.text.value;
-    pageSession.set('info', event.target.text.value);
-    event.target.text.value = '';
+
+    if (event.target.qAmount) {
+      config.qAmount = event.target.qAmount.value;
+      event.target.qAmount.value += '_';
+    }
+
+    if (event.target.trAvVal) {
+      config.trAvVal = event.target.trAvVal.value;
+      event.target.trAvVal.value += '_';
+    }
+
+    if (event.target.conErrorCycles) {
+      config.conErrorCycles = event.target.conErrorCycles.value;
+      event.target.conErrorCycles.value += '_';
+    }
+    
+    if (event.target.conErrorWaitTime) {
+      config.conErrorWaitTime = event.target.conErrorWaitTime.value;
+      event.target.conErrorWaitTime.value += '_';
+    }
+  },
+
+  'click input': function(event) {
+
+    if ($(event.target).prop("name") == "hotMode") {
+      config.hotMode = $(event.target).context.checked;
+    }
+
+    if ($(event.target).prop("name") == "orderType") {
+      config.orderType = $(event.target).prop("value");
+    }
+
+    if ($(event.target).prop("name") == "qAmountType") {
+      config.qAmountType = $(event.target).prop("value");
+    }
+
+    if ($(event.target).prop("name") == "priceType") {
+      config.priceType = $(event.target).prop("value");
+    }
+    if ($(event.target).prop("name") == "trAvType") {
+      config.trAvType = $(event.target).prop("value");
+    }
   }
 });

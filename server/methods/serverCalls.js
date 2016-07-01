@@ -3,6 +3,21 @@ import{ExKraken} from '../trading/exchanges/ExKraken.js';
 
 var exchange = {};
 
+
+var bFunc = function(instInfo){
+  console.log('bought');
+  console.log(instInfo);
+}
+
+var sFunc = function(instInfo){
+  console.log('sold');
+  console.log(instInfo);
+}
+
+
+
+
+
 Meteor.methods({
   create: function(){
     exchange = new ExKraken();
@@ -11,6 +26,8 @@ Meteor.methods({
 
   setConfig: function(config){
     console.log('setConfig');
+    exchange.setBoughtNotifyFunc(bFunc);
+    exchange.setSoldNotifyFunc(sFunc);
     return exchange.setConfig(config);
   },
 
@@ -21,7 +38,9 @@ Meteor.methods({
 
   getStatus: function(){
     console.log('getStatus');
-    return exchange.getStatus();
+    var tmp = exchange.getStatus();
+    console.log('continued');
+    return tmp;
   },
 
   getInfo: function(){

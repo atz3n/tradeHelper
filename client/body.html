@@ -1,10 +1,35 @@
 <body>
   <h1>Exchange Development</h1>
 
-  <form class="input">
-    <input type="text" name="text" placeholder="set value" />
-  </form>
-  
+  orderType:
+  <input type="radio" name="orderType" value="market">market
+  <input type="radio" name="orderType" value="limit">limit
+  <br>
+
+  <br> qAmount:
+  <input type="radio" name="qAmountType" value="value">value
+  <input type="radio" name="qAmountType" value="percentage">percentage
+  <form class='input'> <input type="text" name="qAmount" placeholder="set value" /> </form>
+
+  <br> price:
+  <input type="radio" name="priceType" value="24Average">24Average
+  <input type="radio" name="priceType" value="tradesAverage">tradesAverage
+
+  <br> trades Average:
+  <input type="radio" name="trAvType" value="quantity">quantity
+  <input type="radio" name="trAvType" value="time">time
+  <form class='input'> <input type="text" name="trAvVal" placeholder="set value" /> </form>
+
+  <br> api error cycles:
+  <form class='input'> <input type="text" name="conErrorCycles" placeholder="set value" /> </form>
+  <br> api error time:
+  <form class='input'> <input type="text" name="conErrorWaitTime" placeholder="set value" /> </form>
+
+  <br> mode:
+  <input type="checkbox" id="hotMode" name="hotMode" value="hotMode"> hotMode
+  <br>
+
+  <br> api:<br>
   <button name="createButton">create</button>
   <button name="setConfigButton">setConfig</button>
   <button name="getConfigButton">getConfig</button>
@@ -19,7 +44,9 @@
   <button name="buyButton">buy</button>
   <button name="getInstInfoButton">getInstInfo</button>
   <button name="getTradePairInfosButton">getTradePairInfos</button>
+  <br>
   
+  <br>
   <p>Info: {{info}}</p>
   <p>Error: {{error}}</p>
 </body>

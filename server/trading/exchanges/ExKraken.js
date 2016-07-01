@@ -14,6 +14,11 @@
  * 02-Jun-2015 : Initial version
  */
 
+/***********************************************************************
+  TODO: 
+ ***********************************************************************/
+// - implementing partial order cancel handle
+
 
 import { IExchange } from '../../apis/IExchange.js';
 var KrakenClient = Meteor.npmRequire('kraken-api'); // npm import 
@@ -32,13 +37,15 @@ ExKraken.ConfigDefault = {
   key: 'undefined',
   secret: 'undefined',
   pair: 'undefined',
-  quoteAmountType: 'undefined', // value (total amount), percentage (relative to available amount)
-  qAmount: 'undefined',
+  qAmountType: 'amount', // value (total amount), percentage (relative to available amount)
+  qAmount: 0,
   hotMode: false,
-  priceType: 'undefined', // 24Average (24 Average from kraken Api), tradesAvarage (self calculated avarage depend on trAvType)
-  trAvType: 'undefined', // quantity (number of last trades), time (seconds in the past)
-  trAvNum: 0,
-  trAvSec: 0,
+  priceType: 'tradesAverage', // 24Average (24 Average from kraken Api), tradesAverage (self calculated avarage depend on trAvType)
+  trAvType: 'time', // quantity (number of last trades), time (seconds in the past)
+  trAvVal: 60,
+  orderType: 'market', // market (buy/sell by market price), limit (buy/sell to given price)
+  conErrorCycles: 3, // tries before an connection error will be returned
+  conErrorWaitTime: 3 // time to wait until a connection will be established again (in seconds)
 }
 
 
@@ -89,8 +96,12 @@ export function ExKraken(ConstrParam) {
   var _aPrice = 0;
   var _volume = 0;
   var _cropFactor = 6;
+  var _orderId = '';
 
   var _kraken = {};
+
+  var _boughtNotifyFunc = function() {};
+  var _soldNotifyFunc = function() {};
 
 
   /***********************************************************************
@@ -104,12 +115,8 @@ export function ExKraken(ConstrParam) {
   var _syncApiCall = function(method, params) {
     return Async.runSync(function(done) {
       _kraken.api(method, params, function(error, data) {
-        if (error) {
-          console.log(error);
-          done(ExError.srvConError, null);
-        } else {
-          done(ExError.ok, data.result);
-        }
+        if (error) return done(ExError.srvConError, error);
+        else return done(ExError.ok, data.result);
       });
     });
   }
@@ -119,7 +126,7 @@ export function ExKraken(ConstrParam) {
     var sRet = _syncApiCall('Balance', null);
     if (sRet.error !== ExError.ok) return sRet;
 
-    if (_config.quoteAmountType !== 'value' && _config.quoteAmountType !== 'percentage') {
+    if (_config.qAmountType !== 'value' && _config.qAmountType !== 'percentage') {
       return errHandle(ExError.error, null);
     }
 
@@ -129,7 +136,7 @@ export function ExKraken(ConstrParam) {
     var balance = tmp;
     var volume = 0;
 
-    if (_config.quoteAmountType === 'value') {
+    if (_config.qAmountType === 'value') {
       if (balance < _config.qAmount * 1.01) {
         return errHandle(ExError.toLessBalance, null);
       }
@@ -138,7 +145,7 @@ export function ExKraken(ConstrParam) {
     }
 
 
-    if (_config.quoteAmountType === 'percentage') {
+    if (_config.qAmountType === 'percentage') {
       if (balance < balance * (_config.qAmount / 100) * 1.01) {
         return errHandle(ExError.toLessBalance, null);
       }
@@ -148,14 +155,91 @@ export function ExKraken(ConstrParam) {
   }
 
 
+  var _setOrder = function(type, orderType, volume, price, valOnly) {
+    if (!_config.hotMode) {
+      _aPrice = price;
+      _volume = volume;
+      return errHandle(ExError.ok, null);
+
+    } else {
+
+      if (orderType !== 'market' && orderType !== 'limit')
+        return errHandle(ExError.error, null);
+
+      var order = {
+        trading_agreement: 'agree',
+        pair: _config.pair,
+        volume: volume,
+        type: type
+      };
+
+      if (valOnly) order.validate = true;
+
+      if (orderType === 'market') {
+        order.ordertype = 'market';
+      }
+
+      if (orderType === 'limit') {
+        order.ordertype = 'limit';
+        order.price = price;
+      }
+
+      var oRet = _syncApiCall('AddOrder', order);
+      if (oRet.error !== ExError.ok) return oRet;
+
+      if (!valOnly) _orderId = oRet.result.txid;
+      console.log(_orderId)
+      return errHandle(ExError.ok, null);
+    }
+
+    return errHandle(ExError.error, null);
+  }
+
+
+  var _checkOrderFinished = function() {
+    _orderId = ['OAF67X-CUXPF-V5PSZW'];
+    var sRet = _syncApiCall('ClosedOrders', { start: _orderId[0] });
+    if (sRet.error !== ExError.ok) return sRet;
+
+    // console.log(sRet.result)
+
+    if (Object.keys(sRet.result.closed).length === 0) {
+      return errHandle(ExError.ok, false)
+    }
+
+    if (sRet.result.closed[_orderId]) {
+      var order = sRet.result.closed[_orderId];
+
+      _volume = order.vol_exec;
+      _aPrice = order.price;
+
+      return errHandle(ExError.ok, true)
+    }
+
+    return errHandle(ExError.ok, false);
+  }
+
+
+  var _cycFuncCallWrap = function(callback) {
+    var ret = {};
+    for (let i = 0; i < _config.conErrorCycles; i++) {
+      ret = callback();
+
+      if (ret.error !== ExError.srvConError) break;
+
+      if (i < _config.conErrorCycles - 1) {
+        Meteor._sleepForMs(_config.conErrorWaitTime * 1000);
+      }
+    }
+    return ret;
+  }
+
+
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
   this.update = function() {
-    _config.priceType = '24Average';
-
-
     if (_config.priceType === '24Average') {
 
       var sRet = _syncApiCall('Ticker', { pair: _config.pair });
@@ -170,7 +254,7 @@ export function ExKraken(ConstrParam) {
     }
 
 
-    if (_config.priceType === 'tradesAvarage') {
+    if (_config.priceType === 'tradesAverage') {
       var sRet = _syncApiCall('Trades', { pair: _config.pair });
       if (sRet.error !== ExError.ok) return sRet;
 
@@ -184,10 +268,12 @@ export function ExKraken(ConstrParam) {
         var error = false;
         var tmp = trArray.slice(trArray.indexOf(trArray.find(function(trade) {
           var trSec = parseInt(String(trade[2]).split('.')[0]);
-          if (isNaN(trSec)) { error = true;
-            return true; }
+          if (isNaN(trSec)) {
+            error = true;
+            return true;
+          }
 
-          return trSec >= curSec - _config.trAvSec;
+          return trSec >= curSec - _config.trAvVal;
         })));
         if (error) return errHandle(ExError.parseError, null);
 
@@ -206,7 +292,7 @@ export function ExKraken(ConstrParam) {
       if (_config.trAvType === 'quantity') {
         var trArray = sRet.result[_config.pair];
 
-        var tmp = trArray.slice(-_config.trAvNum);
+        var tmp = trArray.slice(-_config.trAvVal);
 
 
         var meanArray = [];
@@ -255,52 +341,27 @@ export function ExKraken(ConstrParam) {
 
 
   this.getStatus = function() {
-    var sRet = _syncApiCall('Trades', { pair: _config.pair });
-    if (sRet.error !== ExError.ok) return sRet;
 
-    var trArray = sRet.result[_config.pair];
+    var cRet = _checkOrderFinished();
+    console.log(cRet)
+    if (cRet.error !== ExError.ok) return cRet;
 
-    _config.trAvNum = 7;
-    var tmp = trArray.slice(-_config.trAvNum);
-
-
-    var meanArray = [];
-    for (i in tmp) {
-      meanArray[i] = parseFloat(tmp[i][0]);
-      if (isNaN(meanArray[i])) return errHandle(ExError.parseError, null);
-    }
-
-    // _price = average(meanArray);
-
-    console.log(trArray)
-    console.log(tmp)
-
-    console.log(average(meanArray))
-      // console.log(trArray)
-      // console.log(meanArray)
-      // console.log(tmp)
-      // console.log(trArray.indexOf(tmp))
-      // console.log(curSec - _config.trAvSec)
-      // console.log(curSec)
-
-    // console.log(sRet.result.last)
-    // console.log(trArray[trArray.length - 1])
-    // var arr2 = trArray.slice(-5);
-    // console.log(trArray.length)
-    // console.log(arr2)
-
-
-    // console.log(trArray[trArray.length - 1])
-    // console.log(String(trArray[0][2]).length)
-    // console.log(new Date(parseInt(String(trArray[0][2]).split('.')[0]) * 1000))
-
-
+    if (cRet.result) _boughtNotifyFunc(this.getInstInfo());
 
     return errHandle(ExError.ok, null);
   }
 
 
+  // this.getInfo = function() {
+  //   return errHandle(ExError.ok, null);
+  // }
   this.getInfo = function() {
+    console.log(_cycFuncCallWrap(function() {
+      console.log('test');
+      Meteor._sleepForMs(1 * 1000);
+      return errHandle(ExError.ok, null);
+    }));
+
     return errHandle(ExError.ok, null);
   }
 
@@ -316,48 +377,19 @@ export function ExKraken(ConstrParam) {
 
 
   this.getActionPrice = function() {
-    if (!_config.hotMode) {
-      return errHandle(ExError.ok, _aPrice);
-    }
-    return errHandle(ExError.ok, 1);
+    return errHandle(ExError.ok, _aPrice);
   }
 
 
   this.buy = function(position) {
+    // this.buy = async function(position) {
     if (position === 'long') {
 
-      var tmp = _calcVolume();
-      if (tmp.error !== ExError.ok) return tmp;
-
-
-      if (!_config.hotMode) {
-        _aPrice = _price;
-        _volume = tmp.result;
-
-      } else {
-        tmp = Async.runSync(function(done) {
-          var order = {
-            // validate: true,
-            trading_agreement: 'agree',
-            pair: _config.pair,
-            ordertype: 'market',
-            volume: 0.05,
-            type: 'buy'
-          };
-
-          _kraken.api('AddOrder', order, function(error, data) {
-            if (error) {
-              console.log(error);
-              done(ExError.srvConError, null);
-            } else {
-              done(data.error, data.result);
-            }
-          });
-
-        });
-        console.log(tmp);
-      }
-      return errHandle(ExError.ok, null);
+      var cRet = _cycFuncCallWrap(function() {
+        return _calcVolume() });
+      if (cRet.error !== ExError.ok) return cRet;
+      console.log(cRet)
+        // var oRet = _setOrder('buy', _config.orderType, cRet.result, _price, false);
 
 
     } else if (position === 'short') {
@@ -379,56 +411,40 @@ export function ExKraken(ConstrParam) {
 
 
   this.sell = function(position) {
-    if (position === 'short') {
-      var tmp = _calcVolume();
-      if (tmp.error !== ExError.ok) return tmp;
+    if (position === 'long') {
 
 
-      if (!_config.hotMode) {
-        _aPrice = _price;
-        _volume = tmp.result;
-      } else {
 
-      }
-      return errHandle(ExError.ok, null);
+    } else if (position === 'short') {
 
-
-    } else if (position === 'long') {
-      if (!_config.hotMode) {
-        _volume = 0;
-        _aPrice = _price;
-
-        return errHandle(ExError.ok, null);
-      } else {
-
-        tmp = Async.runSync(function(done) {
-          var order = {
-            // validate: true,
-            trading_agreement: 'agree',
-            pair: _config.pair,
-            ordertype: 'market',
-            volume: 0.01,
-            type: 'sell'
-          };
-
-          _kraken.api('AddOrder', order, function(error, data) {
-            if (error) {
-              console.log(error);
-              done(ExError.srvConError, null);
-            } else {
-              done(data.error, data.result);
-            }
-          });
-
-        });
-        console.log(tmp);
-        return errHandle(ExError.ok, null);
-      }
     }
 
     /* wrong parameter */
     return errHandle(ExError.error, null);
+
   }
+
+  this.setBoughtNotifyFunc = function(boughtNotifyFunction) {
+    _boughtNotifyFunc = boughtNotifyFunction;
+  }
+
+  this.setSoldNotifyFunc = function(soldNotifyFunction) {
+      _soldNotifyFunc = soldNotifyFunction;
+    }
+    // this.bought = function() {
+    //   if (!_config.hotMode) return errHandle(ExError.ok, true);
+
+
+
+  //   return errHandle(ExError.notImpl, null);
+  // }
+
+
+  // this.sold = function() {
+  //   if (!_config.hotMode) return errHandle(ExError.ok, true);
+
+  //   return errHandle(ExError.notImpl, null);
+  // }
 
 
   this.getInstInfo = function() {
@@ -437,10 +453,7 @@ export function ExKraken(ConstrParam) {
 
 
   this.getVolume = function() {
-    if (!_config.hotMode) {
-      return errHandle(ExError.ok, _volume);
-    }
-    return errHandle(ExError.ok, 1);
+    return errHandle(ExError.ok, _volume);
   }
 
 
