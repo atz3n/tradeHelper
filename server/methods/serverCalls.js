@@ -4,14 +4,16 @@ import{ExKraken} from '../trading/exchanges/ExKraken.js';
 var exchange = {};
 
 
-var bFunc = function(instInfo){
+var bFunc = function(instInfo, errObject){
   console.log('bought');
   console.log(instInfo);
+  console.log(errObject);
 }
 
-var sFunc = function(instInfo){
+var sFunc = function(instInfo, errObject){
   console.log('sold');
   console.log(instInfo);
+  console.log(errObject);
 }
 
 

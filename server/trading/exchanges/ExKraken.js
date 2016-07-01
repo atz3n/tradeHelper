@@ -45,7 +45,8 @@ ExKraken.ConfigDefault = {
   trAvVal: 60,
   orderType: 'market', // market (buy/sell by market price), limit (buy/sell to given price)
   conErrorCycles: 3, // tries before an connection error will be returned
-  conErrorWaitTime: 3 // time to wait until a connection will be established again (in seconds)
+  conErrorWaitSec: 3, // time to wait until a connection will be established again (in seconds)
+  orderCheckWaitSec: 10
 }
 
 
@@ -120,6 +121,7 @@ export function ExKraken(ConstrParam) {
       });
     });
   }
+
 
   var _calcVolume = function() {
 
@@ -228,7 +230,7 @@ export function ExKraken(ConstrParam) {
       if (ret.error !== ExError.srvConError) break;
 
       if (i < _config.conErrorCycles - 1) {
-        Meteor._sleepForMs(_config.conErrorWaitTime * 1000);
+        Meteor._sleepForMs(_config.conErrorWaitSec * 1000);
       }
     }
     return ret;
@@ -386,10 +388,41 @@ export function ExKraken(ConstrParam) {
     if (position === 'long') {
 
       var cRet = _cycFuncCallWrap(function() {
-        return _calcVolume() });
-      if (cRet.error !== ExError.ok) return cRet;
-      console.log(cRet)
-        // var oRet = _setOrder('buy', _config.orderType, cRet.result, _price, false);
+        return _calcVolume();
+      });
+      if (cRet.error !== ExError.ok) {
+        _boughtNotifyFunc(this.getInstInfo(), cRet);
+        return;
+      }
+
+
+      var oRet = _cycFuncCallWrap(function() {
+        return _setOrder('buy', _config.orderType, cRet.result, _price, false);
+      });
+      if (oRet.error !== ExError.ok) {
+        _boughtNotifyFunc(this.getInstInfo(), oRet);
+        return;
+      }
+
+
+      Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
+
+
+      while (true) {
+        var coRet = _cycFuncCallWrap(function() {
+          return _checkOrderFinished();
+        });
+        if (coRet.error !== ExError.ok) {
+          _boughtNotifyFunc(this.getInstInfo(), coRet);
+          return;
+        }
+        if (coRet.result) {
+          _boughtNotifyFunc(this.getInstInfo(), coRet);
+          return;
+        }
+
+        Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
+      }
 
 
     } else if (position === 'short') {
@@ -421,30 +454,17 @@ export function ExKraken(ConstrParam) {
 
     /* wrong parameter */
     return errHandle(ExError.error, null);
-
   }
+
 
   this.setBoughtNotifyFunc = function(boughtNotifyFunction) {
     _boughtNotifyFunc = boughtNotifyFunction;
   }
 
+
   this.setSoldNotifyFunc = function(soldNotifyFunction) {
-      _soldNotifyFunc = soldNotifyFunction;
-    }
-    // this.bought = function() {
-    //   if (!_config.hotMode) return errHandle(ExError.ok, true);
-
-
-
-  //   return errHandle(ExError.notImpl, null);
-  // }
-
-
-  // this.sold = function() {
-  //   if (!_config.hotMode) return errHandle(ExError.ok, true);
-
-  //   return errHandle(ExError.notImpl, null);
-  // }
+    _soldNotifyFunc = soldNotifyFunction;
+  }
 
 
   this.getInstInfo = function() {
