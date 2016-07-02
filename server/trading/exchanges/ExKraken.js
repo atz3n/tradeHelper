@@ -1,23 +1,24 @@
 /**
  * @description:
- * <Description>
+ * Class for interacting with kraken.com exchange
  *
  * 
- * <Optional informations>
+ * This class implements the kraken.com api's and should be used to trade with this exchange
  *
  * 
  * @author Atzen
- * @version 1.0.0
+ * @version 0.1.0
  *
  * 
  * CHANGES:
- * 02-Jun-2015 : Initial version
+ * 02-July-2016 : Initial version
  */
 
 /***********************************************************************
   TODO: 
  ***********************************************************************/
 // - implementing partial order cancel handle
+// - implementing short mechanism
 
 
 import { IExchange } from '../../apis/IExchange.js';
@@ -32,6 +33,10 @@ var KrakenClient = Meteor.npmRequire('kraken-api'); // npm import
   Public Static Variable
  ***********************************************************************/
 
+/**
+ * Configuration structure
+ * @type {Object}
+ */
 ExKraken.ConfigDefault = {
   id: 'undefined',
   key: 'undefined',
@@ -58,9 +63,13 @@ ExKraken.ConfigDefault = {
   Public Static Function
  ***********************************************************************/
 
+/**
+ * Interface function (see IExchange.js for detail informations)
+ */
 ExKraken.getTradePairInfos = function() {
-  return Async.runSync(function(done) {
+  return Async.runSync(function(done) { // wraps asynchronous function call in synchronous call
 
+    /* get asset pair informations from kraken.com */
     new KrakenClient().api('AssetPairs', null, function(error, data) {
       if (error) done(ExError.srvConError, error);
       else done(ExError.ok, data.result);
@@ -87,18 +96,65 @@ export function ExKraken(ConstrParam) {
     Private Instance Variable
    ***********************************************************************/
 
+  /**
+   * Internal configuration object
+   * @type {Object}
+   */
   var _config = Object.assign({}, ExKraken.ConfigDefault);
+
+  /**
+   * Security pair units
+   * @type {Object}
+   */
   var _pairUnits = { base: 'none', quote: 'none' };
+
+  /**
+   * Calculated actual average price
+   * @type {Number}
+   */
   var _price = 0;
+
+  /**
+   * Real bought/sold price
+   * @type {Number}
+   */
   var _aPrice = 0;
+
+  /**
+   * Traded volume of base security
+   * @type {Number}
+   */
   var _volume = 0;
+
+  /**
+   * Determines the decimal places of a calculated volume
+   * @type {Number}
+   */
   var _cropFactor = 6;
+
+  /**
+   * Holds the placed order id
+   * @type {String}
+   */
   var _orderId = '';
 
+  /**
+   * Kraken api class instance
+   * @type {Object}
+   */
   var _kraken = {};
 
+  /**
+   * Bought notification callback function
+   * @type {Function}
+   */
   var _boughtNotifyFunc = function() {};
-  var _soldNotifyFunc = function() {};
+
+  /**
+   * Sold notification callback function
+   * @type {Function}
+   */
+  var _soldNotifyFunc = function() {}; // sold notification function
 
 
   /***********************************************************************
@@ -109,6 +165,12 @@ export function ExKraken(ConstrParam) {
     Private Instance Function
    ***********************************************************************/
 
+  /**
+   * Kraken api call wrapper to achieve synchronous api calls
+   * @param  {String} method kraken api's method parameter
+   * @param  {Object} params krakn api's params object
+   * @return {Object}        obj.error: ExError error, obj.result: api data object or error message (in case of ExError != ExError.ok)
+   */
   var _syncApiCall = function(method, params) {
     return Async.runSync(function(done) {
       _kraken.api(method, params, function(error, data) {

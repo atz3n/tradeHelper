@@ -23,7 +23,7 @@ export function IExchange() {};
  ***********************************************************************/
 
 /**
- * returns tradeable security pairs
+ * returns tradeable security pairs and additional informations
  * @return {Object} obj.error: ExError error, obj.result: security pairs or error message (in case of ExError != ExError.ok)
  */
 getTradePairInfos = function() {
