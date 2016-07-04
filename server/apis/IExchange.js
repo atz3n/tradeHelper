@@ -188,6 +188,7 @@ IExchange.prototype.setBoughtNotifyFunc = function(boughtNotifyFunction) {
  *   errObject {object} contains obj.error: ExError and obj.result: error message (if ExError != ExError.ok)
  *   
  * @param {function} soldNotifyFunction the notification function
+ * @return {Object} obj.error: ExError, obj.result: null or error message
  */
 IExchange.prototype.setSoldNotifyFunc = function(soldNotifyFunction) {
   throw new Error('This method must be overwritten!');

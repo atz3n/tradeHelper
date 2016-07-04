@@ -760,6 +760,7 @@ export function ExKraken(ConstrParam) {
    */
   this.setBoughtNotifyFunc = function(boughtNotifyFunction) {
     _boughtNotifyFunc = boughtNotifyFunction;
+    return errHandle(ExError.ok, null);
   }
 
 
@@ -768,6 +769,7 @@ export function ExKraken(ConstrParam) {
    */
   this.setSoldNotifyFunc = function(soldNotifyFunction) {
     _soldNotifyFunc = soldNotifyFunction;
+    return errHandle(ExError.ok, null);
   }
 
 
