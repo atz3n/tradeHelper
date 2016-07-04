@@ -6,6 +6,11 @@
   <input type="radio" name="orderType" value="limit">limit
   <br>
 
+  <br> balance:
+  <input type="radio" name="balanceType" value="krakenBalance">krankenBalance
+  <input type="radio" name="balanceType" value="ownBalance">ownBalance
+  <form class='input'> <input type="text" name="oBalanceAmount" placeholder="set value" /> </form>
+
   <br> qAmount:
   <input type="radio" name="qAmountType" value="value">value
   <input type="radio" name="qAmountType" value="percentage">percentage
@@ -41,10 +46,11 @@
   <button name="getPairUnitsButton">getPairUnits</button>
   <button name="getVolumeButton">getVolume</button>
   <button name="getPriceButton">getPrice</button>
-  <button name="getActionPriceButton">getActionPrice</button>
+  <button name="getTradePriceButton">getTradePrice</button>
   <button name="updateButton">update</button>
-  <button name="sellButton">sell</button>
   <button name="buyButton">buy</button>
+  <button name="sellButton">sell</button>
+  <button name="stopTradeButton">stopTrade</button>
   <button name="getInstInfoButton">getInstInfo</button>
   <button name="getTradePairInfosButton">getTradePairInfos</button>
   <br>

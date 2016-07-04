@@ -100,10 +100,10 @@ Template.body.events({
       });
 
 
-      /*++++++++++ getActionPriceButton ++++++++++*/
+      /*++++++++++ getTradePriceButton ++++++++++*/
     } else if ($(event.target).prop("name") == "getActionPriceButton") {
 
-      Meteor.call('getActionPrice', function(error, result) {
+      Meteor.call('getTradePrice', function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
         else pageSession.set('info', JSON.stringify(result));
       });
@@ -131,6 +131,15 @@ Template.body.events({
     } else if ($(event.target).prop("name") == "buyButton") {
 
       Meteor.call('buy', function(error, result) {
+        if (error) pageSession.set('error', JSON.stringify(error));
+        else pageSession.set('info', JSON.stringify(result));
+      });
+
+
+      /*++++++++++ stopTradeButton ++++++++++*/
+    } else if ($(event.target).prop("name") == "stopTradeButton") {
+
+      Meteor.call('stopTrade', function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
         else pageSession.set('info', JSON.stringify(result));
       });
@@ -201,6 +210,14 @@ Template.body.events({
         event.target.orderCheckWaitSec.value = config.orderCheckWaitSec;
       }, 200);
     }
+
+    if (event.target.oBalanceAmount) {
+      config.oBalanceAmount = event.target.oBalanceAmount.value;
+      event.target.oBalanceAmount.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.oBalanceAmount.value = config.oBalanceAmount;
+      }, 200);
+    }
   },
 
   'click input': function(event) {
@@ -223,6 +240,10 @@ Template.body.events({
 
     if ($(event.target).prop("name") == "trAvType") {
       config.trAvType = $(event.target).prop("value");
+    }
+
+    if ($(event.target).prop("name") == "balanceType") {
+      config.balanceType = $(event.target).prop("value");
     }
   }
 });

@@ -112,7 +112,7 @@ IExchange.prototype.getPrice = function() {
  * Returns bought/sold price
  * @return {Object} obj.error: ExError, obj.result: price
  */
-IExchange.prototype.getActionPrice = function() {
+IExchange.prototype.getTradePrice = function() {
   throw new Error('This method must be overwritten!');
 }
 
@@ -142,6 +142,15 @@ IExchange.prototype.sell = async function(position) {
  * @return {none}          no return, uses <boughtNotifyFunction> (see setBoughtNotifyFunc())
  */
 IExchange.prototype.buy = async function(position) {
+  throw new Error('This method must be overwritten!');
+}
+
+
+/**
+ * Stops the current buy or sell process
+ * @return {Object} obj.error: ExError, obj.result: null or error message
+ */
+IExchange.prototype.stopTrade = function() {
   throw new Error('This method must be overwritten!');
 }
 

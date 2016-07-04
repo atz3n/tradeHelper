@@ -9,7 +9,7 @@ var bFunc = function(instInfo, errObject){
   console.log(instInfo);
   console.log(errObject);
   console.log('vol: ' + exchange.getVolume().result);
-  console.log('aPrice: ' + exchange.getActionPrice().result);
+  console.log('tPrice: ' + exchange.getTradePrice().result);
 }
 
 var sFunc = function(instInfo, errObject){
@@ -17,7 +17,7 @@ var sFunc = function(instInfo, errObject){
   console.log(instInfo);
   console.log(errObject);
   console.log('vol: ' + exchange.getVolume().result);
-  console.log('aPrice: ' + exchange.getActionPrice().result);
+  console.log('tPrice: ' + exchange.getTradePrice().result);
 }
 
 
@@ -69,8 +69,8 @@ Meteor.methods({
     return exchange.getPrice();
   },
 
-  getActionPrice: function(){
-    console.log('getActionPrice')
+  getTradePrice: function(){
+    console.log('getTradePrice')
     return exchange.getActionPrice();
   },
 
@@ -87,6 +87,11 @@ Meteor.methods({
   buy: function(){
     console.log('buy');
     return exchange.buy('long');
+  },
+
+  stopTrade: function(){
+    console.log('stopTrade');
+    return exchange.stopTrade();
   },
 
   getInstInfo: function(){

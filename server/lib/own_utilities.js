@@ -54,5 +54,19 @@ this.getStrategyObject = function(strategyId) {
  * @return {object} object that contains an error and result object
  */
 this.errHandle = function(error, result) {
-  return {error: error, result: result};
+  return { error: error, result: result };
+}
+
+
+/**
+ * Merges two Objects where properties of object1 will be overwritten if they have the same name
+ * @param  {Object} object1 an Object
+ * @param  {Object} object2 another Object
+ * @return {Object}         merged Object
+ */
+this.mergeObjects = function(object1, object2) {
+  var tmp = {};
+  for (var attrname in object1) { tmp[attrname] = object1[attrname]; }
+  for (var attrname in object2) { tmp[attrname] = object2[attrname]; }
+  return tmp;
 }
