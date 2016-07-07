@@ -12,13 +12,14 @@
  *
  * 
  * @author Atzen
- * @version 1.0.1
+ * @version 1.0.2
  *
  * 
  * CHANGES:
  * 12-Apr-2016 : Initial version
  * 16-Apr-2016 : added '_' prefix to private statements
  * 24-May-2016 : added possibility to forward parameters to callback function
+ * 05-July-2016 : added undefined check in schedules functions
  */
 
 import { InstHandler } from './InstHandler.js';
@@ -51,7 +52,7 @@ var _schedules = new InstHandler();
  * Allows to configure the underlying SyncedCron system
  * @param {Object} config parameter of SyncedCron.config function
  */
-SchM.setSyncedCronConfig = function(config){
+SchM.setSyncedCronConfig = function(config) {
   SyncedCron.config(config);
 }
 
@@ -90,12 +91,12 @@ SchM.stopSchedules = function() {
 SchM.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
   /* check error */
   var tmp = later.parse.text(time);
-  if(tmp.error != -1) return false;
-  
+  if (tmp.error != -1) return false;
+
   _schedules.setObject(id, new Schedule());
   _schedules.getObject(id).createSchedule(id, time, cyclicFunction, cyclicFunctionParam);
-  
-  return true; 
+
+  return true;
 }
 
 
@@ -104,8 +105,10 @@ SchM.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
  * @param  {string} id id of schedule
  */
 SchM.removeSchedule = function(id) {
-  _schedules.getObject(id).stop();
-  _schedules.removeObject(id);
+  if (_schedules.getObject(id) !== 'undefined') {
+    _schedules.getObject(id).stop();
+    _schedules.removeObject(id);
+  }
 }
 
 
@@ -114,7 +117,9 @@ SchM.removeSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.stopSchedule = function(id) {
-  _schedules.getObject(id).stop();
+  if (_schedules.getObject(id) !== 'undefined') {
+    _schedules.getObject(id).stop();
+  }
 }
 
 
@@ -123,7 +128,9 @@ SchM.stopSchedule = function(id) {
  * @param  {string} id id of schedule
  */
 SchM.restartSchedule = function(id) {
-  _schedules.getObject(id).restart();
+  if (_schedules.getObject(id) !== 'undefined') {
+    _schedules.getObject(id).restart();
+  }
 }
 
 
@@ -133,8 +140,10 @@ SchM.restartSchedule = function(id) {
  * @param {string} time schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  */
 SchM.setScheduleTime = function(id, time) {
-  _schedules.getObject(id).setTime(time);
-}   
+  if (_schedules.getObject(id) !== 'undefined') {
+    _schedules.getObject(id).setTime(time);
+  }
+}
 
 
 /***********************************************************************
@@ -179,7 +188,7 @@ function Schedule() {
    * Variable containing the callback function
    * @type {Function}
    */
-  var _cycFunc = function(){};
+  var _cycFunc = function() {};
 
   /**
    * Variable containing the schedule parameters
@@ -211,7 +220,7 @@ function Schedule() {
       schedule: function(parser) {
         return parser.text(_cycFuncParams._time) // set schedule time
       },
-      
+
       job: function() {
         _cycFunc(_cycFuncParams._param); // set callback function
       }

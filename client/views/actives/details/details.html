@@ -190,14 +190,28 @@
       <hr />
       <div class="form-group">
         <div class="submit-div col-sm-9">
+        {{#if $eq activeData.state 'buying'}}
+          <button id="form-buy-button" class="btn btn-danger" type="submit">
+            <span class="fa fa-arrow-circle-down">
+            </span> Cancel
+          </button>
+          {{else}}
           <button id="form-buy-button" class="btn btn-info" type="submit">
             <span class="fa fa-arrow-circle-down">
             </span> Buy
           </button>
+          {{/if}}
+          {{#if $eq activeData.state 'selling'}}
+          <button id="form-sell-button" class="btn btn-danger" type="submit">
+            <span class="fa fa-arrow-circle-down">
+            </span> Cancel
+          </button>
+          {{else}}
           <button id="form-sell-button" class="btn btn-info" type="submit">
             <span class="fa fa-arrow-circle-up">
             </span> Sell
           </button>
+          {{/if}}
         </div>
       </div>
       <div class="form-group">
@@ -350,10 +364,10 @@
               <br> {{costCur}}
             </td>
           </tr>
-          {{#each arrayify info}}
+          {{#each info.result}}
           <tr class="crud-table-row">
             <td>
-              {{name}}:
+              {{title}}:
               <br> {{value}}
             </td>
           </tr>

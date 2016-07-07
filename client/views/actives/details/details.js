@@ -463,29 +463,58 @@ Template.ActivesDetailsDetailsForm.events({
     e.preventDefault();
     var strId = this.params.strategyId;
     
-    if(this.active_data.position !== 'long'){
-      bootbox.dialog({
-        message: "Buy? Are you sure?",
-        title: "Buy",
-        animate: false,
-        buttons: {
-          success: {
-            label: "Yes",
-            className: "btn-success",
-            callback: function() {
-              Meteor.call('strategyBuy', strId, function(e, r) {
-                if (e) console.log(e);
-              });
+    if (this.active_data.position !== 'long') {
+      if (this.active_data.state === 'buying') {
+        bootbox.dialog({
+          message: "Stop? Are you sure?",
+          title: "Stop Buying",
+          animate: false,
+          buttons: {
+            success: {
+              label: "Yes",
+              className: "btn-success",
+              callback: function() {
+                Meteor.call('strategyStopTrade', strId, function(e, r) {
+                  if (e) console.log(e);
+                });
+              }
+            },
+            danger: {
+              label: "No",
+              className: "btn-default"
             }
-          },
-          danger: {
-            label: "No",
-            className: "btn-default"
           }
-        }
-      });
+        });
+      }
+      else if(this.active_data.state !== 'selling')
+      {
+        bootbox.dialog({
+          message: "Buy? Are you sure?",
+          title: "Buy",
+          animate: false,
+          buttons: {
+            success: {
+              label: "Yes",
+              className: "btn-success",
+              callback: function() {
+                Meteor.call('strategyBuy', strId, function(e, r) {
+                  if (e) console.log(e);
+                });
+              }
+            },
+            danger: {
+              label: "No",
+              className: "btn-default"
+            }
+          }
+        });
+      }
+      else
+      {
+        bootbox.alert('Cannot buy while selling!');
+      }
     } else {
-      bootbox.alert('Already bought!')
+      bootbox.alert('Already bought!');
     }
   },
   "click #form-sell-button": function(e, t) {
@@ -493,26 +522,55 @@ Template.ActivesDetailsDetailsForm.events({
     var strId = this.params.strategyId;
     
     if(this.active_data.position !== 'short'){
-      bootbox.dialog({
-        message: "Sell? Are you sure?",
-        title: "Sell",
-        animate: false,
-        buttons: {
-          success: {
-            label: "Yes",
-            className: "btn-success",
-            callback: function() {
-              Meteor.call('strategySell', strId, function(e, r) {
-                if (e) console.log(e);
-              });
+      if (this.active_data.state === 'selling') {
+        bootbox.dialog({
+          message: "Stop? Are you sure?",
+          title: "Stop Selling",
+          animate: false,
+          buttons: {
+            success: {
+              label: "Yes",
+              className: "btn-success",
+              callback: function() {
+                Meteor.call('strategyStopTrade', strId, function(e, r) {
+                  if (e) console.log(e);
+                });
+              }
+            },
+            danger: {
+              label: "No",
+              className: "btn-default"
             }
-          },
-          danger: {
-            label: "No",
-            className: "btn-default"
           }
-        }
-      });
+        });
+      }
+      else if(this.active_data.state !== 'buying')
+      {
+        bootbox.dialog({
+          message: "Sell? Are you sure?",
+          title: "Sell",
+          animate: false,
+          buttons: {
+            success: {
+              label: "Yes",
+              className: "btn-success",
+              callback: function() {
+                Meteor.call('strategySell', strId, function(e, r) {
+                  if (e) console.log(e);
+                });
+              }
+            },
+            danger: {
+              label: "No",
+              className: "btn-default"
+            }
+          }
+        });
+      }
+      else
+      {
+        bootbox.alert('Cannot sell while buying!');
+      }
     } else {
       bootbox.alert('Already sold!')
     }

@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 1.3.0
+ * @version 1.4.0
  *
  * 
  * CHANGES:
@@ -23,6 +23,7 @@
  * 08-May-2016 : changed for loop variable declaration
  * 10-May-2016 : added getObjectId function
  *               added getObjectArray function
+ * 05-Jul-2016 : added getObjectIdx function
  */
 
 
@@ -147,23 +148,38 @@ export function InstHandler() {
 
 
   /**
-   * returns an object
-   * @param  {string} id id of object which should be returned
-   * @return {Object}    object which should be returned (returns 'undefined' if not found)
+   * Returns the Index of an Object
+   * @param  {string} id id of Object which should be returned
+   * @return {Number}    Index of internal array containing this object
    */
-  this.getObject = function(id) {
+  this.getObjectIdx = function(id) {
     var found = false;
-
-    /* get element index of object */
     var idx = _objArray.findIndex(function(element, index, array) {
       if (element['id'] === id) {
         found = true;
         return true;
       }
     });
+    if (found === true) {
+      return idx;
+    }
+
+    return 'undefined';
+  }
+
+
+  /**
+   * returns an object
+   * @param  {string} id id of object which should be returned
+   * @return {Object}    object which should be returned (returns 'undefined' if not found)
+   */
+  this.getObject = function(id) {
+
+    /* get element index of object */
+    var idx = this.getObjectIdx(id);
 
     /* return object */
-    if (found === true) {
+    if (idx !== 'undefined') {
       return _objArray[idx]['obj'];
     }
 
@@ -185,11 +201,11 @@ export function InstHandler() {
   }
 
 
-/**
- * returns the id of an object selected by its index
- * @param  {integer} idx of object whichs id should be returned
- * @return {string}     id of found object
- */
+  /**
+   * returns the id of an object selected by its index
+   * @param  {integer} idx of object whichs id should be returned
+   * @return {string}     id of found object
+   */
   this.getObjectId = function(idx) {
     if (typeof _objArray[idx] === 'undefined') {
       return 'undefined';

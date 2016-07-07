@@ -39,36 +39,26 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-quote-amount">
-				<label for="quoteAmount">
-					Simulated Amount of Quote Value to trade with
+			<div class="form-group  field-trade-pair">
+				<label for="tradePair">
+					Security Pair
 				</label>
 				<div class="input-div">
-					<input type="text" name="quoteAmount" value="{{ex_test_data.quoteAmount}}" class="form-control " required="required" data-type="float">
+					<select class="form-control" name="tradePair" data-type="string" required="required">
+						<option value="none" {{optionIsSelected ex_test_data.tradePair "none"}}>							None</option>
+					</select>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-base">
-				<label for="base">
-					Base Unit
+			<div class="form-group  field-balance-amount">
+				<label for="balanceAmount">
+					Simulated balance amount to trade with
 				</label>
 				<div class="input-div">
-					<input type="text" name="base" value="{{ex_test_data.base}}" class="form-control " data-type="string">
-					<span id="help-text" class="help-block">
-					</span>
-					<span id="error-text" class="help-block">
-					</span>
-				</div>
-			</div>
-			<div class="form-group  field-quote">
-				<label for="quote">
-					Quote Unit
-				</label>
-				<div class="input-div">
-					<input type="text" name="quote" value="{{ex_test_data.quote}}" class="form-control " data-type="string">
+					<input type="text" name="balanceAmount" value="{{ex_test_data.balanceAmount}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -80,7 +70,7 @@
 					Gain (multiplier)
 				</label>
 				<div class="input-div">
-					<input type="text" name="gain" value="{{ex_test_data.gain}}" class="form-control " required="required" data-type="float">
+					<input type="text" name="gain" value="{{ex_test_data.gain}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -92,7 +82,7 @@
 					Offset
 				</label>
 				<div class="input-div">
-					<input type="text" name="offset" value="{{ex_test_data.offset}}" class="form-control " required="required" data-type="float">
+					<input type="text" name="offset" value="{{ex_test_data.offset}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -104,7 +94,7 @@
 					Start Value (counter starts with this value)
 				</label>
 				<div class="input-div">
-					<input type="text" name="startVal" value="{{ex_test_data.startVal}}" class="form-control " required="required" data-type="float">
+					<input type="text" name="startVal" value="{{ex_test_data.startVal}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -116,7 +106,19 @@
 					Step Width (counter inscreases by this value each time)
 				</label>
 				<div class="input-div">
-					<input type="text" name="stepWidth" value="{{ex_test_data.stepWidth}}" class="form-control " required="required" data-type="integer">
+					<input type="text" name="stepWidth" value="{{ex_test_data.stepWidth}}" class="form-control" required="required" data-type="integer">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-trade-delay-sec">
+				<label for="tradeDelaySec">
+					Simulated time for a trade (buying/selling)
+				</label>
+				<div class="input-div">
+					<input type="text" name="tradeDelaySec" value="{{ex_test_data.tradeDelaySec}}" class="form-control" required="required" data-type="integer">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -130,13 +132,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="Sinus" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "Sinus"}}>
+							<input type="radio" value="sinus" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "sinus"}}>
 							Sinus
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Data" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "Data"}}>
+							<input type="radio" value="data" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "data"}}>
 							Data
 						</label>
 					</div>
@@ -151,7 +153,7 @@
 					Data
 				</label>
 				<div class="input-div">
-					<textarea class="form-control " name="data">{{ex_test_data.data}}</textarea>
+					<textarea class="form-control" name="data">{{ex_test_data.data}}</textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

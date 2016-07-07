@@ -1,0 +1,41 @@
+ID: 0x000
+Exchange API setConfig() returned an error
+
+ID: 0x001
+Exchange API getConfig() returned an error
+
+ID: 0x002
+Exchange API getPrice() returned an error
+
+ID: 0x003
+Exchange API getInfo() returned an error
+
+ID: 0x004
+Exchange API update() returned an error
+
+ID: 0x005
+Exchange API getInstInfo() returned an error
+
+ID: 0x006
+Exchange API getPairUnits() returned an error
+
+ID: 0x007
+Exchange API getTradePrice() returned an error
+
+ID: 0x008
+Exchange API getVolume() returned an error
+
+ID: 0x009
+Exchange API setBoughtNotifyFunc() returned an error
+
+ID: 0x00A
+Exchange API setSoldNotifyFunc() returned an error
+
+ID: 0x00B
+Exchange callback boughtNotifyFunction() returned an error
+
+ID: 0x00C
+Exchange callback soldNotifyFunction() returned an error
+
+ID: 0x00D
+Exchange API stopTrade() returned an error

@@ -2,74 +2,12 @@ import { SchM } from './lib/SchM.js';
 
 var verifyEmail = false;
 
-
-var deactivateStrategies = function(){
-  Strategies.find().forEach(function(item) {
-	  var strId = item._id;
-	  
-	  /* strategy */
-	  var strategy = Strategies.findOne({ _id: strId });
-	  Strategies.update({ _id: strId }, { $set: { active: false } });
-	  Strategies.update({ _id: strId }, { $set: { paused: false } });
-
-	  /* plugin bundles */
-	  var bundles = strategy.pluginBundles;
-	  for (i in bundles) {
-
-	    bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
-	    PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: 0 } });
-
-
-	    /* bundle plugins */
-	    var bundlePlugins = bundles[i].bundlePlugins;
-	    for (j in bundlePlugins) {
-
-
-	      /* PlSwing */
-	      var plugin = PlSwings.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
-	      if (typeof plugin !== "undefined") {
-	        PlSwings.update({ _id: plugin._id }, { $set: { actives: 0 } });
-	      }
-
-	      /* PlDummy */
-	      if (typeof plugin === "undefined") {
-	        plugin = PlDummys.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
-	        if (typeof plugin !== "undefined") {
-	          PlDummys.update({ _id: plugin._id }, { $set: { actives: 0 } });
-	        }
-	      }
-
-
-	      /* exchanges */
-	      var exchange = plugin.exchange;
-	      if (typeof exchange !== "undefined") {
-
-
-	        /* ExKraken */
-	        var tempEx = ExKrakens.find({ _id: exchange }).fetch()[0];
-	        if (typeof tempEx !== "undefined") {
-	          ExKrakens.update({ _id: tempEx._id }, { $set: { actives: 0 } });
-	        }
-
-	        /* ExTestDatas */
-	        if (typeof tempEx === "undefined") {
-	          tempEx = ExTestDatas.find({ _id: exchange }).fetch()[0];
-	          if (typeof tempEx !== "undefined") {
-	            ExTestDatas.update({ _id: tempEx._id }, { $set: { actives: 0 } });
-	          }
-	        }
-	      }
-	    }
-	  }
-  });	
-}
-
-
 Accounts.config({ sendVerificationEmail: verifyEmail });
 
 Meteor.startup(function() {
 
 deactivateStrategies();
+getExTradePairInfos();
 
 	// read environment variables from Meteor.settings
 	if(Meteor.settings && Meteor.settings.env && _.isObject(Meteor.settings.env)) {

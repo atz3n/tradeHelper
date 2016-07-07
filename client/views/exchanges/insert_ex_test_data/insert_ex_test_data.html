@@ -39,36 +39,26 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-quote-amount">
-				<label for="quoteAmount">
-					Simulated Amount of Quote Value to trade with
+			<div class="form-group  field-trade-pair">
+				<label for="tradePair">
+					Security Pair
 				</label>
 				<div class="input-div">
-					<input type="text" name="quoteAmount" value="100" class="form-control " required="required" data-type="float">
+					<select class="form-control" name="tradePair" data-type="string" required="required">
+						<option value="none" selected>							None</option>
+					</select>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
 					</span>
 				</div>
 			</div>
-			<div class="form-group  field-base">
-				<label for="base">
-					Base Unit
+			<div class="form-group  field-balance-amount">
+				<label for="balanceAmount">
+					Simulated balance amount to trade with
 				</label>
 				<div class="input-div">
-					<input type="text" name="base" value="b" class="form-control" data-type="string">
-					<span id="help-text" class="help-block">
-					</span>
-					<span id="error-text" class="help-block">
-					</span>
-				</div>
-			</div>
-			<div class="form-group  field-quote">
-				<label for="quote">
-					Quote Unit
-				</label>
-				<div class="input-div">
-					<input type="text" name="quote" value="q" class="form-control" data-type="string">
+					<input type="text" name="balanceAmount" value="100" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -123,6 +113,18 @@
 					</span>
 				</div>
 			</div>
+			<div class="form-group  field-trade-delay-sec">
+				<label for="tradeDelaySec">
+					Simulated time for a trade (buying/selling)
+				</label>
+				<div class="input-div">
+					<input type="text" name="tradeDelaySec" value="3" class="form-control" required="required" data-type="integer">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
 			<div class="form-group  field-price-type">
 				<label for="priceType">
 					Price Type
@@ -130,13 +132,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="Sinus" name="priceType" data-type="string" checked>
+							<input type="radio" value="sinus" name="priceType" data-type="string" checked>
 							Sinus
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="Data" name="priceType" data-type="string">
+							<input type="radio" value="data" name="priceType" data-type="string">
 							Data
 						</label>
 					</div>

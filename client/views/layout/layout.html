@@ -6,6 +6,7 @@
 </head>
 <template name="layout">
   {{#if currentUser}} {{> PrivateLayout}} {{else}} {{> PublicLayout}} {{/if}}
+  {{> sAlert}}
 </template>
 <template name="FreeLayout">
   <div id="content" class="sticky-wrapper">

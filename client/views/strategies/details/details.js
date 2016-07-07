@@ -126,11 +126,13 @@ Template.StrategiesDetailsDetailsForm.events({
 	
     if (!Strategies.findOne({ _id: strId }).active) {
       Meteor.call('strategyStart', strId, function(e, r) {
-        if (e) console.log(e);
-        else if (r) {
+        if (e) {
+        	console.log(e);
+        	sAlert.error('Server connection failed');
+        } else if (r.error) {
+        	sAlert.error(r.result);
+        } else{
           setActiveState(strId, true);
-          // Strategies.update({ _id: strId }, { $set: { active: true } });
-          // Strategies.update({ _id: strId }, { $set: { paused: false } });
         }
       });
     }

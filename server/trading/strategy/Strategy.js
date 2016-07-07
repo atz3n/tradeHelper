@@ -30,6 +30,16 @@ import { SchM } from '../../lib/SchM.js';
   Public Static Variable
  ***********************************************************************/
 
+StrError = {
+  ok: 'OK',
+  ExConfigError: 'EXCHANGE_CONFIG_ERROR',
+  PlConfigError: 'PLUGIN_CONFIG_ERROR',
+  error: 'ERROR',
+  notFound: 'STRATEGY_NOT_FOUND',
+  errCode: 'ERROR_CODE'
+}
+
+
 /***********************************************************************
   Private Static Function
  ***********************************************************************/
@@ -62,10 +72,13 @@ export function Strategy(strategyDescription) {
   var _notifyMaskedValues = new Array();
 
   var _notifyFunc = function() {};
+  var _errorFunc = function() {};
 
-  var _action = '';
+  var _exTrading = [];
 
   var _lastPosition = 'none';
+
+  var _constrError = errHandle(StrError.ok, null);
 
   var _numOfChartData = 60;
   var _data = {
@@ -94,44 +107,71 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function(fullUpdate) {
-    _callNotifyFunc = false;
+    if (_checkExsNotInTrade()) {
+
+      _callNotifyFunc = false;
 
 
-    if (fullUpdate) _clearNotifyValues();
+      if (fullUpdate) _clearNotifyValues();
 
-    if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
-    _data.curTime.push(new Date);
+      if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
+      _data.curTime.push(new Date);
 
-    for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
-      var tmp = _exchanges.getObjectByIdx(i);
-      if (fullUpdate) tmp.update();
+      for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
+        var tmp = _exchanges.getObjectByIdx(i);
+        if (fullUpdate) {
+          if (tmp.update().error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x004'))
+          }
+        }
 
-      if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
-      _data.exchanges[i].price.push(tmp.getPrice());
-      _data.exchanges[i].info = tmp.getInfo();
+        if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
+
+        var pTmp = tmp.getPrice();
+        if (pTmp.error !== ExError.ok) {
+          _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x002'));
+          if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
+          else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+        }
+        _data.exchanges[i].price.push(pTmp.result);
+
+        var iTmp = tmp.getInfo();
+        if (iTmp.error !== ExError.ok) {
+          _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x003'));
+          iTmp.result = [];
+        }
+        _data.exchanges[i].info = iTmp;
+      }
+
+      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+        var tmp = _plugins.getObjectByIdx(i);
+        if (fullUpdate) {
+          var pTmp = _exchanges.getObject(tmp.exId).getPrice();
+          if (pTmp.error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x002'));
+            pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          }
+          tmp.inst.update(pTmp.result);
+        }
+
+        _data.plugins[i].state = tmp.inst.getState();
+        _data.plugins[i].info = tmp.inst.getInfo();
+      }
+
+      if (fullUpdate) _evalNotifyValues();
+
+      _updateActiveData();
+
+      if (_callNotifyFunc) {
+        _notifyFunc(notifyParam);
+      }
+
+      if (_lastPosition !== 'none' && _data.position === 'none') {
+        _updateHistory();
+      }
+
+      _lastPosition = _data.position;
     }
-
-    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-      var tmp = _plugins.getObjectByIdx(i);
-      if (fullUpdate) tmp.inst.update(_exchanges.getObject(tmp.exId).getPrice());
-
-      _data.plugins[i].state = tmp.inst.getState();
-      _data.plugins[i].info = tmp.inst.getInfo();
-    }
-
-    if (fullUpdate) _evalNotifyValues();
-
-    _updateActiveData();
-
-    if (_callNotifyFunc) {
-      _notifyFunc(notifyParam);
-    }
-
-    if (_lastPosition !== 'none' && _data.position === 'none') {
-      _updateHistory();
-    }
-
-    _lastPosition = _data.position;
   }
 
 
@@ -182,7 +222,14 @@ export function Strategy(strategyDescription) {
       tmp.exchanges[i].outPrice = _data.exchanges[i].outPrice;
       tmp.exchanges[i].outTime = _data.exchanges[i].outTime;
       tmp.exchanges[i].volume = _data.exchanges[i].volume;
-      tmp.exchanges[i].config = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
+
+      var ret = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
+      if (ret.error !== ExError.ok) {
+        _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x001'));
+        ret = {};
+      }
+
+      tmp.exchanges[i].config = ret;
     }
 
     Histories.insert(tmp);
@@ -270,88 +317,209 @@ export function Strategy(strategyDescription) {
 
 
   var _buyFunction = function() {
-    console.log('buying');
+    // console.log('buying');
     if (_data.position !== 'long') {
+      _data.state = 'buying';
+      _updateActiveData();
 
-      if (_data.position === 'none') _data.inTime = new Date();
-      if (_data.position === 'short') _data.outTime = new Date();
+      for (i in _exTrading) _exTrading[i].trading = true;
+
+      if (_data.position === 'none') {
+        for (i in _exTrading) _exTrading[i].error = false;
+      }
 
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
-        tmp.buy();
 
-        if (_data.position === 'none') {
-          _data.exchanges[i].inPrice = tmp.getActionPrice();
-          _data.exchanges[i].volume = tmp.getVolume();
-        }
-
-        if (_data.position === 'short') {
-          _data.exchanges[i].outPrice = tmp.getActionPrice();
-        }
+        if (_exTrading[i].error) _exTrading[i].trading = false;
+        else tmp.buy(_data.position);
       }
-
-
-      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-        var tmp = _plugins.getObjectByIdx(i);
-
-        tmp.inst.bought(_exchanges.getObject(tmp.exId).getActionPrice());
-      }
-
-      if (_data.position === 'none') {
-        _data.position = 'long';
-        _data.state = 'in';
-      }
-
-      if (_data.position === 'short') {
-        _data.position = 'none';
-        _data.state = 'out';
-      }
-
-      // _updateFunc(false);
     }
   }
 
 
   var _sellFunction = function() {
-    console.log('selling');
+    // console.log('selling');
     if (_data.position !== 'short') {
+      _data.state = 'selling';
+      _updateActiveData();
 
-      if (_data.position === 'none') _data.inTime = new Date();
-      if (_data.position === 'long') _data.outTime = new Date();
+
+      for (i in _exTrading) _exTrading[i].trading = true;
+
+      if (_data.position === 'none') {
+        for (i in _exTrading) _exTrading[i].error = false;
+      }
 
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
-        tmp.sell();
 
-        if (_data.position === 'none') {
-          _data.exchanges[i].inPrice = tmp.getActionPrice();
-          _data.exchanges[i].volume = tmp.getVolume();
-        }
-
-        if (_data.position === 'long') {
-          _data.exchanges[i].outPrice = tmp.getActionPrice();
-        }
+        if (_exTrading[i].error) _exTrading[i].trading = false;
+        else tmp.sell(_data.position);
       }
+    }
+  }
 
+  var _exBoughtNotifyFunc = function(instInfo, errObject) {
+    // console.log('boughtFunc')
+    var idx = _exchanges.getObjectIdx(instInfo.id);
 
-      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-        var tmp = _plugins.getObjectByIdx(i);
+    _exTrading[idx].trading = false;
 
-        tmp.inst.sold(_exchanges.getObject(tmp.exId).getPrice());
+    if (errObject.error != ExError.ok) {
+      _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x00B'))
+      return _exTrading[idx].error = true;
+    }
+
+    if (_checkExsNotInTrade()) {
+      if (_checkAtLstOneExNotErr()) {
+        _tradingPostProcessing('bought');
+      } else {
+        _data.state === 'error';
+        _updateActiveData();
       }
+    }
+  }
+
+
+  var _exSoldNotifyFunc = function(instInfo, errObject) {
+    // console.log('soldFunc')
+    var idx = _exchanges.getObjectIdx(instInfo.id);
+
+    _exTrading[idx].trading = false;
+
+    if (errObject.error != ExError.ok) {
+      _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x00B'))
+      return _exTrading[idx].error = true;
+    }
+
+    if (_checkExsNotInTrade()) {
+      if (_checkAtLstOneExNotErr()) {
+        _tradingPostProcessing('sold');
+      } else {
+        _data.state === 'error';
+        _updateActiveData();
+      }
+    }
+  }
+
+
+  var _tradingPostProcessing = function(trade) {
+    // console.log(trade);
+
+    var pos2 = '';
+
+    if (trade === 'bought') pos2 = 'short';
+    if (trade === 'sold') pos2 = 'long';
+
+
+    if (_data.position === 'none') _data.inTime = new Date();
+    if (_data.position === pos2) _data.outTime = new Date();
+
+    for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
+      var tmp = _exchanges.getObjectByIdx(i);
 
       if (_data.position === 'none') {
-        _data.position = 'short';
-        _data.state = 'in';
+
+        if (_exTrading[i].error) {
+
+          _data.exchanges[i].inPrice = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          _data.exchanges[i].volume = 0;
+
+        } else {
+
+          var tTmp = tmp.getTradePrice();
+          if (tTmp.error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x007'));
+            tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          }
+          _data.exchanges[i].inPrice = tTmp.result;
+
+
+          var vTmp = tmp.getVolume();
+          if (vTmp.error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x008'));
+            vTmp.result = 0;
+          }
+          _data.exchanges[i].volume = vTmp.result;
+        }
       }
 
-      if (_data.position === 'long') {
-        _data.position = 'none';
-        _data.state = 'out';
-      }
+      if (_data.position === pos2) {
 
-      // _updateFunc(false);
+        if (_exTrading[i].error) {
+          _data.exchanges[i].outPrice = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+        } else {
+
+          var tTmp = tmp.getTradePrice();
+          if (tTmp.error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x007'));
+            tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          }
+          _data.exchanges[i].outPrice = tTmp.result;
+
+        }
+      }
     }
+
+    for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+      var tmp = _plugins.getObjectByIdx(i);
+      var exIdx = _exchanges.getObjectIdx(tmp.exId);
+
+      if (_exTrading[exIdx].error) {
+        if (trade === 'bought') tmp.inst.bought(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
+        if (trade === 'sold') tmp.inst.sold(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
+
+      } else {
+
+        var tTmp = _exchanges.getObject(tmp.exId).getTradePrice();
+        if (tTmp.error !== ExError.ok) {
+          _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x007'));
+          tTmp.result = _data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1];
+        }
+        if (trade === 'bought') tmp.inst.bought(tTmp.result);
+        if (trade === 'sold') tmp.inst.sold(tTmp.result);
+      }
+
+    }
+
+    if (_data.position === 'none') {
+
+      if (trade === 'bought') _data.position = 'long';
+      if (trade === 'sold') _data.position = 'short';
+      _data.state = 'in';
+    } else if (_data.position === 'short' || _data.position == 'long') {
+      _data.position = 'none';
+      _data.state = 'out';
+    }
+
+    _updateActiveData();
+    _update(false);
+  }
+
+
+  var _checkExsNotInTrade = function() {
+    for (i in _exTrading) {
+      if (_exTrading[i].trading) return false;
+    }
+
+    return true;
+  }
+
+  var _checkAtLstOneExNotErr = function() {
+    for (i in _exTrading) {
+      if (!_exTrading[i].error) return true;
+    }
+
+    return false;
+  }
+
+  var _resetExTradingTraded = function() {
+    for (i in _exTrading) {
+      if (!_exTrading[i].error) return true;
+    }
+
+    return false;
   }
 
 
@@ -409,23 +577,16 @@ export function Strategy(strategyDescription) {
     conf.stepWidth = exchange.stepWidth;
     conf.gain = exchange.gain;
     conf.data = exchange.data;
-    conf.bUnit = exchange.base;
-    conf.qUnit = exchange.quote;
-    conf.qAmount = exchange.quoteAmount;
+    conf.balanceAmount = exchange.balanceAmount;
+    conf.tradeDelaySec = exchange.tradeDelaySec;
+    conf.priceType = exchange.priceType;
 
-    switch (exchange.priceType) {
-      case "Sinus":
-        conf.priceType = ExTestData.priceType.sinus;
-        break;
-      case "Data":
-        conf.priceType = ExTestData.priceType.data;
-        break;
-      default:
-        conf.priceType = ExTestData.priceType.sinus;
-    }
 
     _exchanges.setObject(exchange._id, new ExTestData());
-    _exchanges.getObject(exchange._id).setConfig(conf);
+    var ret = _exchanges.getObject(exchange._id).setConfig(conf);
+
+    if (ret.error !== ExError.ok) return errHandle(StrError.ExConfigError, exchange.name);
+    else return errHandle(StrError.ok, null);
   }
 
 
@@ -443,13 +604,25 @@ export function Strategy(strategyDescription) {
   }
 
 
+  this.setErrorFunction = function(errorFunction) {
+    _errorFunc = errorFunction;
+  }
+
+
   this.start = function() {
     for (var k = 0; k < _exchanges.getObjects().length; k++) {
       _exchanges.getObjectByIdx(k).update();
     }
 
     for (var k = 0; k < _plugins.getObjects().length; k++) {
-      _plugins.getObjectByIdx(k).inst.start(_exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice());
+      var tmp = _exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice();
+
+      if (tmp.error !== ExError.ok) {
+        _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x002'));
+        tmp.result = 0;
+      }
+
+      _plugins.getObjectByIdx(k).inst.start(tmp.result);
     }
 
     if (_strDesc.timeUnit !== 'none') {
@@ -477,18 +650,39 @@ export function Strategy(strategyDescription) {
   }
 
 
+  this.stopTrading = function() {
+    if (!_checkExsNotInTrade()) {
+      for (i in _exTrading) {
+        if (_exTrading[i].trading) {
+          if (_exchanges.getObjectByIdx(i).stopTrade().error !== ExError.ok) {
+            _errorFunc(_strDesc._id, errHandle(StrError.errCode, '0x00D'));
+          }
+        }
+      }
+    }
+  }
+
   this.refresh = function() {
     _updateFunc(true);
   }
 
 
   this.buy = function() {
-    _buyFunction();
+    if (_data.state !== 'buying' && _data.state !== 'selling') {
+      _buyFunction();
+    }
   }
 
 
   this.sell = function() {
-    _sellFunction();
+    if (_data.state !== 'buying' && _data.state !== 'selling') {
+      _sellFunction();
+    }
+  }
+
+
+  this.getStatus = function() {
+    return _constrError;
   }
 
 
@@ -546,6 +740,7 @@ export function Strategy(strategyDescription) {
           tmpPl.setBuyNotifyFunc(_buyNotification);
           tmpPl.setSellNotifyFunc(_sellNotification);
 
+
           /* initialize plugin elements of data information variable */
           _data.plugins[plCnt] = {};
           _data.plugins[plCnt].name = plugin.name;
@@ -559,25 +754,48 @@ export function Strategy(strategyDescription) {
 
             /******** Exchange Creation Functions ********/
 
+
             /* kraken.com */
             if (plugin.exchange.type === 'exKraken') {
               _createExKraken(plugin.exchange);
 
+
               /* test data */
             } else if (plugin.exchange.type === 'exTestData') {
-              _createExTestData(plugin.exchange);
+              if (_createExTestData(plugin.exchange).error !== StrError.ok) {
+                return errHandle(StrError.errCode, '0x000');
+              }
             }
+
 
             /******** Exchange Creation Functions ********/
 
+
+            /* set notify functions */
+            if (_exchanges.getObject(plugin.exchange._id).setBoughtNotifyFunc(_exBoughtNotifyFunc).error !== ExError.ok) {
+              return errHandle(StrError.errCode, '0x009');
+            }
+
+            if (_exchanges.getObject(plugin.exchange._id).setSoldNotifyFunc(_exSoldNotifyFunc).error !== ExError.ok) {
+              return errHandle(StrError.errCode, '0x00A');
+            }
+
+            _exTrading.push({ trading: false, error: false });
 
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
             _data.exchanges[exCnt] = {};
             _data.exchanges[exCnt].price = [];
             _data.exchanges[exCnt].name = plugin.exchange.name;
-            _data.exchanges[exCnt].instInfo = tmpEx.getInstInfo();
-            _data.exchanges[exCnt].units = tmpEx.getPairUnits();
+
+            var iTmp = tmpEx.getInstInfo();
+            if (iTmp.error !== ExError.ok) return _constrError = errHandle(StrError.errCode, '0x005');
+            _data.exchanges[exCnt].instInfo = iTmp.result;
+
+            var pTmp = tmpEx.getPairUnits();
+            if (pTmp.error !== ExError.ok) return _constrError = errHandle(StrError.errCode, '0x006');
+            _data.exchanges[exCnt].units = pTmp.result;
+
             exCnt++;
           }
         }

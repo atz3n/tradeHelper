@@ -36,38 +36,28 @@
 					Name
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-name">
+					<p class="form-control-static">
 						{{ex_test_data.name}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-quote-amount">
-				<label for="quoteAmount" class="col-sm-3 control-label">
-					Simulated Amount of Quote Value to trade with
+			<div class="form-group  field-trade-pair">
+				<label for="tradePair" class="col-sm-3 control-label">
+					Security Pair
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-quote-amount">
-						{{ex_test_data.quoteAmount}}
+					<p class="form-control-static">
+						{{ex_test_data.tradePair}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-base">
-				<label for="base" class="col-sm-3 control-label">
-					Base Unit
+			<div class="form-group  field-balance-amount">
+				<label for="balanceAmount" class="col-sm-3 control-label">
+					Simulated balance amount to trade with
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-base">
-						{{ex_test_data.base}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group  field-quote">
-				<label for="quote" class="col-sm-3 control-label">
-					Quote Unit
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-quote">
-						{{ex_test_data.quote}}
+					<p class="form-control-static">
+						{{ex_test_data.balanceAmount}}
 					</p>
 				</div>
 			</div>
@@ -76,7 +66,7 @@
 					Gain (multiplier)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-gain">
+					<p class="form-control-static">
 						{{ex_test_data.gain}}
 					</p>
 				</div>
@@ -86,7 +76,7 @@
 					Offset
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-offset">
+					<p class="form-control-static">
 						{{ex_test_data.offset}}
 					</p>
 				</div>
@@ -96,7 +86,7 @@
 					Start Value (counter starts with this value)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-start-val">
+					<p class="form-control-static">
 						{{ex_test_data.startVal}}
 					</p>
 				</div>
@@ -106,8 +96,18 @@
 					Step Width (counter inscreases by this value each time)
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-step-width">
+					<p class="form-control-static">
 						{{ex_test_data.stepWidth}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-trade-delay-sec">
+				<label for="tradeDelaySec" class="col-sm-3 control-label">
+					Simulated time for a trade (buying/selling)
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_test_data.tradeDelaySec}}
 					</p>
 				</div>
 			</div>
@@ -116,7 +116,7 @@
 					Price Type
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-price-type">
+					<p class="form-control-static">
 						{{ex_test_data.priceType}}
 					</p>
 				</div>
@@ -126,7 +126,7 @@
 					Data
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-data">
+					<p class="form-control-static">
 						{{ex_test_data.data}}
 					</p>
 				</div>

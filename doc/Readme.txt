@@ -27,3 +27,7 @@ Sound
 
 kranken api
 - packages.json -> "kraken-api": "0.1.7"
+
+Alert
+- meteor add juliancwirko:s-alert
+- meteor add juliancwirko:s-alert-stackslide
