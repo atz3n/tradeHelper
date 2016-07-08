@@ -219,7 +219,7 @@ Template.body.events({
   'click input': function(event) {
 
     if ($(event.target).prop("name") == "priceType") {
-      config.priceType = $(event.target).context.checked;
+      config.priceType = $(event.target).context.value;
     }
   }
 });

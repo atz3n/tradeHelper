@@ -174,7 +174,7 @@ export function ExTestData() {
   this.setConfig = function(configuration) {
     _config = mergeObjects(_config, configuration);
 
-    if(!_checkConfig) return errHandle(ExError.error, null);
+    if(!_checkConfig()) return errHandle(ExError.error, null);
     
     _counter = _config.startVal;
     _dataArray = _config.data;
@@ -265,14 +265,14 @@ export function ExTestData() {
     }
 
     if (!_cancelTrade) {
-      if ('long') {
+      if ('none') {
         _volume = _balance / this.getPrice().result;
         _balance = 0;
       } else if ('short') {
         _balance = _volume * this.getPrice().result;
       } else {
         /* wrong parameter */
-        _boughtNotifyFunc(this.getInstInfo(), errHandle(ExError.error, null));
+        _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
         return;
       }
     } else {
@@ -280,7 +280,7 @@ export function ExTestData() {
     }
 
     _cancelTrade = false;
-    _boughtNotifyFunc(this.getInstInfo(), errHandle(ExError.ok, null));
+    _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, null));
   }
 
 
@@ -298,12 +298,12 @@ export function ExTestData() {
     if (!_cancelTrade) {
       if ('long') {
         _balance = _volume * this.getPrice().result;
-      } else if ('short') {
+      } else if ('none') {
         _volume = _balance / this.getPrice().result;
         _balance *= 2;
       } else {
         /* wrong parameter */
-        _soldNotifyFunc(this.getInstInfo(), errHandle(ExError.error, null));
+        _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
         return;
       }
     } else {
@@ -311,7 +311,7 @@ export function ExTestData() {
     }
 
     _cancelTrade = false;
-    _soldNotifyFunc(this.getInstInfo(), errHandle(ExError.ok, null));
+    _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, null));
   }
 
 
