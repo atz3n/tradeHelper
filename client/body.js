@@ -55,15 +55,6 @@ Template.body.events({
       });
 
 
-      /*++++++++++ getStatusButton ++++++++++*/
-    } else if ($(event.target).prop("name") == "getStatusButton") {
-
-      Meteor.call('getStatus', function(error, result) {
-        if (error) pageSession.set('error', JSON.stringify(error));
-        else pageSession.set('info', JSON.stringify(result));
-      });
-
-
       /*++++++++++ getInfoButton ++++++++++*/
     } else if ($(event.target).prop("name") == "getInfoButton") {
 
@@ -101,7 +92,7 @@ Template.body.events({
 
 
       /*++++++++++ getTradePriceButton ++++++++++*/
-    } else if ($(event.target).prop("name") == "getActionPriceButton") {
+    } else if ($(event.target).prop("name") == "getTradePriceButton") {
 
       Meteor.call('getTradePrice', function(error, result) {
         if (error) pageSession.set('error', JSON.stringify(error));
