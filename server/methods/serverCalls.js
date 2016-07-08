@@ -1,4 +1,4 @@
-import{ExKraken} from '../trading/exchanges/ExKraken.js';
+import{ExTestData} from '../trading/exchanges/ExTestData.js';
 
 
 var exchange = {};
@@ -26,7 +26,7 @@ var sFunc = function(instInfo, errObject){
 
 Meteor.methods({
   create: function(){
-    exchange = new ExKraken();
+    exchange = new ExTestData();
     console.log('create');
   },
 
@@ -40,13 +40,6 @@ Meteor.methods({
   getConfig: function(){
     console.log('getConfig');
     return exchange.getConfig();
-  },
-
-  getStatus: function(){
-    console.log('getStatus');
-    var tmp = exchange.getStatus();
-    console.log('continued');
-    return tmp;
   },
 
   getInfo: function(){
@@ -71,7 +64,7 @@ Meteor.methods({
 
   getTradePrice: function(){
     console.log('getTradePrice')
-    return exchange.getActionPrice();
+    return exchange.getTradePrice();
   },
 
   update: function(){
@@ -101,6 +94,6 @@ Meteor.methods({
 
   getTradePairInfos: function() {
     console.log('getTradePairInfos')
-    return ExKraken.getTradePairInfos();
+    return ExTestData.getTradePairInfos();
   }
 });

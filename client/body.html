@@ -1,40 +1,28 @@
 <body>
-  <h1>Exchange Development</h1>
+  <h1>ExTestData Development</h1>
 
-  orderType:
-  <input type="radio" name="orderType" value="market">market
-  <input type="radio" name="orderType" value="limit">limit
-  <br>
+  priceType:
+  <input type="radio" name="priceType" value="sinus">sinus
+  <input type="radio" name="priceType" value="data">data
+  <form class='input'> <input type="text" name="data" placeholder="set value" /> </form>
 
-  <br> balance:
-  <input type="radio" name="balanceType" value="krakenBalance">krankenBalance
-  <input type="radio" name="balanceType" value="ownBalance">ownBalance
-  <form class='input'> <input type="text" name="oBalanceAmount" placeholder="set value" /> </form>
+  <br> startVal:
+  <form class='input'> <input type="text" name="startVal" placeholder="set value" /> </form>
 
-  <br> qAmount:
-  <input type="radio" name="qAmountType" value="value">value
-  <input type="radio" name="qAmountType" value="percentage">percentage
-  <form class='input'> <input type="text" name="qAmount" placeholder="set value" /> </form>
+  <br> gain:
+  <form class='input'> <input type="text" name="gain" placeholder="set value" /> </form>
+   
+   <br> balanceAmount:
+  <form class='input'> <input type="text" name="balanceAmount" placeholder="set value" /> </form>
 
-  <br> price:
-  <input type="radio" name="priceType" value="24Average">24Average
-  <input type="radio" name="priceType" value="tradesAverage">tradesAverage
+  <br> offset:
+  <form class='input'> <input type="text" name="offset" placeholder="set value" /> </form>
 
-  <br> trades Average:
-  <input type="radio" name="trAvType" value="quantity">quantity
-  <input type="radio" name="trAvType" value="time">time
-  <form class='input'> <input type="text" name="trAvVal" placeholder="set value" /> </form>
-
-  <br> api error cycles:
-  <form class='input'> <input type="text" name="conErrorCycles" placeholder="set value" /> </form>
-   api error time:
-  <form class='input'> <input type="text" name="conErrorWaitTime" placeholder="set value" /> </form>
-
-  <br> orderCheckWaitSec:
-  <form class='input'> <input type="text" name="orderCheckWaitSec" placeholder="set value" /> </form>
-
-  <br> mode:
-  <input type="checkbox" id="hotMode" name="hotMode" value="hotMode"> hotMode
+  <br> stepWidth:
+  <form class='input'> <input type="text" name="stepWidth" placeholder="set value" /> </form>
+  
+  <br> tradeDelaySec:
+  <form class='input'> <input type="text" name="tradeDelaySec" placeholder="set value" /> </form>
   <br>
 
   <br> api:<br>

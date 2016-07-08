@@ -35,9 +35,6 @@ Template.body.events({
       /*++++++++++ setConfigButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setConfigButton") {
       config.id = '123456';
-      config.key = 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi';
-      config.secret = '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==';
-      config.pair = 'XETHZEUR';
 
       console.log(config);
       Meteor.call('setConfig', config, function(error, result) {
@@ -162,79 +159,67 @@ Template.body.events({
   'submit .input': function(event) {
     event.preventDefault();
 
-    if (event.target.qAmount) {
-      config.qAmount = event.target.qAmount.value;
-      event.target.qAmount.value += '_';
+    if (event.target.balanceAmount) {
+      config.balanceAmount = event.target.balanceAmount.value;
+      event.target.balanceAmount.value += '_';
       Meteor.setTimeout(function() {
-        event.target.qAmount.value = config.qAmount;
+        event.target.balanceAmount.value = config.balanceAmount;
       }, 200);
     }
 
-    if (event.target.trAvVal) {
-      config.trAvVal = event.target.trAvVal.value;
-      event.target.trAvVal.value += '_';
+    if (event.target.data) {
+      config.data = event.target.data.value;
+      event.target.data.value += '_';
       Meteor.setTimeout(function() {
-        event.target.trAvVal.value = config.trAvVal;
+        event.target.data.value = config.data;
       }, 200);
     }
 
-    if (event.target.conErrorCycles) {
-      config.conErrorCycles = event.target.conErrorCycles.value;
-      event.target.conErrorCycles.value += '_';
+    if (event.target.startVal) {
+      config.startVal = event.target.startVal.value;
+      event.target.startVal.value += '_';
       Meteor.setTimeout(function() {
-        event.target.conErrorCycles.value = config.conErrorCycles;
+        event.target.startVal.value = config.startVal;
       }, 200);
     }
 
-    if (event.target.conErrorWaitTime) {
-      config.conErrorWaitTime = event.target.conErrorWaitTime.value;
-      event.target.conErrorWaitTime.value += '_';
+    if (event.target.gain) {
+      config.gain = event.target.gain.value;
+      event.target.gain.value += '_';
       Meteor.setTimeout(function() {
-        event.target.conErrorWaitTime.value = config.conErrorWaitTime;
+        event.target.gain.value = config.gain;
       }, 200);
     }
 
-    if (event.target.orderCheckWaitSec) {
-      config.orderCheckWaitSec = event.target.orderCheckWaitSec.value;
-      event.target.orderCheckWaitSec.value += '_';
+    if (event.target.offset) {
+      config.offset = event.target.offset.value;
+      event.target.offset.value += '_';
       Meteor.setTimeout(function() {
-        event.target.orderCheckWaitSec.value = config.orderCheckWaitSec;
+        event.target.offset.value = config.offset;
       }, 200);
     }
 
-    if (event.target.oBalanceAmount) {
-      config.oBalanceAmount = event.target.oBalanceAmount.value;
-      event.target.oBalanceAmount.value += '_';
+    if (event.target.stepWidth) {
+      config.stepWidth = event.target.stepWidth.value;
+      event.target.stepWidth.value += '_';
       Meteor.setTimeout(function() {
-        event.target.oBalanceAmount.value = config.oBalanceAmount;
+        event.target.stepWidth.value = config.stepWidth;
+      }, 200);
+    }
+
+    if (event.target.tradeDelaySec) {
+      config.tradeDelaySec = event.target.tradeDelaySec.value;
+      event.target.tradeDelaySec.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.tradeDelaySec.value = config.tradeDelaySec;
       }, 200);
     }
   },
 
   'click input': function(event) {
 
-    if ($(event.target).prop("name") == "hotMode") {
-      config.hotMode = $(event.target).context.checked;
-    }
-
-    if ($(event.target).prop("name") == "orderType") {
-      config.orderType = $(event.target).prop("value");
-    }
-
-    if ($(event.target).prop("name") == "qAmountType") {
-      config.qAmountType = $(event.target).prop("value");
-    }
-
     if ($(event.target).prop("name") == "priceType") {
-      config.priceType = $(event.target).prop("value");
-    }
-
-    if ($(event.target).prop("name") == "trAvType") {
-      config.trAvType = $(event.target).prop("value");
-    }
-
-    if ($(event.target).prop("name") == "balanceType") {
-      config.balanceType = $(event.target).prop("value");
+      config.priceType = $(event.target).context.value;
     }
   }
 });
