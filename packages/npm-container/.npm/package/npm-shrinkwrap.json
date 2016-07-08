@@ -1,10 +1,5 @@
 {
   "dependencies": {
-    "fibers": {
-      "version": "1.0.12",
-      "resolved": "https://registry.npmjs.org/fibers/-/fibers-1.0.12.tgz",
-      "from": "https://registry.npmjs.org/fibers/-/fibers-1.0.12.tgz"
-    },
     "kraken-api": {
       "version": "0.1.7",
       "resolved": "https://registry.npmjs.org/kraken-api/-/kraken-api-0.1.7.tgz",

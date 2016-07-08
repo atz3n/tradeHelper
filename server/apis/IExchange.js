@@ -45,7 +45,8 @@ ExError = {
   toLessBalance: 'BALANCE_TO_LESS',
   error: 'ERROR',
   parseError: 'PARSE_ERROR',
-  notImpl: 'NOT_YET_IMPLEMENTED'
+  notImpl: 'NOT_YET_IMPLEMENTED',
+  exTypNotFound: 'EXCHANGE_TYPE_NOT_FOUND'
 }
 
 
@@ -173,6 +174,7 @@ IExchange.prototype.getInstInfo = function() {
  *   errObject {object} contains obj.error: ExError and obj.result: error message (if ExError != ExError.ok)
  *   
  * @param {function} boughtNotifyFunction the notification function
+ * @return {Object} obj.error: ExError, obj.result: null or error message
  */
 IExchange.prototype.setBoughtNotifyFunc = function(boughtNotifyFunction) {
   throw new Error('This method must be overwritten!');
