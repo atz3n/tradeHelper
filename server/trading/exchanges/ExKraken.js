@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.1.1
+ * @version 0.1.2
  *
  * 
  * CHANGES:
@@ -78,15 +78,27 @@ ExKraken.ConfigDefault = {
  * Interface function (see IExchange.js for detail informations)
  */
 ExKraken.getTradePairInfos = function() {
-  return Async.runSync(function(done) { // wraps asynchronous function call in synchronous call
 
-    /* get asset pair informations from kraken.com */
-    new KrakenClient().api('AssetPairs', null, function(error, data) {
-      if (error) done(ExError.srvConError, error);
-      else done(ExError.ok, data.result);
+  var ret = {};
+  for (var i = 0; i < 3; i++) {
+    ret = Async.runSync(function(done) { // wraps asynchronous function call in synchronous call
+
+      /* get asset pair informations from kraken.com */
+      new KrakenClient().api('AssetPairs', null, function(error, data) {
+        if (error) done(ExError.srvConError, error);
+        else done(ExError.ok, data.result);
+      });
+
     });
 
-  });
+    if (ret.error !== ExError.srvConError) break;
+
+    if (i < 2) {
+      Meteor._sleepForMs(3 * 1000);
+    }
+  }
+
+  return ret;
 }
 
 
@@ -534,7 +546,7 @@ export function ExKraken(ConstrParam) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInfo = function() {
-    return errHandle(ExError.ok, [{title: 'Own Balance', value: _oBalance}]);
+    return errHandle(ExError.ok, [{ title: 'Own Balance', value: _oBalance }]);
   }
 
 
@@ -702,7 +714,7 @@ export function ExKraken(ConstrParam) {
       }
 
 
-    /* short position */
+      /* short position */
     } else if (position === 'short') {
 
       /* calculate volume */
