@@ -120,6 +120,15 @@ Template.ExchangesEditExTestDataEditForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("exchangesEditExTestDataEditFormErrorMessage");
+	},
+	"pairs": function() {
+		var pairs = this.exTestData_tradePairs.pairs;
+
+		for(i in pairs){
+			if(pairs[i].name === this.ex_test_data.tradePair) pairs[i] = mergeObjects(pairs[i], {selected: 'selected'});
+			else pairs[i] = mergeObjects(pairs[i], {selected: ''});
+		}
+		return this.exTestData_tradePairs.pairs;
 	}
 	
 });

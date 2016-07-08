@@ -19,7 +19,8 @@ this.ExchangesInsertExTestDataController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_test_datas_empty")
+			Meteor.subscribe("ex_test_datas_empty"),
+			Meteor.subscribe("exTestData_tradePairs")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +35,8 @@ this.ExchangesInsertExTestDataController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			ex_test_datas_empty: ExTestDatas.findOne({_id:null}, {})
+			ex_test_datas_empty: ExTestDatas.findOne({_id:null}, {}),
+			exTestData_tradePairs: TradePairs.findOne({type: 'ExTestData'}, {})
 		};
 		
 

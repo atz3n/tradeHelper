@@ -14,7 +14,7 @@ Template.ExchangesInsertExTestData.helpers({
 
 Template.ExchangesInsertExTestDataInsertForm.rendered = function() {
 	
-
+	// console.log(this)
 	pageSession.set("exchangesInsertExTestDataInsertFormInfoMessage", "");
 	pageSession.set("exchangesInsertExTestDataInsertFormErrorMessage", "");
 
@@ -120,6 +120,8 @@ Template.ExchangesInsertExTestDataInsertForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("exchangesInsertExTestDataInsertFormErrorMessage");
+	},
+	'pairs': function() {
+		return this.exTestData_tradePairs.pairs;
 	}
-	
 });

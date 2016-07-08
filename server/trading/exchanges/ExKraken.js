@@ -80,7 +80,7 @@ ExKraken.ConfigDefault = {
 ExKraken.getTradePairInfos = function() {
 
   var ret = {};
-  for (var i = 0; i < _config.conErrorCycles; i++) {
+  for (var i = 0; i < 3; i++) {
     ret = Async.runSync(function(done) { // wraps asynchronous function call in synchronous call
 
       /* get asset pair informations from kraken.com */

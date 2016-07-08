@@ -21,17 +21,13 @@ this.getStrategyObject = function(strategyId) {
     for (var j = 0; j < bundlePlugins.length; j++) {
 
 
-      /******** Plugins ********/
-
-
+      /* PlSwing */
       var plugin = PlSwings.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
 
+      /* PlDummy */
       if (typeof plugin === "undefined") {
         plugin = PlDummys.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
       }
-
-
-      /******** Plugins ********/
 
 
       bundlePlugins[j] = plugin;
@@ -39,20 +35,16 @@ this.getStrategyObject = function(strategyId) {
 
       /* get exchanges from db */
       var exchange = bundlePlugins[j].exchange;
-
-
-      /******** Exchanges ********/
-
-
       if (typeof exchange !== "undefined") {
+
+
+        /* ExKraken */
         var tempEx = ExKrakens.find({ _id: exchange }).fetch()[0];
 
+        /* ExTestData */
         if (typeof tempEx === "undefined") {
           tempEx = ExTestDatas.find({ _id: exchange }).fetch()[0];
         }
-
-
-        /******** Exchanges ********/
 
 
         bundlePlugins[j].exchange = tempEx;
@@ -72,20 +64,6 @@ this.getStrategyObject = function(strategyId) {
  */
 this.errHandle = function(error, result) {
   return { error: error, result: result };
-}
-
-
-/**
- * Merges two Objects where properties of object1 will be overwritten if they have the same name
- * @param  {Object} object1 an Object
- * @param  {Object} object2 another Object
- * @return {Object}         merged Object
- */
-this.mergeObjects = function(object1, object2) {
-  var tmp = {};
-  for (var attrname in object1) { tmp[attrname] = object1[attrname]; }
-  for (var attrname in object2) { tmp[attrname] = object2[attrname]; }
-  return tmp;
 }
 
 
@@ -151,17 +129,34 @@ this.deactivateStrategies = function() {
 }
 
 
-import{ExTestData} from '../trading/exchanges/ExTestData.js';
+import { ExTestData } from '../trading/exchanges/ExTestData.js';
+import { ExKraken } from '../trading/exchanges/ExKraken.js';
 this.getExTradePairInfos = function() {
+  var tmp = {};
 
+
+  /* ExTestData */
   tmp = ExTestData.getTradePairInfos();
   if (tmp.error === ExError.ok) {
-
     if (typeof TradePairs.findOne({ type: 'ExTestData' }) === 'undefined') {
-      ActiveDatas.insert(mergeObjects({ type: 'ExTestData' }, tmp.result));
+      TradePairs.insert(mergeObjects({ type: 'ExTestData' }, { pairs: [{ name: tmp.result, info: {} }] }));
     } else {
-      ActiveDatas.update({ type: 'ExTestData' }, { $set: mergeObjects({ type: 'ExTestData' }, tmp.result) });
+      TradePairs.update({ type: 'ExTestData' }, { $set: { pairs: [{ name: tmp.result, info: {} }] } });
     }
   }
 
+
+  /* ExKraken */
+  tmp = ExKraken.getTradePairInfos();
+  if (tmp.error === ExError.ok) {
+
+    var pairArray = [];
+    for (i in tmp.result) pairArray.push({ name: i, info: tmp.result[i] })
+
+    if (typeof TradePairs.findOne({ type: 'ExKraken' }) === 'undefined') {
+      TradePairs.insert(mergeObjects({ type: 'ExKraken' }, { pairs: pairArray }));
+    } else {
+      TradePairs.update({ type: 'ExKraken' }, { $set: { pairs: pairArray } });
+    }
+  }
 }

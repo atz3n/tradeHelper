@@ -45,7 +45,9 @@
 				</label>
 				<div class="input-div">
 					<select class="form-control" name="tradePair" data-type="string" required="required">
-						<option value="none" {{optionIsSelected ex_test_data.tradePair "none"}}>							None</option>
+						{{#each pairs}}
+						<option value={{name}} {{selected}}>							{{name}}</option>
+						{{/each}}
 					</select>
 					<span id="help-text" class="help-block">
 					</span>
