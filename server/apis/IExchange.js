@@ -5,10 +5,11 @@
  * All Exchanges should implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.0
+ * @version 1.1
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
+ * 09-July-2016 : added getPositions
  */
 
 /***********************************************************************
@@ -161,6 +162,15 @@ IExchange.prototype.stopTrade = function() {
  * @return {Object} obj.error: ExError, obj.result: info object {id: <instance Id>, type: <exchange type>}
  */
 IExchange.prototype.getInstInfo = function() {
+  throw new Error('This method must be overwritten!');
+}
+
+
+/**
+ * Returns available positions
+ * @return {Object} obj.error: ExError, obj.result: info object {long: true/false, short: true/false}
+ */
+IExchange.prototype.getPositions = function() {
   throw new Error('This method must be overwritten!');
 }
 

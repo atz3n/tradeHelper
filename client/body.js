@@ -154,6 +154,14 @@ Template.body.events({
       });
 
 
+    } else if ($(event.target).prop("name") == "getPositionsButton") {
+
+      Meteor.call('getPositions', function(error, result) {
+        if (error) pageSession.set('error', JSON.stringify(error));
+        else pageSession.set('info', JSON.stringify(result));
+      });
+
+
     } else {
       /* do nothing */
     }
