@@ -178,7 +178,7 @@ Meteor.methods({
   strategyStart: function(strategyId) {
     var tmp = start(strategyId);
 
-    if (tmp.error === StrError.ExConfigError) {
+    if (tmp.error !== StrError.ok) {
       stop(strategyId);
     }
 

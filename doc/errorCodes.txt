@@ -39,3 +39,12 @@ Exchange callback soldNotifyFunction() returned an error
 
 ID: 0x00D
 Exchange API stopTrade() returned an error
+
+ID: 0x00E
+Exchange API getPositions() returned an error
+
+ID: 0x00F
+An position long dismatch occurred
+
+ID: 0x010
+An position short dismatch occurred

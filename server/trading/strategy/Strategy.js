@@ -763,7 +763,7 @@ export function Strategy(strategyDescription) {
               /* test data */
             } else if (plugin.exchange.type === 'exTestData') {
               if (_createExTestData(plugin.exchange).error !== StrError.ok) {
-                return errHandle(StrError.errCode, '0x000');
+                return _constrError = errHandle(StrError.errCode, '0x000');
               }
             }
 
@@ -771,13 +771,27 @@ export function Strategy(strategyDescription) {
             /******** Exchange Creation Functions ********/
 
 
+            /* check if position configuration works */
+            var plPositions = _plugins.getObject(plugin._id).inst.getPositions();
+            var exPositions = _exchanges.getObject(plugin.exchange._id).getPositions();
+            if(exPositions.error !== ExError.ok) return _constrError = errHandle(StrError.errCode, '0x00E');
+            
+            if(plPositions.long){
+              if(!exPositions.result.long) return _constrError = errHandle(StrError.errCode, '0x00F');
+            }
+
+            if(plPositions.short){
+              if(!exPositions.result.short) return _constrError = errHandle(StrError.errCode, '0x010');
+            }
+
+
             /* set notify functions */
             if (_exchanges.getObject(plugin.exchange._id).setBoughtNotifyFunc(_exBoughtNotifyFunc).error !== ExError.ok) {
-              return errHandle(StrError.errCode, '0x009');
+              return _constrError = errHandle(StrError.errCode, '0x009');
             }
 
             if (_exchanges.getObject(plugin.exchange._id).setSoldNotifyFunc(_exSoldNotifyFunc).error !== ExError.ok) {
-              return errHandle(StrError.errCode, '0x00A');
+              return _constrError = errHandle(StrError.errCode, '0x00A');
             }
 
             _exTrading.push({ trading: false, error: false });

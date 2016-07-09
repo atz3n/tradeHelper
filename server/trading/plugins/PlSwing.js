@@ -42,7 +42,7 @@ PlSwing.ConfigDefault = {
   shortNoPosNotifyPerc: 5, // no position -> sell
   shortAfterBottomBuyNotifyPerc: 5, // short position -> buy after bottom
   enableLong: true,
-  enableShort: true
+  enableShort: false
 }
 
 
@@ -78,7 +78,6 @@ export function PlSwing(logger) {
   var _buyNotifyFunc = function() {};
   var _sellNotifyFunc = function() {};
 
-  var _active = false;
 
   var _tmpPos = 'init';
 
@@ -109,57 +108,55 @@ export function PlSwing(logger) {
 
 
   this.update = function(price) {
-    if (_active) {
-      _data.currentVal = price;
+    _data.currentVal = price;
 
-      _data.topVal = Math.max(_data.topVal, _data.currentVal);
-      _data.bottomVal = Math.min(_data.bottomVal, _data.currentVal);
-
-
-      /* open long or short */
-      if (!_positions.long && !_positions.short) {
-
-        /* open short */
-        if (_config.enableShort) {
-          if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.topVal) {
-            _log('Short Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-
-            _tmpPos = 'short';
-            _sellNotifyFunc(this.getInstInfo());
-          }
-        }
-
-        /* open long */
-        if (_config.enableLong) {
-          if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.bottomVal) {
-            _log('Long Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-
-            _tmpPos = 'long';
-            _buyNotifyFunc(this.getInstInfo());
-          }
-        }
-
-      }
+    _data.topVal = Math.max(_data.topVal, _data.currentVal);
+    _data.bottomVal = Math.min(_data.bottomVal, _data.currentVal);
 
 
-      /* close short */
-      if (!_positions.long && _positions.short) {
-        if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.shortAfterBottomBuyNotifyPerc) {
-          _log('Short Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+    /* open long or short */
+    if (!_positions.long && !_positions.short) {
+
+      /* open short */
+      if (_config.enableShort) {
+        if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.topVal) {
+          _log('Short Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'short';
+          _sellNotifyFunc(this.getInstInfo());
+        }
+      }
+
+      /* open long */
+      if (_config.enableLong) {
+        if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.bottomVal) {
+          _log('Long Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+
+          _tmpPos = 'long';
           _buyNotifyFunc(this.getInstInfo());
         }
       }
 
-      /* close long */
-      if (_positions.long && !_positions.short) {
-        if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.longAfterTopSellNotifyPerc) {
-          _log('Long Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+    }
 
-          _tmpPos = 'long';
-          _sellNotifyFunc(this.getInstInfo());
-        }
+
+    /* close short */
+    if (!_positions.long && _positions.short) {
+      if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.shortAfterBottomBuyNotifyPerc) {
+        _log('Short Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+
+        _tmpPos = 'short';
+        _buyNotifyFunc(this.getInstInfo());
+      }
+    }
+
+    /* close long */
+    if (_positions.long && !_positions.short) {
+      if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.longAfterTopSellNotifyPerc) {
+        _log('Long Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+
+        _tmpPos = 'long';
+        _sellNotifyFunc(this.getInstInfo());
       }
     }
   }
@@ -187,10 +184,6 @@ export function PlSwing(logger) {
   }
 
 
-  this.getStatus = function() {
-    return 'OK';
-  }
-
 
   this.getInfo = function() {
     var info = {};
@@ -208,56 +201,44 @@ export function PlSwing(logger) {
     _data.currentVal = price;
     _data.bottomVal = price;
     _data.topVal = price;
-    _active = true;
   }
 
-
-  this.stop = function() {
-    _log('stop tracking');
-    _active = false;
-    _data = Object.assign({}, PlSwing._dataInit);
-    _positions = Object.assign({}, PlSwing._positionsInit);
-  }
 
 
   this.bought = function(price) {
-    if (_active) {
-      _data.currentVal = price;
-      _data.topVal = price;
-      _data.bottomVal = price;
+    _data.currentVal = price;
+    _data.topVal = price;
+    _data.bottomVal = price;
 
-      if (_tmpPos == 'short') {
-        _positions.short = false;
+    if (_tmpPos == 'short') {
+      _positions.short = false;
 
-        _log('Short Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-      }
+      _log('Short Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+    }
 
-      if (_tmpPos == 'long') {
-        _positions.long = true;
+    if (_tmpPos == 'long') {
+      _positions.long = true;
 
-        _log('Long Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-      }
+      _log('Long Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
     }
   }
 
 
   this.sold = function(price) {
-    if (_active) {
-      _data.currentVal = price;
-      _data.topVal = price;
-      _data.bottomVal = price;
+    _data.currentVal = price;
+    _data.topVal = price;
+    _data.bottomVal = price;
 
-      if (_tmpPos == 'short') {
-        _positions.short = true;
+    if (_tmpPos == 'short') {
+      _positions.short = true;
 
-        _log('Short Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-      }
+      _log('Short Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
+    }
 
-      if (_tmpPos == 'long') {
-        _positions.long = false;
+    if (_tmpPos == 'long') {
+      _positions.long = false;
 
-        _log('Long Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
-      }
+      _log('Long Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
     }
   }
 
@@ -277,5 +258,9 @@ export function PlSwing(logger) {
       id: _config.id,
       type: "PlSwing"
     }
+  }
+
+  this.getPositions = function() {
+    return {long: _config.enableLong, short: _config.enableShort}
   }
 }
