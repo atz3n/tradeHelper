@@ -7,11 +7,12 @@
  *
  * 
  * @author Atzen
- * @version 0.1.1
+ * @version 0.2.0
  *
  * 
  * CHANGES:
  * 02-July-2016 : Initial version
+ * 09-July-2016 : added getPositions function
  */
 
 /***********************************************************************
@@ -798,6 +799,14 @@ export function ExKraken(ConstrParam) {
    */
   this.getVolume = function() {
     return errHandle(ExError.ok, _volume);
+  }
+
+
+  /**
+   * Interface function (see IExchange.js for detail informations)
+   */
+  this.getPositions = function() {
+    return errHandle(ExError.ok, {long: true, short: false});
   }
 
 
