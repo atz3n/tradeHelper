@@ -4,7 +4,7 @@
  *
  * 
  * @author Atzen
- * @version 0.1.0
+ * @version 0.2.0
  * 
  * CHANGES:
  * 04-July-2016 : Initial version
@@ -31,14 +31,14 @@ ExTestData.ConfigDefault = {
 
   priceType: 'sinus', // sinus (sinus shaped price flow), data (uses data array)
   data: [], // data array
-  
+
   startVal: 0, // counter start value
   gain: 1, // multiplicator
-  offset: 0, 
+  offset: 0,
   stepWidth: 1, // counter increment step width
-  
+
   balanceAmount: 100, // starting amount
-  
+
   tradeDelaySec: 3 // trade seconds
 }
 
@@ -100,10 +100,10 @@ export function ExTestData() {
    */
   var _cancelTrade = false;
 
-/**
- * Balanced used to calculate trading amount
- * @type {Number}
- */
+  /**
+   * Balanced used to calculate trading amount
+   * @type {Number}
+   */
   var _balance = 0;
 
   /**
@@ -133,7 +133,7 @@ export function ExTestData() {
     Private Instance Function
    ***********************************************************************/
 
-/**
+  /**
    * Checks configuration
    * @return {bool} false if error occurs
    */
@@ -149,7 +149,7 @@ export function ExTestData() {
     if (isNaN(_config.gain)) return false;
 
     if (isNaN(_config.balanceAmount)) return false;
-    
+
     if (isNaN(_config.tradeDelaySec)) return false;
 
     return true;
@@ -174,8 +174,8 @@ export function ExTestData() {
   this.setConfig = function(configuration) {
     _config = mergeObjects(_config, configuration);
 
-    if(!_checkConfig()) return errHandle(ExError.error, null);
-    
+    if (!_checkConfig()) return errHandle(ExError.error, null);
+
     _counter = _config.startVal;
     _dataArray = _config.data;
     _balance = _config.balanceAmount;
@@ -344,5 +344,13 @@ export function ExTestData() {
   this.setSoldNotifyFunc = function(soldNotifyFunction) {
     _soldNotifyFunc = soldNotifyFunction;
     return errHandle(ExError.ok, null);
+  }
+
+
+  /**
+   * Interface function (see IExchange.js for detail informations)
+   */
+  this.getPositions = function() {
+    return errHandle(ExError.ok, {long: true, short: true});
   }
 }
