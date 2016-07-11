@@ -31,3 +31,13 @@ kranken api
 Alert
 - meteor add juliancwirko:s-alert
 - meteor add juliancwirko:s-alert-stackslide
+
+
+
+
+Start:
+development mode:
+- npm run startDev
+
+production mode:
+- npm run startProd

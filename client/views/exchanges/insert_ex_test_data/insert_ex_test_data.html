@@ -162,6 +162,246 @@
 					</span>
 				</div>
 			</div>
+			{{#if $eq enError 'true'}}
+			<div class="form-group  field-en-long">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo true}}" name="enLong" data-type="bool" checked>
+							Enable Long Position
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-short">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo true}}" name="enShort" data-type="bool" checked>
+							Enable Short Position
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-sc">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSC" data-type="bool">
+							Error setConfig()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gc">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGC" data-type="bool">
+							Error getConfig()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gi">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGI" data-type="bool">
+							Error getInfo()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpu">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGPU" data-type="bool">
+							Error getPairUnits()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gv">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGV" data-type="bool">
+							Error getVolume()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gp">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGP" data-type="bool">
+							Error getPrice()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gtp">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGTP" data-type="bool">
+							Error getTradePrice()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-u">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errU" data-type="bool">
+							Error update()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-s">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errS" data-type="bool">
+							Error sell()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-b">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errB" data-type="bool">
+							Error buy()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-st">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errST" data-type="bool">
+							Error stopTrade()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gii">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGII" data-type="bool">
+							Error getInstInfo()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpo">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGPO" data-type="bool">
+							Error getPositions()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-sbnf">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSBNF" data-type="bool">
+							Error setBoughtNotifyFunc()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-ssnf">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSSNF" data-type="bool">
+							Error setSoldNotifyFunc()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{/if}}
 			<div class="form-group">
 				<div class="submit-div">
 					<button id="form-submit-button" class="btn btn-success" type="submit">

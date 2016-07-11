@@ -80,8 +80,6 @@ Meteor.ClientCall.methods({
   },
 
   error: function(errObj) {
-    console.log('called')
-    console.log(errObj)
     if(errObj.error){
       sAlert.error(errObj.result);
     }

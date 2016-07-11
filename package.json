@@ -2,7 +2,8 @@
   "name": "tradeHelper",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "startDev": "meteor --settings settings/settings-development.json",
+    "startProd": "meteor --settings settings/settings-production.json"
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"

@@ -129,6 +129,9 @@ Template.ExchangesEditExTestDataEditForm.helpers({
 			else pairs[i] = mergeObjects(pairs[i], {selected: ''});
 		}
 		return this.exTestData_tradePairs.pairs;
+	},
+	'enError': function() {
+		return Meteor.settings.public.ExTestDataErrorConfig;
 	}
 	
 });

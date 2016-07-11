@@ -14,7 +14,6 @@ Template.ExchangesInsertExTestData.helpers({
 
 Template.ExchangesInsertExTestDataInsertForm.rendered = function() {
 	
-	// console.log(this)
 	pageSession.set("exchangesInsertExTestDataInsertFormInfoMessage", "");
 	pageSession.set("exchangesInsertExTestDataInsertFormErrorMessage", "");
 
@@ -123,5 +122,8 @@ Template.ExchangesInsertExTestDataInsertForm.helpers({
 	},
 	'pairs': function() {
 		return this.exTestData_tradePairs.pairs;
+	},
+	'enError': function() {
+		return Meteor.settings.public.ExTestDataErrorConfig;
 	}
 });

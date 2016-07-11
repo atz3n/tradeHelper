@@ -21,13 +21,13 @@ var sOIdNfy = '';
 var sStrIdNfy = '';
 
 function strError(strategyId, errObj) {
-  console.log(strategyId, errObj)
+  // console.log(errObj)
     /* to search as less as possible for the ownerId */
   if (sStrIdNfy !== strategyId) {
     sOIdNfy = Strategies.findOne({ _id: strategyId }).ownerId;
     sStrIdNfy = strategyId;
   }
-  Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj, strategyId)], function(error, result) {});
+  Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj)], function(error, result) {});
 }
 
 
@@ -152,16 +152,8 @@ var errMessage = function(errHandleObject, strategyId) {
     return errHandle(true, 'Strategy: ' + errHandleObject.result + ' not found!');
   }
 
-  if (errHandleObject.error === StrError.ExConfigError) {
-    return errHandle(true, 'Configuration error in Exchange: ' + errHandleObject.result + '!');
-  }
-
-  if (errHandleObject.error === StrError.errCode) {
-    return errHandle(true, 'Error ' + errHandleObject.result + ' occured in Strategy: ' + strategyId + '!');
-  }
-
-  if(errHandleObject.error === ExError.exTypNotFound) {
-    return errHandle(true, 'Exchange not found');
+  if (errHandleObject.error === StrError.error) {
+    return errHandle(true, errHandleObject.result);
   }
 
   if(errHandleObject.error === ExError.srvConError) {

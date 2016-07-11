@@ -131,6 +131,178 @@
 					</p>
 				</div>
 			</div>
+			{{#if $eq enError 'true'}}
+			<div class="form-group  field-en-long">
+				<label for="enLong" class="col-sm-3 control-label">
+					Enable Long Position
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.enLong}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-en-short">
+				<label for="enShort" class="col-sm-3 control-label">
+					Enable Short Position
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.enShort}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-sc">
+				<label for="errSC" class="col-sm-3 control-label">
+					Error setConfig()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errSC}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gc">
+				<label for="errGC" class="col-sm-3 control-label">
+					Error getConfig()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGC}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gi">
+				<label for="errGI" class="col-sm-3 control-label">
+					Error getInfo()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGI}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpu">
+				<label for="errGPU" class="col-sm-3 control-label">
+					Error getPairUnits()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGPU}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gv">
+				<label for="errGV" class="col-sm-3 control-label">
+					Error getVolume()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGV}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gp">
+				<label for="errGP" class="col-sm-3 control-label">
+					Error getPrice()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGP}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gtp">
+				<label for="errGTP" class="col-sm-3 control-label">
+					Error getTradePrice()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGTP}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-u">
+				<label for="errU" class="col-sm-3 control-label">
+					Error update()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errU}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-s">
+				<label for="errS" class="col-sm-3 control-label">
+					Error sell()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errS}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-b">
+				<label for="errB" class="col-sm-3 control-label">
+					Error buy()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errB}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-st">
+				<label for="errST" class="col-sm-3 control-label">
+					Error stopTrade()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errST}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gii">
+				<label for="errGII" class="col-sm-3 control-label">
+					Error getInstInfo()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGII}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpo">
+				<label for="errGPO" class="col-sm-3 control-label">
+					Error getPositions()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errGPO}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-sbnf">
+				<label for="errSBNF" class="col-sm-3 control-label">
+					Error setBoughtNotifyFunc()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errSBNF}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-err-ssnf">
+				<label for="errSSNF" class="col-sm-3 control-label">
+					Error setSoldNotifyFunc()
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_test_data.errSSNF}}
+					</p>
+				</div>
+			</div>
+			{{/if}}
 			<div class="form-group">
 				<div class="submit-div col-sm-9 col-sm-offset-3">
 					<a href="#" id="form-close-button" class="btn btn-primary">

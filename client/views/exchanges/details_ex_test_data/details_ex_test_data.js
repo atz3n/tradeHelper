@@ -120,6 +120,9 @@ Template.ExchangesDetailsExTestDataDetailsForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("exchangesDetailsExTestDataDetailsFormErrorMessage");
+	},
+	'enError': function() {
+		return Meteor.settings.public.ExTestDataErrorConfig;
 	}
 	
 });
