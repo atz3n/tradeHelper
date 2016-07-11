@@ -498,6 +498,142 @@
             "title": "Data",
             "type": "float",
             "input": "textarea"
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long Position",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short Position",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "errSC",
+            "title": "Error setConfig()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGC",
+            "title": "Error getConfig()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGI",
+            "title": "Error getInfo()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGPU",
+            "title": "Error getPairUnits()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGV",
+            "title": "Error getVolume()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGP",
+            "title": "Error getPrice()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGTP",
+            "title": "Error getTradePrice()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errU",
+            "title": "Error update()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errS",
+            "title": "Error sell()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errB",
+            "title": "Error buy()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errST",
+            "title": "Error stopTrade()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGII",
+            "title": "Error getInstInfo()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errGPO",
+            "title": "Error getPositions()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errSBNF",
+            "title": "Error setBoughtNotifyFunc()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          },
+          {
+            "name": "errSSNF",
+            "title": "Error setSoldNotifyFunc()",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
           }
         ],
         "owner_field": "ownerId",
