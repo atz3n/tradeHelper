@@ -32,9 +32,19 @@ Meteor.methods({
 
   setConfig: function(config) {
     console.log('setConfig');
-    exchange.setBoughtNotifyFunc(bFunc);
-    exchange.setSoldNotifyFunc(sFunc);
-    return exchange.setConfig(config);
+    var tmp = exchange.setConfig(config)
+    if (tmp.error === ExError.ok) {
+      var tmp2 = {};
+
+      console.log('setBoughtNotifyFunc');
+      tmp2 = exchange.setBoughtNotifyFunc(bFunc);
+      if (tmp2.error !== ExError.ok) return tmp2;
+
+      console.log('setSoldNotifyFunc');
+      tmp2 = exchange.setSoldNotifyFunc(sFunc);
+      if (tmp2.error !== ExError.ok) return tmp2;
+    }
+    return tmp;
   },
 
   getConfig: function() {

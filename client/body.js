@@ -229,5 +229,65 @@ Template.body.events({
     if ($(event.target).prop("name") == "priceType") {
       config.priceType = $(event.target).context.value;
     }
+
+    if ($(event.target).prop("name") == "errSC") {
+      config.errSC = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGC") {
+      config.errGC = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGI") {
+      config.errGI = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGPU") {
+      config.errGPU = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGV") {
+      config.errGV = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGP") {
+      config.errGP = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGTP") {
+      config.errGTP = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errU") {
+      config.errU = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errS") {
+      config.errS = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errB") {
+      config.errB = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errST") {
+      config.errST = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGII") {
+      config.errGII = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errGPO") {
+      config.errGPO = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errSBNF") {
+      config.errSBNF = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "errSSNF") {
+      config.errSSNF = event.target.checked;
+    }
   }
 });
