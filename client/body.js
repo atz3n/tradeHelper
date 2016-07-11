@@ -230,6 +230,14 @@ Template.body.events({
       config.priceType = $(event.target).context.value;
     }
 
+    if ($(event.target).prop("name") == "enLong") {
+      config.enLong = event.target.checked;
+    }
+
+    if ($(event.target).prop("name") == "enShort") {
+      config.enShort = event.target.checked;
+    }
+    
     if ($(event.target).prop("name") == "errSC") {
       config.errSC = event.target.checked;
     }
