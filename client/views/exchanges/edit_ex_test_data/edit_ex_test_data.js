@@ -128,7 +128,7 @@ Template.ExchangesEditExTestDataEditForm.helpers({
 			if(pairs[i].name === this.ex_test_data.tradePair) pairs[i] = mergeObjects(pairs[i], {selected: 'selected'});
 			else pairs[i] = mergeObjects(pairs[i], {selected: ''});
 		}
-		return this.exTestData_tradePairs.pairs;
+		return pairs;
 	},
 	'enError': function() {
 		return Meteor.settings.public.ExTestDataErrorConfig;

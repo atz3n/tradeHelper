@@ -14,7 +14,9 @@ Template.ExchangesInsertExKraken.helpers({
 
 Template.ExchangesInsertExKrakenInsertForm.rendered = function() {
 	
-
+	pageSession.set('disableOwBaConfig', false);
+	pageSession.set('disableAvConfig', false);
+	pageSession.set('disableHotModeConfig', true);
 	pageSession.set("exchangesInsertExKrakenInsertFormInfoMessage", "");
 	pageSession.set("exchangesInsertExKrakenInsertFormErrorMessage", "");
 
@@ -109,8 +111,33 @@ Template.ExchangesInsertExKrakenInsertForm.events({
 		e.preventDefault();
 
 		/*BACK_REDIRECT*/
-	}
+	},
+	'click input': function(e) {
 
+		if ($(e.target).prop("name") == "priceType") {
+			if($(e.target).prop("value") !== 'tradesAverage'){
+				pageSession.set('disableAvConfig', true);
+			} else {
+				pageSession.set('disableAvConfig', false);
+			}
+		}
+
+		if ($(e.target).prop("name") == "hotMode") {
+			if($(e.target).context.checked) {
+				pageSession.set('disableHotModeConfig', false);
+			} else {
+				pageSession.set('disableHotModeConfig', true);
+			}
+		}
+
+		if ($(e.target).prop("name") == "balanceType") {
+			if($(e.target).prop("value") === 'krakenBalance'){
+				pageSession.set('disableOwBaConfig', true);
+			} else {
+				pageSession.set('disableOwBaConfig', false);
+			}
+		}
+	}
 	
 });
 
@@ -120,6 +147,18 @@ Template.ExchangesInsertExKrakenInsertForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("exchangesInsertExKrakenInsertFormErrorMessage");
+	},
+	'pairs': function() {
+		return this.exKraken_tradePairs.pairs;
+	},
+	'disableAvConfig': function() {
+		return pageSession.get('disableAvConfig');
+	},
+	'disableHotModeConfig': function() {
+		return pageSession.get('disableHotModeConfig');
+	},
+	'disableOwBaConfig': function() {
+		return pageSession.get('disableOwBaConfig');
 	}
 	
 });
