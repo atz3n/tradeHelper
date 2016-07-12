@@ -64,7 +64,7 @@ Meteor.methods({
 
   getTradePrice: function() {
     console.log('getTradePrice')
-    return exchange.getActionPrice();
+    return exchange.getTradePrice();
   },
 
   update: function() {
