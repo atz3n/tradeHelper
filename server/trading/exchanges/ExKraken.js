@@ -7,13 +7,14 @@
  *
  * 
  * @author Atzen
- * @version 0.3.0
+ * @version 0.3.1
  *
  * 
  * CHANGES:
  * 02-July-2016 : Initial version
  * 09-July-2016 : added getPositions function
  * 12-July-2016 : changed !hotMode + ownBalance combination to work without secret and api keys
+ * 12-July-2016 : bugfixed buy and sell mechanism
  */
 
 /***********************************************************************
@@ -595,7 +596,7 @@ export function ExKraken(ConstrParam) {
   this.buy = async function(position) {
 
     /* long position */
-    if (position === 'long') {
+    if (position === 'none') {
 
       /* calculate volume */
       var cRet = _cycFuncCall(function() {
@@ -616,6 +617,7 @@ export function ExKraken(ConstrParam) {
         return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
+      console.log('')
 
       /* set order */
       var oRet = _cycFuncCall(function() {
@@ -721,7 +723,7 @@ export function ExKraken(ConstrParam) {
 
 
       /* short position */
-    } else if (position === 'short') {
+    } else if (position === 'none') {
 
       /* calculate volume */
       var cRet = _cycFuncCall(function() {

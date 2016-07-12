@@ -79,7 +79,7 @@ Meteor.methods({
 
   buy: function() {
     console.log('buy');
-    return exchange.buy('long');
+    return exchange.buy('none');
   },
 
   stopTrade: function() {
