@@ -97,6 +97,8 @@ export function Strategy(strategyDescription) {
   var _notifyParam = {};
   var _callNotifyFunc = false;
 
+  var _firstRun = false;
+
 
   /***********************************************************************
     Public Instance Variable
@@ -112,10 +114,13 @@ export function Strategy(strategyDescription) {
       _callNotifyFunc = false;
 
 
-      if (fullUpdate) _clearNotifyValues();
+      if (fullUpdate) {
 
-      if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
-      _data.curTime.push(new Date);
+        _clearNotifyValues();
+
+        if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
+        _data.curTime.push(new Date);
+      }
 
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
@@ -130,25 +135,25 @@ export function Strategy(strategyDescription) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x004', strId: _strDesc._id, exId: instInfo.result.id }));
             }
           }
-        }
 
-        if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
+          if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
 
-        var pTmp = tmp.getPrice();
-        if (pTmp.error !== ExError.ok) {
+          var pTmp = tmp.getPrice();
+          if (pTmp.error !== ExError.ok) {
 
-          var instInfo = tmp.getInstInfo();
+            var instInfo = tmp.getInstInfo();
 
-          if (instInfo.error !== ExError.ok) {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
-          } else {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
+            if (instInfo.error !== ExError.ok) {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+            } else {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
+            }
+
+            if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
+            else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
-
-          if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
-          else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          _data.exchanges[i].price.push(pTmp.result);
         }
-        _data.exchanges[i].price.push(pTmp.result);
 
         var iTmp = tmp.getInfo();
         if (iTmp.error !== ExError.ok) {
@@ -182,7 +187,13 @@ export function Strategy(strategyDescription) {
 
             pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
-          tmp.inst.update(pTmp.result);
+
+          if(_firstRun){
+            _firstRun = false;
+            tmp.inst.start(pTmp.result);
+          } else {
+            tmp.inst.update(pTmp.result);
+          }
         }
 
         _data.plugins[i].state = tmp.inst.getState();
@@ -213,7 +224,6 @@ export function Strategy(strategyDescription) {
     } else {
       ActiveDatas.update({ strategyId: _data.strategyId }, { $set: _data });
     }
-
   }
 
 
@@ -357,6 +367,7 @@ export function Strategy(strategyDescription) {
     if (_data.position !== 'long') {
       _data.state = 'buying';
       _updateActiveData();
+      // _updateFunc(false);
 
       for (i in _exTrading) _exTrading[i].trading = true;
 
@@ -379,7 +390,7 @@ export function Strategy(strategyDescription) {
     if (_data.position !== 'short') {
       _data.state = 'selling';
       _updateActiveData();
-
+      // _updateFunc(false);
 
       for (i in _exTrading) _exTrading[i].trading = true;
 
@@ -412,7 +423,8 @@ export function Strategy(strategyDescription) {
         _tradingPostProcessing('buy');
       } else {
         _data.state === 'error';
-        _updateActiveData();
+        // _updateActiveData();
+        _updateFunc(false);
       }
     }
   }
@@ -434,7 +446,8 @@ export function Strategy(strategyDescription) {
         _tradingPostProcessing('sell');
       } else {
         _data.state === 'error';
-        _updateActiveData();
+        // _updateActiveData();
+        _updateFunc(false);
       }
     }
   }
@@ -561,8 +574,8 @@ export function Strategy(strategyDescription) {
       _data.state = 'out';
     }
 
-    _updateActiveData();
-    _update(false);
+    // _updateActiveData();
+    _updateFunc(false);
   }
 
 
@@ -653,7 +666,6 @@ export function Strategy(strategyDescription) {
     if (errObj.code === '0x010') {
       return errHandle(StrError.error, preMsg + 'Exchange "' + exName + '" does not support short position trading. Change Exchange depending plugin configurations');
     }
-
   }
 
 
@@ -665,6 +677,7 @@ export function Strategy(strategyDescription) {
     return true;
   }
 
+
   var _checkAtLstOneExNotErr = function() {
     for (i in _exTrading) {
       if (!_exTrading[i].error) return true;
@@ -672,6 +685,7 @@ export function Strategy(strategyDescription) {
 
     return false;
   }
+
 
   var _resetExTradingTraded = function() {
     for (i in _exTrading) {
@@ -708,23 +722,22 @@ export function Strategy(strategyDescription) {
 
   var _createExKraken = function(exchange) {
     var conf = Object.assign({}, ExKraken.ConfigDefault);
-    conf.id = exchange._id;
-    switch (exchange.pair) {
-      case "Ether/Euro":
-        conf.pair = ExKraken.Pair.eth_eur;
-        break;
-      case "Ether/Bitcoin":
-        conf.pair = ExKraken.Pair.eth_btc;
-        break;
-      case "Bitcoin/Euro":
-        conf.pair = ExKraken.Pair.btc_eur;
-        break;
-      default:
-        conf.pair = ExKraken.Pair.btc_eur;
-    }
+    var tmp = Object.assign({}, exchange);
 
+    delete tmp.createdAt;
+    delete tmp.createdBy;
+    delete tmp.modifiedAt;
+    delete tmp.modifiedBy;
+    delete tmp.ownerId;
+    delete tmp.type;
+    delete tmp.actives;
+
+    renameObjKey(tmp, '_id', 'id');
     _exchanges.setObject(exchange._id, new ExKraken());
-    _exchanges.getObject(exchange._id).setConfig(conf);
+    var ret = _exchanges.getObject(exchange._id).setConfig(mergeObjects(conf, tmp));
+
+    if (ret.error !== ExError.ok) return errHandle(StrError.ExConfigError, exchange.name);
+    else return errHandle(StrError.ok, null);
   }
 
 
@@ -770,33 +783,13 @@ export function Strategy(strategyDescription) {
 
 
   this.start = function() {
-    for (var k = 0; k < _exchanges.getObjects().length; k++) {
-      _exchanges.getObjectByIdx(k).update();
-    }
-
-    for (var k = 0; k < _plugins.getObjects().length; k++) {
-      var tmp = _exchanges.getObject(_plugins.getObjectByIdx(k).exId).getPrice();
-
-      if (tmp.error !== ExError.ok) {
-        var instInfo = _exchanges.getObject(_plugins.getObjectByIdx(k).exId).getInstInfo();
-
-        if (instInfo.error !== ExError.ok) {
-          _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
-        } else {
-          _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
-        }
-
-        tmp.result = 0;
-      }
-
-      _plugins.getObjectByIdx(k).inst.start(tmp.result);
-    }
+    _firstRun = true;
 
     if (_strDesc.timeUnit !== 'none') {
       SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
     }
 
-    _updateFunc(false);
+    _updateFunc(true);
   }
 
 
@@ -834,6 +827,7 @@ export function Strategy(strategyDescription) {
       }
     }
   }
+
 
   this.refresh = function() {
     _updateFunc(true);

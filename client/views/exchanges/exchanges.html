@@ -64,7 +64,16 @@
 					Name
 				</th>
 				<th class="th-sortable" data-sort="pair">
-					Currency Pair
+					Balance Type
+				</th>
+				<th class="th-sortable" data-sort="priceType">
+					Pair
+				</th>
+				<th class="th-sortable" data-sort="trAvType">
+					Hot Mode
+				</th>
+				<th class="th-sortable" data-sort="trAvVal">
+					Order Type
 				</th>
 				<th>
 					&nbsp;
@@ -86,7 +95,16 @@
 			{{name}}
 		</td>
 		<td>
+			{{balanceType}}
+		</td>
+		<td>
 			{{pair}}
+		</td>
+		<td>
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="hotMode" {{checked hotMode}} disabled>
+		</td>
+		<td>
+			{{orderType}}
 		</td>
 		{{#if $eq actives 0}}
 		<td class="td-icon">

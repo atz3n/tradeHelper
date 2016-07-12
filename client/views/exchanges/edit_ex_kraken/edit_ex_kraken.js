@@ -13,7 +13,15 @@ Template.ExchangesEditExKraken.helpers({
 });
 
 Template.ExchangesEditExKrakenEditForm.rendered = function() {
-	
+	var tmp = this.data.ex_kraken
+
+	pageSession.set('disableOwBaConfig', false);
+	pageSession.set('disableAvConfig', false);
+	pageSession.set('disableHotModeConfig', true);
+
+	if(tmp.priceType !== 'tradesAverage') pageSession.set('disableAvConfig', true);
+	if(tmp.balanceType === 'krakenBalance') pageSession.set('disableOwBaConfig', true);
+	if(tmp.hotMode) pageSession.set('disableHotModeConfig', false);
 
 	pageSession.set("exchangesEditExKrakenEditFormInfoMessage", "");
 	pageSession.set("exchangesEditExKrakenEditFormErrorMessage", "");
@@ -109,6 +117,32 @@ Template.ExchangesEditExKrakenEditForm.events({
 		e.preventDefault();
 
 		/*BACK_REDIRECT*/
+	},
+	'click input': function(e) {
+
+		if ($(e.target).prop("name") == "priceType") {
+			if($(e.target).prop("value") !== 'tradesAverage'){
+				pageSession.set('disableAvConfig', true);
+			} else {
+				pageSession.set('disableAvConfig', false);
+			}
+		}
+
+		if ($(e.target).prop("name") == "hotMode") {
+			if($(e.target).context.checked) {
+				pageSession.set('disableHotModeConfig', false);
+			} else {
+				pageSession.set('disableHotModeConfig', true);
+			}
+		}
+
+		if ($(e.target).prop("name") == "balanceType") {
+			if($(e.target).prop("value") === 'krakenBalance'){
+				pageSession.set('disableOwBaConfig', true);
+			} else {
+				pageSession.set('disableOwBaConfig', false);
+			}
+		}
 	}
 
 	
@@ -120,6 +154,24 @@ Template.ExchangesEditExKrakenEditForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("exchangesEditExKrakenEditFormErrorMessage");
+	},
+	"pairs": function() {
+		var pairs = this.exKraken_tradePairs.pairs;
+
+		for(i in pairs){
+			if(pairs[i].name === this.ex_kraken.pair) pairs[i] = mergeObjects(pairs[i], {selected: 'selected'});
+			else pairs[i] = mergeObjects(pairs[i], {selected: ''});
+		}
+		return pairs;
+	},
+	'disableAvConfig': function() {
+		return pageSession.get('disableAvConfig');
+	},
+	'disableHotModeConfig': function() {
+		return pageSession.get('disableHotModeConfig');
+	},
+	'disableOwBaConfig': function() {
+		return pageSession.get('disableOwBaConfig');
 	}
 	
 });

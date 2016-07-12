@@ -388,25 +388,150 @@
           },
           {
             "name": "pair",
-            "title": "Currency Pair",
+            "title": "Trade Pair",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "priceType",
+            "title": "Price Type",
             "type": "string",
             "input": "radio",
             "input_items": [
               {
-                "title": "Ether/Euro",
-                "value": "Ether/Euro"
+                "title": "24Average",
+                "value": "24Average"
               },
               {
-                "title": "Ether/Bitcoin",
-                "value": "Ether/Bitcoin"
-              },
-              {
-                "title": "Bitcoin/Euro",
-                "value": "Bitcoin/Euro"
+                "title": "tradesAverage",
+                "value": "tradesAverage"
               }
             ],
+            "required": true,
+            "default": "tradesAverage"
+          },
+          {
+            "name": "trAvType",
+            "title": "Self Average Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "time",
+                "value": "time"
+              },
+              {
+                "title": "quantity",
+                "value": "quantity"
+              }
+            ],
+            "required": true,
+            "default": "time"
+          },
+          {
+            "name": "trAvVal",
+            "title": "Self Average Value",
+            "type": "integer",
+            "required": true,
+            "default": 60,
+            "min": 1
+          },
+          {
+            "name": "orderType",
+            "title": "Order Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "market",
+                "value": "market"
+              },
+              {
+                "title": "limit",
+                "value": "limit"
+              }
+            ],
+            "required": true,
+            "default": "market"
+          },
+          {
+            "name": "conErrorCycles",
+            "title": "Connect to Server tries",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 1
+          },
+          {
+            "name": "conErrorWaitSec",
+            "title": "Delay seconds before next try",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 1
+          },
+          {
+            "name": "orderCheckWaitSec",
+            "title": "Delay seconds before trade finished check",
+            "type": "integer",
+            "required": true,
+            "default": 10,
+            "min": 1
+          },
+          {
+            "name": "hotMode",
+            "title": "Hot Mode",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+         },
+         {
+            "name": "balanceType",
+            "title": "Balance Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "krakenBalance",
+                "value": "krakenBalance"
+              },
+              {
+                "title": "ownBalance",
+                "value": "ownBalance"
+              }
+            ],
+            "required": true,
+            "default": "ownBalance"
+          },
+          {
+            "name": "oBalanceAmount",
+            "title": "Amount of own Balance",
+            "type": "float",
+            "required": true,
+            "default": 1,
+            "min": 0.1
+          },
+          {
+            "name": "key",
+            "title": "Kraken.com API Key",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "secret",
+            "title": "Kraken.com API Secret",
+            "type": "string",
             "required": true
           }
+          
         ],
         "owner_field": "ownerId",
         "roles_allowed_to_read": [
@@ -435,18 +560,6 @@
             "type": "float",
             "default": 100,
             "required": true
-          },
-          {
-            "name": "base",
-            "title": "Base Unit",
-            "type": "string",
-            "default": "c"
-          },
-          {
-            "name": "quote",
-            "title": "Quote Unit",
-            "type": "string",
-            "default": "d"
           },
           {
             "name": "gain",

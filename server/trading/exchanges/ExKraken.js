@@ -7,12 +7,14 @@
  *
  * 
  * @author Atzen
- * @version 0.2.0
+ * @version 0.3.1
  *
  * 
  * CHANGES:
  * 02-July-2016 : Initial version
  * 09-July-2016 : added getPositions function
+ * 12-July-2016 : changed !hotMode + ownBalance combination to work without secret and api keys
+ * 12-July-2016 : bugfixed buy and sell mechanism
  */
 
 /***********************************************************************
@@ -226,19 +228,27 @@ export function ExKraken(ConstrParam) {
    */
   var _calcVolume = function() {
 
-    /* get available balance from kraken.com */
-    var sRet = _syncApiCall('Balance', null);
-    if (sRet.error !== ExError.ok) return sRet;
+    if (_config.hotMode) {
+
+      /* get available balance from kraken.com */
+      var sRet = _syncApiCall('Balance', null);
+      if (sRet.error !== ExError.ok) return sRet;
 
 
-    /* check returned quote balance */
-    var balance = parseFloat(sRet.result[_pairUnits.quote]);
-    if (isNaN(balance)) return errHandle(ExError.parseError, null)
+      /* check returned quote balance */
+      var balance = parseFloat(sRet.result[_pairUnits.quote]);
+      if (isNaN(balance)) return errHandle(ExError.parseError, null)
 
 
-    /* set balance to _oBalance if ownBalance is configured */
-    if (_config.balanceType === 'ownBalance') {
-      if (balance < _oBalance) return errHandle(ExError.toLessBalance, null);
+      /* set balance to _oBalance if ownBalance is configured */
+      if (_config.balanceType === 'ownBalance') {
+        if (balance < _oBalance) return errHandle(ExError.toLessBalance, null);
+        balance = _oBalance;
+      }
+
+    } else {
+
+      /* set balance to _oBalance */
       balance = _oBalance;
     }
 
@@ -363,8 +373,6 @@ export function ExKraken(ConstrParam) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
     if (_config.pair === 'undefined') return false;
-    if (_config.key === 'undefined') return false;
-    if (_config.secret === 'undefined') return false;
 
     if (_config.balanceType !== 'krakenBalance' && _config.balanceType !== 'ownBalance') return false;
     if (isNaN(_config.oBalanceAmount)) return false;
@@ -372,7 +380,14 @@ export function ExKraken(ConstrParam) {
     if (_config.qAmountType !== 'value' && _config.qAmountType !== 'percentage') return false;
     if (isNaN(_config.qAmount)) return false;
 
-    if (typeof _config.hotMode !== 'boolean') errHandle(ExError, null);
+    if (typeof _config.hotMode !== 'boolean') return false;
+
+    if (_config.hotMode) {
+      if (_config.key === 'undefined') return false;
+      if (_config.secret === 'undefined') return false;
+    } else {
+      if (_config.balanceType !== 'ownBalance') return false;
+    }
 
     if (_config.priceType !== 'tradesAverage' && _config.priceType !== '24Average') return false;
     if (_config.trAvType !== 'time' && _config.trAvType !== 'quantity') return false;
@@ -581,7 +596,7 @@ export function ExKraken(ConstrParam) {
   this.buy = async function(position) {
 
     /* long position */
-    if (position === 'long') {
+    if (position === 'none') {
 
       /* calculate volume */
       var cRet = _cycFuncCall(function() {
@@ -589,8 +604,7 @@ export function ExKraken(ConstrParam) {
       });
 
       if (cRet.error !== ExError.ok) {
-        _boughtNotifyFunc(this.getInstInfo().result, cRet);
-        return;
+        return _boughtNotifyFunc(this.getInstInfo().result, cRet);
       }
 
 
@@ -600,10 +614,10 @@ export function ExKraken(ConstrParam) {
         _volume = cRet.result;
         _oBalance -= _tPrice * _volume;
 
-        _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
-        return;
+        return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
+      console.log('')
 
       /* set order */
       var oRet = _cycFuncCall(function() {
@@ -611,8 +625,7 @@ export function ExKraken(ConstrParam) {
       });
 
       if (oRet.error !== ExError.ok) {
-        _boughtNotifyFunc(this.getInstInfo().result, oRet);
-        return;
+        return _boughtNotifyFunc(this.getInstInfo().result, oRet);
       }
 
       _orderOpen = true;
@@ -627,15 +640,14 @@ export function ExKraken(ConstrParam) {
         });
 
         if (coRet.error !== ExError.ok) {
-          _boughtNotifyFunc(this.getInstInfo().result, coRet);
-          return;
+          return _boughtNotifyFunc(this.getInstInfo().result, coRet);
         }
 
         if (coRet.result) {
           _orderOpen = false;
           _oBalance -= _tPrice * _volume;
-          _boughtNotifyFunc(this.getInstInfo().result, coRet);
-          return;
+
+          return _boughtNotifyFunc(this.getInstInfo().result, coRet);
         }
       }
 
@@ -646,13 +658,11 @@ export function ExKraken(ConstrParam) {
         _tPrice = _price;
         _oBalance += _volume * _tPrice;
 
-        _boughtNotifyFunc(this.getInstInfo().result, true);
-        return;
+        return _boughtNotifyFunc(this.getInstInfo().result, true);
       } else {
 
         /* TODO implement buy mechanism */
-        _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.notImpl, null));
-        return;
+        return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.notImpl, null));
       }
     }
 
@@ -675,8 +685,7 @@ export function ExKraken(ConstrParam) {
         _tPrice = _price;
         _oBalance += _tPrice * _volume;
 
-        _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
-        return;
+        return _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
 
@@ -686,8 +695,7 @@ export function ExKraken(ConstrParam) {
       });
 
       if (oRet.error !== ExError.ok) {
-        _soldNotifyFunc(this.getInstInfo().result, oRet);
-        return;
+        return _soldNotifyFunc(this.getInstInfo().result, oRet);
       }
 
       _orderOpen = true;
@@ -702,21 +710,20 @@ export function ExKraken(ConstrParam) {
         });
 
         if (coRet.error !== ExError.ok) {
-          _soldNotifyFunc(this.getInstInfo().result, coRet);
-          return;
+          return _soldNotifyFunc(this.getInstInfo().result, coRet);
         }
 
         if (coRet.result) {
           _orderOpen = false;
           _oBalance += _tPrice * _volume;
-          _soldNotifyFunc(this.getInstInfo().result, coRet);
-          return;
+
+          return _soldNotifyFunc(this.getInstInfo().result, coRet);
         }
       }
 
 
       /* short position */
-    } else if (position === 'short') {
+    } else if (position === 'none') {
 
       /* calculate volume */
       var cRet = _cycFuncCall(function() {
@@ -724,8 +731,7 @@ export function ExKraken(ConstrParam) {
       });
 
       if (cRet.error !== ExError.ok) {
-        _soldNotifyFunc(this.getInstInfo().result, cRet);
-        return;
+        return _soldNotifyFunc(this.getInstInfo().result, cRet);
       }
 
 
@@ -734,13 +740,11 @@ export function ExKraken(ConstrParam) {
         _volume = cRet.result;
         _oBalance += _volume * _tPrice;
 
-        _soldNotifyFunc(this.getInstInfo().result, true);
-        return;
+        return _soldNotifyFunc(this.getInstInfo().result, true);
       } else {
 
         /* TODO implement sell mechanism */
-        _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.notImpl, null));
-        return;
+        return _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.notImpl, null));
       }
     }
 
@@ -806,7 +810,7 @@ export function ExKraken(ConstrParam) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPositions = function() {
-    return errHandle(ExError.ok, {long: true, short: false});
+    return errHandle(ExError.ok, { long: true, short: false });
   }
 
 
