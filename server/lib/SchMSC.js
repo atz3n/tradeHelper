@@ -1,20 +1,26 @@
 /**
  * @description:
- * Manages schedules
+ * Manages SyncCron schedules
  *
  * 
  * - dependencies:
  *    InstHandler.js v1.4
+ *    SyncedCron (meteor add percolate:synced-cron)
+ *    later.js (meteor add voidale:later-js-tz)
  *    
  * - static only module
  *
  * 
  * @author Atzen
- * @version 1.0.0
+ * @version 1.1.0
  *
  * 
  * CHANGES:
- * 13-July-2016 : Initial version
+ * 12-Apr-2016 : Initial version
+ * 16-Apr-2016 : added '_' prefix to private statements
+ * 24-May-2016 : added possibility to forward parameters to callback function
+ * 05-July-2016 : added undefined check in schedules functions
+ * 13-July-2016 : changed name from SchM to SchMSC
  */
 
 import { InstHandler } from './InstHandler.js';
@@ -44,13 +50,27 @@ var _schedules = new InstHandler();
  ***********************************************************************/
 
 /**
+ * Allows to configure the underlying SyncedCron system
+ * @param {Object} config parameter of SyncedCron.config function
+ */
+SchMSC.setSyncedCronConfig = function(config) {
+  SyncedCron.config(config);
+}
+
+
+/**
+ * Starts all schedules (has to be called to start scheduling)
+ */
+SchMSC.startSchedules = function() {
+  SyncedCron.start();
+}
+
+
+/**
  * Removes all schedules
  */
-SchM.removeSchedules = function() {
-  for (var i = 0; i < _schedules.getObjectsArray().length; i++) {
-    _schedules.getObjectByIdx(i).stop();
-  }
-
+SchMSC.removeSchedules = function() {
+  SyncedCron.stop();
   _schedules.clear();
 }
 
@@ -58,33 +78,26 @@ SchM.removeSchedules = function() {
 /**
  * Stops all schedules
  */
-SchM.stopSchedules = function() {
-  for (var i = 0; i < _schedules.getObjectsArray().length; i++) {
-    _schedules.getObjectByIdx(i).stop();
-  }
-}
-
-
-/**
- * Restarts all schedules
- */
-SchM.restartSchedules = function() {
-  for (var i = 0; i < _schedules.getObjectsArray().length; i++) {
-    _schedules.getObjectByIdx(i).restart();
-  }
+SchMSC.stopSchedules = function() {
+  SyncedCron.pause();
 }
 
 
 /**
  * Creates a schedule
  * @param {string} id               id of schedule
- * @param {number} time             schedule time in seconds
+ * @param {string} time             schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  * @param {function} cyclicFunction callback function that will be executed
- * @param {what ever} cyclicFunctionParam   parameters of callback function
  */
-SchM.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
+SchMSC.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
+  /* check error */
+  var tmp = later.parse.text(time);
+  if (tmp.error != -1) return false;
+
   _schedules.setObject(id, new Schedule());
-  _schedules.getObject(id).createSchedule(time, cyclicFunction, cyclicFunctionParam);
+  _schedules.getObject(id).createSchedule(id, time, cyclicFunction, cyclicFunctionParam);
+
+  return true;
 }
 
 
@@ -92,7 +105,7 @@ SchM.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
  * Removes a schedule
  * @param  {string} id id of schedule
  */
-SchM.removeSchedule = function(id) {
+SchMSC.removeSchedule = function(id) {
   if (_schedules.getObject(id) !== 'undefined') {
     _schedules.getObject(id).stop();
     _schedules.removeObject(id);
@@ -104,7 +117,7 @@ SchM.removeSchedule = function(id) {
  * Stops a schedule
  * @param  {string} id id of schedule
  */
-SchM.stopSchedule = function(id) {
+SchMSC.stopSchedule = function(id) {
   if (_schedules.getObject(id) !== 'undefined') {
     _schedules.getObject(id).stop();
   }
@@ -115,7 +128,7 @@ SchM.stopSchedule = function(id) {
  * Restarts a schedule (only successful after creating and stopping a schedule)
  * @param  {string} id id of schedule
  */
-SchM.restartSchedule = function(id) {
+SchMSC.restartSchedule = function(id) {
   if (_schedules.getObject(id) !== 'undefined') {
     _schedules.getObject(id).restart();
   }
@@ -125,9 +138,9 @@ SchM.restartSchedule = function(id) {
 /**
  * Sets/Resets a schedule time
  * @param {string} id   id of schedule
- * @param {number} time schedule time in seconds
+ * @param {string} time schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
  */
-SchM.setScheduleTime = function(id, time) {
+SchMSC.setScheduleTime = function(id, time) {
   if (_schedules.getObject(id) !== 'undefined') {
     _schedules.getObject(id).setTime(time);
   }
@@ -138,7 +151,7 @@ SchM.setScheduleTime = function(id, time) {
   Class
  ***********************************************************************/
 
-export function SchM() {
+export function SchMSC() {
 
   /***********************************************************************
     Private Instance Variable
@@ -183,21 +196,10 @@ function Schedule() {
    * @type {Object}
    */
   var _cycFuncParams = {
-    time: 'init',
-    param: 'init'
+    _id: 'init',
+    _time: 'init',
+    _param: 'init'
   };
-
-  /**
-   * Schedule Id
-   * @type {Object}
-   */
-  var _schedId = {};
-
-  /**
-   * Function call blocker
-   * @type {Boolean}
-   */
-  var _blocKCall = false;
 
 
   /***********************************************************************
@@ -208,24 +210,22 @@ function Schedule() {
     Private Instance Function
    ***********************************************************************/
 
-
-  /**
-   * Calls the callback function if last call is finished
-   */
-  var _asyncCallFunc = async function() {
-    if (!_blocKCall) {
-      _blocKCall = true;
-      _cycFunc(_cycFuncParams.param);
-      _blocKCall = false;
-    }
-  }
-
-
   /**
    * creates a schedule
    */
   var _createSch = function() {
-    _schedId = Meteor.setInterval(_asyncCallFunc, _cycFuncParams.time * 1000);
+
+    SyncedCron.add({
+      name: _cycFuncParams._id, // set schedule name
+
+      schedule: function(parser) {
+        return parser.text(_cycFuncParams._time) // set schedule time
+      },
+
+      job: function() {
+        _cycFunc(_cycFuncParams._param); // set callback function
+      }
+    });
   }
 
 
@@ -235,25 +235,28 @@ function Schedule() {
 
   /**
    * Creates the schedule
-   * @param {number} time                     schedule time in seconds
+   * @param {string} id                       id of schedule
+   * @param {string} time                     schedule time in later.parse.text format (http://bunkat.github.io/later/parsers.html#overview)
    * @param {function} cyclicFunction         callback function that will be executed
    * @param {what ever} cyclicFunctionParam   parameters of callback function
    */
-  this.createSchedule = function(time, cyclicFunction, cyclicFunctionParam) {
+  this.createSchedule = function(id, time, cyclicFunction, cyclicFunctionParam) {
     _cycFunc = cyclicFunction;
-    _cycFuncParams.time = time;
-    _cycFuncParams.param = cyclicFunctionParam;
+    _cycFuncParams._id = id;
+    _cycFuncParams._time = time;
+    _cycFuncParams._param = cyclicFunctionParam;
+
     _createSch();
   }
 
 
   /**
    * Sets/Resets the schedule time
-   * @param {number} time                     schedule time in seconds
+   * @param  {string} id id of schedule
    */
   this.setTime = function(time) {
-    this.stop();
-    _cycFuncParams.time = time;
+    this.stop(_cycFuncParams._id);
+    _cycFuncParams._time = time;
     _createSch();
   }
 
@@ -262,7 +265,7 @@ function Schedule() {
    * Removes the schedule
    */
   this.stop = function() {
-    Meteor.clearInterval(_schedId);
+    SyncedCron.remove(_cycFuncParams._id);
   }
 
 

@@ -1,4 +1,4 @@
-import { SchM } from './lib/SchM.js';
+import { SchMSC } from './lib/SchMSC.js';
 
 var verifyEmail = false;
 
@@ -10,7 +10,7 @@ deactivateStrategies();
 
 console.log('enable getExTradePairInfos in server.js!!!')
 // getExTradePairInfos();
-// SchM.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
+// SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
 
 	// read environment variables from Meteor.settings
 	if(Meteor.settings && Meteor.settings.env && _.isObject(Meteor.settings.env)) {
@@ -119,7 +119,7 @@ console.log('enable getExTradePairInfos in server.js!!!')
 	}
 
 	
-  SchM.startSchedules();
+  SchMSC.startSchedules();
 });
 
 Meteor.methods({

@@ -20,6 +20,7 @@ import { PlSwing } from '../plugins/PlSwing.js';
 import { ExKraken } from '../exchanges/ExKraken.js';
 import { ExTestData } from '../exchanges/ExTestData.js';
 import { SchM } from '../../lib/SchM.js';
+import { SchMSC } from '../../lib/SchMSC.js';
 
 
 /***********************************************************************
@@ -188,7 +189,7 @@ export function Strategy(strategyDescription) {
             pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
 
-          if(_firstRun){
+          if (_firstRun) {
             _firstRun = false;
             tmp.inst.start(pTmp.result);
           } else {
@@ -704,6 +705,18 @@ export function Strategy(strategyDescription) {
     }
   }
 
+  var _calcSchMUpdateTime = function() {
+    var unit2Sec = 60; // 1 min
+    _strDesc.updateTime + ' ' + _strDesc.timeUnit
+
+    if (_strDesc.timeUnit === 'seconds') unit2Sec = 1;
+    if (_strDesc.timeUnit === 'minutes') unit2Sec = 1 * 60;
+    if (_strDesc.timeUnit === 'hours') unit2Sec = 1 * 60 * 60;
+    if (_strDesc.timeUnit === 'day') unit2Sec = 1 * 60 * 60 * 24;
+
+    return _strDesc.updateTime * unit2Sec;
+  }
+
 
   var _createPlSwing = function(plugin) {
     var conf = Object.assign({}, PlSwing.ConfigDefault);
@@ -786,7 +799,12 @@ export function Strategy(strategyDescription) {
     _firstRun = true;
 
     if (_strDesc.timeUnit !== 'none') {
-      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
+      if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
+        _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
+        SchM.createSchedule(_strDesc._id, _calcSchMUpdateTime(), _updateFunc, true);
+      } else {
+        SchMSC.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
+      }
     }
 
     _updateFunc(true);
@@ -796,7 +814,12 @@ export function Strategy(strategyDescription) {
   this.resume = function() {
 
     if (_strDesc.timeUnit !== 'none') {
-      SchM.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
+      if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
+        _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
+        SchM.restartSchedule(_strDesc._id)
+      } else {
+        SchMSC.restartSchedule(_strDesc._id)
+      }
     }
 
     _updateFunc(true);
@@ -804,8 +827,14 @@ export function Strategy(strategyDescription) {
 
 
   this.stop = function() {
+
     if (_strDesc.timeUnit !== 'none') {
-      SchM.stopSchedule(_strDesc._id);
+      if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
+        _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
+        SchM.stopSchedule(_strDesc._id)
+      } else {
+        SchMSC.stopSchedule(_strDesc._id)
+      }
     }
   }
 
