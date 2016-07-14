@@ -9,5 +9,3 @@
 - push notification
 - ssl connection
 - amount field in Swing configuration
-- change creation of actives to pause state
-- change amount to volume and volume to cost
