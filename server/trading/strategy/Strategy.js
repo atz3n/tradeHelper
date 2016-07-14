@@ -21,6 +21,7 @@ import { ExKraken } from '../exchanges/ExKraken.js';
 import { ExTestData } from '../exchanges/ExTestData.js';
 import { SchM } from '../../lib/SchM.js';
 import { SchMSC } from '../../lib/SchMSC.js';
+import { Logger } from '../../lib/Logger.js';
 
 
 /***********************************************************************
@@ -100,6 +101,8 @@ export function Strategy(strategyDescription) {
 
   var _firstRun = false;
 
+  var _priceLogger = {};
+
 
   /***********************************************************************
     Public Instance Variable
@@ -110,6 +113,8 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function(fullUpdate) {
+    var lPrice = '';
+
     if (_checkExsNotInTrade()) {
 
       _callNotifyFunc = false;
@@ -153,6 +158,8 @@ export function Strategy(strategyDescription) {
             if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
             else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
+
+          lPrice += pTmp.result + ';'
           _data.exchanges[i].price.push(pTmp.result);
         }
 
@@ -171,6 +178,8 @@ export function Strategy(strategyDescription) {
         }
         _data.exchanges[i].info = iTmp;
       }
+
+      _logPrice(lPrice.slice(0, -1));
 
       for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
         var tmp = _plugins.getObjectByIdx(i);
@@ -705,6 +714,7 @@ export function Strategy(strategyDescription) {
     }
   }
 
+
   var _calcSchMUpdateTime = function() {
     var unit2Sec = 60; // 1 min
     _strDesc.updateTime + ' ' + _strDesc.timeUnit
@@ -715,6 +725,13 @@ export function Strategy(strategyDescription) {
     if (_strDesc.timeUnit === 'day') unit2Sec = 1 * 60 * 60 * 24;
 
     return _strDesc.updateTime * unit2Sec;
+  }
+
+
+  var _logPrice = function(price) {
+    if(Meteor.settings.private.PriceDataLogging){
+      _priceLogger.info(price);
+    }
   }
 
 
@@ -896,6 +913,16 @@ export function Strategy(strategyDescription) {
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
+    if(Meteor.settings.private.PriceDataLogging){
+      _priceLogger = new Logger();
+      _priceLogger.setConfig({viewLevel: false, viewTime: false});
+      _priceLogger.setDailyFileLogger(_strDesc._id + 'pl', '../../../../../../TH_Prices/', '__' + _strDesc.name  + '__' + _strDesc._id);
+      // _priceLogger.setFileLogger(_strDesc.name  + '__' + _strDesc._id +'.log', '../../../../../../TH_Prices/');
+      _priceLogger.info('');
+      _priceLogger.info('Configuration:');
+      _priceLogger.info('update: ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit);
+    }
+
 
     /* create plugin and exchange instances */
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
@@ -992,6 +1019,7 @@ export function Strategy(strategyDescription) {
 
             _exTrading.push({ trading: false, error: false });
 
+
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
             _data.exchanges[exCnt] = {};
@@ -1006,6 +1034,9 @@ export function Strategy(strategyDescription) {
             if (pTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x006', strId: _strDesc._id, exId: plugin.exchange._id });
             _data.exchanges[exCnt].units = pTmp.result;
 
+            _logPrice('ExName: ' + _data.exchanges[exCnt].name + ', ExInsInfo: ' +  JSON.stringify(_data.exchanges[exCnt].instInfo) + ', PairUnits: ' + 
+                      JSON.stringify(_data.exchanges[exCnt].units) + ', ExConfig: ' + JSON.stringify(tmpEx.getConfig().result) );
+            
             exCnt++;
           }
         }

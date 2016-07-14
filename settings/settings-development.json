@@ -3,5 +3,6 @@
   	"ExTestDataErrorConfig": "true"
   },
   "private": {
+  	"PriceDataLogging": "true"
   }
 }
