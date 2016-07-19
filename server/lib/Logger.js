@@ -10,11 +10,12 @@
  * 
  * 
  * @author Atzen
- * @version 0.9.0
+ * @version 0.9.1
  *
  * 
  * CHANGES:
  * 15-Apr-2016 : Initial version
+ * 19-July-2016 : BugFix: setDailyFileLogger() did not create daily schedule
  */
 
 
@@ -283,7 +284,7 @@ export function Logger(name) {
     _createLogger();
 
     // return SchMSC.createSchedule(scheduleName, 'every 1 min', function() {
-    return SchMSC.createSchedule(scheduleName, 'at 00:00 pm', function() {
+    return SchMSC.createSchedule(scheduleName, 'at 00:00', function() {
       _createFileLogger(path, _createFileName(suffix));
       _createLogger();
     });
