@@ -283,7 +283,7 @@ export function Logger(name) {
     _createLogger();
 
     // return SchMSC.createSchedule(scheduleName, 'every 1 min', function() {
-    return SchMSC.createSchedule(scheduleName, 'at 00:00 pm', function() {
+    return SchMSC.createSchedule(scheduleName, 'at 00:00', function() {
       _createFileLogger(path, _createFileName(suffix));
       _createLogger();
     });

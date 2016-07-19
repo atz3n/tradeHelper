@@ -417,6 +417,7 @@ export function Strategy(strategyDescription) {
     }
   }
 
+
   var _exBoughtNotifyFunc = function(instInfo, errObject) {
     // console.log('boughtFunc')
     var idx = _exchanges.getObjectIdx(instInfo.id);
@@ -844,6 +845,23 @@ export function Strategy(strategyDescription) {
 
 
   this.stop = function() {
+
+    if (_strDesc.timeUnit !== 'none') {
+      if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
+        _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
+        SchM.removeSchedule(_strDesc._id)
+      } else {
+        SchMSC.removeSchedule(_strDesc._id)
+      }
+    }
+
+    if(Meteor.settings.private.PriceDataLogging){
+      _priceLogger.removeDailyFileLogger(_strDesc._id + 'pl');
+    }
+  }
+
+
+  this.pause = function() {
 
     if (_strDesc.timeUnit !== 'none') {
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||

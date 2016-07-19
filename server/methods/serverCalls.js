@@ -57,7 +57,7 @@ var start = function(strategyId) {
 var pause = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     if (strategies.getObject(strategyId).startFlag === true) {
-      strategies.getObject(strategyId).inst.stop();
+      strategies.getObject(strategyId).inst.pause();
       strategies.getObject(strategyId).startFlag = false;
     }
   } else {
