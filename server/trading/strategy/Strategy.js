@@ -179,7 +179,8 @@ export function Strategy(strategyDescription) {
         _data.exchanges[i].info = iTmp;
       }
 
-      _logPrice(lPrice.slice(0, -1));
+      _logPrice(lPrice + ' ' + _data.curTime[_data.curTime.length - 1]);
+      // _logPrice(lPrice.slice(0, -1));
 
       for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
         var tmp = _plugins.getObjectByIdx(i);
@@ -934,8 +935,8 @@ export function Strategy(strategyDescription) {
     if(Meteor.settings.private.PriceDataLogging){
       _priceLogger = new Logger();
       _priceLogger.setConfig({viewLevel: false, viewTime: false});
-      _priceLogger.setDailyFileLogger(_strDesc._id + 'pl', '../../../../../../TH_Prices/', '__' + _strDesc.name  + '__' + _strDesc._id);
-      // _priceLogger.setFileLogger(_strDesc.name  + '__' + _strDesc._id +'.log', '../../../../../../TH_Prices/');
+      // _priceLogger.setDailyFileLogger(_strDesc._id + 'pl', '../../../../../../TH_Prices/', '__' + _strDesc.name  + '__' + _strDesc._id);
+      _priceLogger.setFileLogger(_strDesc.name  + '__' + _strDesc._id +'.log', '../../../../../../TH_Prices/');
       _priceLogger.info('');
       _priceLogger.info('Configuration:');
       _priceLogger.info('update: ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit);
