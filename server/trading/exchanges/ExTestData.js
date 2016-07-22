@@ -4,12 +4,14 @@
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.5.0
  * 
  * CHANGES:
  * 04-July-2016 : Initial version
  * 11-July-2016 : added throw error system
  * 11-July-2016 : added position configuration
+ * 22-July-2016 : implemented data input
+ *                fixed bug: long/short position was not considered while buy/sell function call
  */
 
 
@@ -32,7 +34,7 @@ ExTestData.ConfigDefault = {
   id: 'undefined',
 
   priceType: 'sinus', // sinus (sinus shaped price flow), data (uses data array)
-  data: [], // data array
+  data: '', // data string
 
   startVal: 0, // counter start value
   gain: 1, // multiplicator
@@ -155,6 +157,17 @@ export function ExTestData() {
     Private Instance Function
    ***********************************************************************/
 
+  var _dataString2Array = function(data) {
+    var tmp = data.split(',');
+    var tmp2 = [];
+    for (var j = 0; j < tmp.length; j++) {
+      let tmp3 = tmp[j].split('\n');
+      for (var k = 0; k < tmp3.length; k++) tmp2.push(tmp3[k])
+    }
+    return tmp2;
+  }
+
+
   /**
    * Checks configuration
    * @return {bool} false if error occurs
@@ -165,7 +178,12 @@ export function ExTestData() {
     if (_config.priceType !== 'sinus' && _config.priceType !== 'data') return false;
 
     if (_config.priceType === 'data') {
-      if (typeof _config.data !== 'object') return false;
+      if (typeof _config.data !== 'string') return false;
+
+      var tmp = _dataString2Array(_config.data);
+      for (var i = 0; i < tmp.length; i++) {
+        if (isNaN(tmp[i])) return false;
+      }
     }
 
     if (isNaN(_config.startVal)) return false;
@@ -229,8 +247,8 @@ export function ExTestData() {
     if (!_checkConfig()) return errHandle(ExError.error, null);
 
     _counter = _config.startVal;
-    _dataArray = _config.data;
     _balance = _config.balanceAmount;
+    _dataArray = _dataString2Array(_config.data);
 
     return errHandle(ExError.ok, null);
   }
@@ -286,7 +304,12 @@ export function ExTestData() {
         break;
 
       case 'data':
-        price = Math.abs(_config.gain * _dataArray[_counter % _dataArray.length] + _config.offset);
+        if (_counter < _dataArray.length) {
+          price = Math.abs(_config.gain * _dataArray[_counter % _dataArray.length] + _config.offset);
+        } else {
+          price = Math.abs(_config.gain * _dataArray[_dataArray.length - 1] + _config.offset);
+          return errHandle(ExError.finished, null);
+        }
         break;
 
       default:
@@ -331,11 +354,11 @@ export function ExTestData() {
     }
 
     if (!_cancelTrade) {
-      if ('none') {
+      if (positon === 'none') {
         _volume = _balance / this.getPrice().result;
-        _balance = 0;
-      } else if ('short') {
-        _balance = _volume * this.getPrice().result;
+        _balance -= _volume * this.getPrice().result;
+      } else if (positon === 'short') {
+        _balance -= _volume * this.getPrice().result;
       } else {
         /* wrong parameter */
         _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
@@ -364,11 +387,11 @@ export function ExTestData() {
     }
 
     if (!_cancelTrade) {
-      if ('long') {
-        _balance = _volume * this.getPrice().result;
-      } else if ('none') {
+      if (positon === 'none') {
         _volume = _balance / this.getPrice().result;
-        _balance *= 2;
+        _balance += _volume * this.getPrice().result;
+      } else if (positon === 'long') {
+        _balance += _volume * this.getPrice().result;
       } else {
         /* wrong parameter */
         _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));

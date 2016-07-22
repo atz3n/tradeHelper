@@ -125,6 +125,7 @@ export function Strategy(strategyDescription) {
 
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
+
         if (fullUpdate) {
           if (tmp.update().error !== ExError.ok) {
 
@@ -147,14 +148,20 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
+              if (pTmp.error === ExError.finished) {
+                _errorFunc(_strDesc._id, errorMessage({ code: '0x011', strId: _strDesc._id, exId: instInfo.result.id }));
+              } else {
+                _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
+              }
             }
 
             if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
             else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
+
           _data.exchanges[i].price.push(pTmp.result);
         }
+
 
         var iTmp = tmp.getInfo();
         if (iTmp.error !== ExError.ok) {
@@ -172,28 +179,19 @@ export function Strategy(strategyDescription) {
         _data.exchanges[i].info = iTmp;
       }
 
+
       for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
         var tmp = _plugins.getObjectByIdx(i);
+
         if (fullUpdate) {
-          var pTmp = _exchanges.getObject(tmp.exId).getPrice();
-          if (pTmp.error !== ExError.ok) {
-
-            var instInfo = pTmp.getInstInfo();
-
-            if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
-            } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
-            }
-
-            pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
-          }
+          var eIdx = _exchanges.getObjectIdx(tmp.exId);
+          var price = _data.exchanges[eIdx].price[_data.exchanges[eIdx].price.length - 1];
 
           if (_firstRun) {
             _firstRun = false;
-            tmp.inst.start(pTmp.result);
+            tmp.inst.start(price);
           } else {
-            tmp.inst.update(pTmp.result);
+            tmp.inst.update(price);
           }
         }
 
@@ -599,74 +597,79 @@ export function Strategy(strategyDescription) {
     }
 
 
-    var preMsg = 'AN ERROR OCCURRED IN STRATEGY "' + strName + '":' + '\n';
+    var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + strName + '":' + '\n';
+    var infPreMsg = 'AN INFO FROM STRATEGY "' + strName + '":' + '\n';
 
     if (errObj.code === '0x000') {
-      return errHandle(StrError.error, preMsg + 'Configuration of Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + exName + '" could not be set!');
     }
 
     if (errObj.code === '0x001') {
-      return errHandle(StrError.error, preMsg + 'Configuration of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x002') {
-      return errHandle(StrError.error, preMsg + 'Current price from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Current price from Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x003') {
-      return errHandle(StrError.error, preMsg + 'Additional informations of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Additional informations of Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x004') {
-      return errHandle(StrError.error, preMsg + 'Current Price from Exchange "' + exName + '" could not be updated!');
+      return errHandle(StrError.error, erPreMsg + 'Current Price from Exchange "' + exName + '" could not be updated!');
     }
 
     if (errObj.code === '0x005') {
-      return errHandle(StrError.error, preMsg + 'Instance informations from an Exchange could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Instance informations from an Exchange could not be fetched!');
     }
 
     if (errObj.code === '0x006') {
-      return errHandle(StrError.error, preMsg + 'Trade pair units from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade pair units from Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x007') {
-      return errHandle(StrError.error, preMsg + 'Trade price from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade price from Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x008') {
-      return errHandle(StrError.error, preMsg + 'Trade volume from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade volume from Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x009') {
-      return errHandle(StrError.error, preMsg + 'Bought notify function from Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Bought notify function from Exchange "' + exName + '" could not be set!');
     }
 
     if (errObj.code === '0x00A') {
-      return errHandle(StrError.error, preMsg + 'Sold notify function from Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Sold notify function from Exchange "' + exName + '" could not be set!');
     }
 
     if (errObj.code === '0x00B') {
-      return errHandle(StrError.error, preMsg + 'Something went wrong while buying at Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while buying at Exchange "' + exName + '"');
     }
 
     if (errObj.code === '0x00C') {
-      return errHandle(StrError.error, preMsg + 'Something went wrong while selling at Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while selling at Exchange "' + exName + '"');
     }
 
     if (errObj.code === '0x00D') {
-      return errHandle(StrError.error, preMsg + 'Something went wrong while stopping a trade from Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while stopping a trade from Exchange "' + exName + '"');
     }
 
     if (errObj.code === '0x00E') {
-      return errHandle(StrError.error, preMsg + 'Available  position informations of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Available  position informations of Exchange "' + exName + '" could not be fetched!');
     }
 
     if (errObj.code === '0x00F') {
-      return errHandle(StrError.error, preMsg + 'Exchange "' + exName + '" does not support long position trading. Change Exchange depending plugin configurations');
+      return errHandle(StrError.error, erPreMsg + 'Exchange "' + exName + '" does not support long position trading. Change Exchange depending plugin configurations');
     }
 
     if (errObj.code === '0x010') {
-      return errHandle(StrError.error, preMsg + 'Exchange "' + exName + '" does not support short position trading. Change Exchange depending plugin configurations');
+      return errHandle(StrError.error, erPreMsg + 'Exchange "' + exName + '" does not support short position trading. Change Exchange depending plugin configurations');
+    }
+
+    if (errObj.code === '0x011') {
+      return errHandle(ExError.finished, infPreMsg + 'Exchange "' + exName + '" finished');
     }
   }
 
@@ -839,6 +842,7 @@ export function Strategy(strategyDescription) {
       }
     }
   }
+
 
   this.pause = function() {
 

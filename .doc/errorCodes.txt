@@ -48,3 +48,6 @@ An position long dismatch occurred
 
 ID: 0x010
 An position short dismatch occurred
+
+ID: 0x011
+An Exchange called ExError.finished

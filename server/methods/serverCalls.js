@@ -27,7 +27,7 @@ function strError(strategyId, errObj) {
     sOIdNfy = Strategies.findOne({ _id: strategyId }).ownerId;
     sStrIdNfy = strategyId;
   }
-  Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj)], function(error, result) {});
+  Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj, strategyId)], function(error, result) {});
 }
 
 
@@ -141,26 +141,32 @@ var tradePairInfos = function(exchangeType) {
 var errMessage = function(errHandleObject, strategyId) {
 
   if (errHandleObject.error === StrError.ok) {
-    return errHandle(false, null);
+    return errHandle(null, null);
   }
 
   if (errHandleObject.error === ExError.ok) {
-    return errHandle(false, errHandleObject.result);
+    return errHandle(null, errHandleObject.result);
   }
 
   if (errHandleObject.error === StrError.notFound) {
-    return errHandle(true, 'Strategy: ' + errHandleObject.result + ' not found!');
+    return errHandle('error', 'Strategy: ' + errHandleObject.result + ' not found!');
   }
 
   if (errHandleObject.error === StrError.error) {
-    return errHandle(true, errHandleObject.result);
+    return errHandle('error', errHandleObject.result);
   }
 
   if(errHandleObject.error === ExError.srvConError) {
-    return errHandle(true, 'Could not connect to server');
+    return errHandle('error', 'Could not connect to server');
   }
 
-  return errHandle(true, 'Sorry, an unknown error occurred!');
+  if(errHandleObject.error === ExError.finished) {
+    pause(strategyId);
+    Strategies.update({ _id: strategyId }, { $set: { paused: true } });
+    return errHandle('info', errHandleObject.result);
+  }
+
+  return errHandle('error', 'Sorry, an unknown error occurred!');
 }
 
 
