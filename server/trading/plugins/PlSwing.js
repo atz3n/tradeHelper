@@ -184,7 +184,6 @@ export function PlSwing(logger) {
   }
 
 
-
   this.getInfo = function() {
     var info = {};
 
@@ -192,7 +191,11 @@ export function PlSwing(logger) {
     info.Current = cropFracDigits(_data.currentVal, 6);
     info.Bottom = cropFracDigits(_data.bottomVal, 6);
 
-    return info;
+    return errHandle(ExError.ok, [
+      { title: 'Top Value', value: cropFracDigits(_data.topVal, 6) },
+      { title: 'Current Value', value: cropFracDigits(_data.currentVal, 6) },
+      { title: 'Bottom Value', value: cropFracDigits(_data.bottomVal, 6) }
+    ]);
   }
 
 
@@ -202,7 +205,6 @@ export function PlSwing(logger) {
     _data.bottomVal = price;
     _data.topVal = price;
   }
-
 
 
   this.bought = function(price) {
@@ -260,7 +262,8 @@ export function PlSwing(logger) {
     }
   }
 
+
   this.getPositions = function() {
-    return {long: _config.enableLong, short: _config.enableShort}
+    return { long: _config.enableLong, short: _config.enableShort }
   }
 }
