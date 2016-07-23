@@ -4,7 +4,7 @@
  *
  * 
  * @author Atzen
- * @version 0.5.0
+ * @version 0.5.1
  * 
  * CHANGES:
  * 04-July-2016 : Initial version
@@ -12,6 +12,7 @@
  * 11-July-2016 : added position configuration
  * 22-July-2016 : implemented data input
  *                fixed bug: long/short position was not considered while buy/sell function call
+ * 22-July-2016 : adapted to IExchange v1.1 
  */
 
 
@@ -32,6 +33,7 @@ import { IExchange } from '../../apis/IExchange.js';
  */
 ExTestData.ConfigDefault = {
   id: 'undefined',
+  name: 'undefined',
 
   priceType: 'sinus', // sinus (sinus shaped price flow), data (uses data array)
   data: '', // data string
@@ -180,6 +182,7 @@ export function ExTestData() {
    */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
+    if (_config.name === 'undefined') return false;
 
     if (_config.priceType !== 'sinus' && _config.priceType !== 'data') return false;
 
@@ -426,7 +429,7 @@ export function ExTestData() {
   this.getInstInfo = function() {
     if (_config.errGII) return errHandle(ExError.error, null);
 
-    return errHandle(ExError.ok, { id: _config.id, type: "ExTestData" });
+    return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExTestData" });
   }
 
 
