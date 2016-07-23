@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.1
+ * @version 0.3.2
  *
  * 
  * CHANGES:
@@ -15,6 +15,7 @@
  * 09-July-2016 : added getPositions function
  * 12-July-2016 : changed !hotMode + ownBalance combination to work without secret and api keys
  * 12-July-2016 : bugfixed buy and sell mechanism
+ * 22-July-2016 : adapted to IExchange v1.1 
  */
 
 /***********************************************************************
@@ -42,6 +43,7 @@ var KrakenClient = Meteor.npmRequire('kraken-api'); // npm import
  */
 ExKraken.ConfigDefault = {
   id: 'undefined',
+  name: 'undefined',
 
   pair: 'undefined',
 
@@ -372,6 +374,8 @@ export function ExKraken(ConstrParam) {
    */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
+    if (_config.name === 'undefined') return false;
+    
     if (_config.pair === 'undefined') return false;
 
     if (_config.balanceType !== 'krakenBalance' && _config.balanceType !== 'ownBalance') return false;
@@ -794,7 +798,7 @@ export function ExKraken(ConstrParam) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInstInfo = function() {
-    return errHandle(ExError.ok, { id: _config.id, type: "ExKraken" });
+    return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExKraken" });
   }
 
 
