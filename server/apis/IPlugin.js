@@ -5,10 +5,11 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.0
+ * @version 1.1
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
+ * 22-July-2016 : added name element to getInstInfo() return object
  */
 
 /***********************************************************************
@@ -122,7 +123,7 @@ IPlugin.prototype.setSellNotifyFunc = function(sellNotifyFunction) {
 
 /**
  * Returns instant specific informations
- * @return {Object} info object {id: <instance Id>, type: <plugin type>}
+ * @return {Object} info object {id: <instance Id>, name: <instance name>, type: <exchange type>}
  */
 IPlugin.prototype.getInstInfo = function() {
     throw new Error('This method must be overwritten!');

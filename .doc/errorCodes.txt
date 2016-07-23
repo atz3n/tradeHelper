@@ -51,3 +51,6 @@ An position short dismatch occurred
 
 ID: 0x011
 An Exchange called ExError.finished
+
+ID: 0x012
+Plugin API setConfig() returned an error

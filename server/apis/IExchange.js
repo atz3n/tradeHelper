@@ -5,11 +5,12 @@
  * All Exchanges should implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.1
+ * @version 1.2
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
  * 09-July-2016 : added getPositions
+ * 22-July-2016 : added name element to getInstInfo() return result object
  */
 
 /***********************************************************************
@@ -160,7 +161,7 @@ IExchange.prototype.stopTrade = function() {
 
 /**
  * Returns instant specific informations
- * @return {Object} obj.error: ExError, obj.result: info object {id: <instance Id>, type: <exchange type>}
+ * @return {Object} obj.error: ExError, obj.result: info object {id: <instance Id>, name: <instance name>, type: <exchange type>}
  */
 IExchange.prototype.getInstInfo = function() {
   throw new Error('This method must be overwritten!');

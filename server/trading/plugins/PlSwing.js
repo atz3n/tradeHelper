@@ -37,6 +37,7 @@ var _positionsInit = {
 
 PlSwing.ConfigDefault = {
   id: 'undefined',
+  name: 'undefined',
   longNoPosNotifyPerc: 5, // no position -> buy
   longAfterTopSellNotifyPerc: 5, // long position -> sell after top
   shortNoPosNotifyPerc: 5, // no position -> sell
@@ -98,12 +99,35 @@ export function PlSwing(logger) {
   }
 
 
+  var _checkConfig = function() {
+    if (_config.id === 'undefined') return false;
+    if (_config.name === 'undefined') return false;
+
+    if (isNaN(_config.longNoPosNotifyPerc)) return false;
+    if (_config.longNoPosNotifyPerc < 0 || _config.longNoPosNotifyPerc > 100) return false;
+
+    if (isNaN(_config.longAfterTopSellNotifyPerc)) return false;
+    if (_config.longAfterTopSellNotifyPerc < 0 || _config.longAfterTopSellNotifyPerc > 100) return false;
+
+    if (isNaN(_config.shortNoPosNotifyPerc)) return false;
+    if (_config.shortNoPosNotifyPerc < 0 || _config.shortNoPosNotifyPerc > 100) return false;
+
+    if (isNaN(_config.shortAfterBottomBuyNotifyPerc)) return false;
+    if (_config.shortAfterBottomBuyNotifyPerc < 0 || _config.shortAfterBottomBuyNotifyPerc > 100) return false;
+
+    if (typeof _config.enableLong !== 'boolean') return false;
+    if (typeof _config.enableShort !== 'boolean') return false;
+
+    return true;
+  }
+
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
-  this.setConfig = function(config) {
-    _config = Object.assign({}, config);
+  this.setConfig = function(configuration) {
+    _config = mergeObjects(_config, configuration);
+    return _checkConfig();
   }
 
 
@@ -256,14 +280,11 @@ export function PlSwing(logger) {
 
 
   this.getInstInfo = function() {
-    return {
-      id: _config.id,
-      type: "PlSwing"
-    }
+    return { id: _config.id, name: _config.name, type: "PlSwing" };
   }
 
 
   this.getPositions = function() {
-    return { long: _config.enableLong, short: _config.enableShort }
+    return { long: _config.enableLong, short: _config.enableShort };
   }
 }

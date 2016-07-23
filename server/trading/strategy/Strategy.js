@@ -134,7 +134,7 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x004', strId: _strDesc._id, exId: instInfo.result.id }));
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x004', strId: _strDesc._id, name: instInfo.result.name }));
             }
           }
 
@@ -149,9 +149,9 @@ export function Strategy(strategyDescription) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
               if (pTmp.error === ExError.finished) {
-                _errorFunc(_strDesc._id, errorMessage({ code: '0x011', strId: _strDesc._id, exId: instInfo.result.id }));
+                _errorFunc(_strDesc._id, errorMessage({ code: '0x011', strId: _strDesc._id, name: instInfo.result.name }));
               } else {
-                _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, exId: instInfo.result.id }));
+                _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, name: instInfo.result.name }));
               }
             }
 
@@ -171,7 +171,7 @@ export function Strategy(strategyDescription) {
           if (instInfo.error !== ExError.ok) {
             _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
           } else {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x003', strId: _strDesc._id, exId: instInfo.result.id }));
+            _errorFunc(_strDesc._id, errorMessage({ code: '0x003', strId: _strDesc._id, name: instInfo.result.name }));
           }
 
           iTmp.result = [];
@@ -265,12 +265,7 @@ export function Strategy(strategyDescription) {
 
       var ret = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
       if (ret.error !== ExError.ok) {
-        _errorFunc(_strDesc._id, errorMessage({
-          code: '0x001',
-          strId: _strDesc._id,
-          exId: tmp.exchanges[i].instInfo.id,
-        }));
-
+        _errorFunc(_strDesc._id, errorMessage({ code: '0x001', strId: _strDesc._id, name: tmp.exchanges[i].instInfo.name }));
         ret = {};
       }
 
@@ -414,7 +409,7 @@ export function Strategy(strategyDescription) {
     _exTrading[idx].trading = false;
 
     if (errObject.error != ExError.ok) {
-      _errorFunc(_strDesc._id, errorMessage({ code: '0x00B', strId: _strDesc._id, exId: instInfo.id }));
+      _errorFunc(_strDesc._id, errorMessage({ code: '0x00B', strId: _strDesc._id, name: instInfo.name }));
       return _exTrading[idx].error = true;
     }
 
@@ -437,7 +432,7 @@ export function Strategy(strategyDescription) {
     _exTrading[idx].trading = false;
 
     if (errObject.error != ExError.ok) {
-      _errorFunc(_strDesc._id, errorMessage({ code: '0x00C', strId: _strDesc._id, exId: instInfo.id }));
+      _errorFunc(_strDesc._id, errorMessage({ code: '0x00C', strId: _strDesc._id, name: instInfo.name }));
       return _exTrading[idx].error = true;
     }
 
@@ -485,7 +480,7 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, exId: instInfo.result.id }));
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
             tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
@@ -501,7 +496,7 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x008', strId: _strDesc._id, exId: instInfo.result.id }));
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x008', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
             vTmp.result = 0;
@@ -524,7 +519,7 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, exId: instInfo.result.id }));
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
             tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
@@ -553,7 +548,7 @@ export function Strategy(strategyDescription) {
           if (instInfo.error !== ExError.ok) {
             _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
           } else {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, exId: instInfo.result.id }));
+            _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
           }
 
           tTmp.result = _data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1];
@@ -580,44 +575,29 @@ export function Strategy(strategyDescription) {
 
 
   var errorMessage = function(errObj) {
-    var strName = _strDesc.name;
-    var exName = '';
 
+    var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + _strDesc.name + '":' + '\n';
+    var infPreMsg = 'AN INFO FROM STRATEGY "' + _strDesc.name + '":' + '\n';
 
-    if (errObj.exId !== undefined) {
-      for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
-        var plBun = _strDesc.pluginBundles[i];
-
-        for (var j = 0; j < plBun.bundlePlugins.length; j++) {
-          var pl = plBun.bundlePlugins[j];
-
-          if (errObj.exId === pl.exchange._id) exName = pl.exchange.name;
-        }
-      }
-    }
-
-
-    var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + strName + '":' + '\n';
-    var infPreMsg = 'AN INFO FROM STRATEGY "' + strName + '":' + '\n';
 
     if (errObj.code === '0x000') {
-      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be set!');
     }
 
     if (errObj.code === '0x001') {
-      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x002') {
-      return errHandle(StrError.error, erPreMsg + 'Current price from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Current price from Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x003') {
-      return errHandle(StrError.error, erPreMsg + 'Additional informations of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Additional informations of Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x004') {
-      return errHandle(StrError.error, erPreMsg + 'Current Price from Exchange "' + exName + '" could not be updated!');
+      return errHandle(StrError.error, erPreMsg + 'Current Price from Exchange "' + errObj.name + '" could not be updated!');
     }
 
     if (errObj.code === '0x005') {
@@ -625,51 +605,55 @@ export function Strategy(strategyDescription) {
     }
 
     if (errObj.code === '0x006') {
-      return errHandle(StrError.error, erPreMsg + 'Trade pair units from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade pair units from Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x007') {
-      return errHandle(StrError.error, erPreMsg + 'Trade price from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade price from Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x008') {
-      return errHandle(StrError.error, erPreMsg + 'Trade volume from Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Trade volume from Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x009') {
-      return errHandle(StrError.error, erPreMsg + 'Bought notify function from Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Bought notify function from Exchange "' + errObj.name + '" could not be set!');
     }
 
     if (errObj.code === '0x00A') {
-      return errHandle(StrError.error, erPreMsg + 'Sold notify function from Exchange "' + exName + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Sold notify function from Exchange "' + errObj.name + '" could not be set!');
     }
 
     if (errObj.code === '0x00B') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while buying at Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while buying at Exchange "' + errObj.name + '"');
     }
 
     if (errObj.code === '0x00C') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while selling at Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while selling at Exchange "' + errObj.name + '"');
     }
 
     if (errObj.code === '0x00D') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while stopping a trade from Exchange "' + exName + '"');
+      return errHandle(StrError.error, erPreMsg + 'Something went wrong while stopping a trade from Exchange "' + errObj.name + '"');
     }
 
     if (errObj.code === '0x00E') {
-      return errHandle(StrError.error, erPreMsg + 'Available  position informations of Exchange "' + exName + '" could not be fetched!');
+      return errHandle(StrError.error, erPreMsg + 'Available  position informations of Exchange "' + errObj.name + '" could not be fetched!');
     }
 
     if (errObj.code === '0x00F') {
-      return errHandle(StrError.error, erPreMsg + 'Exchange "' + exName + '" does not support long position trading. Change Exchange depending plugin configurations');
+      return errHandle(StrError.error, erPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading. Change Exchange depending plugin configurations');
     }
 
     if (errObj.code === '0x010') {
-      return errHandle(StrError.error, erPreMsg + 'Exchange "' + exName + '" does not support short position trading. Change Exchange depending plugin configurations');
+      return errHandle(StrError.error, erPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading. Change Exchange depending plugin configurations');
     }
 
     if (errObj.code === '0x011') {
-      return errHandle(ExError.finished, infPreMsg + 'Exchange "' + exName + '" finished');
+      return errHandle(ExError.finished, infPreMsg + 'Exchange "' + errObj.name + '" finished');
+    }
+
+    if (errObj.code === '0x012') {
+      return errHandle(ExError.error, erPreMsg + 'Configuration of Plugin "' + errObj.name + '" could not be set!');
     }
   }
 
@@ -726,6 +710,7 @@ export function Strategy(strategyDescription) {
   var _createPlSwing = function(plugin) {
     var conf = Object.assign({}, PlSwing.ConfigDefault);
     conf.id = plugin._id;
+    // conf.name = plugin.name;
     conf.longNoPosNotifyPerc = plugin.lnpnp;
     conf.longAfterTopSellNotifyPerc = plugin.latsnp;
     conf.shortNoPosNotifyPerc = plugin.snpnp;
@@ -734,7 +719,7 @@ export function Strategy(strategyDescription) {
     conf.enableLong = plugin.enLong;
 
     _plugins.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
-    _plugins.getObject(plugin._id).inst.setConfig(conf);
+    return _plugins.getObject(plugin._id).inst.setConfig(conf);
   }
 
 
@@ -751,6 +736,7 @@ export function Strategy(strategyDescription) {
     delete tmp.actives;
 
     renameObjKey(tmp, '_id', 'id');
+
     _exchanges.setObject(exchange._id, new ExKraken());
     var ret = _exchanges.getObject(exchange._id).setConfig(mergeObjects(conf, tmp));
 
@@ -867,7 +853,7 @@ export function Strategy(strategyDescription) {
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x00D', strId: _strDesc._id, exId: instInfo.result.id }));
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x00D', strId: _strDesc._id, name: instInfo.result.name }));
             }
           }
         }
@@ -944,7 +930,9 @@ export function Strategy(strategyDescription) {
 
           /* swing */
           if (plugin.type === "plSwing") {
-            _createPlSwing(plugin);
+            if (!_createPlSwing(plugin)) {
+              return _constrError = errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
+            }
           }
 
           /******** Plugin Creation Functions ********/
@@ -977,7 +965,7 @@ export function Strategy(strategyDescription) {
               /* test data */
             } else if (plugin.exchange.type === 'exTestData') {
               if (_createExTestData(plugin.exchange).error !== StrError.ok) {
-                return _constrError = errorMessage({ code: '0x000', strId: _strDesc._id, exId: plugin.exchange._id });
+                return _constrError = errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
               }
             }
 
@@ -988,24 +976,24 @@ export function Strategy(strategyDescription) {
             /* check if position configuration works */
             var plPositions = _plugins.getObject(plugin._id).inst.getPositions();
             var exPositions = _exchanges.getObject(plugin.exchange._id).getPositions();
-            if (exPositions.error !== ExError.ok) return _constrError = errorMessage({ code: '0x00E', strId: _strDesc._id, exId: plugin.exchange._id });
+            if (exPositions.error !== ExError.ok) return _constrError = errorMessage({ code: '0x00E', strId: _strDesc._id, name: plugin.exchange.name });
 
             if (plPositions.long) {
-              if (!exPositions.result.long) return _constrError = errorMessage({ code: '0x00F', strId: _strDesc._id, exId: plugin.exchange._id });
+              if (!exPositions.result.long) return _constrError = errorMessage({ code: '0x00F', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             if (plPositions.short) {
-              if (!exPositions.result.short) return _constrError = errorMessage({ code: '0x010', strId: _strDesc._id, exId: plugin.exchange._id });
+              if (!exPositions.result.short) return _constrError = errorMessage({ code: '0x010', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
 
             /* set notify functions */
             if (_exchanges.getObject(plugin.exchange._id).setBoughtNotifyFunc(_exBoughtNotifyFunc).error !== ExError.ok) {
-              return _constrError = errorMessage({ code: '0x009', strId: _strDesc._id, exId: plugin.exchange._id });
+              return _constrError = errorMessage({ code: '0x009', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             if (_exchanges.getObject(plugin.exchange._id).setSoldNotifyFunc(_exSoldNotifyFunc).error !== ExError.ok) {
-              return _constrError = errorMessage({ code: '0x00A', strId: _strDesc._id, exId: plugin.exchange._id });
+              return _constrError = errorMessage({ code: '0x00A', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             _exTrading.push({ trading: false, error: false });
@@ -1021,7 +1009,7 @@ export function Strategy(strategyDescription) {
             _data.exchanges[exCnt].instInfo = iTmp.result;
 
             var pTmp = tmpEx.getPairUnits();
-            if (pTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x006', strId: _strDesc._id, exId: plugin.exchange._id });
+            if (pTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x006', strId: _strDesc._id, name: plugin.exchange.name });
             _data.exchanges[exCnt].units = pTmp.result;
 
             exCnt++;
