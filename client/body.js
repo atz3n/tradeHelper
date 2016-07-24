@@ -35,8 +35,7 @@ Template.body.events({
       /*++++++++++ setConfigButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setConfigButton") {
       config.id = '123456';
-      config.key = 'wlU3pt+2L6hFed161UN+YVDzh5cfTf5yJn4Yrar5NWzt7FM9jCfSkQBi';
-      config.secret = '9rMBm3bbxJdLdM3bne7VG5w9w5UV7Uk/9sUaxt2CiTSuhkBXF1/5NG6MOW1S32EheJckhnVIJ0g2ll3KSYMvXQ==';
+      config.name = 'devExKraken';
       config.pair = 'XETHZEUR';
 
       console.log(config);
@@ -215,6 +214,22 @@ Template.body.events({
       event.target.oBalanceAmount.value += '_';
       Meteor.setTimeout(function() {
         event.target.oBalanceAmount.value = config.oBalanceAmount;
+      }, 200);
+    }
+
+    if (event.target.key) {
+      config.key = event.target.key.value;
+      event.target.key.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.key.value = config.key;
+      }, 200);
+    }
+
+    if (event.target.secret) {
+      config.secret = event.target.secret.value;
+      event.target.secret.value += '_';
+      Meteor.setTimeout(function() {
+        event.target.secret.value = config.secret;
       }, 200);
     }
   },
