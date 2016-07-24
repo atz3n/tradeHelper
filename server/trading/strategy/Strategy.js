@@ -710,7 +710,7 @@ export function Strategy(strategyDescription) {
   var _createPlSwing = function(plugin) {
     var conf = Object.assign({}, PlSwing.ConfigDefault);
     conf.id = plugin._id;
-    // conf.name = plugin.name;
+    conf.name = plugin.name;
     conf.longNoPosNotifyPerc = plugin.lnpnp;
     conf.longAfterTopSellNotifyPerc = plugin.latsnp;
     conf.shortNoPosNotifyPerc = plugin.snpnp;
