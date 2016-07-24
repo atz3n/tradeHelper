@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.3
+ * @version 0.3.4
  *
  * 
  * CHANGES:
@@ -17,6 +17,7 @@
  * 12-July-2016 : bugfixed buy and sell mechanism
  * 22-July-2016 : adapted to IExchange v1.1
  * 22-July-2016 : adapted to IExchange v1.3
+ * 24-July-2016 : fixed bug in default config and getConfig() function
  */
 
 /***********************************************************************
@@ -51,7 +52,7 @@ ExKraken.ConfigDefault = {
   key: 'undefined',
   secret: 'undefined',
 
-  balanceType: 'krakenBalance', // krakenBalance (using kraken.com available balance for trading), ownBalance (using oBalanceAmount for trading)
+  balanceType: 'ownBalance', // krakenBalance (using kraken.com available balance for trading), ownBalance (using oBalanceAmount for trading)
   oBalanceAmount: 0,
 
   qAmountType: 'value', // value (total amount), percentage (relative to available amount)
@@ -576,7 +577,7 @@ export function ExKraken(ConstrParam) {
     }
 
     if (_config.qAmountType === 'value') {
-      tmpA.push({ title: 'Amount from Balance [' + this.getPairUnits.result.quote + ']', value: _config.qAmount });
+      tmpA.push({ title: 'Amount from Balance [' + this.getPairUnits().result.quote + ']', value: _config.qAmount });
     }
 
 
