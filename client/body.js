@@ -35,6 +35,7 @@ Template.body.events({
       /*++++++++++ setConfigButton ++++++++++*/
     } else if ($(event.target).prop("name") == "setConfigButton") {
       config.id = '123456';
+      config.name = 'devExTestData';
 
       console.log(config);
       Meteor.call('setConfig', config, function(error, result) {

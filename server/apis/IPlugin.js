@@ -5,11 +5,12 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.1
+ * @version 1.2
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
  * 22-July-2016 : added name element to getInstInfo() return object
+ * 24-July-2016 : changed getConfig() return result object to array (same structure as getInfo())
  */
 
 /***********************************************************************
@@ -34,7 +35,7 @@ IPlugin.prototype.setConfig = function() {
 
 /**
  * Returns the configuration
- * @return {Object} configuration object
+ * @return {Object} configuration array [{title: <title>, value: <value>}]
  */
 IPlugin.prototype.getConfig = function() {
     throw new Error('This method must be overwritten!');
