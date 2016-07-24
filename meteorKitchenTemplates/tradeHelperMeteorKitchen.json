@@ -289,7 +289,7 @@
             "show_in_update_form": false
           },
           {
-            "name": "lnpnp",
+            "name": "oLngPosPer",
             "title": "Open Long Position [%]",
             "type": "float",
             "default": 5,
@@ -297,7 +297,7 @@
             "required": true
           },
           {
-            "name": "latsnp",
+            "name": "cLngPosPer",
             "title": "Close Long Position [%]",
             "type": "float",
             "default": 5,
@@ -305,7 +305,7 @@
             "required": true
           },
           {
-            "name": "snpnp",
+            "name": "oShrtPosPer",
             "title": "Open Short Positon [%]",
             "type": "float",
             "default": 5,
@@ -313,7 +313,7 @@
             "required": true
           },
           {
-            "name": "sabbnp",
+            "name": "cShrtPosPer",
             "title": "Close Short Position [%]",
             "type": "float",
             "default": 5,

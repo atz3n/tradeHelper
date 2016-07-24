@@ -5,12 +5,13 @@
  * All Exchanges should implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.2
+ * @version 1.3
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
  * 09-July-2016 : added getPositions
  * 22-July-2016 : added name element to getInstInfo() return result object
+ * 24-July-2016 : changed getConfig() return result object to array (same structure as getInfo())
  */
 
 /***********************************************************************
@@ -69,7 +70,7 @@ IExchange.prototype.setConfig = function(configuration) {
 
 /**
  * Returns the configuration
- * @return {Object} obj.error: ExError, obj.result: configuration object
+ * @return {Object} obj.error: ExError, obj.result: configuration array [{title: <title>, value: <value>}]
  */
 IExchange.prototype.getConfig = function() {
   throw new Error('This method must be overwritten!');

@@ -38,12 +38,12 @@ var _positionsInit = {
 PlSwing.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
-  longNoPosNotifyPerc: 5, // no position -> buy
-  longAfterTopSellNotifyPerc: 5, // long position -> sell after top
-  shortNoPosNotifyPerc: 5, // no position -> sell
-  shortAfterBottomBuyNotifyPerc: 5, // short position -> buy after bottom
-  enableLong: true,
-  enableShort: false
+  oLngPosPer: 5, // no position -> buy (value in percentage) (open long position)
+  cLngPosPer: 5, // long position -> sell after top (value in percentage) (close long position)
+  oShrtPosPer: 5, // no position -> sell (value in percentage) (open short position)
+  cShrtPosPer: 5, // short position -> buy after bottom (value in percentage) (close short position)
+  enLong: true, // enable long trading
+  enShort: false // enable short trading
 }
 
 
@@ -103,20 +103,20 @@ export function PlSwing(logger) {
     if (_config.id === 'undefined') return false;
     if (_config.name === 'undefined') return false;
 
-    if (isNaN(_config.longNoPosNotifyPerc)) return false;
-    if (_config.longNoPosNotifyPerc < 0 || _config.longNoPosNotifyPerc > 100) return false;
+    if (isNaN(_config.oLngPosPer)) return false;
+    if (_config.oLngPosPer < 0 || _config.oLngPosPer > 100) return false;
 
-    if (isNaN(_config.longAfterTopSellNotifyPerc)) return false;
-    if (_config.longAfterTopSellNotifyPerc < 0 || _config.longAfterTopSellNotifyPerc > 100) return false;
+    if (isNaN(_config.cLngPosPer)) return false;
+    if (_config.cLngPosPer < 0 || _config.cLngPosPer > 100) return false;
 
-    if (isNaN(_config.shortNoPosNotifyPerc)) return false;
-    if (_config.shortNoPosNotifyPerc < 0 || _config.shortNoPosNotifyPerc > 100) return false;
+    if (isNaN(_config.oShrtPosPer)) return false;
+    if (_config.oShrtPosPer < 0 || _config.oShrtPosPer > 100) return false;
 
-    if (isNaN(_config.shortAfterBottomBuyNotifyPerc)) return false;
-    if (_config.shortAfterBottomBuyNotifyPerc < 0 || _config.shortAfterBottomBuyNotifyPerc > 100) return false;
+    if (isNaN(_config.cShrtPosPer)) return false;
+    if (_config.cShrtPosPer < 0 || _config.cShrtPosPer > 100) return false;
 
-    if (typeof _config.enableLong !== 'boolean') return false;
-    if (typeof _config.enableShort !== 'boolean') return false;
+    if (typeof _config.enLong !== 'boolean') return false;
+    if (typeof _config.enShort !== 'boolean') return false;
 
     return true;
   }
@@ -142,8 +142,8 @@ export function PlSwing(logger) {
     if (!_positions.long && !_positions.short) {
 
       /* open short */
-      if (_config.enableShort) {
-        if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.shortNoPosNotifyPerc && _data.currentVal < _data.topVal) {
+      if (_config.enShort) {
+        if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.oShrtPosPer && _data.currentVal < _data.topVal) {
           _log('Short Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'short';
@@ -152,8 +152,8 @@ export function PlSwing(logger) {
       }
 
       /* open long */
-      if (_config.enableLong) {
-        if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.longNoPosNotifyPerc && _data.currentVal > _data.bottomVal) {
+      if (_config.enLong) {
+        if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.oLngPosPer && _data.currentVal > _data.bottomVal) {
           _log('Long Open, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
           _tmpPos = 'long';
@@ -166,7 +166,7 @@ export function PlSwing(logger) {
 
     /* close short */
     if (!_positions.long && _positions.short) {
-      if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.shortAfterBottomBuyNotifyPerc) {
+      if (Math.abs(percentage(_data.currentVal, _data.bottomVal)) >= _config.cShrtPosPer) {
         _log('Short Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
         _tmpPos = 'short';
@@ -176,7 +176,7 @@ export function PlSwing(logger) {
 
     /* close long */
     if (_positions.long && !_positions.short) {
-      if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.longAfterTopSellNotifyPerc) {
+      if (Math.abs(percentage(_data.currentVal, _data.topVal)) >= _config.cLngPosPer) {
         _log('Long Close, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
 
         _tmpPos = 'long';
@@ -187,16 +187,14 @@ export function PlSwing(logger) {
 
 
   this.getConfig = function() {
-    var conf = {};
-
-    conf.OpenLongPosition = _config.longNoPosNotifyPerc + '%';
-    conf.CloseLongPosition = _config.longAfterTopSellNotifyPerc + '%';
-    conf.OpenShortPosition = _config.shortNoPosNotifyPerc + '%';
-    conf.CloseShortPosition = _config.shortAfterBottomBuyNotifyPerc + '%';
-    conf.EnableLong = _config.enableLong
-    conf.EnableShort = _config.enableShort
-
-    return conf;
+    return [
+      { title: 'Open Long [%]', value: _config.oLngPosPer },
+      { title: 'Close Long [%]', value: _config.cLngPosPer },
+      { title: 'Open Short [%]', value: _config.oShrtPosPer },
+      { title: 'Close Short [%]', value: _config.cShrtPosPer },
+      { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
+      { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
+    ];
   }
 
 
@@ -285,6 +283,6 @@ export function PlSwing(logger) {
 
 
   this.getPositions = function() {
-    return { long: _config.enableLong, short: _config.enableShort };
+    return { long: _config.enLong, short: _config.enShort };
   }
 }

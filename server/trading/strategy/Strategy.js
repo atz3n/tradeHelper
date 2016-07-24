@@ -100,6 +100,9 @@ export function Strategy(strategyDescription) {
 
   var _firstRun = false;
 
+  // var _updtHist = false;
+  var _updateRunning = false;
+
 
   /***********************************************************************
     Public Instance Variable
@@ -110,6 +113,8 @@ export function Strategy(strategyDescription) {
    ***********************************************************************/
 
   var _updateFunc = function(fullUpdate) {
+    _updateRunning = true;
+    
     if (_checkExsNotInTrade()) {
 
       _callNotifyFunc = false;
@@ -213,6 +218,8 @@ export function Strategy(strategyDescription) {
 
       _lastPosition = _data.position;
     }
+
+    _updateRunning = false;
   }
 
 
@@ -361,7 +368,6 @@ export function Strategy(strategyDescription) {
     if (_data.position !== 'long') {
       _data.state = 'buying';
       _updateActiveData();
-      // _updateFunc(false);
 
       for (i in _exTrading) _exTrading[i].trading = true;
 
@@ -384,7 +390,6 @@ export function Strategy(strategyDescription) {
     if (_data.position !== 'short') {
       _data.state = 'selling';
       _updateActiveData();
-      // _updateFunc(false);
 
       for (i in _exTrading) _exTrading[i].trading = true;
 
@@ -419,7 +424,8 @@ export function Strategy(strategyDescription) {
       } else {
         _data.state === 'error';
         // _updateActiveData();
-        _updateFunc(false);
+        console.log('boughtFunc')
+        _syncUpdateFuncCall(false);
       }
     }
   }
@@ -442,15 +448,14 @@ export function Strategy(strategyDescription) {
       } else {
         _data.state === 'error';
         // _updateActiveData();
-        _updateFunc(false);
+        console.log('soldFunc')
+        _syncUpdateFuncCall(false);
       }
     }
   }
 
 
   var _tradingPostProcessing = function(trade) {
-    // console.log(trade);
-
     var pos2Exit = '';
 
     if (trade === 'buy') pos2Exit = 'short';
@@ -569,8 +574,13 @@ export function Strategy(strategyDescription) {
       _data.state = 'out';
     }
 
-    // _updateActiveData();
-    _updateFunc(false);
+    _syncUpdateFuncCall(false);
+  }
+
+
+  var _syncUpdateFuncCall = function(fullUpdate) {
+    while (_updateRunning) Meteor._sleepForMs(1);
+    _updateFunc(fullUpdate);
   }
 
 
@@ -709,17 +719,21 @@ export function Strategy(strategyDescription) {
 
   var _createPlSwing = function(plugin) {
     var conf = Object.assign({}, PlSwing.ConfigDefault);
-    conf.id = plugin._id;
-    conf.name = plugin.name;
-    conf.longNoPosNotifyPerc = plugin.lnpnp;
-    conf.longAfterTopSellNotifyPerc = plugin.latsnp;
-    conf.shortNoPosNotifyPerc = plugin.snpnp;
-    conf.shortAfterBottomBuyNotifyPerc = plugin.sabbnp;
-    conf.enableShort = plugin.enShort;
-    conf.enableLong = plugin.enLong;
+    var tmp = Object.assign({}, plugin);
+
+    delete tmp.exchange;
+    delete tmp.createdAt;
+    delete tmp.createdBy;
+    delete tmp.modifiedAt;
+    delete tmp.modifiedBy;
+    delete tmp.ownerId;
+    delete tmp.type;
+    delete tmp.actives;
+
+    renameObjKey(tmp, '_id', 'id');
 
     _plugins.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
-    return _plugins.getObject(plugin._id).inst.setConfig(conf);
+    return _plugins.getObject(plugin._id).inst.setConfig(mergeObjects(conf, tmp));
   }
 
 
@@ -785,20 +799,19 @@ export function Strategy(strategyDescription) {
     _errorFunc = errorFunction;
   }
 
-
   this.start = function() {
     _firstRun = true;
 
     if (_strDesc.timeUnit !== 'none') {
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
         _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
-        SchM.createSchedule(_strDesc._id, _calcSchMUpdateTime(), _updateFunc, true);
+        SchM.createSchedule(_strDesc._id, _calcSchMUpdateTime(), _syncUpdateFuncCall, true);
       } else {
-        SchMSC.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _updateFunc, true);
+        SchMSC.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _syncUpdateFuncCall, true);
       }
     }
 
-    _updateFunc(true);
+    _syncUpdateFuncCall(true);
   }
 
 
@@ -813,7 +826,7 @@ export function Strategy(strategyDescription) {
       }
     }
 
-    _updateFunc(true);
+    _syncUpdateFuncCall(true);
   }
 
 
@@ -863,7 +876,7 @@ export function Strategy(strategyDescription) {
 
 
   this.refresh = function() {
-    _updateFunc(true);
+    _syncUpdateFuncCall(true);
   }
 
 

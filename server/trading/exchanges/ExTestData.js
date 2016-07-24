@@ -4,7 +4,7 @@
  *
  * 
  * @author Atzen
- * @version 0.5.1
+ * @version 0.5.2
  * 
  * CHANGES:
  * 04-July-2016 : Initial version
@@ -12,7 +12,8 @@
  * 11-July-2016 : added position configuration
  * 22-July-2016 : implemented data input
  *                fixed bug: long/short position was not considered while buy/sell function call
- * 22-July-2016 : adapted to IExchange v1.1 
+ * 22-July-2016 : adapted to IExchange v1.1
+ * 24-July-2016 : adapted to IExchange v1.3
  */
 
 
@@ -263,10 +264,52 @@ export function ExTestData() {
   this.getConfig = function() {
     if (_config.errGC) return errHandle(ExError.error, null);
 
-    var tmp = Object.assign({}, _config);
-    delete tmp.id;
 
-    return errHandle(ExError.ok, tmp);
+    var tmpA = [];
+
+    tmpA.push({ title: 'Price Type', value: _config.priceType });
+
+    if (_config.priceType === 'data') {
+      var tmpS = '';
+      for (var i = 0; i < _dataArray.length; i++) {
+        if (i >= 100) { // crop string to max 100 data
+          tmpS += '...';
+          break;
+        }
+        if (i > 0) tmpS += ', ';
+        tmpS += _dataArray[i];
+      }
+      tmpA.push({ title: 'data', value: tmpS });
+    }
+
+    tmpA.push({ title: 'Start Value', value: _config.startVal });
+    tmpA.push({ title: 'Gain', value: _config.gain });
+    tmpA.push({ title: 'Offset', value: _config.offset });
+    tmpA.push({ title: 'Step Width', value: _config.stepWidth });
+    tmpA.push({ title: 'Start Balance', value: _config.balanceAmount });
+    tmpA.push({ title: 'Trade Delay [Sec]', value: _config.tradeDelaySec });
+    tmpA.push({ title: 'Enabled Long', value: JSON.stringify(_config.enLong) });
+    tmpA.push({ title: 'Enabled Short', value: JSON.stringify(_config.enShort) });
+
+    if (Meteor.settings.public.ExTestDataErrorConfig === 'true') {
+      tmpA.push({ title: 'Error setConfig()', value: JSON.stringify(_config.errSC) });
+      tmpA.push({ title: 'Error getConfig()', value: JSON.stringify(_config.errGC) });
+      tmpA.push({ title: 'Error getInfo()', value: JSON.stringify(_config.errGI) });
+      tmpA.push({ title: 'Error getPairUnits()', value: JSON.stringify(_config.errGPU) });
+      tmpA.push({ title: 'Error getVolume()', value: JSON.stringify(_config.errGV) });
+      tmpA.push({ title: 'Error getPrice()', value: JSON.stringify(_config.errGP) });
+      tmpA.push({ title: 'Error getTradePrice()', value: JSON.stringify(_config.errGTP) });
+      tmpA.push({ title: 'Error update()', value: JSON.stringify(_config.errU) });
+      tmpA.push({ title: 'Error sell()', value: JSON.stringify(_config.errS) });
+      tmpA.push({ title: 'Error buy()', value: JSON.stringify(_config.errB) });
+      tmpA.push({ title: 'Error stopTrade()', value: JSON.stringify(_config.errST) });
+      tmpA.push({ title: 'Error getInstInfo()', value: JSON.stringify(_config.errGII) });
+      tmpA.push({ title: 'Error getPositions()', value: JSON.stringify(_config.errGPO) });
+      tmpA.push({ title: 'Error setBoughtNotifyFunc()', value: JSON.stringify(_config.errSBNF) });
+      tmpA.push({ title: 'Error setSoldNotifyFunc()', value: JSON.stringify(_config.errSSNF) });
+    }
+
+    return errHandle(ExError.ok, tmpA);
   }
 
 

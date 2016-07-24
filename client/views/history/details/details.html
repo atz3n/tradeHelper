@@ -217,10 +217,10 @@
               <br> {{exchange.name}}
             </td>
           </tr>
-          {{#each arrayify config}}
+          {{#each config}}
           <tr class="crud-table-row">
             <td>
-              {{name}}:
+              {{title}}:
               <br> {{value}}
             </td>
           </tr>
@@ -297,14 +297,22 @@
               <br> {{costOut}}
             </td>
           </tr>
-          {{#each arrayify config.result}}
+          {{#each config.result}}
+          <tr class="crud-table-row">
+            <td>
+              {{title}}:
+              <br> {{value}}
+            </td>
+          </tr>
+          {{/each}}
+          <!-- {{#each arrayify config.result}}
           <tr class="crud-table-row">
             <td>
               {{name}}:
               <br> {{value}}
             </td>
           </tr>
-          {{/each}}
+          {{/each}} -->
         </tbody>
         {{/if}}
       </table>
