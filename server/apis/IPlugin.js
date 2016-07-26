@@ -5,12 +5,13 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.2
+ * @version 2.0
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
  * 22-July-2016 : added name element to getInstInfo() return object
  * 24-July-2016 : changed getConfig() return result object to array (same structure as getInfo())
+ * 26-July-2016 : included default configuration object
  */
 
 /***********************************************************************
@@ -18,6 +19,22 @@
  ***********************************************************************/
 
 export function IPlugin(){};
+
+
+/***********************************************************************
+  Public Static Variable
+ ***********************************************************************/
+
+/**
+ * Default Configuration structure
+ * Every Plugin should implement a public static default configuration object including an id, a name and depending configuration elements.
+ * It should be a working default configuration, too.
+ * @type {Object}
+ */
+IPlugin.ConfigDefault = {
+  id: 'undefined',
+  name: 'undefined',
+}
 
 
 /***********************************************************************
