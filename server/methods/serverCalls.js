@@ -34,8 +34,7 @@ function strError(strategyId, errObj) {
 var start = function(strategyId) {
   if (strategies.getObject(strategyId) === 'undefined') {
 
-
-    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId)), startFlag: true });
+    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId), createPlugin, createExchange), startFlag: true });
     var ret = strategies.getObject(strategyId).inst.getStatus();
     if (ret.error !== StrError.ok) return ret;
 
