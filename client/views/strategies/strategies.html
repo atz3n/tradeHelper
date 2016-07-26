@@ -63,6 +63,9 @@
 				<th class="th-sortable" data-sort="name">
 					Name
 				</th>
+				<th class="th-sortable" data-sort="pluginBundles">
+					Plugin Bundles
+				</th>
 				<th class="th-sortable" data-sort="updateTime">
 					Update Time
 				</th>
@@ -71,9 +74,6 @@
 				</th>
 				<th class="th-sortable" data-sort="mode">
 					Mode
-				</th>
-				<th class="th-sortable" data-sort="pluginBundles">
-					Plugin Bundles
 				</th>
 				<th>
 					&nbsp;
@@ -95,6 +95,9 @@
 			{{name}}
 		</td>
 		<td>
+			{{pluginBundlesString}}
+		</td>
+		<td>
 			{{updateTime}}
 		</td>
 		<td>
@@ -102,9 +105,6 @@
 		</td>
 		<td>
 			{{mode}}
-		</td>
-		<td>
-			{{pluginBundlesString}}
 		</td>
 		{{#if $ne active true}}
 		<td class="td-icon">

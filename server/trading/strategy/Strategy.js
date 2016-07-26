@@ -14,11 +14,7 @@
  * 02-Jun-2015 : Initial version
  */
 
-
 import { InstHandler } from '../../lib/InstHandler.js';
-import { PlSwing } from '../plugins/PlSwing.js';
-import { ExKraken } from '../exchanges/ExKraken.js';
-import { ExTestData } from '../exchanges/ExTestData.js';
 import { SchM } from '../../lib/SchM.js';
 import { SchMSC } from '../../lib/SchMSC.js';
 
@@ -53,7 +49,7 @@ StrError = {
   Class
  ***********************************************************************/
 
-export function Strategy(strategyDescription) {
+export function Strategy(strategyDescription, createPluginFunc, createExchangeFunc) {
 
   /***********************************************************************
     Inheritances
@@ -100,7 +96,6 @@ export function Strategy(strategyDescription) {
 
   var _firstRun = false;
 
-  // var _updtHist = false;
   var _updateRunning = false;
 
 
@@ -114,7 +109,7 @@ export function Strategy(strategyDescription) {
 
   var _updateFunc = function(fullUpdate) {
     _updateRunning = true;
-    
+
     if (_checkExsNotInTrade()) {
 
       _callNotifyFunc = false;
@@ -717,70 +712,6 @@ export function Strategy(strategyDescription) {
   }
 
 
-  var _createPlSwing = function(plugin) {
-    var conf = Object.assign({}, PlSwing.ConfigDefault);
-    var tmp = Object.assign({}, plugin);
-
-    delete tmp.exchange;
-    delete tmp.createdAt;
-    delete tmp.createdBy;
-    delete tmp.modifiedAt;
-    delete tmp.modifiedBy;
-    delete tmp.ownerId;
-    delete tmp.type;
-    delete tmp.actives;
-
-    renameObjKey(tmp, '_id', 'id');
-
-    _plugins.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
-    return _plugins.getObject(plugin._id).inst.setConfig(mergeObjects(conf, tmp));
-  }
-
-
-  var _createExKraken = function(exchange) {
-    var conf = Object.assign({}, ExKraken.ConfigDefault);
-    var tmp = Object.assign({}, exchange);
-
-    delete tmp.createdAt;
-    delete tmp.createdBy;
-    delete tmp.modifiedAt;
-    delete tmp.modifiedBy;
-    delete tmp.ownerId;
-    delete tmp.type;
-    delete tmp.actives;
-
-    renameObjKey(tmp, '_id', 'id');
-
-    _exchanges.setObject(exchange._id, new ExKraken());
-    var ret = _exchanges.getObject(exchange._id).setConfig(mergeObjects(conf, tmp));
-
-    if (ret.error !== ExError.ok) return errHandle(StrError.ExConfigError, exchange.name);
-    else return errHandle(StrError.ok, null);
-  }
-
-
-  var _createExTestData = function(exchange) {
-    var conf = Object.assign({}, ExTestData.ConfigDefault);
-    var tmp = Object.assign({}, exchange);
-
-    delete tmp.createdAt;
-    delete tmp.createdBy;
-    delete tmp.modifiedAt;
-    delete tmp.modifiedBy;
-    delete tmp.ownerId;
-    delete tmp.type;
-    delete tmp.actives;
-
-    renameObjKey(tmp, '_id', 'id');
-
-    _exchanges.setObject(exchange._id, new ExTestData());
-    var ret = _exchanges.getObject(exchange._id).setConfig(mergeObjects(conf, tmp));
-
-    if (ret.error !== ExError.ok) return errHandle(StrError.ExConfigError, exchange.name);
-    else return errHandle(StrError.ok, null);
-  }
-
-
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
@@ -798,6 +729,7 @@ export function Strategy(strategyDescription) {
   this.setErrorFunction = function(errorFunction) {
     _errorFunc = errorFunction;
   }
+
 
   this.start = function() {
     _firstRun = true;
@@ -903,10 +835,10 @@ export function Strategy(strategyDescription) {
     Constructor
    ***********************************************************************/
 
-  var _constructor = function(param) {
+  var _constructor = function(strDesc, createPlFunc, createExFunc) {
     var plCnt = 0;
     var exCnt = 0;
-    _strDesc = Object.assign({}, param);
+    _strDesc = Object.assign({}, strDesc);
 
     _data.strategyId = _strDesc._id;
     _data.ownerId = Strategies.findOne({ _id: _data.strategyId }).ownerId;
@@ -939,17 +871,10 @@ export function Strategy(strategyDescription) {
         if (_plugins.getObject(plugin._id) === 'undefined') {
 
 
-          /******** Plugin Creation Functions ********/
-
-          /* swing */
-          if (plugin.type === "plSwing") {
-            if (!_createPlSwing(plugin)) {
-              return _constrError = errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
-            }
+          /* Plugin Creation Function */
+          if (!createPlFunc(plugin, _plugins)) {
+            return _constrError = errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
           }
-
-          /******** Plugin Creation Functions ********/
-
 
           var tmpPl = _plugins.getObject(plugin._id).inst;
           tmpPl.setBuyNotifyFunc(_buyNotification);
@@ -967,23 +892,10 @@ export function Strategy(strategyDescription) {
           if (_exchanges.getObject(plugin.exchange._id) === 'undefined') {
 
 
-            /******** Exchange Creation Functions ********/
-
-
-            /* kraken.com */
-            if (plugin.exchange.type === 'exKraken') {
-              _createExKraken(plugin.exchange);
-
-
-              /* test data */
-            } else if (plugin.exchange.type === 'exTestData') {
-              if (_createExTestData(plugin.exchange).error !== StrError.ok) {
-                return _constrError = errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
-              }
+            /* Exchange Creation Function */
+            if (!createExFunc(plugin.exchange, _exchanges)) {
+              return _constrError = errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
             }
-
-
-            /******** Exchange Creation Functions ********/
 
 
             /* check if position configuration works */
@@ -1011,6 +923,7 @@ export function Strategy(strategyDescription) {
 
             _exTrading.push({ trading: false, error: false });
 
+
             /* initialize exchange elements of data information variable */
             var tmpEx = _exchanges.getObject(plugin.exchange._id);
             _data.exchanges[exCnt] = {};
@@ -1032,5 +945,5 @@ export function Strategy(strategyDescription) {
     }
   }
 
-  _constructor(strategyDescription)
+  _constructor(strategyDescription, createPluginFunc, createExchangeFunc)
 }

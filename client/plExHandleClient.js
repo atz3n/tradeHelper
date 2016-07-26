@@ -1,12 +1,40 @@
+import { InstHandler } from './lib/InstHandler.js';
+
+
+/***********************************************************************
+  Subscribe data bases
+ ***********************************************************************/
+
+Meteor.subscribe("pluginbundles");
+Meteor.subscribe("strategies");
+
+
+/* Exchanges */
 Meteor.subscribe("ex_krakens");
 Meteor.subscribe("ex_test_datas");
 
+
+/* Plugins */
 Meteor.subscribe("pl_swings");
 Meteor.subscribe("pl_dummys");
 
-Meteor.subscribe("pluginbundles");
 
-Meteor.subscribe("strategies");
+/***********************************************************************
+  Set db handler
+ ***********************************************************************/
+
+var pluginHandler = new InstHandler();
+var exchangeHandler = new InstHandler();
+
+
+/* Plugins */
+pluginHandler.setObject('PlSwings', PlSwings);
+pluginHandler.setObject('PlDummys', PlDummys);
+
+
+/* Exchanges */
+exchangeHandler.setObject('ExTestDatas', ExTestDatas);
+exchangeHandler.setObject('ExKrakens', ExKrakens);
 
 
 /***********************************************************************
@@ -34,19 +62,15 @@ this.setActiveState = function(strId, enabled) {
     for (j in bundlePlugins) {
 
 
-      /* PlSwing */
-      var plugin = PlSwings.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
-      if (typeof plugin !== "undefined") {
-        if (enabled) PlSwings.update({ _id: plugin._id }, { $set: { actives: plugin.actives + 1 } });
-        else if (plugin.actives >= 1) PlSwings.update({ _id: plugin._id }, { $set: { actives: plugin.actives - 1 } });
-      }
+      /* plugins */
+      for (let k = 0; k < pluginHandler.getObjectsArray().length; k++) {
+        var pluginDb = pluginHandler.getObjectByIdx(k);
+        var plugin = pluginDb.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
 
-      /* PlDummy */
-      if (typeof plugin === "undefined") {
-        plugin = PlDummys.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
         if (typeof plugin !== "undefined") {
-          if (enabled) PlDummys.update({ _id: plugin._id }, { $set: { actives: plugin.actives + 1 } });
-          else if (plugin.actives >= 1) PlDummys.update({ _id: plugin._id }, { $set: { actives: plugin.actives - 1 } });
+          if (enabled) pluginDb.update({ _id: plugin._id }, { $set: { actives: plugin.actives + 1 } });
+          else if (plugin.actives >= 1) pluginDb.update({ _id: plugin._id }, { $set: { actives: plugin.actives - 1 } });
+          break;
         }
       }
 
@@ -56,19 +80,14 @@ this.setActiveState = function(strId, enabled) {
       if (typeof exchange !== "undefined") {
 
 
-        /* ExKraken */
-        var tempEx = ExKrakens.find({ _id: exchange }).fetch()[0];
-        if (typeof tempEx !== "undefined") {
-          if (enabled) ExKrakens.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives + 1 } });
-          else if (tempEx.actives >= 1) ExKrakens.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
-        }
+        for (let k = 0; k < exchangeHandler.getObjectsArray().length; k++) {
+          var exchangeDb = exchangeHandler.getObjectByIdx(k);
+          var tempEx = exchangeDb.find({ _id: exchange }).fetch()[0];
 
-        /* ExTestDatas */
-        if (typeof tempEx === "undefined") {
-          tempEx = ExTestDatas.find({ _id: exchange }).fetch()[0];
           if (typeof tempEx !== "undefined") {
-            if (enabled) ExTestDatas.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives + 1 } });
-            else if (tempEx.actives >= 1) ExTestDatas.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
+            if (enabled) exchangeDb.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives + 1 } });
+            else if (tempEx.actives >= 1) exchangeDb.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
+            break;
           }
         }
       }
@@ -85,62 +104,55 @@ this.setActiveState = function(strId, enabled) {
 
 this.getExchangeName = function(exId) {
 
-  if (typeof ExKrakens.findOne({ _id: exId }) !== 'undefined')
-    return ExKrakens.findOne({ _id: exId }).name;
-
-  if (typeof ExTestDatas.findOne({ _id: exId }) !== 'undefined')
-    return ExTestDatas.findOne({ _id: exId }).name;
+  for (var i = 0; i < exchangeHandler.getObjectsArray().length; i++) {
+    var exchange = exchangeHandler.getObjectByIdx(i).findOne({ _id: exId });
+    if (typeof exchange !== 'undefined') return exchange.name;
+  }
 
   return '';
-};
+}
 
 
 this.getExchanges = function() {
   var res = [];
 
-
-  _.each(ExKrakens.find().fetch(), function(item) {
-    res.push({ name: item.name, _id: item._id })
-  });
-
-  _.each(ExTestDatas.find().fetch(), function(item) {
-    res.push({ name: item.name, _id: item._id })
-  });
+  for (var i = 0; i < exchangeHandler.getObjectsArray().length; i++) {
+    _.each(exchangeHandler.getObjectByIdx(i).find().fetch(), function(item) {
+      res.push({ name: item.name, _id: item._id })
+    });
+  }
 
   res.sort(byName);
   return res;
-};
+}
 
 
 /*++++++++++ Plugins ++++++++++*/
 
 this.getPluginName = function(plId) {
 
-  if (typeof PlSwings.findOne({ _id: plId }) !== 'undefined')
-    return PlSwings.findOne({ _id: plId }).name;
-
-  if (typeof PlDummys.findOne({ _id: plId }) !== 'undefined')
-    return PlDummys.findOne({ _id: plId }).name;
+  for (var i = 0; i < pluginHandler.getObjectsArray().length; i++) {
+    var plugin = pluginHandler.getObjectByIdx(i).findOne({ _id: plId });
+    if (typeof plugin !== 'undefined') return plugin.name;
+  }
 
   return '';
-};
+}
 
 
 this.getPlugins = function() {
   var res = [];
 
 
-  _.each(PlSwings.find().fetch(), function(item) {
-    res.push({ name: item.name, _id: item._id })
-  });
-
-  _.each(PlDummys.find().fetch(), function(item) {
-    res.push({ name: item.name, _id: item._id })
-  });
+  for (var i = 0; i < pluginHandler.getObjectsArray().length; i++) {
+    _.each(pluginHandler.getObjectByIdx(i).find().fetch(), function(item) {
+      res.push({ name: item.name, _id: item._id })
+    });
+  }
 
   res.sort(byName);
   return res;
-};
+}
 
 
 /*++++++++++ Plugin Bundles ++++++++++*/
@@ -151,7 +163,7 @@ this.getPluginBundleName = function(plBuId) {
     return PluginBundles.findOne({ _id: plBuId }).name;
 
   return '';
-};
+}
 
 
 this.getPluginBundles = function() {
@@ -164,7 +176,7 @@ this.getPluginBundles = function() {
 
   res.sort(byName);
   return res;
-};
+}
 
 
 /***********************************************************************
