@@ -1,16 +1,18 @@
 /**
  * @description:
- * <Description>
+ * Class for swing like trading
  *
- * <Optional informations>
+ * 
+ * This class implements a so called swing like trading micro strategy
+ *
  * 
  * @author Atzen
- * @version 1.0
+ * @version 0.1.0
+ *
  * 
  * CHANGES:
- * 02-Jun-2015 : Initial version
+ * 26-Jul-2016 : Initial version
  */
-
 
 import { IPlugin } from '../../apis/IPlugin.js'
 
@@ -19,22 +21,14 @@ import { IPlugin } from '../../apis/IPlugin.js'
   Private Static Variable
  ***********************************************************************/
 
-var _dataInit = {
-  currentVal: 0,
-  topVal: 0,
-  bottomVal: 0
-};
-
-var _positionsInit = {
-  long: false,
-  short: false
-};
-
-
 /***********************************************************************
   Public Static Variable
  ***********************************************************************/
 
+/**
+ * Configuration structure
+ * @type {Object}
+ */
 PlSwing.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
@@ -72,16 +66,45 @@ export function PlSwing(logger) {
     Private Instance Variable
    ***********************************************************************/
 
+  /**
+   * Internal configuration object
+   * @type {Object}
+   */
   var _config = Object.assign({}, PlSwing.ConfigDefault);
-  var _data = Object.assign({}, _dataInit);
-  var _positions = Object.assign({}, _positionsInit);
 
+  /**
+   * Data object that contains all important values
+   * @type {Object}
+   */
+  var _data = { currentVal: 0, topVal: 0, bottomVal: 0 }
+
+  /**
+   * Hold the current position
+   * @type {Object}
+   */
+  var _positions = { long: false, short: false };
+
+  /**
+   * Callback function that will be called when a buy action is calculated
+   */
   var _buyNotifyFunc = function() {};
+
+  /**
+   * Callback function that will be called when a sell action is calculated
+   */
   var _sellNotifyFunc = function() {};
 
-
+  /**
+   * Temporary position (will be set when a buy or sell function is called)
+   * Is used to determine a successful buy/sell action
+   * @type {String}
+   */
   var _tmpPos = 'init';
 
+  /**
+   * Logger object
+   * @type {Logger}
+   */
   var _logger = logger;
 
 
@@ -93,12 +116,20 @@ export function PlSwing(logger) {
     Private Instance Function
    ***********************************************************************/
 
+  /**
+   * Function to log messages if a logger object is available
+   * @param  {String} message message to be logged
+   */
   var _log = function(message) {
     if (typeof _logger !== 'undefined')
       _logger.debug('PlSwing: ' + message);
   }
 
 
+  /**
+   * Checks configuration
+   * @return {bool} false if error occurs
+   */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
     if (_config.name === 'undefined') return false;
@@ -121,16 +152,23 @@ export function PlSwing(logger) {
     return true;
   }
 
+
   /***********************************************************************
     Public Instance Function
    ***********************************************************************/
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.setConfig = function(configuration) {
     _config = mergeObjects(_config, configuration);
     return _checkConfig();
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.update = function(price) {
     _data.currentVal = price;
 
@@ -186,6 +224,9 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.getConfig = function() {
     return [
       { title: 'Open Long [%]', value: _config.oLngPosPer },
@@ -198,6 +239,9 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.getState = function() {
     if (_positions.long || _positions.short)
       return 'in';
@@ -206,6 +250,9 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.getInfo = function() {
     var info = {};
 
@@ -221,6 +268,9 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.start = function(price) {
     _log('start tracking');
     _data.currentVal = price;
@@ -229,18 +279,21 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.bought = function(price) {
     _data.currentVal = price;
     _data.topVal = price;
     _data.bottomVal = price;
 
-    if (_tmpPos == 'short') {
+    if (_tmpPos === 'short') {
       _positions.short = false;
 
       _log('Short Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
     }
 
-    if (_tmpPos == 'long') {
+    if (_tmpPos === 'long') {
       _positions.long = true;
 
       _log('Long Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
@@ -248,18 +301,21 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.sold = function(price) {
     _data.currentVal = price;
     _data.topVal = price;
     _data.bottomVal = price;
 
-    if (_tmpPos == 'short') {
+    if (_tmpPos === 'short') {
       _positions.short = true;
 
       _log('Short Opened, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
     }
 
-    if (_tmpPos == 'long') {
+    if (_tmpPos === 'long') {
       _positions.long = false;
 
       _log('Long Closed, ' + 'pos long: ' + _positions.long + ', pos short: ' + _positions.short);
@@ -267,21 +323,33 @@ export function PlSwing(logger) {
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
     _buyNotifyFunc = buyNotifyFunction;
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
     _sellNotifyFunc = sellNotifyFunction;
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.getInstInfo = function() {
     return { id: _config.id, name: _config.name, type: "PlSwing" };
   }
 
 
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.getPositions = function() {
     return { long: _config.enLong, short: _config.enShort };
   }

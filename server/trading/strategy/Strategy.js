@@ -1,17 +1,18 @@
 /**
  * @description:
- * <Description>
+ * Trading strategy class
  *
  * 
- * <Optional informations>
+ * This is the central class for each trading strategy.
+ * It combines all settings and handles the plugin and exchange interactions
  *
  * 
  * @author Atzen
- * @version 1.0.0
+ * @version 0.1.0
  *
  * 
  * CHANGES:
- * 02-Jun-2015 : Initial version
+ * 26-Jul-2016 : Initial version
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -27,6 +28,10 @@ import { SchMSC } from '../../lib/SchMSC.js';
   Public Static Variable
  ***********************************************************************/
 
+/**
+ * Strategy Error object
+ * @type {Object}
+ */
 StrError = {
   ok: 'OK',
   ExConfigError: 'EXCHANGE_CONFIG_ERROR',
@@ -49,6 +54,12 @@ StrError = {
   Class
  ***********************************************************************/
 
+/**
+ * Strategy class
+ * @param {Object} strategyDescription object which contains all necessary strategy informations
+ * @param {function} createPluginFunc    callback function which will be called to create an plugin instance
+ * @param {function} createExchangeFunc  callback function which will be called to create an exchange instance
+ */
 export function Strategy(strategyDescription, createPluginFunc, createExchangeFunc) {
 
   /***********************************************************************
@@ -59,25 +70,89 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     Private Instance Variable
    ***********************************************************************/
 
-  var _strDesc = '';
+  /**
+   * Object that contains all configurations
+   * @type {Object}
+   */
+  var _strDesc = {};
+
+  /**
+   * Plugins handler
+   * @type {InstHandler}
+   */
   var _plugins = new InstHandler();
+
+  /**
+   * Exchanges handler
+   * @type {InstHandler}
+   */
   var _exchanges = new InstHandler();
 
+  /**
+   * Mask for none action (used for buy/sell validation)
+   * @type {Number}
+   */
   var _noneMask = 1; //none: 1
+
+  /**
+   * Mask for buy action (used for buy/sell validation)
+   * @type {Number}
+   */
   var _buyMask = 2; //buy: 1 << 1 (2)
+
+  /**
+   * Mask for sell action (used for buy/sell validation)
+   * @type {Number}
+   */
   var _sellMask = 4; //sell: 1 << 2 (4)
+
+  /**
+   * Holds masks for validations
+   * @type {Array}
+   */
   var _notifyMaskedValues = new Array();
 
+  /**
+   * Callback function that will be called if a buy/sell action should be done
+   */
   var _notifyFunc = function() {};
+
+  /**
+   * Callback function that will be called if an error occurred
+   */
   var _errorFunc = function() {};
 
+  /**
+   * Holds following exchange depending informations:
+   * trading: bool that indicates whether an exchange is still trading or not
+   * error: bool that indicates an error while trading
+   * @type {Array}
+   */
   var _exTrading = [];
 
+  /**
+   * Holds the last position (updated every _updateFunc call)
+   * Used to create a history from each trade
+   * @type {String}
+   */
   var _lastPosition = 'none';
 
+  /**
+   * Used for error handling while constructor function is running
+   * @type {error Object}
+   */
   var _constrError = errHandle(StrError.ok, null);
 
+  /**
+   * Sets the number of chart data that will be shown in actives details view
+   * @type {Number}
+   */
   var _numOfChartData = 60;
+
+  /**
+   * Holds relevant trade data
+   * @type {Object}
+   */
   var _data = {
     strategyId: '',
     strategyName: '',
@@ -91,11 +166,23 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     outTime: ''
   };
 
-  var _notifyParam = {};
+  /**
+   * Indicates if the notification function should be called
+   * @type {Boolean}
+   */
   var _callNotifyFunc = false;
 
+  /**
+   * Used for first run (update) handling
+   * @type {Boolean}
+   */
   var _firstRun = false;
 
+  /**
+   * Indicates if the _updateFunc function is running
+   * Used for synchronous call management
+   * @type {Boolean}
+   */
   var _updateRunning = false;
 
 
@@ -107,14 +194,20 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     Private Instance Function
    ***********************************************************************/
 
+  /**
+   * Update function which handles the updates from Plugins, Exchanges,
+   * datas and histories
+   * @param  {bool} fullUpdate indicates a full update (including exchange and plugin updates)
+   */
   var _updateFunc = function(fullUpdate) {
-    _updateRunning = true;
 
+    /* check if all exchanges are ready for an update (not currently trading) */
     if (_checkExsNotInTrade()) {
 
       _callNotifyFunc = false;
 
 
+      /* prepare variables for full update */
       if (fullUpdate) {
 
         _clearNotifyValues();
@@ -123,13 +216,17 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
         _data.curTime.push(new Date);
       }
 
+
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
-        var tmp = _exchanges.getObjectByIdx(i);
+        var ex = _exchanges.getObjectByIdx(i);
 
+
+        /* update each exchange */
         if (fullUpdate) {
-          if (tmp.update().error !== ExError.ok) {
+          if (ex.update().error !== ExError.ok) {
 
-            var instInfo = tmp.getInstInfo();
+            /* error handling */
+            var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -138,35 +235,43 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             }
           }
 
+
+          /* update _data.price array */
           if (_data.exchanges[i].price.length >= _numOfChartData) _data.exchanges[i].price.shift();
 
-          var pTmp = tmp.getPrice();
-          if (pTmp.error !== ExError.ok) {
+          var pEx = ex.getPrice();
 
-            var instInfo = tmp.getInstInfo();
+          /* error handling */
+          if (pEx.error !== ExError.ok) {
+
+            var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              if (pTmp.error === ExError.finished) {
+              if (pEx.error === ExError.finished) {
                 _errorFunc(_strDesc._id, errorMessage({ code: '0x011', strId: _strDesc._id, name: instInfo.result.name }));
               } else {
                 _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, name: instInfo.result.name }));
               }
             }
 
-            if (_data.exchanges[i].price.length === 0) pTmp.result = 0;
-            else pTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+            /* if an error occurs, set price to last price (0 if it's the first array element) */
+            if (_data.exchanges[i].price.length === 0) pEx.result = 0;
+            else pEx.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
 
-          _data.exchanges[i].price.push(pTmp.result);
+          _data.exchanges[i].price.push(pEx.result);
         }
 
 
-        var iTmp = tmp.getInfo();
-        if (iTmp.error !== ExError.ok) {
+        /* update exchange infos */
+        var iEx = ex.getInfo();
 
-          var instInfo = tmp.getInstInfo();
+        /* error handling */
+        if (iEx.error !== ExError.ok) {
+
+          var instInfo = ex.getInstInfo();
 
           if (instInfo.error !== ExError.ok) {
             _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -174,50 +279,62 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             _errorFunc(_strDesc._id, errorMessage({ code: '0x003', strId: _strDesc._id, name: instInfo.result.name }));
           }
 
-          iTmp.result = [];
+          iEx.result = [];
         }
-        _data.exchanges[i].info = iTmp;
+        _data.exchanges[i].info = iEx;
+
       }
 
 
       for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-        var tmp = _plugins.getObjectByIdx(i);
+        var pl = _plugins.getObjectByIdx(i);
 
+
+        /* update each plugin */
         if (fullUpdate) {
-          var eIdx = _exchanges.getObjectIdx(tmp.exId);
+          var eIdx = _exchanges.getObjectIdx(pl.exId);
           var price = _data.exchanges[eIdx].price[_data.exchanges[eIdx].price.length - 1];
 
           if (_firstRun) {
             _firstRun = false;
-            tmp.inst.start(price);
+            pl.inst.start(price);
           } else {
-            tmp.inst.update(price);
+            pl.inst.update(price);
           }
         }
 
-        _data.plugins[i].state = tmp.inst.getState();
-        _data.plugins[i].info = tmp.inst.getInfo();
+        _data.plugins[i].state = pl.inst.getState();
+        _data.plugins[i].info = pl.inst.getInfo();
       }
 
+
+      /* evaluate notification values */
       if (fullUpdate) _evalNotifyValues();
 
+
+      /* update activeData db */
       _updateActiveData();
 
+
+      /* call notification function */
       if (_callNotifyFunc) {
         _notifyFunc(notifyParam);
       }
 
+
+      /* update history after a successfully trade (in + out) */
       if (_lastPosition !== 'none' && _data.position === 'none') {
         _updateHistory();
       }
 
       _lastPosition = _data.position;
     }
-
-    _updateRunning = false;
   }
 
 
+  /**
+   * Updates ActiveDatas db document
+   */
   var _updateActiveData = function() {
 
     if (typeof ActiveDatas.findOne({ strategyId: _data.strategyId }) === 'undefined') {
@@ -228,8 +345,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Updates Histories db
+   */
   var _updateHistory = function() {
     var tmp = {};
+
 
     tmp.inTime = _data.inTime;
     tmp.outTime = _data.outTime;
@@ -265,7 +386,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       tmp.exchanges[i].outTime = _data.exchanges[i].outTime;
       tmp.exchanges[i].volume = _data.exchanges[i].volume;
 
+
       var ret = _exchanges.getObject(tmp.exchanges[i].instInfo.id).getConfig();
+
+      /* error handling */
       if (ret.error !== ExError.ok) {
         _errorFunc(_strDesc._id, errorMessage({ code: '0x001', strId: _strDesc._id, name: tmp.exchanges[i].instInfo.name }));
         ret = {};
@@ -278,6 +402,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Sets plugin depending buy notification value in _notifyMaskedValues Array
+   * @param  {object} instInfo return object from IPlugin.getInstInfo() function
+   */
   var _buyNotification = function(instInfo) {
     for (var i = 0; i < _notifyMaskedValues.length; i++) {
       if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
@@ -287,6 +415,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Sets plugin depending sell notification value in _notifyMaskedValues Array
+   * @param  {object} instInfo return object from IPlugin.getInstInfo() function
+   */
   var _sellNotification = function(instInfo) {
     for (var i = 0; i < _notifyMaskedValues.length; i++) {
       if (_notifyMaskedValues[i].getObject(instInfo.id) !== 'undefined') {
@@ -296,6 +428,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Evaluates _notifyMaskedValues Array
+   */
   var _evalNotifyValues = function() {
     var finalDecision = 0;
     var pluginBundleVals = new Array(_notifyMaskedValues.length);
@@ -318,12 +453,15 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
     }
 
+
     /* evaluate final decision */
     if (finalDecision < (_buyMask + _sellMask) && // buy + sell notification is not valid
       finalDecision > _noneMask) { // only none means no notification needed
 
+
       /* eliminate none flag */
       finalDecision &= ~_noneMask;
+
 
       /* set notify function parameter */
       notifyParam = {
@@ -331,151 +469,163 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
         action: 'none'
       };
 
-      /* buy */
+
+      /* evaluated buy */
       if (finalDecision === _buyMask) {
         notifyParam.action = 'buy';
         _callNotifyFunc = true;
 
         _data.state = 'buy request';
 
+        /* buy */
         if (_strDesc.mode === 'auto' || (_strDesc.mode === 'semiAuto' && _data.position === 'short')) {
-          _buyFunction();
+          _tradeFunction('buy');
         }
       }
 
-      /* sell */
+
+      /* evaluated sell */
       if (finalDecision === _sellMask) {
         notifyParam.action = 'sell';
         _callNotifyFunc = true;
 
         _data.state = 'sell request';
 
+        /* sell */
         if (_strDesc.mode === 'auto' || (_strDesc.mode === 'semiAuto' && _data.position === 'long')) {
-          _sellFunction();
+          _tradeFunction('sell');
         }
       }
     }
   }
 
 
-  var _buyFunction = function() {
-    // console.log('buying');
-    if (_data.position !== 'long') {
-      _data.state = 'buying';
+  /**
+   * Initiates a trade
+   * @param  {String} trade sets buy ('buy') or sell ('sell') trade
+   */
+  var _tradeFunction = function(trade) {
+    if ((_data.position !== 'long' && trade === 'buy') ||
+      (_data.position !== 'short' && trade === 'sell')) {
+
+      /* update state */
+      if (trade === 'buy') _data.state = 'buying';
+      if (trade === 'sell') _data.state = 'selling';
       _updateActiveData();
 
+
+      /* set trading state */
       for (i in _exTrading) _exTrading[i].trading = true;
 
+
+      /* reset error state */
       if (_data.position === 'none') {
         for (i in _exTrading) _exTrading[i].error = false;
       }
 
+
+      /* call exchanges trade function */
       for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
         var tmp = _exchanges.getObjectByIdx(i);
 
         if (_exTrading[i].error) _exTrading[i].trading = false;
-        else tmp.buy(_data.position);
+        else if (trade === 'buy') tmp.buy(_data.position);
+        else if (trade === 'sell') tmp.sell(_data.position);
       }
     }
   }
 
 
-  var _sellFunction = function() {
-    // console.log('selling');
-    if (_data.position !== 'short') {
-      _data.state = 'selling';
-      _updateActiveData();
-
-      for (i in _exTrading) _exTrading[i].trading = true;
-
-      if (_data.position === 'none') {
-        for (i in _exTrading) _exTrading[i].error = false;
-      }
-
-      for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
-        var tmp = _exchanges.getObjectByIdx(i);
-
-        if (_exTrading[i].error) _exTrading[i].trading = false;
-        else tmp.sell(_data.position);
-      }
-    }
-  }
-
-
+  /**
+   * IExchanges boughtNotifyFunction
+   */
   var _exBoughtNotifyFunc = function(instInfo, errObject) {
-    // console.log('boughtFunc')
-    var idx = _exchanges.getObjectIdx(instInfo.id);
-
-    _exTrading[idx].trading = false;
-
-    if (errObject.error != ExError.ok) {
-      _errorFunc(_strDesc._id, errorMessage({ code: '0x00B', strId: _strDesc._id, name: instInfo.name }));
-      return _exTrading[idx].error = true;
-    }
-
-    if (_checkExsNotInTrade()) {
-      if (_checkAtLstOneExNotErr()) {
-        _tradingPostProcessing('buy');
-      } else {
-        _data.state === 'error';
-        // _updateActiveData();
-        console.log('boughtFunc')
-        _syncUpdateFuncCall(false);
-      }
-    }
+    _postTradingCheck('buy', instInfo, errObject);
   }
 
 
+  /**
+   * IExchanges soldNotifyFunction
+   */
   var _exSoldNotifyFunc = function(instInfo, errObject) {
-    // console.log('soldFunc')
+    _postTradingCheck('sell', instInfo, errObject);
+  }
+
+
+  /**
+   * Executes some post trading checks and initiates the trading post process
+   * @param  {String} trade     indicates a buy ('buy') or sell ('sell') trade
+   * @param  {Object} instInfo  IExchanges boughtNotifyFunction/sellNotifyFunction parameter
+   * @param  {Object} errObject IExchanges boughtNotifyFunction/sellNotifyFunction parameter
+   */
+  var _postTradingCheck = function(trade, instInfo, errObject) {
     var idx = _exchanges.getObjectIdx(instInfo.id);
 
+
+    /* reset trading state */
     _exTrading[idx].trading = false;
 
+
+    /* check if an error occurred */
     if (errObject.error != ExError.ok) {
-      _errorFunc(_strDesc._id, errorMessage({ code: '0x00C', strId: _strDesc._id, name: instInfo.name }));
+      if (trade === 'buy') _errorFunc(_strDesc._id, errorMessage({ code: '0x00B', strId: _strDesc._id, name: instInfo.name }));
+      if (trade === 'sell') _errorFunc(_strDesc._id, errorMessage({ code: '0x00C', strId: _strDesc._id, name: instInfo.name }));
       return _exTrading[idx].error = true;
     }
 
+
+    /* start the trading post process after all exchanges finished trading */
     if (_checkExsNotInTrade()) {
       if (_checkAtLstOneExNotErr()) {
-        _tradingPostProcessing('sell');
+        if (trade === 'buy') _tradingPostProcessing('buy');
+        if (trade === 'sell') _tradingPostProcessing('sell');
       } else {
         _data.state === 'error';
-        // _updateActiveData();
-        console.log('soldFunc')
         _syncUpdateFuncCall(false);
       }
     }
   }
 
 
+  /**
+   * Does some post trading handles
+   * @param  {String} trade indicates a buy ('buy') or sell ('sell') trade
+   */
   var _tradingPostProcessing = function(trade) {
-    var pos2Exit = '';
 
-    if (trade === 'buy') pos2Exit = 'short';
-    if (trade === 'sell') pos2Exit = 'long';
+    /* set trades out position */
+    var posOut = '';
+    if (trade === 'buy') posOut = 'short';
+    if (trade === 'sell') posOut = 'long';
 
 
+    /* set time data */
     if (_data.position === 'none') _data.inTime = new Date();
-    if (_data.position === pos2Exit) _data.outTime = new Date();
+    if (_data.position === posOut) _data.outTime = new Date();
 
+
+    /* exchanges processing */
     for (var i = 0; i < _exchanges.getObjectsArray().length; i++) {
-      var tmp = _exchanges.getObjectByIdx(i);
+      var ex = _exchanges.getObjectByIdx(i);
 
+
+      /* exchanges in position handling */
       if (_data.position === 'none') {
 
+        /* error handling */
         if (_exTrading[i].error) {
-
-          _data.exchanges[i].inPrice = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+          _data.exchanges[i].inPrice = _data.exchanges[i].price[_data.exchanges[i].price.length - 1]; // set in price to last price
           _data.exchanges[i].volume = 0;
-
         } else {
 
-          var tTmp = tmp.getTradePrice();
-          if (tTmp.error !== ExError.ok) {
 
-            var instInfo = tmp.getInstInfo();
+          /* get in price */
+          var tPrice = ex.getTradePrice();
+
+          /* error handling */
+          if (tPrice.error !== ExError.ok) {
+
+            var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -483,15 +633,20 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
               _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
-            tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+            tPrice.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1]; // set in price to last price
           }
-          _data.exchanges[i].inPrice = tTmp.result;
+
+          /* save in price */
+          _data.exchanges[i].inPrice = tPrice.result;
 
 
-          var vTmp = tmp.getVolume();
+          /* get volume */
+          var vTmp = ex.getVolume();
+
+          /* error handling */
           if (vTmp.error !== ExError.ok) {
 
-            var instInfo = tmp.getInstInfo();
+            var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -501,20 +656,29 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
             vTmp.result = 0;
           }
+
+          /* save volume */
           _data.exchanges[i].volume = vTmp.result;
         }
       }
 
-      if (_data.position === pos2Exit) {
 
+      /* exchanges out position handling */
+      if (_data.position === posOut) {
+
+        /* error handling */
         if (_exTrading[i].error) {
           _data.exchanges[i].outPrice = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
         } else {
 
-          var tTmp = tmp.getTradePrice();
-          if (tTmp.error !== ExError.ok) {
 
-            var instInfo = tmp.getInstInfo();
+          /* get out price */
+          var tPrice = ex.getTradePrice();
+
+          /* error handling */
+          if (tPrice.error !== ExError.ok) {
+
+            var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -522,28 +686,35 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
               _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
-            tTmp.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
+            tPrice.result = _data.exchanges[i].price[_data.exchanges[i].price.length - 1];
           }
-          _data.exchanges[i].outPrice = tTmp.result;
 
+          /* save out price */
+          _data.exchanges[i].outPrice = tPrice.result;
         }
       }
     }
 
+
+    /* plugins processing */
     for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
-      var tmp = _plugins.getObjectByIdx(i);
-      var exIdx = _exchanges.getObjectIdx(tmp.exId);
+      var pl = _plugins.getObjectByIdx(i);
+      var exIdx = _exchanges.getObjectIdx(pl.exId);
 
+
+      /* error handling */
       if (_exTrading[exIdx].error) {
-        if (trade === 'buy') tmp.inst.bought(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
-        if (trade === 'sell') tmp.inst.sold(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
-
+        if (trade === 'buy') pl.inst.bought(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
+        if (trade === 'sell') pl.inst.sold(_data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1]);
       } else {
 
-        var tTmp = _exchanges.getObject(tmp.exId).getTradePrice();
-        if (tTmp.error !== ExError.ok) {
 
-          var instInfo = _exchanges.getObject(tmp.exId).getInstInfo();
+        /* get trade price */
+        var tPrice = _exchanges.getObject(pl.exId).getTradePrice();
+
+        /* error handling */
+        if (tPrice.error !== ExError.ok) {
+          var instInfo = _exchanges.getObject(pl.exId).getInstInfo();
 
           if (instInfo.error !== ExError.ok) {
             _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
@@ -551,16 +722,19 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
           }
 
-          tTmp.result = _data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1];
+          tPrice.result = _data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1];
         }
-        if (trade === 'buy') tmp.inst.bought(tTmp.result);
-        if (trade === 'sell') tmp.inst.sold(tTmp.result);
-      }
 
+
+        /* call trade finished function */
+        if (trade === 'buy') pl.inst.bought(tPrice.result);
+        if (trade === 'sell') pl.inst.sold(tPrice.result);
+      }
     }
 
-    if (_data.position === 'none') {
 
+    /* set new state and position */
+    if (_data.position === 'none') {
       if (trade === 'buy') _data.position = 'long';
       if (trade === 'sell') _data.position = 'short';
       _data.state = 'in';
@@ -569,16 +743,32 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       _data.state = 'out';
     }
 
+
+    /* call update function */
     _syncUpdateFuncCall(false);
   }
 
 
+  /**
+   * Manages synchronous _updateFunc() calls
+   * @param  {bool} fullUpdate _updateFunc parameter
+   */
   var _syncUpdateFuncCall = function(fullUpdate) {
+
+    /* wait until _updateFunc is released / not running */
     while (_updateRunning) Meteor._sleepForMs(1);
+
+    _updateRunning = true;
     _updateFunc(fullUpdate);
+    _updateRunning = false;
   }
 
 
+  /**
+   * Transforms an error object into an error message 
+   * @param  {Object} errObj error Object
+   * @return {Object}        an errHandle object containing the error message
+   */
   var errorMessage = function(errObj) {
 
     var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + _strDesc.name + '":' + '\n';
@@ -663,6 +853,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Indicates if an exchange is currently trading
+   * @return {bool} true if an exchange is currently trading
+   */
   var _checkExsNotInTrade = function() {
     for (i in _exTrading) {
       if (_exTrading[i].trading) return false;
@@ -672,6 +866,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Checks if at least one exchange traded successfully
+   * @return {bool} true if at least one exchange traded successfully
+   */
   var _checkAtLstOneExNotErr = function() {
     for (i in _exTrading) {
       if (!_exTrading[i].error) return true;
@@ -681,15 +879,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
-  var _resetExTradingTraded = function() {
-    for (i in _exTrading) {
-      if (!_exTrading[i].error) return true;
-    }
-
-    return false;
-  }
-
-
+  /**
+   * Resets the _notifyMaskedValues
+   */
   var _clearNotifyValues = function() {
     for (var i = 0; i < _notifyMaskedValues.length; i++) {
       for (var j = 0; j < _notifyMaskedValues[i].getObjectsArray().length; j++) {
@@ -699,9 +891,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Calculates the update time for SchM schedules 
+   * @return {Number} update time in seconds
+   */
   var _calcSchMUpdateTime = function() {
     var unit2Sec = 60; // 1 min
-    _strDesc.updateTime + ' ' + _strDesc.timeUnit
 
     if (_strDesc.timeUnit === 'seconds') unit2Sec = 1;
     if (_strDesc.timeUnit === 'minutes') unit2Sec = 1 * 60;
@@ -716,78 +911,109 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     Public Instance Function
    ***********************************************************************/
 
-  this.getData = function() {
-    return _data;
-  }
-
-
+  /**
+   * Sets the notification callback function
+   * @param {function} notifyFunction notification function with parameter {strategyId: <strategy id>, action: <buy/sell>}
+   */
   this.setNotifyFunction = function(notifyFunction) {
     _notifyFunc = notifyFunction;
   }
 
 
+  /**
+   * Sets the error callback function
+   * @param {function} errorFunction error function with parameters strategyId: <strategy Id>, errObj: <errHandle Object>
+   */
   this.setErrorFunction = function(errorFunction) {
     _errorFunc = errorFunction;
   }
 
 
+  /**
+   * Starts the Strategy
+   */
   this.start = function() {
     _firstRun = true;
 
+
     if (_strDesc.timeUnit !== 'none') {
+
+      /* select the Scheduler and start an schedule */
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
         _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
         SchM.createSchedule(_strDesc._id, _calcSchMUpdateTime(), _syncUpdateFuncCall, true);
       } else {
         SchMSC.createSchedule(_strDesc._id, 'every ' + _strDesc.updateTime + ' ' + _strDesc.timeUnit, _syncUpdateFuncCall, true);
       }
+
     }
 
     _syncUpdateFuncCall(true);
   }
 
 
+  /**
+   * Restarts the Strategy after pause
+   */
   this.resume = function() {
 
     if (_strDesc.timeUnit !== 'none') {
+
+      /* select the Scheduler and start an schedule */
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
         _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
         SchM.restartSchedule(_strDesc._id)
       } else {
         SchMSC.restartSchedule(_strDesc._id)
       }
+
     }
 
     _syncUpdateFuncCall(true);
   }
 
 
+  /**
+   * Stops the Strategy
+   */
   this.stop = function() {
 
     if (_strDesc.timeUnit !== 'none') {
+
+      /* select the Scheduler and remove the corresponding strategy schedule */
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
         _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
         SchM.removeSchedule(_strDesc._id)
       } else {
         SchMSC.removeSchedule(_strDesc._id)
       }
+
     }
   }
 
 
+  /**
+   * Pause the Strategy
+   */
   this.pause = function() {
 
     if (_strDesc.timeUnit !== 'none') {
+
+      /* select the Scheduler and stop the corresponding strategy schedule */
       if (_strDesc.timeUnit === 'seconds' || _strDesc.timeUnit === 'minutes' ||
         _strDesc.timeUnit === 'hours' || _strDesc.timeUnit === 'days') {
         SchM.stopSchedule(_strDesc._id)
       } else {
         SchMSC.stopSchedule(_strDesc._id)
       }
+
     }
   }
 
 
+  /**
+   * Cancels running trades
+   */
   this.stopTrading = function() {
     if (!_checkExsNotInTrade()) {
       for (i in _exTrading) {
@@ -795,6 +1021,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
           if (_exchanges.getObjectByIdx(i).stopTrade().error !== ExError.ok) {
             var instInfo = _exchanges.getObjectByIdx(i).getInstInfo();
 
+            /* error handling */
             if (instInfo.error !== ExError.ok) {
               _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
@@ -807,25 +1034,39 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
 
+  /**
+   * Refreshes the Strategy
+   */
   this.refresh = function() {
     _syncUpdateFuncCall(true);
   }
 
 
+  /**
+   * Initiates a buy action
+   */
   this.buy = function() {
     if (_data.state !== 'buying' && _data.state !== 'selling') {
-      _buyFunction();
+      _tradeFunction('buy');
     }
   }
 
 
+  /**
+   * Initiates a sell action
+   */
   this.sell = function() {
     if (_data.state !== 'buying' && _data.state !== 'selling') {
-      _sellFunction();
+      _tradeFunction('sell')
     }
   }
 
 
+  /**
+   * Returns the Status after _constructor call
+   * Used to indicate an error inside the constructor function
+   * @return {Object} errHandle object
+   */
   this.getStatus = function() {
     return _constrError;
   }
@@ -835,6 +1076,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     Constructor
    ***********************************************************************/
 
+  /**
+   * Constructor function
+   * @param  {Object} strDesc      classes strategyDescription parameter 
+   * @param  {function} createPlFunc classes createPluginFunc parameter
+   * @param  {function} createExFunc classes createExchangeFunc parameter
+   */
   var _constructor = function(strDesc, createPlFunc, createExFunc) {
     var plCnt = 0;
     var exCnt = 0;
@@ -876,15 +1123,15 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             return _constrError = errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
           }
 
-          var tmpPl = _plugins.getObject(plugin._id).inst;
-          tmpPl.setBuyNotifyFunc(_buyNotification);
-          tmpPl.setSellNotifyFunc(_sellNotification);
+          var pl = _plugins.getObject(plugin._id).inst;
+          pl.setBuyNotifyFunc(_buyNotification);
+          pl.setSellNotifyFunc(_sellNotification);
 
 
           /* initialize plugin elements of data information variable */
           _data.plugins[plCnt] = {};
           _data.plugins[plCnt].name = plugin.name;
-          _data.plugins[plCnt].instInfo = tmpPl.getInstInfo();
+          _data.plugins[plCnt].instInfo = pl.getInstInfo();
           plCnt++;
 
 
@@ -925,16 +1172,16 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
 
             /* initialize exchange elements of data information variable */
-            var tmpEx = _exchanges.getObject(plugin.exchange._id);
+            var ex = _exchanges.getObject(plugin.exchange._id);
             _data.exchanges[exCnt] = {};
             _data.exchanges[exCnt].price = [];
             _data.exchanges[exCnt].name = plugin.exchange.name;
 
-            var iTmp = tmpEx.getInstInfo();
+            var iTmp = ex.getInstInfo();
             if (iTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x005', strId: _strDesc._id });
             _data.exchanges[exCnt].instInfo = iTmp.result;
 
-            var pTmp = tmpEx.getPairUnits();
+            var pTmp = ex.getPairUnits();
             if (pTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x006', strId: _strDesc._id, name: plugin.exchange.name });
             _data.exchanges[exCnt].units = pTmp.result;
 
@@ -945,5 +1192,6 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     }
   }
 
+  /* constructor call */
   _constructor(strategyDescription, createPluginFunc, createExchangeFunc)
 }
