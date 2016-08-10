@@ -160,6 +160,12 @@ export function ExTestData() {
     Private Instance Function
    ***********************************************************************/
 
+  /** 
+   * converts data input string to array. 
+   * Used seperators: ',', '\n' 
+   * @param  {string} data input data 
+   * @return {Array}      converted Array 
+   */ 
   var _dataString2Array = function(data) {
     var tmp = data.split(',');
     var tmp2 = [];
