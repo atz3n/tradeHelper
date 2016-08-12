@@ -7,11 +7,13 @@
  *
  * 
  * @author Atzen
- * @version 0.1.0
+ * @version 0.1.1
  *
  * 
  * CHANGES:
  * 26-Jul-2016 : Initial version
+ * 10-Aug-2016 : changed getInfo functions return value according to IPlugin v2.0
+ *               changed Info to High Price, Current Price and Low Price
  */
 
 import { IPlugin } from '../../apis/IPlugin.js'
@@ -32,10 +34,12 @@ import { IPlugin } from '../../apis/IPlugin.js'
 PlSwing.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
+  
   oLngPosPer: 5, // no position -> buy (value in percentage) (open long position)
   cLngPosPer: 5, // long position -> sell after top (value in percentage) (close long position)
   oShrtPosPer: 5, // no position -> sell (value in percentage) (open short position)
   cShrtPosPer: 5, // short position -> buy after bottom (value in percentage) (close short position)
+  
   enLong: true, // enable long trading
   enShort: false // enable short trading
 }
@@ -260,11 +264,11 @@ export function PlSwing(logger) {
     info.Current = cropFracDigits(_data.currentVal, 6);
     info.Bottom = cropFracDigits(_data.bottomVal, 6);
 
-    return errHandle(ExError.ok, [
-      { title: 'Top Value', value: cropFracDigits(_data.topVal, 6) },
-      { title: 'Current Value', value: cropFracDigits(_data.currentVal, 6) },
-      { title: 'Bottom Value', value: cropFracDigits(_data.bottomVal, 6) }
-    ]);
+    return [
+      { title: 'High Price', value: cropFracDigits(_data.topVal, 6) },
+      { title: 'Current Price', value: cropFracDigits(_data.currentVal, 6) },
+      { title: 'Low Price', value: cropFracDigits(_data.bottomVal, 6) }
+    ];
   }
 
 

@@ -33,9 +33,9 @@ var privateRoutes = [
 	"plugins.insert_pl_swing",
 	"plugins.details_pl_swing",
 	"plugins.edit_pl_swing",
-	"plugins.insert_pl_dummy",
-	"plugins.details_pl_dummy",
-	"plugins.edit_pl_dummy",
+	"plugins.insert_pl_stop_loss",
+	"plugins.details_pl_stop_loss",
+	"plugins.edit_pl_stop_loss",
 	"exchanges",
 	"exchanges.insert_ex_kraken",
 	"exchanges.edit_ex_kraken",
@@ -247,9 +247,9 @@ Router.map(function () {
 	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
 	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});
 	this.route("plugins.edit_pl_swing", {path: "/plugins/edit_pl_swing/:plSwingId", controller: "PluginsEditPlSwingController"});
-	this.route("plugins.insert_pl_dummy", {path: "/plugins/insert_pl_dummy", controller: "PluginsInsertPlDummyController"});
-	this.route("plugins.details_pl_dummy", {path: "/plugins/details_pl_dummy/:plDummyId", controller: "PluginsDetailsPlDummyController"});
-	this.route("plugins.edit_pl_dummy", {path: "/plugins/edit_pl_dummy/:plDummyId", controller: "PluginsEditPlDummyController"});
+	this.route("plugins.insert_pl_stop_loss", {path: "/plugins/insert_pl_stop_loss", controller: "PluginsInsertPlStopLossController"});
+	this.route("plugins.details_pl_stop_loss", {path: "/plugins/details_pl_stop_loss/:plStopLossId", controller: "PluginsDetailsPlStopLossController"});
+	this.route("plugins.edit_pl_stop_loss", {path: "/plugins/edit_pl_stop_loss/:plStopLossId", controller: "PluginsEditPlStopLossController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
 	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
 	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});

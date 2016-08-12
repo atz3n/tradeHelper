@@ -4,6 +4,7 @@ import { ExTestData } from './trading/exchanges/ExTestData.js';
 import { ExKraken } from './trading/exchanges/ExKraken.js';
 
 import { PlSwing } from './trading/plugins/PlSwing.js';
+import { PlStopLoss } from './trading/plugins/PlStopLoss.js';
 
 
 /***********************************************************************
@@ -16,7 +17,7 @@ exchangeHandler = new InstHandler();
 
 /* Plugins */
 pluginHandler.setObject('PlSwings', PlSwings);
-pluginHandler.setObject('PlDummys', PlDummys);
+pluginHandler.setObject('PlStopLosses', PlStopLosses);
 
 
 /* Exchanges */
@@ -41,6 +42,7 @@ this.createPlugin = function(plugin, strPlHandler) {
   /***** add plugin default config here ******/
 
   if (plugin.type === 'plSwing') conf = Object.assign({}, PlSwing.ConfigDefault);
+  if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -62,6 +64,7 @@ this.createPlugin = function(plugin, strPlHandler) {
   /***** add plugin instance creation here ******/
 
   if (plugin.type === 'plSwing') strPlHandler.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
+  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 

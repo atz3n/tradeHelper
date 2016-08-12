@@ -5,13 +5,14 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 2.0
+ * @version 2.1
  * 
  * CHANGES:
- * 01-July-2016 : Initial version
- * 22-July-2016 : added name element to getInstInfo() return object
- * 24-July-2016 : changed getConfig() return result object to array (same structure as getInfo())
- * 26-July-2016 : included default configuration object
+ * 01-Jul-2016 : Initial version
+ * 22-Jul-2016 : added name element to getInstInfo() return object
+ * 24-Jul-2016 : changed getConfig() return result object to array (same structure as getInfo())
+ * 26-Jul-2016 : included default configuration object
+ * 12-Aug-2016 : bugfix: added configuration parameter in setConfig() signature
  */
 
 /***********************************************************************
@@ -45,7 +46,7 @@ IPlugin.ConfigDefault = {
  * Sets Class specific configurations
  * @param {Object} configuration class specific configuration
  */
-IPlugin.prototype.setConfig = function() {
+IPlugin.prototype.setConfig = function(configuration) {
     throw new Error('This method must be overwritten!');
 }
 
