@@ -1,5 +1,5 @@
-this.PluginsEditPlDummyController = RouteController.extend({
-	template: "PluginsEditPlDummy",
+this.PluginsDetailsPlStopLossController = RouteController.extend({
+	template: "PluginsDetailsPlStopLoss",
 	
 
 	yieldTemplates: {
@@ -19,7 +19,7 @@ this.PluginsEditPlDummyController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_dummy", this.params.plDummyId)
+			Meteor.subscribe("pl_stop_loss", this.params.plStopLossId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +34,7 @@ this.PluginsEditPlDummyController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_dummy: PlDummys.findOne({_id:this.params.plDummyId}, {})
+			pl_stop_loss: PlStopLosses.findOne({_id:this.params.plStopLossId}, {})
 		};
 		
 

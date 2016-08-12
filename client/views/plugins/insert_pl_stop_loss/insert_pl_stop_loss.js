@@ -1,22 +1,22 @@
 var pageSession = new ReactiveDict();
 
-Template.PluginsInsertPlDummy.rendered = function() {
-	Session.set('activePage', 'plugins');
+Template.PluginsInsertPlStopLoss.rendered = function() {
+	
 };
 
-Template.PluginsInsertPlDummy.events({
+Template.PluginsInsertPlStopLoss.events({
 	
 });
 
-Template.PluginsInsertPlDummy.helpers({
+Template.PluginsInsertPlStopLoss.helpers({
 	
 });
 
-Template.PluginsInsertPlDummyInsertForm.rendered = function() {
+Template.PluginsInsertPlStopLossInsertForm.rendered = function() {
 	
 
-	pageSession.set("pluginsInsertPlDummyInsertFormInfoMessage", "");
-	pageSession.set("pluginsInsertPlDummyInsertFormErrorMessage", "");
+	pageSession.set("pluginsInsertPlStopLossInsertFormInfoMessage", "");
+	pageSession.set("pluginsInsertPlStopLossInsertFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -44,25 +44,25 @@ Template.PluginsInsertPlDummyInsertForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.PluginsInsertPlDummyInsertForm.events({
+Template.PluginsInsertPlStopLossInsertForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("pluginsInsertPlDummyInsertFormInfoMessage", "");
-		pageSession.set("pluginsInsertPlDummyInsertFormErrorMessage", "");
+		pageSession.set("pluginsInsertPlStopLossInsertFormInfoMessage", "");
+		pageSession.set("pluginsInsertPlStopLossInsertFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var pluginsInsertPlDummyInsertFormMode = "insert";
+			var pluginsInsertPlStopLossInsertFormMode = "insert";
 			if(!t.find("#form-cancel-button")) {
-				switch(pluginsInsertPlDummyInsertFormMode) {
+				switch(pluginsInsertPlStopLossInsertFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("pluginsInsertPlDummyInsertFormInfoMessage", message);
+						pageSession.set("pluginsInsertPlStopLossInsertFormInfoMessage", message);
 					}; break;
 				}
 			}
@@ -73,7 +73,7 @@ Template.PluginsInsertPlDummyInsertForm.events({
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("pluginsInsertPlDummyInsertFormErrorMessage", message);
+			pageSession.set("pluginsInsertPlStopLossInsertFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -87,7 +87,7 @@ Template.PluginsInsertPlDummyInsertForm.events({
 			function(values) {
 				
 
-				newId = PlDummys.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
+				newId = PlStopLosses.insert(values, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 
@@ -114,12 +114,15 @@ Template.PluginsInsertPlDummyInsertForm.events({
 	
 });
 
-Template.PluginsInsertPlDummyInsertForm.helpers({
+Template.PluginsInsertPlStopLossInsertForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("pluginsInsertPlDummyInsertFormInfoMessage");
+		return pageSession.get("pluginsInsertPlStopLossInsertFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("pluginsInsertPlDummyInsertFormErrorMessage");
+		return pageSession.get("pluginsInsertPlStopLossInsertFormErrorMessage");
+	},
+	"exchanges": function() {
+		return getExchanges();
 	}
 	
 });

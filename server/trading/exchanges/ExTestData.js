@@ -4,16 +4,17 @@
  *
  * 
  * @author Atzen
- * @version 0.5.2
+ * @version 0.5.3
  * 
  * CHANGES:
- * 04-July-2016 : Initial version
- * 11-July-2016 : added throw error system
- * 11-July-2016 : added position configuration
- * 22-July-2016 : implemented data input
+ * 04-Jul-2016 : Initial version
+ * 11-Jul-2016 : added throw error system
+ * 11-Jul-2016 : added position configuration
+ * 22-Jul-2016 : implemented data input
  *                fixed bug: long/short position was not considered while buy/sell function call
- * 22-July-2016 : adapted to IExchange v1.1
- * 24-July-2016 : adapted to IExchange v1.3
+ * 22-Jul-2016 : adapted to IExchange v1.1
+ * 24-Jul-2016 : adapted to IExchange v1.3
+ * 12-Aug-2016 : bugfix: counter now starts with 0 instead of 1
  */
 
 
@@ -151,6 +152,11 @@ export function ExTestData() {
    */
   var _soldNotifyFunc = function() {};
 
+  /**
+   * Indicates first update function call
+   * @type {Boolean}
+   */
+  var firstRun = true;
 
   /***********************************************************************
     Public Instance Variable
@@ -165,7 +171,7 @@ export function ExTestData() {
    * Used seperators: ',', '\n' 
    * @param  {string} data input data 
    * @return {Array}      converted Array 
-   */ 
+   */
   var _dataString2Array = function(data) {
     var tmp = data.split(',');
     var tmp2 = [];
@@ -237,7 +243,9 @@ export function ExTestData() {
   this.update = function() {
     if (_config.errU) return errHandle(ExError.error, null);
 
-    _counter += _config.stepWidth;
+    if (firstRun) firstRun = false;
+    else _counter += _config.stepWidth;
+
     return errHandle(ExError.ok, null);
   }
 

@@ -8,11 +8,12 @@
  *
  * 
  * @author Atzen
- * @version 0.1.0
+ * @version 0.1.1
  *
  * 
  * CHANGES:
  * 26-Jul-2016 : Initial version
+ * 12-Aug-2016 : bugfix: every plugins start api will be called in first updatFunc call now
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -286,7 +287,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       }
 
 
-      for (var i = 0; i < _plugins.getObjectsArray().length; i++) {
+      var numOfPl = _plugins.getObjectsArray().length;
+      for (var i = 0; i < numOfPl; i++) {
         var pl = _plugins.getObjectByIdx(i);
 
 
@@ -295,16 +297,14 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
           var eIdx = _exchanges.getObjectIdx(pl.exId);
           var price = _data.exchanges[eIdx].price[_data.exchanges[eIdx].price.length - 1];
 
-          if (_firstRun) {
-            _firstRun = false;
-            pl.inst.start(price);
-          } else {
-            pl.inst.update(price);
-          }
+          if (_firstRun) pl.inst.start(price);
+          else pl.inst.update(price);
         }
 
         _data.plugins[i].state = pl.inst.getState();
         _data.plugins[i].info = pl.inst.getInfo();
+
+        if(i === numOfPl - 1) _firstRun = false;
       }
 
 

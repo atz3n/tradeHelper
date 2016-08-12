@@ -1,22 +1,22 @@
 var pageSession = new ReactiveDict();
 
-Template.PluginsEditPlDummy.rendered = function() {
-	Session.set('activePage', 'plugins');
+Template.PluginsDetailsPlStopLoss.rendered = function() {
+	
 };
 
-Template.PluginsEditPlDummy.events({
+Template.PluginsDetailsPlStopLoss.events({
 	
 });
 
-Template.PluginsEditPlDummy.helpers({
+Template.PluginsDetailsPlStopLoss.helpers({
 	
 });
 
-Template.PluginsEditPlDummyEditForm.rendered = function() {
+Template.PluginsDetailsPlStopLossDetailsForm.rendered = function() {
 	
 
-	pageSession.set("pluginsEditPlDummyEditFormInfoMessage", "");
-	pageSession.set("pluginsEditPlDummyEditFormErrorMessage", "");
+	pageSession.set("pluginsDetailsPlStopLossDetailsFormInfoMessage", "");
+	pageSession.set("pluginsDetailsPlStopLossDetailsFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -44,36 +44,36 @@ Template.PluginsEditPlDummyEditForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.PluginsEditPlDummyEditForm.events({
+Template.PluginsDetailsPlStopLossDetailsForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("pluginsEditPlDummyEditFormInfoMessage", "");
-		pageSession.set("pluginsEditPlDummyEditFormErrorMessage", "");
+		pageSession.set("pluginsDetailsPlStopLossDetailsFormInfoMessage", "");
+		pageSession.set("pluginsDetailsPlStopLossDetailsFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var pluginsEditPlDummyEditFormMode = "update";
+			var pluginsDetailsPlStopLossDetailsFormMode = "read_only";
 			if(!t.find("#form-cancel-button")) {
-				switch(pluginsEditPlDummyEditFormMode) {
+				switch(pluginsDetailsPlStopLossDetailsFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("pluginsEditPlDummyEditFormInfoMessage", message);
+						pageSession.set("pluginsDetailsPlStopLossDetailsFormInfoMessage", message);
 					}; break;
 				}
 			}
 
-			Router.go("plugins", {});
+			/*SUBMIT_REDIRECT*/
 		}
 
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("pluginsEditPlDummyEditFormErrorMessage", message);
+			pageSession.set("pluginsDetailsPlStopLossDetailsFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -87,7 +87,7 @@ Template.PluginsEditPlDummyEditForm.events({
 			function(values) {
 				
 
-				PlDummys.update({ _id: t.data.pl_dummy._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				
 			}
 		);
 
@@ -98,28 +98,31 @@ Template.PluginsEditPlDummyEditForm.events({
 
 		
 
-		Router.go("plugins", {});
+		/*CANCEL_REDIRECT*/
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
 
-		/*CLOSE_REDIRECT*/
+		Router.go("plugins", {});
 	},
 	"click #form-back-button": function(e, t) {
 		e.preventDefault();
 
-		/*BACK_REDIRECT*/
+		Router.go("plugins", {});
 	}
 
 	
 });
 
-Template.PluginsEditPlDummyEditForm.helpers({
+Template.PluginsDetailsPlStopLossDetailsForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("pluginsEditPlDummyEditFormInfoMessage");
+		return pageSession.get("pluginsDetailsPlStopLossDetailsFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("pluginsEditPlDummyEditFormErrorMessage");
+		return pageSession.get("pluginsDetailsPlStopLossDetailsFormErrorMessage");
+	},
+	"exchangeName": function() {
+		return getExchangeName(this.pl_stop_loss.exchange);
 	}
 	
 });
