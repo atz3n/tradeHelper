@@ -1776,7 +1776,7 @@
           "type": "page"
         },
                 {
-          "name": "playground",
+          "name": "forum",
           "type": "page"
         },
         {
@@ -2120,8 +2120,8 @@
               "icon_class": "fa fa-desktop"
             },
             {
-              "title": "Playground",
-              "route": "playground",
+              "title": "Forum",
+              "route": "forum",
               "icon_class": "fa fa-inbox"
             }
           ]

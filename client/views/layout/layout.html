@@ -159,7 +159,7 @@
             <span class="fa fa-gears">
             </span> {{/if}} {{#if $eq $Session.activePage 'develop'}}
             <span class="fa fa-desktop">
-            </span> {{/if}} {{#if $eq $Session.activePage 'playground'}}
+            </span> {{/if}} {{#if $eq $Session.activePage 'forum'}}
             <span class="fa fa-inbox">
             </span> {{/if}} {{#if $eq $Session.activePage 'user_settings'}}
             <span class="fa fa-cog">
@@ -300,12 +300,12 @@
         </span>
           </a>
         </li>
-        <li class="{{menuItemClass 'playground'}}">
-          <a href="{{pathFor 'playground'}}">
+        <li class="{{menuItemClass 'forum'}}">
+          <a href="{{pathFor 'forum'}}">
             <span class="fa fa-inbox">
         </span>
             <span class="item-title">
-          &nbsp;Playground
+          &nbsp;Forum
         </span>
           </a>
         </li>
