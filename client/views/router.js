@@ -47,10 +47,13 @@ var privateRoutes = [
 	"info",
 	"history",
 	"history.details",
+	"forum",
+	"forum.insert",
+	"forum.details",
+	"forum.edit",
 	"develop",
 	"develop.details_settings",
 	"develop.edit_settings",
-	"forum",
 	"admin",
 	"admin.users",
 	"admin.users.details",
@@ -261,10 +264,13 @@ Router.map(function () {
 	this.route("info", {path: "/info", controller: "InfoController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
 	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
+	this.route("forum", {path: "/forum", controller: "ForumController"});
+	this.route("forum.insert", {path: "/forum/insert", controller: "ForumInsertController"});
+	this.route("forum.details", {path: "/forum/details/:topicId", controller: "ForumDetailsController"});
+	this.route("forum.edit", {path: "/forum/edit/:topicId", controller: "ForumEditController"});
 	this.route("develop", {path: "/develop", controller: "DevelopController"});
 	this.route("develop.details_settings", {path: "/develop/details_settings/:settingId", controller: "DevelopDetailsSettingsController"});
 	this.route("develop.edit_settings", {path: "/develop/edit_settings/:settingId", controller: "DevelopEditSettingsController"});
-	this.route("forum", {path: "/forum", controller: "ForumController"});
 	this.route("admin", {path: "/admin", controller: "AdminController"});
 	this.route("admin.users", {path: "/admin/users", controller: "AdminUsersController"});
 	this.route("admin.users.details", {path: "/admin/users/details/:userId", controller: "AdminUsersDetailsController"});

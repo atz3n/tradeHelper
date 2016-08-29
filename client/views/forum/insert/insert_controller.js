@@ -1,5 +1,5 @@
-this.ForumController = RouteController.extend({
-	template: "Forum",
+this.ForumInsertController = RouteController.extend({
+	template: "ForumInsert",
 	
 
 	yieldTemplates: {
@@ -19,7 +19,7 @@ this.ForumController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("topics")
+			Meteor.subscribe("topics_empty")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +34,7 @@ this.ForumController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			topics: Topics.find({}, {})
+			topics_empty: Topics.findOne({_id:null}, {})
 		};
 		
 

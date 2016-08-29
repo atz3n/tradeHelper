@@ -351,7 +351,7 @@
         
       },
       {
-        "name": "plDummys",
+        "name": "plStopLosses",
         "fields": [
           {
             "name": "name",
@@ -360,9 +360,59 @@
             "required": true
           },
           {
-            "name": "dummyCont",
-            "title": "Dummy Content",
-            "type": "string"
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "stopValueType",
+            "title": "Stop Value Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "value",
+                "value": "value"
+              },
+              {
+                "title": "percentage",
+                "value": "percentage"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
+            "name": "stopValueAmount",
+            "title": "Stop Value",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 0
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
           }
         ],
         "owner_field": "ownerId",
@@ -375,7 +425,7 @@
         "roles_allowed_to_delete": [
           "owner"
         ],
-        "before_insert_code": "doc.type = 'plDummy';"
+        "before_insert_code": "doc.type = 'plStopLoss';"
       },
       {
         "name": "exKrakens",
@@ -769,7 +819,7 @@
             "title": "Enable Notifications",
             "type": "bool",
             "input": "checkbox",
-            "default": "true"
+            "default": "false"
           },
           {
             "name": "dummy",
@@ -789,6 +839,40 @@
         "roles_allowed_to_delete": [
           "owner"
         ]
+      },
+      {
+        "name": "topics",
+        "fields": [
+          {
+            "name": "topicNum",
+            "title": "Topic Number",
+            "type": "integer",
+            "input": "read-only",
+            "show_in_insert_form": false
+          },
+          {
+            "name": "title",
+            "title": "Titel",
+            "type": "string",
+            "input": "text",
+            "required": true
+          },
+          {
+            "name": "desc",
+            "title": "Description",
+            "type": "string",
+            "input": "textarea",
+            "required": true,
+            "show_in_dataview": false
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ]
       }
     ],
     /***********************************************************************
@@ -796,23 +880,23 @@
  ***********************************************************************/
     "queries": [
       {
-        "name": "plDummys",
-        "collection": "plDummys",
+        "name": "plStopLosses",
+        "collection": "plStopLosses",
         "filter": {}
       },
       {
-        "name": "plDummys_empty",
-        "collection": "plDummys",
+        "name": "plStopLosses_empty",
+        "collection": "plStopLosses",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plDummy",
-        "collection": "plDummys",
+        "name": "plStopLoss",
+        "collection": "plStopLosses",
         "filter": {
-          "_id": ":plDummyId"
+          "_id": ":plStopLossId"
         },
         "find_one": true
       },
@@ -978,6 +1062,27 @@
         "collection": "pluginBundles",
         "filter": {
           "_id": ":pluginbundleId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "topics",
+        "collection": "topics",
+        "filter": {}
+      },
+      {
+        "name": "topics_empty",
+        "collection": "topics",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "topic",
+        "collection": "topics",
+        "filter": {
+          "_id": ":topicId"
         },
         "find_one": true
       },
@@ -1350,24 +1455,24 @@
               ]
             },
             {
-              "name": "viewPlDummys",
-              "title": "Dummy",
+              "name": "viewPlStopLosses",
+              "title": "StopLoss",
               "type": "data_view",
-              "text_if_empty": "No Dummy configured",
-              "query_name": "plDummys",
+              "text_if_empty": "No StopLoss configured",
+              "query_name": "plStopLosses",
               "query_params": [],
-              "insert_route": "plugins.insertPlDummy",
-              "edit_route": "plugins.editPlDummy",
+              "insert_route": "plugins.insertPlStopLoss",
+              "edit_route": "plugins.editPlStopLoss",
               "edit_route_params": [
                 {
-                  "name": "plDummyId",
+                  "name": "plStopLossesId",
                   "value": "this._id"
                 }
               ],
-              "details_route": "plugins.detailsPlDummy",
+              "details_route": "plugins.detailsPlStopLoss",
               "details_route_params": [
                 {
-                  "name": "plDummyId",
+                  "name": "plStopLossId",
                   "value": "this._id"
                 }
               ]
@@ -1427,14 +1532,14 @@
               ]
             },
             {
-              "name": "insertPlDummy",
+              "name": "insertPlStopLoss",
               "components": [
                 {
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
-                  "title": "New Dummy",
-                  "query_name": "plDummys_empty",
+                  "title": "New StopLoss",
+                  "query_name": "plStopLosses_empty",
                   "query_params": [],
                   "submit_route": "plugins",
                   "cancel_route": "plugins"
@@ -1442,9 +1547,9 @@
               ]
             },
             {
-              "name": "detailsPlDummy",
+              "name": "detailsPlStopLoss",
               "route_params": [
-                "plDummyId"
+                "plStopLossId"
               ],
               "components": [
                 {
@@ -1453,7 +1558,7 @@
                   "mode": "read_only",
                   "title": "Details",
                   "layout": "horizontal",
-                  "query_name": "plDummy",
+                  "query_name": "plStopLoss",
                   "query_params": [],
                   "close_route": "plugins",
                   "back_route": "plugins"
@@ -1461,19 +1566,19 @@
               ]
             },
             {
-              "name": "editPlDummy",
+              "name": "editPlStopLoss",
               "route_params": [
-                "plDummyId"
+                "plStopLossId"
               ],
               "components": [
                 {
                   "name": "edit_form",
                   "type": "form",
                   "mode": "update",
-                  "title": "Edit Dummy",
+                  "title": "Edit StopLoss",
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
-                  "query_name": "plDummy",
+                  "query_name": "plStopLoss",
                   "query_params": []
                 }
               ]
@@ -1709,6 +1814,95 @@
           "type": "page"
         },
         {
+          "name": "forum",
+          "components": [
+            {
+              "name": "view",
+              "title": "Topics",
+              "type": "data_view",
+              "text_if_empty": "No Topics available",
+              "query_name": "topics",
+              "query_params": [],
+              "insert_route": "forum.insert",
+              "edit_route": "forum.edit",
+              "edit_route_params": [
+                {
+                  "name": "topicId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "forum.details",
+              "details_route_params": [
+                {
+                  "name": "topicId",
+                  "value": "this._id"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "name": "insert",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New Topic",
+                  "query_name": "topics_empty",
+                  "query_params": [],
+                  "submit_route": "forum",
+                  "submit_route_params": [
+                    {
+                      "name": "topicId",
+                      "value": "newId"
+                    }
+                  ],
+                  "cancel_route": "forum"
+                }
+              ]
+            },
+            {
+              "name": "details",
+              "route_params": [
+                "topicId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Topic",
+                  "layout": "horizontal",
+                  "query_name": "topic",
+                  "query_params": [],
+                  "close_route": "forum",
+                  "back_route": "forum"
+                }
+              ]
+            },
+            {
+              "name": "edit",
+              "route_params": [
+                "topicId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit Topic",
+                  "submit_route": "forum",
+                  "cancel_route": "forum",
+                  "query_name": "topic",
+                  "query_params": []
+                }
+              ]
+            }
+          ],
+          "type": "page"
+        },
+        {
           "name": "develop",
           "components": [
             {
@@ -1773,10 +1967,6 @@
               ]
             }
           ],
-          "type": "page"
-        },
-                {
-          "name": "forum",
           "type": "page"
         },
         {
@@ -2115,14 +2305,14 @@
               "icon_class": "fa fa-info"
             },
             {
-              "title": "Develop",
-              "route": "develop",
-              "icon_class": "fa fa-desktop"
-            },
-            {
               "title": "Forum",
               "route": "forum",
               "icon_class": "fa fa-inbox"
+            },
+            {
+              "title": "Develop",
+              "route": "develop",
+              "icon_class": "fa fa-desktop"
             }
           ]
         },
