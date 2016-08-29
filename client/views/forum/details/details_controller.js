@@ -1,5 +1,5 @@
-this.PlaygroundController = RouteController.extend({
-	template: "Playground",
+this.ForumDetailsController = RouteController.extend({
+	template: "ForumDetails",
 	
 
 	yieldTemplates: {
@@ -19,8 +19,7 @@ this.PlaygroundController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("strategies"),
-			Meteor.subscribe("settings_first")
+			Meteor.subscribe("topic", this.params.topicId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +33,8 @@ this.PlaygroundController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			topic: Topics.findOne({_id:this.params.topicId}, {})
 		};
 		
 
