@@ -300,6 +300,7 @@
         </span>
           </a>
         </li>
+        {{#if $eq enDevView 'true'}}
         <li class="{{menuItemClass 'develop'}}">
           <a href="{{pathFor 'develop'}}">
             <span class="fa fa-desktop">
@@ -309,6 +310,7 @@
         </span>
           </a>
         </li>
+        {{/if}}
       </ul>
     </li>
   </ul>

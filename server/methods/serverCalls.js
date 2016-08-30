@@ -211,6 +211,11 @@ Meteor.methods({
     return errMessage(tradePairInfos(exchangeType));
   },
 
+  checkAccessCode: function(accessCode) {
+    if(accessCode === Meteor.settings.private.AccessCode) return true;
+    else return false;
+  },
+
   develop: function(strategyId) {
     console.log(strategyId);
     if (strategies.getObject(strategyId) !== 'undefined') {

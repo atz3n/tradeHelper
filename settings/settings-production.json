@@ -1,7 +1,10 @@
 {
   "public": {
-  	"ExTestDataErrorConfig": "false"
+  	"ExTestDataErrorConfig": "false",
+  	"ShowDevelopView": "false",
+  	"EnableAccessCode": "true"
   },
   "private": {
+  	"AccessCode": "YouAr3ACh0sen0ne"
   }
 }
