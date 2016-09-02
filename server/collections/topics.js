@@ -20,7 +20,6 @@ Topics.before.insert(function(userId, doc) {
 
 
 	var tpCnt = ServerDatas.findOne().topicCounter;
-	console.log('called')
 	doc.topicNum = '#' + tpCnt;
 	
 	tpCnt++;
