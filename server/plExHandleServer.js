@@ -18,6 +18,7 @@ exchangeHandler = new InstHandler();
 /* Plugins */
 pluginHandler.setObject('PlSwings', PlSwings);
 pluginHandler.setObject('PlStopLosses', PlStopLosses);
+pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
 
 
 /* Exchanges */
@@ -43,6 +44,7 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   if (plugin.type === 'plSwing') conf = Object.assign({}, PlSwing.ConfigDefault);
   if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
+  if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlStopLoss.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -65,6 +67,7 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   if (plugin.type === 'plSwing') strPlHandler.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
   if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
+  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 

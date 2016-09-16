@@ -1,5 +1,5 @@
-this.PluginsController = RouteController.extend({
-	template: "Plugins",
+this.PluginsInsertPlTakeProfitController = RouteController.extend({
+	template: "PluginsInsertPlTakeProfit",
 	
 
 	yieldTemplates: {
@@ -19,9 +19,7 @@ this.PluginsController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_swings"),
-			Meteor.subscribe("pl_stop_losses"),
-			Meteor.subscribe("pl_take_profits")
+			Meteor.subscribe("pl_take_profits_empty")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -36,9 +34,7 @@ this.PluginsController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_swings: PlSwings.find({}, {}),
-			pl_stop_losses: PlStopLosses.find({}, {}),
-			pl_take_profits: PlTakeProfits.find({}, {})
+			pl_take_profits_empty: PlTakeProfits.findOne({_id:null}, {})
 		};
 		
 
