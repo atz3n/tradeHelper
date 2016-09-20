@@ -1,5 +1,6 @@
 {
   "public": {
+  	"Version": "0.1.0",
   	"ExTestDataErrorConfig": "false",
   	"ShowDevelopView": "false",
   	"EnableAccessCode": "true"
