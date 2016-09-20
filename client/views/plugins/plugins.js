@@ -576,6 +576,10 @@ Template.PluginsViewPlStopLossesTableItems.helpers({
 
 	"deleteButtonClass": function() {
 		return PlStopLosses.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
 	}
 });
 
