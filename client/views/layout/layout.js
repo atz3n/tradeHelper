@@ -1,4 +1,7 @@
+
 Template.layout.rendered = function() {
+	Session.set('year', new Date().getFullYear());
+	
 	// scroll to anchor
 	$('body').on('click', 'a', function(e) { 
 		var href = $(this).attr("href");
