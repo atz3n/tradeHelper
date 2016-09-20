@@ -6,6 +6,7 @@
   	"EnableAccessCode": "false"
   },
   "private": {
-  	"AccessCode": "YouAr3ACh0sen0ne"
+  	"AccessCode": "YouAr3ACh0sen0ne",
+  	"UpdatePairs": "no"
   }
 }
