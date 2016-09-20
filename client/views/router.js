@@ -36,6 +36,9 @@ var privateRoutes = [
 	"plugins.insert_pl_stop_loss",
 	"plugins.details_pl_stop_loss",
 	"plugins.edit_pl_stop_loss",
+	"plugins.insert_pl_take_profit",
+	"plugins.details_pl_take_profit",
+	"plugins.edit_pl_take_profit",
 	"exchanges",
 	"exchanges.insert_ex_kraken",
 	"exchanges.edit_ex_kraken",
@@ -253,6 +256,9 @@ Router.map(function () {
 	this.route("plugins.insert_pl_stop_loss", {path: "/plugins/insert_pl_stop_loss", controller: "PluginsInsertPlStopLossController"});
 	this.route("plugins.details_pl_stop_loss", {path: "/plugins/details_pl_stop_loss/:plStopLossId", controller: "PluginsDetailsPlStopLossController"});
 	this.route("plugins.edit_pl_stop_loss", {path: "/plugins/edit_pl_stop_loss/:plStopLossId", controller: "PluginsEditPlStopLossController"});
+	this.route("plugins.insert_pl_take_profit", {path: "/plugins/insert_pl_take_profit", controller: "PluginsInsertPlTakeProfitController"});
+	this.route("plugins.details_pl_take_profit", {path: "/plugins/details_pl_take_profit/:plTakeProfitId", controller: "PluginsDetailsPlTakeProfitController"});
+	this.route("plugins.edit_pl_take_profit", {path: "/plugins/edit_pl_take_profit/:plTakeProfitId", controller: "PluginsEditPlTakeProfitController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
 	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
 	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});

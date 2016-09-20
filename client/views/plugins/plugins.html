@@ -6,8 +6,8 @@
 				</div>
 			</div>
 		</div>
-		{{> PluginsViewPlSwings}}{{> PluginsViewPlStopLosses}}
-	</div>
+		{{> PluginsViewPlSwings}}{{> PluginsViewPlStopLosses}}{{> PluginsViewPlTakeProfits}}
+		</div>
 </template>
 
 <template name="PluginsViewPlSwings">
@@ -197,6 +197,121 @@
 
 <template name="PluginsViewPlStopLossesTableItems">
 	<tr id="dataview-table-items-row">
+		<td>
+			{{name}}
+		</td>
+		<td>
+		{{exchangeName}}
+		</td>
+		<td>
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enLong" {{checked enLong}} disabled>
+		</td>
+		<td>
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enShort" {{checked enShort}} disabled>
+		</td>
+		{{#if $eq actives 0}}
+		<td class="td-icon">
+			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">
+			</span>
+		</td>
+		<td class="td-icon">
+			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
+			</span>
+		</td>
+		{{else}}
+		<td></td>
+		<td class="td-icon">
+			<span id="actives-button" class="fa fa-flash" title="Go to Actives">
+			</span>
+		</td>
+		{{/if}}
+	</tr>
+</template>
+
+<template name="test">
+<h2>
+			TakeProfit
+		</h2>
+</template>
+
+<template name="PluginsViewPlTakeProfits">
+	<div id="plugins-view-pl-take-profits" class="">
+		<h2 id="component-title">
+			TakeProfit
+		</h2>
+		<form id="dataview-controls" class="form-inline">
+			<div id="dataview-controls-insert" class="form-group {{insertButtonClass}}">
+				<button type="submit" id="dataview-insert-button" class="btn btn-success">
+					<span class="fa fa-plus">
+					</span>
+					Add new
+				</button>
+			</div>
+			<div id="dataview-controls-search">
+				{{#if isNotEmpty}}
+				<div id="dataview-controls-search-group" class="form-group">
+					<label class="sr-only" for="search">
+						Search
+					</label>
+					<input type="text" class="form-control" id="dataview-search-input" placeholder="Search" name="search" value="{{searchString}}" autofocus="autofocus">
+					<button type="button" id="dataview-search-button" class="btn btn-primary">
+						<span class="fa fa-search">
+						</span>
+					</button>
+				</div>
+				{{/if}}
+			</div>
+		</form>
+		{{#if isNotEmpty}}
+			{{#if isNotFound}}
+		<div class="alert alert-warning">
+			"{{searchString}}" not found.
+		</div>
+		{{else}}
+		<div id="dataview-data">
+			{{#if viewAsTable}} {{> PluginsViewPlTakeProfitsTable}} {{/if}}
+		</div>
+		{{/if}}
+		{{else}}
+		<div class="alert alert-info">
+			No TakeProfit configured
+		</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="PluginsViewPlTakeProfitsTable">
+	<table id="dataview-table" class="table table-striped table-hover">
+		<thead id="dataview-table-header">
+			<tr id="dataview-table-header-row">
+				<th class="th-sortable" data-sort="name">
+					Name
+				</th>
+				<th class="th-sortable" data-sort="exchange">
+					Exchange
+				</th>
+				<th class="th-sortable" data-sort="enLong">
+					Enable Long
+				</th>
+				<th class="th-sortable" data-sort="enShort">
+					Enable Short
+				</th>
+				<th>
+					&nbsp;
+				</th>
+				<th>
+					&nbsp;
+				</th>
+			</tr>
+		</thead>
+		<tbody id="dataview-table-items">
+			{{#each tableItems}} {{> PluginsViewPlTakeProfitsTableItems}} {{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="PluginsViewPlTakeProfitsTableItems">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
