@@ -1,10 +1,16 @@
 import { InstHandler } from './lib/InstHandler.js';
 
-import { ExTestData } from './trading/exchanges/ExTestData.js';
-import { ExKraken } from './trading/exchanges/ExKraken.js';
+
+/***********************************************************************
+  Import Plugin / Exchange
+ ***********************************************************************/
 
 import { PlSwing } from './trading/plugins/PlSwing.js';
 import { PlStopLoss } from './trading/plugins/PlStopLoss.js';
+import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
+
+import { ExTestData } from './trading/exchanges/ExTestData.js';
+import { ExKraken } from './trading/exchanges/ExKraken.js';
 
 
 /***********************************************************************
@@ -19,7 +25,6 @@ exchangeHandler = new InstHandler();
 pluginHandler.setObject('PlSwings', PlSwings);
 pluginHandler.setObject('PlStopLosses', PlStopLosses);
 pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
-
 
 /* Exchanges */
 exchangeHandler.setObject('ExTestDatas', ExTestDatas);
@@ -44,7 +49,7 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   if (plugin.type === 'plSwing') conf = Object.assign({}, PlSwing.ConfigDefault);
   if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
-  if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlStopLoss.ConfigDefault);
+  if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlTakeProfit.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -67,7 +72,7 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   if (plugin.type === 'plSwing') strPlHandler.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
   if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
-  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
+  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 

@@ -840,6 +840,11 @@ Template.PluginsViewPlTakeProfitsTableItems.events({
 		e.preventDefault();
 		Router.go("plugins.edit_pl_take_profit", {plTakeProfitId: this._id});
 		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
 	}
 });
 
@@ -856,4 +861,5 @@ Template.PluginsViewPlTakeProfitsTableItems.helpers({
 		if(this.actives > 0) return "warning";
 		else return "default";
 	}
+
 });
