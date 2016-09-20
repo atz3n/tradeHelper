@@ -80,8 +80,12 @@ Meteor.ClientCall.methods({
   },
 
   error: function(errObj) {
-    if(errObj.error){
+    if(errObj.error === 'error'){
       sAlert.error(errObj.result);
+    }
+
+    if(errObj.error === 'info'){
+      sAlert.info(errObj.result);
     }
   }
 });

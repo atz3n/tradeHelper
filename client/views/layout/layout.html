@@ -39,6 +39,7 @@
   <div id="footer" class="sticky-footer">
     <div class="footer-container container">
       <p class="text-muted">
+        Trade Helper &copy; 2016 Attila Aldemir All Rights Reserved
       </p>
     </div>
   </div>
@@ -74,6 +75,7 @@
   </div>
   <div id="footer" class="sticky-footer">
     <div class="footer-container container">
+    Trade Helper &copy; 2016 Attila Aldemir All Rights Reserved
       <p class="text-muted">
       </p>
     </div>
@@ -159,7 +161,7 @@
             <span class="fa fa-gears">
             </span> {{/if}} {{#if $eq $Session.activePage 'develop'}}
             <span class="fa fa-desktop">
-            </span> {{/if}} {{#if $eq $Session.activePage 'playground'}}
+            </span> {{/if}} {{#if $eq $Session.activePage 'forum'}}
             <span class="fa fa-inbox">
             </span> {{/if}} {{#if $eq $Session.activePage 'user_settings'}}
             <span class="fa fa-cog">
@@ -179,6 +181,7 @@
   <div id="footer" class="sticky-footer">
     <div class="footer-container container">
       <p class="text-muted">
+        Trade Helper &copy; 2016 Attila Aldemir All Rights Reserved
       </p>
     </div>
   </div>
@@ -281,6 +284,16 @@
           </a>
         </li>
         <li role="separator" class="divider"></li>
+        <li class="{{menuItemClass 'forum'}}">
+          <a href="{{pathFor 'forum'}}">
+            <span class="fa fa-inbox">
+        </span>
+            <span class="item-title">
+          &nbsp;Forum
+        </span>
+          </a>
+        </li>
+        <li role="separator" class="divider"></li>
         <li class="{{menuItemClass 'settings'}}">
           <a href="{{pathFor 'settings'}}">
             <span class="fa fa-gears">
@@ -290,7 +303,7 @@
         </span>
           </a>
         </li>
-        <li role="separator" class="divider"></li>
+        {{#if $eq enDevView 'true'}}
         <li class="{{menuItemClass 'develop'}}">
           <a href="{{pathFor 'develop'}}">
             <span class="fa fa-desktop">
@@ -300,15 +313,7 @@
         </span>
           </a>
         </li>
-        <li class="{{menuItemClass 'playground'}}">
-          <a href="{{pathFor 'playground'}}">
-            <span class="fa fa-inbox">
-        </span>
-            <span class="item-title">
-          &nbsp;Playground
-        </span>
-          </a>
-        </li>
+        {{/if}}
       </ul>
     </li>
   </ul>

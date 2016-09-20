@@ -33,9 +33,12 @@ var privateRoutes = [
 	"plugins.insert_pl_swing",
 	"plugins.details_pl_swing",
 	"plugins.edit_pl_swing",
-	"plugins.insert_pl_dummy",
-	"plugins.details_pl_dummy",
-	"plugins.edit_pl_dummy",
+	"plugins.insert_pl_stop_loss",
+	"plugins.details_pl_stop_loss",
+	"plugins.edit_pl_stop_loss",
+	"plugins.insert_pl_take_profit",
+	"plugins.details_pl_take_profit",
+	"plugins.edit_pl_take_profit",
 	"exchanges",
 	"exchanges.insert_ex_kraken",
 	"exchanges.edit_ex_kraken",
@@ -47,10 +50,13 @@ var privateRoutes = [
 	"info",
 	"history",
 	"history.details",
+	"forum",
+	"forum.insert",
+	"forum.details",
+	"forum.edit",
 	"develop",
 	"develop.details_settings",
 	"develop.edit_settings",
-	"playground",
 	"admin",
 	"admin.users",
 	"admin.users.details",
@@ -247,9 +253,12 @@ Router.map(function () {
 	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
 	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});
 	this.route("plugins.edit_pl_swing", {path: "/plugins/edit_pl_swing/:plSwingId", controller: "PluginsEditPlSwingController"});
-	this.route("plugins.insert_pl_dummy", {path: "/plugins/insert_pl_dummy", controller: "PluginsInsertPlDummyController"});
-	this.route("plugins.details_pl_dummy", {path: "/plugins/details_pl_dummy/:plDummyId", controller: "PluginsDetailsPlDummyController"});
-	this.route("plugins.edit_pl_dummy", {path: "/plugins/edit_pl_dummy/:plDummyId", controller: "PluginsEditPlDummyController"});
+	this.route("plugins.insert_pl_stop_loss", {path: "/plugins/insert_pl_stop_loss", controller: "PluginsInsertPlStopLossController"});
+	this.route("plugins.details_pl_stop_loss", {path: "/plugins/details_pl_stop_loss/:plStopLossId", controller: "PluginsDetailsPlStopLossController"});
+	this.route("plugins.edit_pl_stop_loss", {path: "/plugins/edit_pl_stop_loss/:plStopLossId", controller: "PluginsEditPlStopLossController"});
+	this.route("plugins.insert_pl_take_profit", {path: "/plugins/insert_pl_take_profit", controller: "PluginsInsertPlTakeProfitController"});
+	this.route("plugins.details_pl_take_profit", {path: "/plugins/details_pl_take_profit/:plTakeProfitId", controller: "PluginsDetailsPlTakeProfitController"});
+	this.route("plugins.edit_pl_take_profit", {path: "/plugins/edit_pl_take_profit/:plTakeProfitId", controller: "PluginsEditPlTakeProfitController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
 	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
 	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});
@@ -261,10 +270,13 @@ Router.map(function () {
 	this.route("info", {path: "/info", controller: "InfoController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
 	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
+	this.route("forum", {path: "/forum", controller: "ForumController"});
+	this.route("forum.insert", {path: "/forum/insert", controller: "ForumInsertController"});
+	this.route("forum.details", {path: "/forum/details/:topicId", controller: "ForumDetailsController"});
+	this.route("forum.edit", {path: "/forum/edit/:topicId", controller: "ForumEditController"});
 	this.route("develop", {path: "/develop", controller: "DevelopController"});
 	this.route("develop.details_settings", {path: "/develop/details_settings/:settingId", controller: "DevelopDetailsSettingsController"});
 	this.route("develop.edit_settings", {path: "/develop/edit_settings/:settingId", controller: "DevelopEditSettingsController"});
-	this.route("playground", {path: "/playground", controller: "PlaygroundController"});
 	this.route("admin", {path: "/admin", controller: "AdminController"});
 	this.route("admin.users", {path: "/admin/users", controller: "AdminUsersController"});
 	this.route("admin.users.details", {path: "/admin/users/details/:userId", controller: "AdminUsersDetailsController"});

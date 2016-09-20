@@ -24,9 +24,7 @@ var PluginsViewPlSwingsItems = function(cursor) {
 
 	var raw = cursor.fetch();
 
-	for (i in raw) {
-  		raw[i].exchangeName = getExchangeName(raw[i].exchange);
-  	}
+	for (i in raw) raw[i].exchangeName = getExchangeName(raw[i].exchange);
 
 
 	// filter
@@ -36,7 +34,7 @@ var PluginsViewPlSwingsItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "lnpnp", "latsnp", "snpnp", "sabbnp", "enLong", "enShort"];
+		var searchFields = ["name", "exchange", "enLong", "enShort"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -300,17 +298,19 @@ Template.PluginsViewPlSwingsTableItems.helpers({
 	}
 });
 
-var PluginsViewPlDummysItems = function(cursor) {
+var PluginsViewPlStopLossesItems = function(cursor) {
 	if(!cursor) {
 		return [];
 	}
 
-	var searchString = pageSession.get("PluginsViewPlDummysSearchString");
-	var sortBy = pageSession.get("PluginsViewPlDummysSortBy");
-	var sortAscending = pageSession.get("PluginsViewPlDummysSortAscending");
+	var searchString = pageSession.get("PluginsViewPlStopLossesSearchString");
+	var sortBy = pageSession.get("PluginsViewPlStopLossesSortBy");
+	var sortAscending = pageSession.get("PluginsViewPlStopLossesSortAscending");
 	if(typeof(sortAscending) == "undefined") sortAscending = true;
 
 	var raw = cursor.fetch();
+
+	for (i in raw) raw[i].exchangeName = getExchangeName(raw[i].exchange);
 
 	// filter
 	var filtered = [];
@@ -319,7 +319,7 @@ var PluginsViewPlDummysItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "dummyCont"];
+		var searchFields = ["name", "exchange", "enLong", "enShort"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -347,8 +347,8 @@ var PluginsViewPlDummysItems = function(cursor) {
 	return filtered;
 };
 
-var PluginsViewPlDummysExport = function(cursor, fileType) {
-	var data = PluginsViewPlDummysItems(cursor);
+var PluginsViewPlStopLossesExport = function(cursor, fileType) {
+	var data = PluginsViewPlStopLossesItems(cursor);
 	var exportFields = [];
 
 	var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -359,12 +359,12 @@ var PluginsViewPlDummysExport = function(cursor, fileType) {
 }
 
 
-Template.PluginsViewPlDummys.rendered = function() {
-	pageSession.set("PluginsViewPlDummysStyle", "table");
+Template.PluginsViewPlStopLosses.rendered = function() {
+	pageSession.set("PluginsViewPlStopLossesStyle", "table");
 	
 };
 
-Template.PluginsViewPlDummys.events({
+Template.PluginsViewPlStopLosses.events({
 	"submit #dataview-controls": function(e, t) {
 		return false;
 	},
@@ -377,7 +377,7 @@ Template.PluginsViewPlDummys.events({
 			if(searchInput) {
 				searchInput.focus();
 				var searchString = searchInput.val();
-				pageSession.set("PluginsViewPlDummysSearchString", searchString);
+				pageSession.set("PluginsViewPlStopLossesSearchString", searchString);
 			}
 
 		}
@@ -393,7 +393,7 @@ Template.PluginsViewPlDummys.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					var searchString = searchInput.val();
-					pageSession.set("PluginsViewPlDummysSearchString", searchString);
+					pageSession.set("PluginsViewPlStopLossesSearchString", searchString);
 				}
 
 			}
@@ -408,7 +408,7 @@ Template.PluginsViewPlDummys.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					searchInput.val("");
-					pageSession.set("PluginsViewPlDummysSearchString", "");
+					pageSession.set("PluginsViewPlStopLossesSearchString", "");
 				}
 
 			}
@@ -420,100 +420,100 @@ Template.PluginsViewPlDummys.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.insert_pl_dummy", {});
+		Router.go("plugins.insert_pl_stop_loss", {});
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		PluginsViewPlDummysExport(this.pl_dummys, "csv");
+		PluginsViewPlStopLossesExport(this.pl_stop_losses, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		PluginsViewPlDummysExport(this.pl_dummys, "csv");
+		PluginsViewPlStopLossesExport(this.pl_stop_losses, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		PluginsViewPlDummysExport(this.pl_dummys, "tsv");
+		PluginsViewPlStopLossesExport(this.pl_stop_losses, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		PluginsViewPlDummysExport(this.pl_dummys, "json");
+		PluginsViewPlStopLossesExport(this.pl_stop_losses, "json");
 	}
 
 	
 });
 
-Template.PluginsViewPlDummys.helpers({
+Template.PluginsViewPlStopLosses.helpers({
 
 	"insertButtonClass": function() {
-		return PlDummys.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+		return PlStopLosses.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
 	},
 
 	"isEmpty": function() {
-		return !this.pl_dummys || this.pl_dummys.count() == 0;
+		return !this.pl_stop_losses || this.pl_stop_losses.count() == 0;
 	},
 	"isNotEmpty": function() {
-		return this.pl_dummys && this.pl_dummys.count() > 0;
+		return this.pl_stop_losses && this.pl_stop_losses.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.pl_dummys && pageSession.get("PluginsViewPlDummysSearchString") && PluginsViewPlDummysItems(this.pl_dummys).length == 0;
+		return this.pl_stop_losses && pageSession.get("PluginsViewPlStopLossesSearchString") && PluginsViewPlStopLossesItems(this.pl_stop_losses).length == 0;
 	},
 	"searchString": function() {
-		return pageSession.get("PluginsViewPlDummysSearchString");
+		return pageSession.get("PluginsViewPlStopLossesSearchString");
 	},
 	"viewAsTable": function() {
-		return pageSession.get("PluginsViewPlDummysStyle") == "table";
+		return pageSession.get("PluginsViewPlStopLossesStyle") == "table";
 	},
 	"viewAsList": function() {
-		return pageSession.get("PluginsViewPlDummysStyle") == "list";
+		return pageSession.get("PluginsViewPlStopLossesStyle") == "list";
 	},
 	"viewAsGallery": function() {
-		return pageSession.get("PluginsViewPlDummysStyle") == "gallery";
+		return pageSession.get("PluginsViewPlStopLossesStyle") == "gallery";
 	}
 
 	
 });
 
 
-Template.PluginsViewPlDummysTable.rendered = function() {
+Template.PluginsViewPlStopLossesTable.rendered = function() {
 	
 };
 
-Template.PluginsViewPlDummysTable.events({
+Template.PluginsViewPlStopLossesTable.events({
 	"click .th-sortable": function(e, t) {
 		e.preventDefault();
-		var oldSortBy = pageSession.get("PluginsViewPlDummysSortBy");
+		var oldSortBy = pageSession.get("PluginsViewPlStopLossesSortBy");
 		var newSortBy = $(e.target).attr("data-sort");
 
-		pageSession.set("PluginsViewPlDummysSortBy", newSortBy);
+		pageSession.set("PluginsViewPlStopLossesSortBy", newSortBy);
 		if(oldSortBy == newSortBy) {
-			var sortAscending = pageSession.get("PluginsViewPlDummysSortAscending") || false;
-			pageSession.set("PluginsViewPlDummysSortAscending", !sortAscending);
+			var sortAscending = pageSession.get("PluginsViewPlStopLossesSortAscending") || false;
+			pageSession.set("PluginsViewPlStopLossesSortAscending", !sortAscending);
 		} else {
-			pageSession.set("PluginsViewPlDummysSortAscending", true);
+			pageSession.set("PluginsViewPlStopLossesSortAscending", true);
 		}
 	}
 });
 
-Template.PluginsViewPlDummysTable.helpers({
+Template.PluginsViewPlStopLossesTable.helpers({
 	"tableItems": function() {
-		return PluginsViewPlDummysItems(this.pl_dummys);
+		return PluginsViewPlStopLossesItems(this.pl_stop_losses);
 	}
 });
 
 
-Template.PluginsViewPlDummysTableItems.rendered = function() {
+Template.PluginsViewPlStopLossesTableItems.rendered = function() {
 	
 };
 
-Template.PluginsViewPlDummysTableItems.events({
+Template.PluginsViewPlStopLossesTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("plugins.details_pl_dummy", {plDummyId: this._id});
+		Router.go("plugins.details_pl_stop_loss", {plStopLossId: this._id});
 		return false;
 	},
 
@@ -528,7 +528,7 @@ Template.PluginsViewPlDummysTableItems.events({
 		var values = {};
 		values[fieldName] = !this[fieldName];
 
-		PlDummys.update({ _id: this._id }, { $set: values });
+		PlStopLosses.update({ _id: this._id }, { $set: values });
 
 		return false;
 	},
@@ -545,7 +545,7 @@ Template.PluginsViewPlDummysTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						PlDummys.remove({ _id: me._id });
+						PlStopLosses.remove({ _id: me._id });
 					}
 				},
 				danger: {
@@ -558,7 +558,7 @@ Template.PluginsViewPlDummysTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.edit_pl_dummy", {plDummyId: this._id});
+		Router.go("plugins.edit_pl_stop_loss", {plStopLossId: this._id});
 		return false;
 	},
 	"click #actives-button": function(e, t) {
@@ -568,17 +568,302 @@ Template.PluginsViewPlDummysTableItems.events({
 	}
 });
 
-Template.PluginsViewPlDummysTableItems.helpers({
+Template.PluginsViewPlStopLossesTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return PlDummys.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return PlStopLosses.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return PlDummys.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return PlStopLosses.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	},
 	"rowClass": function() {
 		if(this.actives > 0) return "warning";
 		else return "default";
 	}
+});
+
+var PluginsViewPlTakeProfitsItems = function(cursor) {
+	if(!cursor) {
+		return [];
+	}
+
+	var searchString = pageSession.get("PluginsViewPlTakeProfitsSearchString");
+	var sortBy = pageSession.get("PluginsViewPlTakeProfitsSortBy");
+	var sortAscending = pageSession.get("PluginsViewPlTakeProfitsSortAscending");
+	if(typeof(sortAscending) == "undefined") sortAscending = true;
+
+	var raw = cursor.fetch();
+	for (i in raw) raw[i].exchangeName = getExchangeName(raw[i].exchange);
+
+	// filter
+	var filtered = [];
+	if(!searchString || searchString == "") {
+		filtered = raw;
+	} else {
+		searchString = searchString.replace(".", "\\.");
+		var regEx = new RegExp(searchString, "i");
+		var searchFields = ["name", "exchange", "takeValueType", "takeValueAmount", "enLong", "enShort"];
+		filtered = _.filter(raw, function(item) {
+			var match = false;
+			_.each(searchFields, function(field) {
+				var value = (getPropertyValue(field, item) || "") + "";
+
+				match = match || (value && value.match(regEx));
+				if(match) {
+					return false;
+				}
+			})
+			return match;
+		});
+	}
+
+	// sort
+	if(sortBy) {
+		filtered = _.sortBy(filtered, sortBy);
+
+		// descending?
+		if(!sortAscending) {
+			filtered = filtered.reverse();
+		}
+	}
+
+	return filtered;
+};
+
+var PluginsViewPlTakeProfitsExport = function(cursor, fileType) {
+	var data = PluginsViewPlTakeProfitsItems(cursor);
+	var exportFields = [];
+
+	var str = convertArrayOfObjects(data, exportFields, fileType);
+
+	var filename = "export." + fileType;
+
+	downloadLocalResource(str, filename, "application/octet-stream");
+}
+
+
+Template.PluginsViewPlTakeProfits.rendered = function() {
+	pageSession.set("PluginsViewPlTakeProfitsStyle", "table");
+	
+};
+
+Template.PluginsViewPlTakeProfits.events({
+	"submit #dataview-controls": function(e, t) {
+		return false;
+	},
+
+	"click #dataview-search-button": function(e, t) {
+		e.preventDefault();
+		var form = $(e.currentTarget).parent();
+		if(form) {
+			var searchInput = form.find("#dataview-search-input");
+			if(searchInput) {
+				searchInput.focus();
+				var searchString = searchInput.val();
+				pageSession.set("PluginsViewPlTakeProfitsSearchString", searchString);
+			}
+
+		}
+		return false;
+	},
+
+	"keydown #dataview-search-input": function(e, t) {
+		if(e.which === 13)
+		{
+			e.preventDefault();
+			var form = $(e.currentTarget).parent();
+			if(form) {
+				var searchInput = form.find("#dataview-search-input");
+				if(searchInput) {
+					var searchString = searchInput.val();
+					pageSession.set("PluginsViewPlTakeProfitsSearchString", searchString);
+				}
+
+			}
+			return false;
+		}
+
+		if(e.which === 27)
+		{
+			e.preventDefault();
+			var form = $(e.currentTarget).parent();
+			if(form) {
+				var searchInput = form.find("#dataview-search-input");
+				if(searchInput) {
+					searchInput.val("");
+					pageSession.set("PluginsViewPlTakeProfitsSearchString", "");
+				}
+
+			}
+			return false;
+		}
+
+		return true;
+	},
+
+	"click #dataview-insert-button": function(e, t) {
+		e.preventDefault();
+		Router.go("plugins.insert_pl_take_profit", {});
+	},
+
+	"click #dataview-export-default": function(e, t) {
+		e.preventDefault();
+		PluginsViewPlTakeProfitsExport(this.pl_take_profits, "csv");
+	},
+
+	"click #dataview-export-csv": function(e, t) {
+		e.preventDefault();
+		PluginsViewPlTakeProfitsExport(this.pl_take_profits, "csv");
+	},
+
+	"click #dataview-export-tsv": function(e, t) {
+		e.preventDefault();
+		PluginsViewPlTakeProfitsExport(this.pl_take_profits, "tsv");
+	},
+
+	"click #dataview-export-json": function(e, t) {
+		e.preventDefault();
+		PluginsViewPlTakeProfitsExport(this.pl_take_profits, "json");
+	}
+
+	
+});
+
+Template.PluginsViewPlTakeProfits.helpers({
+
+	"insertButtonClass": function() {
+		return PlTakeProfits.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+	},
+
+	"isEmpty": function() {
+		return !this.pl_take_profits || this.pl_take_profits.count() == 0;
+	},
+	"isNotEmpty": function() {
+		return this.pl_take_profits && this.pl_take_profits.count() > 0;
+	},
+	"isNotFound": function() {
+		return this.pl_take_profits && pageSession.get("PluginsViewPlTakeProfitsSearchString") && PluginsViewPlTakeProfitsItems(this.pl_take_profits).length == 0;
+	},
+	"searchString": function() {
+		return pageSession.get("PluginsViewPlTakeProfitsSearchString");
+	},
+	"viewAsTable": function() {
+		return pageSession.get("PluginsViewPlTakeProfitsStyle") == "table";
+	},
+	"viewAsList": function() {
+		return pageSession.get("PluginsViewPlTakeProfitsStyle") == "list";
+	},
+	"viewAsGallery": function() {
+		return pageSession.get("PluginsViewPlTakeProfitsStyle") == "gallery";
+	}
+
+	
+});
+
+
+Template.PluginsViewPlTakeProfitsTable.rendered = function() {
+	
+};
+
+Template.PluginsViewPlTakeProfitsTable.events({
+	"click .th-sortable": function(e, t) {
+		e.preventDefault();
+		var oldSortBy = pageSession.get("PluginsViewPlTakeProfitsSortBy");
+		var newSortBy = $(e.target).attr("data-sort");
+
+		pageSession.set("PluginsViewPlTakeProfitsSortBy", newSortBy);
+		if(oldSortBy == newSortBy) {
+			var sortAscending = pageSession.get("PluginsViewPlTakeProfitsSortAscending") || false;
+			pageSession.set("PluginsViewPlTakeProfitsSortAscending", !sortAscending);
+		} else {
+			pageSession.set("PluginsViewPlTakeProfitsSortAscending", true);
+		}
+	}
+});
+
+Template.PluginsViewPlTakeProfitsTable.helpers({
+	"tableItems": function() {
+		return PluginsViewPlTakeProfitsItems(this.pl_take_profits);
+	}
+});
+
+
+Template.PluginsViewPlTakeProfitsTableItems.rendered = function() {
+	
+};
+
+Template.PluginsViewPlTakeProfitsTableItems.events({
+	"click td": function(e, t) {
+		e.preventDefault();
+		
+		Router.go("plugins.details_pl_take_profit", {plTakeProfitId: this._id});
+		return false;
+	},
+
+	"click .inline-checkbox": function(e, t) {
+		e.preventDefault();
+
+		if(!this || !this._id) return false;
+
+		var fieldName = $(e.currentTarget).attr("data-field");
+		if(!fieldName) return false;
+
+		var values = {};
+		values[fieldName] = !this[fieldName];
+
+		PlTakeProfits.update({ _id: this._id }, { $set: values });
+
+		return false;
+	},
+
+	"click #delete-button": function(e, t) {
+		e.preventDefault();
+		var me = this;
+		bootbox.dialog({
+			message: "Delete? Are you sure?",
+			title: "Delete",
+			animate: false,
+			buttons: {
+				success: {
+					label: "Yes",
+					className: "btn-success",
+					callback: function() {
+						PlTakeProfits.remove({ _id: me._id });
+					}
+				},
+				danger: {
+					label: "No",
+					className: "btn-default"
+				}
+			}
+		});
+		return false;
+	},
+	"click #edit-button": function(e, t) {
+		e.preventDefault();
+		Router.go("plugins.edit_pl_take_profit", {plTakeProfitId: this._id});
+		return false;
+	},
+	"click #actives-button": function(e, t) {
+		e.preventDefault();
+		Router.go("actives");
+		return false;
+	}
+});
+
+Template.PluginsViewPlTakeProfitsTableItems.helpers({
+	"checked": function(value) { return value ? "checked" : "" }, 
+	"editButtonClass": function() {
+		return PlTakeProfits.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+	},
+
+	"deleteButtonClass": function() {
+		return PlTakeProfits.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+	},
+	"rowClass": function() {
+		if(this.actives > 0) return "warning";
+		else return "default";
+	}
+
 });

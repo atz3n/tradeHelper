@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.1
+ * @version 0.3.4
  *
  * 
  * CHANGES:
@@ -15,6 +15,9 @@
  * 09-July-2016 : added getPositions function
  * 12-July-2016 : changed !hotMode + ownBalance combination to work without secret and api keys
  * 12-July-2016 : bugfixed buy and sell mechanism
+ * 22-July-2016 : adapted to IExchange v1.1
+ * 22-July-2016 : adapted to IExchange v1.3
+ * 24-July-2016 : fixed bug in default config and getConfig() function
  */
 
 /***********************************************************************
@@ -42,13 +45,14 @@ var KrakenClient = Meteor.npmRequire('kraken-api'); // npm import
  */
 ExKraken.ConfigDefault = {
   id: 'undefined',
+  name: 'undefined',
 
   pair: 'undefined',
 
   key: 'undefined',
   secret: 'undefined',
 
-  balanceType: 'krakenBalance', // krakenBalance (using kraken.com available balance for trading), ownBalance (using oBalanceAmount for trading)
+  balanceType: 'ownBalance', // krakenBalance (using kraken.com available balance for trading), ownBalance (using oBalanceAmount for trading)
   oBalanceAmount: 0,
 
   qAmountType: 'value', // value (total amount), percentage (relative to available amount)
@@ -372,6 +376,8 @@ export function ExKraken(ConstrParam) {
    */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
+    if (_config.name === 'undefined') return false;
+
     if (_config.pair === 'undefined') return false;
 
     if (_config.balanceType !== 'krakenBalance' && _config.balanceType !== 'ownBalance') return false;
@@ -551,10 +557,57 @@ export function ExKraken(ConstrParam) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getConfig = function() {
-    var tmp = Object.assign({}, _config);
-    delete tmp.id;
+    var tmpA = [];
 
-    return errHandle(ExError.ok, tmp);
+
+    tmpA.push({ title: 'Trade Pair', value: _config.pair });
+
+
+    tmpA.push({ title: 'Balance Type', value: _config.balanceType });
+
+    if (_config.balanceType === 'ownBalance') {
+      tmpA.push({ title: 'Own Start Balance', value: _config.oBalanceAmount });
+    }
+
+
+    tmpA.push({ title: 'Balance Amount Type', value: _config.qAmountType });
+
+    if (_config.qAmountType === 'percentage') {
+      tmpA.push({ title: 'Amount from Balance [%]', value: _config.qAmount });
+    }
+
+    if (_config.qAmountType === 'value') {
+      tmpA.push({ title: 'Amount from Balance [' + this.getPairUnits().result.quote + ']', value: _config.qAmount });
+    }
+
+
+    tmpA.push({ title: 'Hot Mode', value: JSON.stringify(_config.hotMode) });
+
+
+    tmpA.push({ title: 'Price Type', value: _config.priceType });
+
+    if (_config.priceType === 'tradesAverage') {
+      tmpA.push({ title: 'Self Average Type', value: _config.trAvType });
+
+      if (_config.trAvType === 'time') {
+        tmpA.push({ title: 'Seconds in past', value: _config.trAvVal });
+      }
+
+      if (_config.trAvType === 'quantity') {
+        tmpA.push({ title: 'Trades in past', value: _config.trAvVal });
+      }
+    }
+
+
+    tmpA.push({ title: 'Order Type', value: _config.orderType });
+
+
+    tmpA.push({ title: 'Connect to Server tries', value: _config.conErrorCycles });
+    tmpA.push({ title: 'Delay seconds before next try', value: _config.conErrorWaitSec });
+    tmpA.push({ title: ' Delay seconds before trade finished check ', value: _config.orderCheckWaitSec });
+
+
+    return errHandle(ExError.ok, tmpA);
   }
 
 
@@ -794,7 +847,7 @@ export function ExKraken(ConstrParam) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInstInfo = function() {
-    return errHandle(ExError.ok, { id: _config.id, type: "ExKraken" });
+    return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExKraken" });
   }
 
 

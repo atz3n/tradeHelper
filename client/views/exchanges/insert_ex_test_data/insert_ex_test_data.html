@@ -84,7 +84,7 @@
 					Offset
 				</label>
 				<div class="input-div">
-					<input type="text" name="offset" value="1" class="form-control" required="required" data-type="float">
+					<input type="text" name="offset" value="0" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -162,7 +162,6 @@
 					</span>
 				</div>
 			</div>
-			{{#if $eq enError 'true'}}
 			<div class="form-group  field-en-long">
 				<div class="input-div">
 					<div class="checkbox">
@@ -191,6 +190,7 @@
 					</span>
 				</div>
 			</div>
+			{{#if $eq enError 'true'}}
 			<div class="form-group  field-err-sc">
 				<div class="input-div">
 					<div class="checkbox">

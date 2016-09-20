@@ -5,11 +5,14 @@
  * All Exchanges should implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.1
+ * @version 2.0
  * 
  * CHANGES:
  * 01-July-2016 : Initial version
  * 09-July-2016 : added getPositions
+ * 22-July-2016 : added name element to getInstInfo() return result object
+ * 24-July-2016 : changed getConfig() return result object to array (same structure as getInfo())
+ * 26-July-2016 : included default configuration object
  */
 
 /***********************************************************************
@@ -17,6 +20,22 @@
  ***********************************************************************/
 
 export function IExchange() {};
+
+
+/***********************************************************************
+  Public Static Variable
+ ***********************************************************************/
+
+/**
+ * Default Configuration structure
+ * Every Exchange should implement a public static default configuration object including an id, a name and depending configuration elements.
+ * It should be a working default configuration, too.
+ * @type {Object}
+ */
+IExchange.ConfigDefault = {
+  id: 'undefined',
+  name: 'undefined',
+}
 
 
 /***********************************************************************
@@ -41,13 +60,14 @@ getTradePairInfos = function() {
  * @type {Object}
  */
 ExError = {
-  ok: 'OK',
-  srvConError: 'SERVER_CONNECTION_ERROR',
-  toLessBalance: 'BALANCE_TO_LESS',
-  error: 'ERROR',
-  parseError: 'PARSE_ERROR',
-  notImpl: 'NOT_YET_IMPLEMENTED',
-  exTypNotFound: 'EXCHANGE_TYPE_NOT_FOUND'
+  ok: 'OK', // no error, everything is fine
+  srvConError: 'SERVER_CONNECTION_ERROR', // a server error occurred
+  toLessBalance: 'BALANCE_TO_LESS', // user has to less balance
+  error: 'ERROR', // unknown or general error
+  parseError: 'PARSE_ERROR', // error while parsing an input
+  notImpl: 'NOT_YET_IMPLEMENTED', // not yet implemented
+  exTypNotFound: 'EXCHANGE_TYPE_NOT_FOUND', // exchange type is wrong or could not be found
+  finished: 'EXCHANGE_FINISHED' // exchange is finished (i.e. when ExTestDatas data array is complete proceeded)
 }
 
 
@@ -67,7 +87,7 @@ IExchange.prototype.setConfig = function(configuration) {
 
 /**
  * Returns the configuration
- * @return {Object} obj.error: ExError, obj.result: configuration object
+ * @return {Object} obj.error: ExError, obj.result: configuration array [{title: <title>, value: <value>}]
  */
 IExchange.prototype.getConfig = function() {
   throw new Error('This method must be overwritten!');
@@ -159,7 +179,7 @@ IExchange.prototype.stopTrade = function() {
 
 /**
  * Returns instant specific informations
- * @return {Object} obj.error: ExError, obj.result: info object {id: <instance Id>, type: <exchange type>}
+ * @return {Object} obj.error: ExError, obj.result: info object {id: <instance Id>, name: <instance name>, type: <exchange type>}
  */
 IExchange.prototype.getInstInfo = function() {
   throw new Error('This method must be overwritten!');

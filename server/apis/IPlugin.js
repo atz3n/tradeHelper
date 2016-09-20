@@ -5,10 +5,14 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 1.0
+ * @version 2.1
  * 
  * CHANGES:
- * 01-July-2016 : Initial version
+ * 01-Jul-2016 : Initial version
+ * 22-Jul-2016 : added name element to getInstInfo() return object
+ * 24-Jul-2016 : changed getConfig() return result object to array (same structure as getInfo())
+ * 26-Jul-2016 : included default configuration object
+ * 12-Aug-2016 : bugfix: added configuration parameter in setConfig() signature
  */
 
 /***********************************************************************
@@ -19,6 +23,22 @@ export function IPlugin(){};
 
 
 /***********************************************************************
+  Public Static Variable
+ ***********************************************************************/
+
+/**
+ * Default Configuration structure
+ * Every Plugin should implement a public static default configuration object including an id, a name and depending configuration elements.
+ * It should be a working default configuration, too.
+ * @type {Object}
+ */
+IPlugin.ConfigDefault = {
+  id: 'undefined',
+  name: 'undefined',
+}
+
+
+/***********************************************************************
   Function Prototypes
  ***********************************************************************/
 
@@ -26,14 +46,14 @@ export function IPlugin(){};
  * Sets Class specific configurations
  * @param {Object} configuration class specific configuration
  */
-IPlugin.prototype.setConfig = function() {
+IPlugin.prototype.setConfig = function(configuration) {
     throw new Error('This method must be overwritten!');
 }
 
 
 /**
  * Returns the configuration
- * @return {Object} configuration object
+ * @return {Object} configuration array [{title: <title>, value: <value>}]
  */
 IPlugin.prototype.getConfig = function() {
     throw new Error('This method must be overwritten!');
@@ -122,7 +142,7 @@ IPlugin.prototype.setSellNotifyFunc = function(sellNotifyFunction) {
 
 /**
  * Returns instant specific informations
- * @return {Object} info object {id: <instance Id>, type: <plugin type>}
+ * @return {Object} info object {id: <instance Id>, name: <instance name>, type: <exchange type>}
  */
 IPlugin.prototype.getInstInfo = function() {
     throw new Error('This method must be overwritten!');

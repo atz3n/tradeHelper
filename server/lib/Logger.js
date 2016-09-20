@@ -10,16 +10,17 @@
  * 
  * 
  * @author Atzen
- * @version 0.9.0
+ * @version 0.9.1
  *
  * 
  * CHANGES:
  * 15-Apr-2016 : Initial version
+ * 19-July-2016 : BugFix: setDailyFileLogger() did not create daily schedule
  */
 
 
-// import { InstHandler } from './InstHandler.js';
-// import { SchM } from './SchM.js';
+import { InstHandler } from './InstHandler.js';
+import { SchMSC } from './SchMSC.js';
 
 
 /***********************************************************************
@@ -159,7 +160,7 @@ export function Logger(name) {
 
   var _db = null;
   var _dbCreated = false;
-  
+
 
   /***********************************************************************
     Public Instance Variable
@@ -189,6 +190,9 @@ export function Logger(name) {
 
 
   var _createFileLogger = function(path, fileName) {
+    var fs = Npm.require('fs');
+    if (!fs.existsSync(path)) fs.mkdirSync(path);
+
     _fileLg = new winston.transports.File({
       name: _name + 'file',
       level: _config.fileLevel,
@@ -211,7 +215,7 @@ export function Logger(name) {
 
 
   var _createDatabaseLogger = function() {
-    if(_dbCreated === false){
+    if (_dbCreated === false) {
       _db = new Mongo.Collection(_name + 'logs');
       _dbCreated = true;
     }
@@ -246,13 +250,26 @@ export function Logger(name) {
     });
   }
 
+  /**
+   * Merges two Objects where properties of object1 will be overwritten if they have the same name
+   * @param  {Object} object1 an Object
+   * @param  {Object} object2 another Object
+   * @return {Object}         merged Object
+   */
+  var _mergeObjects = function(object1, object2) {
+    var tmp = {};
+    for (var attrname in object1) { tmp[attrname] = object1[attrname]; }
+    for (var attrname in object2) { tmp[attrname] = object2[attrname]; }
+    return tmp;
+  }
+
 
   /***********************************************************************
     Public Instance Function
     ***********************************************************************/
 
   this.setConfig = function(config) {
-    _config = Object.assign({}, config);
+    _config = mergeObjects(_config, config);
   }
 
 
@@ -266,8 +283,8 @@ export function Logger(name) {
     _createFileLogger(path, _createFileName(suffix));
     _createLogger();
 
-    return SchM.createSchedule(scheduleName, 'at 00:00', function() {
-
+    // return SchMSC.createSchedule(scheduleName, 'every 1 min', function() {
+    return SchMSC.createSchedule(scheduleName, 'at 00:00', function() {
       _createFileLogger(path, _createFileName(suffix));
       _createLogger();
     });
@@ -293,7 +310,7 @@ export function Logger(name) {
 
 
   this.removeDailyFileLogger = function(scheduleName) {
-    SchM.removeSchedule(scheduleName);
+    SchMSC.removeSchedule(scheduleName);
     _fileLg = null;
     _createLogger();
   }

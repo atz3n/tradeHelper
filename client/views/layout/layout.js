@@ -121,7 +121,9 @@ Template.PrivateLayoutLeftMenu.events({
 });
 
 Template.PrivateLayoutLeftMenu.helpers({
-	
+	'enDevView': function() {
+		return Meteor.settings.public.ShowDevelopView;
+	}
 });
 
 Template.PrivateLayoutRightMenu.rendered = function() {

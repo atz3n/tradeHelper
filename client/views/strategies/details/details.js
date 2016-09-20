@@ -129,7 +129,7 @@ Template.StrategiesDetailsDetailsForm.events({
         if (e) {
         	console.log(e);
         	sAlert.error('Server connection failed');
-        } else if (r.error) {
+        } else if (r.error === 'error') {
         	sAlert.error(r.result);
         } else{
           setActiveState(strId, true);

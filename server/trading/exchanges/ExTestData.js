@@ -4,12 +4,17 @@
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.5.3
  * 
  * CHANGES:
- * 04-July-2016 : Initial version
- * 11-July-2016 : added throw error system
- * 11-July-2016 : added position configuration
+ * 04-Jul-2016 : Initial version
+ * 11-Jul-2016 : added throw error system
+ * 11-Jul-2016 : added position configuration
+ * 22-Jul-2016 : implemented data input
+ *                fixed bug: long/short position was not considered while buy/sell function call
+ * 22-Jul-2016 : adapted to IExchange v1.1
+ * 24-Jul-2016 : adapted to IExchange v1.3
+ * 12-Aug-2016 : bugfix: counter now starts with 0 instead of 1
  */
 
 
@@ -30,9 +35,10 @@ import { IExchange } from '../../apis/IExchange.js';
  */
 ExTestData.ConfigDefault = {
   id: 'undefined',
+  name: 'undefined',
 
   priceType: 'sinus', // sinus (sinus shaped price flow), data (uses data array)
-  data: [], // data array
+  data: '', // data string
 
   startVal: 0, // counter start value
   gain: 1, // multiplicator
@@ -146,6 +152,11 @@ export function ExTestData() {
    */
   var _soldNotifyFunc = function() {};
 
+  /**
+   * Indicates first update function call
+   * @type {Boolean}
+   */
+  var firstRun = true;
 
   /***********************************************************************
     Public Instance Variable
@@ -155,17 +166,40 @@ export function ExTestData() {
     Private Instance Function
    ***********************************************************************/
 
+  /** 
+   * converts data input string to array. 
+   * Used seperators: ',', '\n' 
+   * @param  {string} data input data 
+   * @return {Array}      converted Array 
+   */
+  var _dataString2Array = function(data) {
+    var tmp = data.split(',');
+    var tmp2 = [];
+    for (var j = 0; j < tmp.length; j++) {
+      let tmp3 = tmp[j].split('\n');
+      for (var k = 0; k < tmp3.length; k++) tmp2.push(tmp3[k])
+    }
+    return tmp2;
+  }
+
+
   /**
    * Checks configuration
    * @return {bool} false if error occurs
    */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
+    if (_config.name === 'undefined') return false;
 
     if (_config.priceType !== 'sinus' && _config.priceType !== 'data') return false;
 
     if (_config.priceType === 'data') {
-      if (typeof _config.data !== 'object') return false;
+      if (typeof _config.data !== 'string') return false;
+
+      var tmp = _dataString2Array(_config.data);
+      for (var i = 0; i < tmp.length; i++) {
+        if (isNaN(tmp[i])) return false;
+      }
     }
 
     if (isNaN(_config.startVal)) return false;
@@ -209,7 +243,9 @@ export function ExTestData() {
   this.update = function() {
     if (_config.errU) return errHandle(ExError.error, null);
 
-    _counter += _config.stepWidth;
+    if (firstRun) firstRun = false;
+    else _counter += _config.stepWidth;
+
     return errHandle(ExError.ok, null);
   }
 
@@ -229,8 +265,8 @@ export function ExTestData() {
     if (!_checkConfig()) return errHandle(ExError.error, null);
 
     _counter = _config.startVal;
-    _dataArray = _config.data;
     _balance = _config.balanceAmount;
+    _dataArray = _dataString2Array(_config.data);
 
     return errHandle(ExError.ok, null);
   }
@@ -242,10 +278,52 @@ export function ExTestData() {
   this.getConfig = function() {
     if (_config.errGC) return errHandle(ExError.error, null);
 
-    var tmp = Object.assign({}, _config);
-    delete tmp.id;
 
-    return errHandle(ExError.ok, tmp);
+    var tmpA = [];
+
+    tmpA.push({ title: 'Price Type', value: _config.priceType });
+
+    if (_config.priceType === 'data') {
+      var tmpS = '';
+      for (var i = 0; i < _dataArray.length; i++) {
+        if (i >= 100) { // crop string to max 100 data
+          tmpS += '...';
+          break;
+        }
+        if (i > 0) tmpS += ', ';
+        tmpS += _dataArray[i];
+      }
+      tmpA.push({ title: 'data', value: tmpS });
+    }
+
+    tmpA.push({ title: 'Start Value', value: _config.startVal });
+    tmpA.push({ title: 'Gain', value: _config.gain });
+    tmpA.push({ title: 'Offset', value: _config.offset });
+    tmpA.push({ title: 'Step Width', value: _config.stepWidth });
+    tmpA.push({ title: 'Start Balance', value: _config.balanceAmount });
+    tmpA.push({ title: 'Trade Delay [Sec]', value: _config.tradeDelaySec });
+    tmpA.push({ title: 'Enabled Long', value: JSON.stringify(_config.enLong) });
+    tmpA.push({ title: 'Enabled Short', value: JSON.stringify(_config.enShort) });
+
+    if (Meteor.settings.public.ExTestDataErrorConfig === 'true') {
+      tmpA.push({ title: 'Error setConfig()', value: JSON.stringify(_config.errSC) });
+      tmpA.push({ title: 'Error getConfig()', value: JSON.stringify(_config.errGC) });
+      tmpA.push({ title: 'Error getInfo()', value: JSON.stringify(_config.errGI) });
+      tmpA.push({ title: 'Error getPairUnits()', value: JSON.stringify(_config.errGPU) });
+      tmpA.push({ title: 'Error getVolume()', value: JSON.stringify(_config.errGV) });
+      tmpA.push({ title: 'Error getPrice()', value: JSON.stringify(_config.errGP) });
+      tmpA.push({ title: 'Error getTradePrice()', value: JSON.stringify(_config.errGTP) });
+      tmpA.push({ title: 'Error update()', value: JSON.stringify(_config.errU) });
+      tmpA.push({ title: 'Error sell()', value: JSON.stringify(_config.errS) });
+      tmpA.push({ title: 'Error buy()', value: JSON.stringify(_config.errB) });
+      tmpA.push({ title: 'Error stopTrade()', value: JSON.stringify(_config.errST) });
+      tmpA.push({ title: 'Error getInstInfo()', value: JSON.stringify(_config.errGII) });
+      tmpA.push({ title: 'Error getPositions()', value: JSON.stringify(_config.errGPO) });
+      tmpA.push({ title: 'Error setBoughtNotifyFunc()', value: JSON.stringify(_config.errSBNF) });
+      tmpA.push({ title: 'Error setSoldNotifyFunc()', value: JSON.stringify(_config.errSSNF) });
+    }
+
+    return errHandle(ExError.ok, tmpA);
   }
 
 
@@ -286,7 +364,12 @@ export function ExTestData() {
         break;
 
       case 'data':
-        price = Math.abs(_config.gain * _dataArray[_counter % _dataArray.length] + _config.offset);
+        if (_counter < _dataArray.length) {
+          price = Math.abs(_config.gain * _dataArray[_counter % _dataArray.length] + _config.offset);
+        } else {
+          price = Math.abs(_config.gain * _dataArray[_dataArray.length - 1] + _config.offset);
+          return errHandle(ExError.finished, null);
+        }
         break;
 
       default:
@@ -331,11 +414,11 @@ export function ExTestData() {
     }
 
     if (!_cancelTrade) {
-      if ('none') {
+      if (positon === 'none') {
         _volume = _balance / this.getPrice().result;
-        _balance = 0;
-      } else if ('short') {
-        _balance = _volume * this.getPrice().result;
+        _balance -= _volume * this.getPrice().result;
+      } else if (positon === 'short') {
+        _balance -= _volume * this.getPrice().result;
       } else {
         /* wrong parameter */
         _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
@@ -364,11 +447,11 @@ export function ExTestData() {
     }
 
     if (!_cancelTrade) {
-      if ('long') {
-        _balance = _volume * this.getPrice().result;
-      } else if ('none') {
+      if (positon === 'none') {
         _volume = _balance / this.getPrice().result;
-        _balance *= 2;
+        _balance += _volume * this.getPrice().result;
+      } else if (positon === 'long') {
+        _balance += _volume * this.getPrice().result;
       } else {
         /* wrong parameter */
         _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
@@ -397,7 +480,7 @@ export function ExTestData() {
   this.getInstInfo = function() {
     if (_config.errGII) return errHandle(ExError.error, null);
 
-    return errHandle(ExError.ok, { id: _config.id, type: "ExTestData" });
+    return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExTestData" });
   }
 
 
