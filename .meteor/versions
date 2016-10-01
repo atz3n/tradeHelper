@@ -58,6 +58,7 @@ matb33:collection-hooks@0.8.1
 meteor@1.1.14
 meteor-base@1.0.4
 meteorhacks:async@1.0.0
+meteorhacks:cluster@1.6.9
 meteorhacks:npm@1.5.0
 minifier-css@1.1.11
 minifier-js@1.1.11

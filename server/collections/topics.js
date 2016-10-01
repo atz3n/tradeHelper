@@ -19,13 +19,25 @@ Topics.before.insert(function(userId, doc) {
 	doc.modifiedBy = doc.createdBy;
 
 
+	/* adding topic number */
 	var tpCnt = ServerDatas.findOne().topicCounter;
-	doc.topicNum = '#' + tpCnt;
+	var tmp = '#';
+
+	if(tpCnt < 10) tmp += '000';
+	if(tpCnt < 100 && tpCnt >= 10) tmp += '00';
+	if(tpCnt < 1000 && tpCnt >= 100) tmp += '0';
+	doc.topicNum = tmp + tpCnt;
 	
 	tpCnt++;
 	ServerDatas.update({_id: serverDataId}, { $set: { topicCounter: tpCnt } })
 
-	
+	/* adding state */
+	doc.state = 'created';
+
+	/* adding autor */
+	doc.autor = getUserName(userId);
+
+
 	if(!doc.ownerId) doc.ownerId = userId;
 });
 

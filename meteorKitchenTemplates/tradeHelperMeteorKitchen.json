@@ -851,11 +851,73 @@
             "input": "read-only",
             "show_in_insert_form": false
           },
+	  {
+            "name": "date",
+            "title": "Date",
+            "type": "date",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
+          },
           {
             "name": "title",
             "title": "Titel",
             "type": "string",
             "input": "text",
+            "required": true
+          },
+	  {
+            "name": "type",
+            "title": "Type",
+	    "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+	        "value": "soi",
+	        "title": "Suggestion of Improvement (soi)"
+	      },
+	      {
+	        "value": "bug",
+	        "title": "Bug"
+	      }
+	    ],
+            "required": true
+          },
+	  {
+            "name": "autor",
+            "title": "Autor",
+            "type": "string",
+            "input": "read-only",
+            "show_in_insert_form": false,
+	    "show_in_update_form": false
+          },
+	  {
+            "name": "state",
+            "title": "State",
+	    "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+	        "value": "created",
+	        "title": "Created"
+	      },
+	      {
+	        "value": "accepted",
+	        "title": "Accepted"
+	      },
+	      {
+	        "value": "denied",
+	        "title": "Denied"
+	      },
+	      {
+	        "value": "inProgress",
+	        "title": "In progress"
+	      },
+	      {
+	        "value": "solved",
+	        "title": "Solved"
+	      }
+	    ],
+	    "show_in_insert_form": false,
             "required": true
           },
           {
@@ -2131,6 +2193,10 @@
                             {
                               "value": "admin",
                               "title": "Admin"
+                            },
+                            {
+                              "value": "developer",
+                              "title": "Developer"
                             },
                             {
                               "value": "blocked",

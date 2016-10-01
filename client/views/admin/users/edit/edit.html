@@ -70,6 +70,12 @@
 					</div>
 					<div class="radio">
 						<label>
+							<input type="radio" value="developer" name="roles" data-type="array" {{itemIsChecked admin_user.roles "developer"}}>
+							Developer
+						</label>
+					</div>
+					<div class="radio">
+						<label>
 							<input type="radio" value="blocked" name="roles" data-type="array" {{itemIsChecked admin_user.roles "blocked"}}>
 							Blocked
 						</label>

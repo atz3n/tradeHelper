@@ -32,7 +32,30 @@
 					Titel
 				</label>
 				<div class="input-div">
-					<input type="text" name="title" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="title" value="" class="form-control " autofocus="autofocus" required="required" data-type="string">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-type">
+				<label for="type">
+					Type
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="soi" name="type" data-type="string" checked>
+							Suggestion of Improvement (soi)
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="bug" name="type" data-type="string">
+							Bug
+						</label>
+					</div>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -44,7 +67,7 @@
 					Description
 				</label>
 				<div class="input-div">
-					<textarea class="form-control" name="desc"></textarea>
+					<textarea class="form-control " name="desc"></textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

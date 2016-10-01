@@ -63,8 +63,20 @@
 				<th class="th-sortable" data-sort="topicNum">
 					Topic Number
 				</th>
+				<th class="th-sortable" data-sort="date">
+					Date
+				</th>
 				<th class="th-sortable" data-sort="title">
 					Titel
+				</th>
+				<th class="th-sortable" data-sort="type">
+					Type
+				</th>
+				<th class="th-sortable" data-sort="autor">
+					Autor
+				</th>
+				<th class="th-sortable" data-sort="state">
+					State
 				</th>
 				<th>
 					&nbsp;
@@ -86,7 +98,19 @@
 			{{topicNum}}
 		</td>
 		<td>
+			{{formatDate createdAt ''}}
+		</td>
+		<td>
 			{{title}}
+		</td>
+		<td>
+			{{type}}
+		</td>
+		<td>
+			{{autor}}
+		</td>
+		<td>
+			{{state}}
 		</td>
 		<td class="td-icon">
 			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">

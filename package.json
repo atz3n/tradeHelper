@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "startDev": "meteor --settings settings/settings-development.json",
-    "startProd": "meteor --settings settings/settings-production.json"
+    "startProd": "meteor --settings settings/settings-production.json --production",
+    "startDevMltCore": "export CLUSTER_WORKERS_COUNT=auto; npm run startDev",
+    "startProdMltCore": "export CLUSTER_WORKERS_COUNT=auto; npm run startProd"
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"

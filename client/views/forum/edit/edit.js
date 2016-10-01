@@ -120,6 +120,9 @@ Template.ForumEditEditForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("forumEditEditFormErrorMessage");
+	},
+	"isDeveloper": function() {
+		return getUserRole(Meteor.userId()) == 'developer';
 	}
 	
 });
