@@ -41,16 +41,6 @@
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-date">
-				<label for="date" class="col-sm-3 control-label">
-					Date
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-date">
-						{{formatDate topic.createdAt ''}}
-					</p>
-				</div>
-			</div>
 			<div class="form-group  field-title">
 				<label for="title" class="col-sm-3 control-label">
 					Titel
@@ -58,6 +48,16 @@
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-title">
 						{{topic.title}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-date">
+				<label for="date" class="col-sm-3 control-label">
+					Date
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-date">
+						{{formatDate topic.createdAt ''}}
 					</p>
 				</div>
 			</div>

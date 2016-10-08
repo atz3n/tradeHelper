@@ -63,11 +63,11 @@
 				<th class="th-sortable" data-sort="topicNum">
 					Topic Number
 				</th>
-				<th class="th-sortable" data-sort="date">
-					Date
-				</th>
 				<th class="th-sortable" data-sort="title">
 					Titel
+				</th>
+				<th class="th-sortable" data-sort="date">
+					Date
 				</th>
 				<th class="th-sortable" data-sort="type">
 					Type
@@ -98,10 +98,10 @@
 			{{topicNum}}
 		</td>
 		<td>
-			{{formatDate createdAt ''}}
+			{{title}}
 		</td>
 		<td>
-			{{title}}
+			{{formatDate createdAt ''}}
 		</td>
 		<td>
 			{{type}}
