@@ -851,19 +851,19 @@
             "input": "read-only",
             "show_in_insert_form": false
           },
-	  {
-            "name": "date",
-            "title": "Date",
-            "type": "date",
-            "show_in_insert_form": false,
-            "show_in_update_form": false
-          },
           {
             "name": "title",
             "title": "Titel",
             "type": "string",
             "input": "text",
             "required": true
+          },
+	  {
+            "name": "date",
+            "title": "Date",
+            "type": "date",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
           },
 	  {
             "name": "type",
