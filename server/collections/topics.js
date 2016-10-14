@@ -38,6 +38,9 @@ Topics.before.insert(function(userId, doc) {
 	doc.autor = getUserName(userId);
 
 
+	/* adding comments array */
+	doc.comments = [];
+
 	if(!doc.ownerId) doc.ownerId = userId;
 });
 

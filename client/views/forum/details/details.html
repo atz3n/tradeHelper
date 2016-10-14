@@ -31,6 +31,8 @@
 				{{infoMessage}}
 			</div>
 			{{/if}}
+			<h3>Details</h3>
+      		<hr />
 			<div class="form-group  field-topic-num">
 				<label for="topicNum" class="col-sm-3 control-label">
 					Topic Number
@@ -101,6 +103,42 @@
 					</p>
 				</div>
 			</div>
+			<h3>Discussion</h3>
+			<div class="input-div ">
+              <table class="table table-striped">
+                <thead>
+                  <tr class="crud-table-header">
+                    <th>
+                      
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                {{#each topic.comments}}
+		          <tr class="crud-table-row">
+		            <td>
+		              {{title}}:
+		              <br> {{value}}
+		            </td>
+		          </tr>
+		          {{/each}}
+            		{{> ForumDetailsDetailsFormComments}}
+                </tbody>
+              </table>
+             </div>
+			<div class="input-div">
+				<textarea class="form-control " name="comment"></textarea>
+			</div>
+			<div class="form-group">
+				<div class="submit-div col-sm-9">
+					<a href="#" id="comment-insert-button" class="btn btn-default btn-xs">
+						<span class="fa fa-plus">
+						</span>
+						Add
+					</a>
+				</div>
+			</div>
+			<hr/>
 			<div class="form-group">
 				<div class="submit-div col-sm-9">
 					<a href="#" id="form-close-button" class="btn btn-primary">
@@ -112,3 +150,17 @@
 	</div>
 </template>
 
+<template name="ForumDetailsDetailsFormComments">
+  <tr class="crud-table-row">
+    <td>
+      Volume:
+      <br> bla
+    </td>
+  </tr>
+  <tr class="crud-table-row">
+    <td>
+      Volume:
+      <br> bla
+    </td>
+  </tr>
+</template>
