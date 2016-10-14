@@ -13,7 +13,6 @@ Template.ForumDetails.helpers({
 });
 
 Template.ForumDetailsDetailsForm.rendered = function() {
-	
 
 	pageSession.set("forumDetailsDetailsFormInfoMessage", "");
 	pageSession.set("forumDetailsDetailsFormErrorMessage", "");
@@ -92,6 +91,17 @@ Template.ForumDetailsDetailsForm.events({
 		);
 
 		return false;
+	},
+	"click #comment-insert-button": function(e,t) {
+		console.log(this)
+		console.log($(e.target))
+		var tmp = this.topicComments.comments;
+		
+
+		
+
+		// Comments.update({ topicId: t.data.topic._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+
 	},
 	"click #form-cancel-button": function(e, t) {
 		e.preventDefault();

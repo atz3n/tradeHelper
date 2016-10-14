@@ -114,15 +114,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                {{#each topic.comments}}
+                {{#each topicComments.comments}}
 		          <tr class="crud-table-row">
 		            <td>
-		              {{title}}:
-		              <br> {{value}}
+		              {{owner}}  {{date}}:
+		              <br> {{comment}}
 		            </td>
 		          </tr>
 		          {{/each}}
-            		{{> ForumDetailsDetailsFormComments}}
+            		<!-- {{> ForumDetailsDetailsFormComments}} -->
                 </tbody>
               </table>
              </div>

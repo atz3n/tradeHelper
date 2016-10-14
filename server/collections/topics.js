@@ -53,11 +53,12 @@ Topics.before.update(function(userId, doc, fieldNames, modifier, options) {
 });
 
 Topics.before.remove(function(userId, doc) {
-	
+	Comments.remove({_id: doc.commentsId});
 });
 
 Topics.after.insert(function(userId, doc) {
-	
+	/* creating comments doc */
+	Comments.insert({topicId: doc._id});
 });
 
 Topics.after.update(function(userId, doc, fieldNames, modifier, options) {
