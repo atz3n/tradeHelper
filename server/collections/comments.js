@@ -24,8 +24,6 @@ Comments.before.update(function(userId, doc, fieldNames, modifier, options) {
 	modifier.$set = modifier.$set || {};
 	modifier.$set.modifiedAt = new Date();
 	modifier.$set.modifiedBy = userId;
-
-	
 });
 
 Comments.before.remove(function(userId, doc) {
@@ -37,7 +35,7 @@ Comments.after.insert(function(userId, doc) {
 });
 
 Comments.after.update(function(userId, doc, fieldNames, modifier, options) {
-	
+
 });
 
 Comments.after.remove(function(userId, doc) {

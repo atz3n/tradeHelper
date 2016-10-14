@@ -1,11 +1,11 @@
 this.Comments = new Mongo.Collection("comments");
 
 this.Comments.userCanInsert = function(userId, doc) {
-	return true;
+	return false;
 };
 
 this.Comments.userCanUpdate = function(userId, doc) {
-	return getUserRole(userId) == 'developer' || getUserRole(userId) == 'admin';
+	return true;
 };
 
 this.Comments.userCanRemove = function(userId, doc) {

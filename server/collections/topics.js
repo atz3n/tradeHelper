@@ -21,7 +21,7 @@ Topics.before.insert(function(userId, doc) {
 
 	/* adding topic number */
 	var tpCnt = ServerDatas.findOne().topicCounter;
-	var tmp = '#';
+	var tmp = '';
 
 	if(tpCnt < 10) tmp += '000';
 	if(tpCnt < 100 && tpCnt >= 10) tmp += '00';
