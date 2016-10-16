@@ -37,6 +37,8 @@ Topics.before.insert(function(userId, doc) {
 	/* adding autor */
 	doc.autor = getUserName(userId);
 
+	/* adding number of comments */
+	doc.numOfCmnt = 0;
 
 	if(!doc.ownerId) doc.ownerId = userId;
 });
@@ -50,7 +52,8 @@ Topics.before.update(function(userId, doc, fieldNames, modifier, options) {
 });
 
 Topics.before.remove(function(userId, doc) {
-	Comments.remove({_id: doc.commentsId});
+	/* remove corresponding comment doc */
+	Comments.remove({topicId: doc._id});
 });
 
 Topics.after.insert(function(userId, doc) {

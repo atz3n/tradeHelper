@@ -35,7 +35,7 @@ Comments.after.insert(function(userId, doc) {
 });
 
 Comments.after.update(function(userId, doc, fieldNames, modifier, options) {
-
+	Topics.update({ _id: doc.topicId }, { $set: { numOfCmnt: doc.comments.length } });
 });
 
 Comments.after.remove(function(userId, doc) {

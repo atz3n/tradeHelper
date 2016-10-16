@@ -32,8 +32,8 @@
 					Topic Number
 				</label>
 				<div class="input-div">
-					<p class="form-control-static  control-field-topic-num">
-						{{topic.topicNum}}
+					<p class="form-control-static">
+						#{{topic.topicNum}}
 					</p>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 					Titel
 				</label>
 				<div class="input-div">
-					<input type="text" name="title" value="{{topic.title}}" class="form-control " autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="title" value="{{topic.title}}" class="form-control" autofocus="autofocus" required="required" data-type="string" disabled>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -66,6 +66,12 @@
 							Bug
 						</label>
 					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="misc" name="type" data-type="string" {{itemIsChecked topic.type "misc"}}>
+							Miscellaneous
+						</label>
+					</div>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -78,7 +84,7 @@
 					State
 				</label>
 				<div class="input-div">
-					<select class="form-control " name="state" data-type="string" required="required">
+					<select class="form-control" name="state" data-type="string" required="required">
 						<option value="created" {{optionIsSelected topic.state "created"}}>							Created</option>
 						<option value="accepted" {{optionIsSelected topic.state "accepted"}}>							Accepted</option>
 						<option value="denied" {{optionIsSelected topic.state "denied"}}>							Denied</option>
@@ -97,7 +103,7 @@
 					Description
 				</label>
 				<div class="input-div">
-					<textarea class="form-control " name="desc">{{topic.desc}}</textarea>
+					<textarea class="form-control" name="desc" disabled>{{topic.desc}}</textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

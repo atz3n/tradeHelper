@@ -123,6 +123,9 @@ Template.ForumEditEditForm.helpers({
 	},
 	"isDeveloper": function() {
 		return getUserRole(Meteor.userId()) == 'developer';
+	},
+	"tt": function() {
+		return ttTopic.insEdi;
 	}
 	
 });
