@@ -34,17 +34,17 @@
 			<h3>Details</h3>
       		<hr />
 			<div class="form-group  field-topic-num">
-				<label for="topicNum" class="col-sm-3 control-label">
+				<label for="topicNum" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.topicNum}}>
 					Topic Number
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-topic-num">
-						{{topic.topicNum}}
+						#{{topic.topicNum}}
 					</p>
 				</div>
 			</div>
 			<div class="form-group  field-title">
-				<label for="title" class="col-sm-3 control-label">
+				<label for="title" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.title}}>
 					Titel
 				</label>
 				<div class="input-div col-sm-9">
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<div class="form-group  field-date">
-				<label for="date" class="col-sm-3 control-label">
+				<label for="date" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.date}}>
 					Date
 				</label>
 				<div class="input-div col-sm-9">
@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<div class="form-group  field-type">
-				<label for="type" class="col-sm-3 control-label">
+				<label for="type" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.type}}>
 					Type
 				</label>
 				<div class="input-div col-sm-9">
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			<div class="form-group  field-autor">
-				<label for="autor" class="col-sm-3 control-label">
+				<label for="autor" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.autor}}>
 					Autor
 				</label>
 				<div class="input-div col-sm-9">
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 			<div class="form-group  field-state">
-				<label for="state" class="col-sm-3 control-label">
+				<label for="state" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.state}}>
 					State
 				</label>
 				<div class="input-div col-sm-9">
@@ -94,48 +94,52 @@
 				</div>
 			</div>
 			<div class="form-group  field-desc">
-				<label for="desc" class="col-sm-3 control-label">
+				<label for="desc" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.desc}}>
 					Description
 				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-desc">
-						{{topic.desc}}
-					</p>
-				</div>
 			</div>
-			<h3>Discussion</h3>
+				<div class="input-div">
+					<pre class="pre-scrollable"><h6>{{#markdown}}{{topic.desc}}{{/markdown}}</h6></pre>
+				</div>
+			<h3>Comments ({{topic.numOfCmnt}})</h3>
 			<div class="input-div ">
-              <table class="table table-striped">
-                <thead>
-                  <tr class="crud-table-header">
-                    <th>
-                      
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                {{#each topic.comments}}
-		          <tr class="crud-table-row">
-		            <td>
-		              {{title}}:
-		              <br> {{value}}
-		            </td>
-		          </tr>
-		          {{/each}}
-            		{{> ForumDetailsDetailsFormComments}}
-                </tbody>
-              </table>
-             </div>
+	      <table class="table table-striped">
+	        <thead>
+	          <tr class="crud-table-header">
+	            <th>
+	              
+	            </th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	        {{#each topicComments.comments}}
+	      <tr class="crud-table-row">
+	        <td>
+	          {{autor}} ({{role}}) {{formatDate date ''}}:
+	          <br> 
+	          <pre class="pre-scrollable"><h6>{{#markdown}}{{comment}}{{/markdown}}</h6></pre>
+	          {{#if isAdmin}}
+						<a href="#" id="delete-button" class="btn btn-default btn-xs">
+							<span class="fa fa-trash-o">
+							</span>
+						</a>
+						{{/if}}
+	        </td>
+	      </tr>
+	      {{/each}}
+	        </tbody>
+	      </table>
+	     </div>
 			<div class="input-div">
-				<textarea class="form-control " name="comment"></textarea>
+				<textarea class="form-control " name="comment" id="comment" data-toggle="tooltip" title={{tt.cmnt}}></textarea>
 			</div>
 			<div class="form-group">
 				<div class="submit-div col-sm-9">
-					<a href="#" id="comment-insert-button" class="btn btn-default btn-xs">
+					<button id="comment-insert-button" class="btn btn-success btn-xs" type="submit">
 						<span class="fa fa-plus">
 						</span>
 						Add
-					</a>
+					</button>
 				</div>
 			</div>
 			<hr/>
@@ -148,19 +152,4 @@
 			</div>
 		</form>
 	</div>
-</template>
-
-<template name="ForumDetailsDetailsFormComments">
-  <tr class="crud-table-row">
-    <td>
-      Volume:
-      <br> bla
-    </td>
-  </tr>
-  <tr class="crud-table-row">
-    <td>
-      Volume:
-      <br> bla
-    </td>
-  </tr>
 </template>

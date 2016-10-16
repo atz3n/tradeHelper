@@ -5,9 +5,9 @@ this.Topics.userCanInsert = function(userId, doc) {
 };
 
 this.Topics.userCanUpdate = function(userId, doc) {
-	return (userId && doc.ownerId == userId) || Users.findOne({_id: userId}).roles == 'developer';
+	return getUserRole(userId) == 'developer' || getUserRole(userId) == 'admin';
 };
 
 this.Topics.userCanRemove = function(userId, doc) {
-	return (userId && doc.ownerId == userId) || Users.findOne({_id: userId}).roles == 'developer';
+	return getUserRole(userId) == 'developer' || getUserRole(userId) == 'admin';
 };

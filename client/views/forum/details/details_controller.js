@@ -19,7 +19,9 @@ this.ForumDetailsController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("topic", this.params.topicId)
+			Meteor.subscribe("topic", this.params.topicId),
+			Meteor.subscribe("topicComments", this.params.topicId),
+			Meteor.subscribe("current_user_data")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +36,9 @@ this.ForumDetailsController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			topic: Topics.findOne({_id:this.params.topicId}, {})
+			topic: Topics.findOne({_id:this.params.topicId}, {}),
+			topicComments: Comments.findOne({topicId: this.params.topicId}, {}),
+			current_user_data: Users.findOne({_id:Meteor.userId()}, {})
 		};
 		
 

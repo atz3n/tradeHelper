@@ -21,7 +21,7 @@ Topics.before.insert(function(userId, doc) {
 
 	/* adding topic number */
 	var tpCnt = ServerDatas.findOne().topicCounter;
-	var tmp = '#';
+	var tmp = '';
 
 	if(tpCnt < 10) tmp += '000';
 	if(tpCnt < 100 && tpCnt >= 10) tmp += '00';
@@ -37,9 +37,8 @@ Topics.before.insert(function(userId, doc) {
 	/* adding autor */
 	doc.autor = getUserName(userId);
 
-
-	/* adding comments array */
-	doc.comments = [];
+	/* adding number of comments */
+	doc.numOfCmnt = 0;
 
 	if(!doc.ownerId) doc.ownerId = userId;
 });
@@ -53,11 +52,13 @@ Topics.before.update(function(userId, doc, fieldNames, modifier, options) {
 });
 
 Topics.before.remove(function(userId, doc) {
-	
+	/* remove corresponding comment doc */
+	Comments.remove({topicId: doc._id});
 });
 
 Topics.after.insert(function(userId, doc) {
-	
+	/* creating comments doc */
+	Comments.insert({topicId: doc._id});
 });
 
 Topics.after.update(function(userId, doc, fieldNames, modifier, options) {

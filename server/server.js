@@ -8,7 +8,7 @@ Meteor.startup(function() {
 
 deactivateStrategies();
 
-if (Meteor.settings.private.UpdatePairs === 'yes') {
+if (Meteor.settings.private.UpdatePairs === 'true') {
 	SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
 } else {
 	console.log('enable getExTradePairInfos in server.js!!!')

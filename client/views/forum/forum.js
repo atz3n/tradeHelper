@@ -31,7 +31,7 @@ var ForumViewItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["topicNum", "title", "desc"];
+		var searchFields = ["topicNum", "title", "date", "type", "autor", "state", "numOfCmnt", "desc"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -213,6 +213,9 @@ Template.ForumViewTable.events({
 Template.ForumViewTable.helpers({
 	"tableItems": function() {
 		return ForumViewItems(this.topics);
+	},
+	"tt": function() {
+		return ttTopic.desc;
 	}
 });
 
@@ -278,10 +281,10 @@ Template.ForumViewTableItems.events({
 Template.ForumViewTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return Topics.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return Topics.userCanUpdate(Meteor.userId(), this);
 	},
 
 	"deleteButtonClass": function() {
-		return Topics.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return Topics.userCanRemove(Meteor.userId(), this);
 	}
 });

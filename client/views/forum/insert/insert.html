@@ -28,11 +28,11 @@
 			</div>
 			{{/if}}
 			<div class="form-group  field-title">
-				<label for="title">
+				<label for="title" data-toggle="tooltip" title={{tt.title}}>
 					Titel
 				</label>
 				<div class="input-div">
-					<input type="text" name="title" value="" class="form-control " autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="title" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 			<div class="form-group  field-type">
-				<label for="type">
+				<label for="type" data-toggle="tooltip" title={{tt.type}}>
 					Type
 				</label>
 				<div class="input-div">
@@ -56,6 +56,12 @@
 							Bug
 						</label>
 					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="misc" name="type" data-type="string">
+							Miscellaneous
+						</label>
+					</div>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -63,11 +69,11 @@
 				</div>
 			</div>
 			<div class="form-group  field-desc">
-				<label for="desc">
+				<label for="desc" data-toggle="tooltip" title={{tt.desc}}>
 					Description
 				</label>
 				<div class="input-div">
-					<textarea class="form-control " name="desc"></textarea>
+					<textarea class="form-control" name="desc"></textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
