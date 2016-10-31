@@ -232,15 +232,18 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price) {
-    if (_position === 'none') {
-      _position = 'long';
-      _inPrice = price;
-    } else {
-      _position = 'none';
-      _inPrice = 0;
-    }
+    if (_position !== 'long') { // for savety reasons
 
-    _curPrice = price;
+      if (_position === 'none') {
+        _position = 'long';
+        _inPrice = price;
+      } else {
+        _position = 'none';
+        _inPrice = 0;
+      }
+
+      _curPrice = price;
+    }
   }
 
 
@@ -248,15 +251,18 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price) {
-    if (_position === 'none') {
-      _position = 'short';
-      _inPrice = price;
-    } else {
-      _position = 'none';
-      _inPrice = 0;
-    }
+    if (_position !== 'short') { // for savety reasons
 
-    _curPrice = price;
+      if (_position === 'none') {
+        _position = 'short';
+        _inPrice = price;
+      } else {
+        _position = 'none';
+        _inPrice = 0;
+      }
+
+      _curPrice = price;
+    }
   }
 
 
