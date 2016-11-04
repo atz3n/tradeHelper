@@ -3,12 +3,31 @@
 		<div class="row" id="title_row">
 			<div class="col-md-12">
 				<h2 id="page_title" class="pull-left">
-					Under construction...
+					<!-- Under construction... -->
 				</h2>
 				<div id="page_menu" class="pull-right">
 				</div>
 			</div>
 		</div>
+		{{> aboutCont}}
 	</div>
 </template>
 
+
+<template name="aboutCont">
+  {{#markdown}}
+{{> overview}}
+{{> credits}}
+  {{/markdown}}
+</template>
+
+<template name='overview'>
+##Overview
+<!-- Trade Helper is a platform with the intension to support traders while trading. It can be used from manual mode, where -->
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+</template>
+
+<template name='credits'>
+##Credits
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+</template>
