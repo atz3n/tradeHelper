@@ -228,9 +228,9 @@ var setChartValues = function(self) {
     // subchart: {
     //   show: true
     // },
-    // zoom: {
-    //   enabled: true
-    // },
+    zoom: {
+      enabled: true
+    },
     axis: {
       x: {
         type: 'category',
