@@ -13,7 +13,6 @@ Template.AdminActives.helpers({
 });
 
 
-var actives;
 var AdminActivesViewItems = function(cursor) {
 	if(!cursor) {
 		return [];
@@ -75,8 +74,6 @@ var AdminActivesViewExport = function(cursor, fileType) {
 
 Template.AdminActivesView.rendered = function() {
 	pageSession.set("AdminActivesViewStyle", "table");
-	// actives = this.data.active_datas_admin.fetch();
-	pageSession.set('actives', this.data.active_datas_admin.fetch());
 };
 
 Template.AdminActivesView.events({
@@ -187,9 +184,8 @@ Template.AdminActivesView.helpers({
 		return pageSession.get("AdminActivesViewStyle") == "gallery";
 	},
 	"numOfActvs": function(){
-		if(typeof pageSession.get('actives') != 'undefined'){
-			return pageSession.get('actives').length;
-		}
+		pageSession.set('actives', this.active_datas_admin.fetch());
+		return pageSession.get('actives').length;
 	}
 
 	
