@@ -71,6 +71,7 @@ var stop = function(strategyId) {
     strategies.getObject(strategyId).inst.stop();
     strategies.removeObject(strategyId);
     ActiveDatas.remove({ strategyId: strategyId });
+    setActiveState(strategyId, false);
   } else {
     return errHandle(StrError.notFound, strategyId)
   }
@@ -169,6 +170,13 @@ var errMessage = function(errHandleObject, strategyId) {
 }
 
 
+var stopActives = function(userId) {
+  Strategies.find({ownerId: userId}).forEach(function(item) {
+    stop(item._id);
+  });
+}
+
+
 
 Meteor.methods({
 
@@ -177,6 +185,8 @@ Meteor.methods({
 
     if (tmp.error !== StrError.ok) {
       stop(strategyId);
+    } else {
+      setActiveState(strategyId, true);
     }
 
     return errMessage(tmp, strategyId);
@@ -215,6 +225,39 @@ Meteor.methods({
     if(accessCode === Meteor.settings.private.AccessCode) return true;
     else return false;
   },
+
+  stopUserActives: function(userId) {
+    stopActives(userId);
+  },
+
+  deleteUser: function(userId) {
+    stopActives(userId);
+
+    Strategies.remove({ownerId: userId});
+    ActiveDatas.remove({ownerId: userId});
+    Histories.remove({ownerId: userId});
+    PluginBundles.remove({ownerId: userId});
+    Settings.remove({ownerId: userId});
+    Users.remove({_id: userId});
+
+
+    var tmp = {};
+
+    /* delete Plugins */
+    while(true) {
+      if(getPluginDbDoc({ownerId: userId}, tmp)){
+        tmp.ref.remove({ownerId:userId});
+      } else break;
+    }
+
+    /* delete Exchanges */
+    while(true) {
+      if(getExchangeDbDoc({ownerId: userId}, tmp)){
+        tmp.ref.remove({ownerId:userId});
+      } else break;
+    }
+  },
+
 
   develop: function(strategyId) {
     console.log(strategyId);

@@ -6,16 +6,18 @@ Template.Charts.rendered = function() {
 
 
 Template.tvWidget.onRendered(function() {
-  $.getScript('https://d33t3vvu2t2yu5.cloudfront.net/tv.js', function() {
-      var cont = document.getElementById("tvChart");
-      var hei = (cont.offsetWidth * 0.6) + "px";
 
-      cont.setAttribute("style","display:block;height:" + hei);
-      cont.style.height=hei;
+  $.getScript('https://d33t3vvu2t2yu5.cloudfront.net/tv.js', function() {
+    
+      var div = document.getElementById("tvChart");
+      var h = (div.offsetWidth * 0.6) + "px";
+
+      div.setAttribute("style","display:block;height:" + h);
+      div.style.height = h;
 
       var c = new TradingView.widget({
         "autosize": true,
-        "symbol": "NASDAQ:AAPL",
+        "symbol": "KRAKEN:XBTEUR",
         "interval": "D",
         "timezone": "Etc/UTC",
         "theme": "White",

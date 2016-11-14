@@ -1059,6 +1059,11 @@
         "filter": {}
       },
       {
+        "name": "activeDatasAdmin",
+        "collection": "activeDatas",
+        "filter": {}
+      },     
+      {
         "name": "activeData",
         "collection": "activeDatas",
         "filter": {
@@ -1824,14 +1829,6 @@
         },
         {
           "name": "info",
-          "template_rendered_code": "$('table').addClass('table');",
-          "components": [
-            {
-              "name": "content",
-              "type": "markdown",
-              "source_file": "tradeHelper/files/info.md"
-            }
-          ],
           "type": "page"
         },
         {
@@ -2211,6 +2208,32 @@
                 }
               ],
               "type": "page"
+            },
+            {
+              "name": "actives",
+              "components": [
+                {
+                  "name": "view",
+                  "type": "data_view",
+                  "title": "Actives",
+                  "text_if_empty": "No active Strategies",
+                  "query_name": "admin_users",
+                  "fields": [
+                    {
+                      "name": "profile.name",
+                      "title": "Name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "actives",
+                      "title": "Actives",
+                      "type": "string"
+                    }
+                  ],
+                  "type": "page"
+                }
+              ],
+              "type": "page"
             }
           ],
           "components": [
@@ -2222,6 +2245,10 @@
                 {
                   "title": "Users",
                   "route": "admin.users"
+                },
+                {
+                  "title": "Actives",
+                  "route": "admin.actives"
                 }
               ]
             }
@@ -2375,12 +2402,8 @@
               "title": "Forum",
               "route": "forum",
               "icon_class": "fa fa-inbox"
-            },
-            {
-              "title": "Develop",
-              "route": "develop",
-              "icon_class": "fa fa-desktop"
             }
+           
           ]
         },
         {

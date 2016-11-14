@@ -131,8 +131,6 @@ Template.StrategiesDetailsDetailsForm.events({
         	sAlert.error('Server connection failed');
         } else if (r.error === 'error') {
         	sAlert.error(r.result);
-        } else{
-          setActiveState(strId, true);
         }
       });
     }

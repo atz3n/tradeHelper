@@ -9,9 +9,10 @@ Meteor.startup(function() {
 deactivateStrategies();
 
 if (Meteor.settings.private.UpdatePairs === 'true') {
+	getExTradePairInfos();
 	SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
 } else {
-	console.log('enable getExTradePairInfos in server.js!!!')
+	console.log('enable getExTradePairInfos in server.js!!!');
 	// getExTradePairInfos();
 }
 

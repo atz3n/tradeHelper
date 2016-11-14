@@ -1,25 +1,27 @@
 var pageSession = new ReactiveDict();
 
-Template.AdminUsers.rendered = function() {
+Template.AdminActives.rendered = function() {
 	
 };
 
-Template.AdminUsers.events({
+Template.AdminActives.events({
 	
 });
 
-Template.AdminUsers.helpers({
+Template.AdminActives.helpers({
 	
 });
 
-var AdminUsersViewItems = function(cursor) {
+
+var actives;
+var AdminActivesViewItems = function(cursor) {
 	if(!cursor) {
 		return [];
 	}
 
-	var searchString = pageSession.get("AdminUsersViewSearchString");
-	var sortBy = pageSession.get("AdminUsersViewSortBy");
-	var sortAscending = pageSession.get("AdminUsersViewSortAscending");
+	var searchString = pageSession.get("AdminActivesViewSearchString");
+	var sortBy = pageSession.get("AdminActivesViewSortBy");
+	var sortAscending = pageSession.get("AdminActivesViewSortAscending");
 	if(typeof(sortAscending) == "undefined") sortAscending = true;
 
 	var raw = cursor.fetch();
@@ -31,7 +33,7 @@ var AdminUsersViewItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["profile.name", "profile.email", "roles"];
+		var searchFields = ["profile.name", "actives"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -59,8 +61,8 @@ var AdminUsersViewItems = function(cursor) {
 	return filtered;
 };
 
-var AdminUsersViewExport = function(cursor, fileType) {
-	var data = AdminUsersViewItems(cursor);
+var AdminActivesViewExport = function(cursor, fileType) {
+	var data = AdminActivesViewItems(cursor);
 	var exportFields = [];
 
 	var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -71,12 +73,13 @@ var AdminUsersViewExport = function(cursor, fileType) {
 }
 
 
-Template.AdminUsersView.rendered = function() {
-	pageSession.set("AdminUsersViewStyle", "table");
-	
+Template.AdminActivesView.rendered = function() {
+	pageSession.set("AdminActivesViewStyle", "table");
+	// actives = this.data.active_datas_admin.fetch();
+	pageSession.set('actives', this.data.active_datas_admin.fetch());
 };
 
-Template.AdminUsersView.events({
+Template.AdminActivesView.events({
 	"submit #dataview-controls": function(e, t) {
 		return false;
 	},
@@ -89,7 +92,7 @@ Template.AdminUsersView.events({
 			if(searchInput) {
 				searchInput.focus();
 				var searchString = searchInput.val();
-				pageSession.set("AdminUsersViewSearchString", searchString);
+				pageSession.set("AdminActivesViewSearchString", searchString);
 			}
 
 		}
@@ -105,7 +108,7 @@ Template.AdminUsersView.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					var searchString = searchInput.val();
-					pageSession.set("AdminUsersViewSearchString", searchString);
+					pageSession.set("AdminActivesViewSearchString", searchString);
 				}
 
 			}
@@ -120,7 +123,7 @@ Template.AdminUsersView.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					searchInput.val("");
-					pageSession.set("AdminUsersViewSearchString", "");
+					pageSession.set("AdminActivesViewSearchString", "");
 				}
 
 			}
@@ -132,33 +135,33 @@ Template.AdminUsersView.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("admin.users.insert", {});
+		/**/
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		AdminUsersViewExport(this.admin_users, "csv");
+		AdminActivesViewExport(this.admin_users, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		AdminUsersViewExport(this.admin_users, "csv");
+		AdminActivesViewExport(this.admin_users, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		AdminUsersViewExport(this.admin_users, "tsv");
+		AdminActivesViewExport(this.admin_users, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		AdminUsersViewExport(this.admin_users, "json");
+		AdminActivesViewExport(this.admin_users, "json");
 	}
 
 	
 });
 
-Template.AdminUsersView.helpers({
+Template.AdminActivesView.helpers({
 
 	
 
@@ -169,61 +172,66 @@ Template.AdminUsersView.helpers({
 		return this.admin_users && this.admin_users.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.admin_users && pageSession.get("AdminUsersViewSearchString") && AdminUsersViewItems(this.admin_users).length == 0;
+		return this.admin_users && pageSession.get("AdminActivesViewSearchString") && AdminActivesViewItems(this.admin_users).length == 0;
 	},
 	"searchString": function() {
-		return pageSession.get("AdminUsersViewSearchString");
+		return pageSession.get("AdminActivesViewSearchString");
 	},
 	"viewAsTable": function() {
-		return pageSession.get("AdminUsersViewStyle") == "table";
+		return pageSession.get("AdminActivesViewStyle") == "table";
 	},
 	"viewAsList": function() {
-		return pageSession.get("AdminUsersViewStyle") == "list";
+		return pageSession.get("AdminActivesViewStyle") == "list";
 	},
 	"viewAsGallery": function() {
-		return pageSession.get("AdminUsersViewStyle") == "gallery";
+		return pageSession.get("AdminActivesViewStyle") == "gallery";
+	},
+	"numOfActvs": function(){
+		if(typeof pageSession.get('actives') != 'undefined'){
+			return pageSession.get('actives').length;
+		}
 	}
 
 	
 });
 
 
-Template.AdminUsersViewTable.rendered = function() {
+Template.AdminActivesViewTable.rendered = function() {
 	
 };
 
-Template.AdminUsersViewTable.events({
+Template.AdminActivesViewTable.events({
 	"click .th-sortable": function(e, t) {
 		e.preventDefault();
-		var oldSortBy = pageSession.get("AdminUsersViewSortBy");
+		var oldSortBy = pageSession.get("AdminActivesViewSortBy");
 		var newSortBy = $(e.target).attr("data-sort");
 
-		pageSession.set("AdminUsersViewSortBy", newSortBy);
+		pageSession.set("AdminActivesViewSortBy", newSortBy);
 		if(oldSortBy == newSortBy) {
-			var sortAscending = pageSession.get("AdminUsersViewSortAscending") || false;
-			pageSession.set("AdminUsersViewSortAscending", !sortAscending);
+			var sortAscending = pageSession.get("AdminActivesViewSortAscending") || false;
+			pageSession.set("AdminActivesViewSortAscending", !sortAscending);
 		} else {
-			pageSession.set("AdminUsersViewSortAscending", true);
+			pageSession.set("AdminActivesViewSortAscending", true);
 		}
 	}
 });
 
-Template.AdminUsersViewTable.helpers({
+Template.AdminActivesViewTable.helpers({
 	"tableItems": function() {
-		return AdminUsersViewItems(this.admin_users);
+		return AdminActivesViewItems(this.admin_users);
 	}
 });
 
 
-Template.AdminUsersViewTableItems.rendered = function() {
+Template.AdminActivesViewTableItems.rendered = function() {
 	
 };
 
-Template.AdminUsersViewTableItems.events({
+Template.AdminActivesViewTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("admin.users.details", {userId: this._id});
+		/**/
 		return false;
 	},
 
@@ -243,19 +251,19 @@ Template.AdminUsersViewTableItems.events({
 		return false;
 	},
 
-	"click #delete-button": function(e, t) {
+	"click #stop-button": function(e, t) {
 		e.preventDefault();
 		var me = this;
 		bootbox.dialog({
-			message: "Delete? Are you sure?",
-			title: "Delete",
+			message: "Stop all active Strategies? Are you sure?",
+			title: "Stop Actives",
 			animate: false,
 			buttons: {
 				success: {
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						Meteor.call('deleteUser', me._id, function(e, r) {
+						Meteor.call('stopUserActives', me._id, function(e, r) {
               				if (e) console.log(e);
               			});
 					}
@@ -270,18 +278,27 @@ Template.AdminUsersViewTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("admin.users.edit", {userId: this._id});
+		/**/
 		return false;
 	}
 });
 
-Template.AdminUsersViewTableItems.helpers({
+Template.AdminActivesViewTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
 		return Users.isAdmin(Meteor.userId()) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return Users.isAdmin(Meteor.userId()) && this._id !== Meteor.userId()? "" : "hidden";
+		return Users.isAdmin(Meteor.userId()) ? "" : "hidden";
+	},
+	"numOfUserActvs": function(){
+		var actives = pageSession.get('actives');
+		var cnt = 0;
+		for(var i = 0 ; i < actives.length ; i++) {
+			if(this._id === actives[i].ownerId) cnt++;
+		}
+
+		return cnt;
 	}
 });

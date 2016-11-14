@@ -62,6 +62,7 @@ var privateRoutes = [
 	"admin.users.details",
 	"admin.users.insert",
 	"admin.users.edit",
+	"admin.actives",
 	"user_settings",
 	"user_settings.profile",
 	"user_settings.change_pass",
@@ -78,6 +79,7 @@ var roleMap = [
 	{ route: "admin.users.details",	roles: ["admin"] },
 	{ route: "admin.users.insert",	roles: ["admin"] },
 	{ route: "admin.users.edit",	roles: ["admin"] },
+	{ route: "admin.actives",	roles: ["admin"] },
 	{ route: "user_settings",	roles: ["user","admin"] },
 	{ route: "user_settings.profile",	roles: ["user","admin"] },
 	{ route: "user_settings.change_pass",	roles: ["user","admin"] }
@@ -282,6 +284,7 @@ Router.map(function () {
 	this.route("admin.users.details", {path: "/admin/users/details/:userId", controller: "AdminUsersDetailsController"});
 	this.route("admin.users.insert", {path: "/admin/users/insert", controller: "AdminUsersInsertController"});
 	this.route("admin.users.edit", {path: "/admin/users/edit/:userId", controller: "AdminUsersEditController"});
+	this.route("admin.actives", {path: "/admin/actives", controller: "AdminActivesController"});
 	this.route("user_settings", {path: "/user_settings", controller: "UserSettingsController"});
 	this.route("user_settings.profile", {path: "/user_settings/profile", controller: "UserSettingsProfileController"});
 	this.route("user_settings.change_pass", {path: "/user_settings/change_pass", controller: "UserSettingsChangePassController"});
