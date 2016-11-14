@@ -1,0 +1,49 @@
+<template name="InfoMisc">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> miscCont}}
+	</div>
+</template>
+
+<template name="miscCont">
+  {{#markdown}}
+<h2 id="tableOfCont">Table of Content</h2> 
++ <a href="#changeLog">Change Log</a> 
+
+
+
+<br/>
+{{> miscChangeLog}}
+
+  {{/markdown}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Change Log
+ ---------------------------------------------------------------->
+<template name='miscChangeLog'>
+<h3 id="changeLog">Change Log</h3> 
+####v0.2.0
+- massive forum improvements
+- initial implementation of info page
+- extended tooltips support
+- some system relevant improvements
+- added chart zoom
+- fixed chromium based browser bug
+- integrated trading view widget in Charts view
+
+####v0.1.1
+- fixed manual buy/sell bug in Swing plugin
+
+####v0.1.0
+- initial version
+
+{{> RetToToC}}
+</template>
+

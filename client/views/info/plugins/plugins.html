@@ -1,0 +1,58 @@
+<template name="InfoPlugins">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> plCont}}
+	</div>
+</template>
+
+
+<template name="plCont">
+  {{#markdown}}
+<h2 id="tableOfCont">Table of Content</h2> 
++ <a href="#stopLoss">StopLoss</a> 
++ <a href="#swing">Swing</a> 
++ <a href="#takeProfit">TakeProfit</a> 
+
+
+<br/>
+{{> plStopLoss}}
+{{> plSwing}}
+{{> plTakeProfit}}
+
+  {{/markdown}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  StopLoss
+ ---------------------------------------------------------------->
+<template name='plStopLoss'>
+<h3 id="stopLoss">StopLoss</h3> 
+tbd
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Swing
+ ---------------------------------------------------------------->
+<template name='plSwing'>
+<h3 id="swing">Swing</h3> 
+tbd
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  TakeProfit
+ ---------------------------------------------------------------->
+<template name='plTakeProfit'>
+<h3 id="takeProfit">TakeProfit</h3> 
+tbd
+{{> RetToToC}}
+</template>

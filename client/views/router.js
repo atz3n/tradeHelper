@@ -48,6 +48,11 @@ var privateRoutes = [
 	"exchanges.details_ex_test_data",
 	"settings",
 	"info",
+	"info.howto",
+	"info.pages",
+	"info.plugins",
+	"info.exchanges",
+	"info.misc",
 	"history",
 	"history.details",
 	"forum",
@@ -270,6 +275,11 @@ Router.map(function () {
 	this.route("exchanges.details_ex_test_data", {path: "/exchanges/details_ex_test_data/:exTestDataId", controller: "ExchangesDetailsExTestDataController"});
 	this.route("settings", {path: "/settings", controller: "SettingsController"});
 	this.route("info", {path: "/info", controller: "InfoController"});
+	this.route("info.howto", {path: "/info/howto", controller: "InfoHowtoController"});
+	this.route("info.pages", {path: "/info/pages", controller: "InfoPagesController"});
+	this.route("info.plugins", {path: "/info/plugins", controller: "InfoPluginsController"});
+	this.route("info.exchanges", {path: "/info/exchanges", controller: "InfoExchangesController"});
+	this.route("info.misc", {path: "/info/misc", controller: "InfoMiscController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
 	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
 	this.route("forum", {path: "/forum", controller: "ForumController"});

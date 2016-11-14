@@ -1829,6 +1829,57 @@
         },
         {
           "name": "info",
+          "pages": [
+            {
+              "name": "Howto",
+              "type": "page"
+            },
+            {
+              "name": "Pages",
+              "type": "page"
+            },
+            {
+              "name": "Plugins",
+              "type": "page"
+            },
+            {
+              "name": "Exchanges",
+              "type": "page"
+            },            
+            {
+              "name": "Misc",
+              "type": "page"
+            }
+          ],
+          "components": [
+            {
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
+                {
+                  "title": "Howto",
+                  "route": "info.howto"
+                },
+                {
+                  "title": "Pages",
+                  "route": "info.pages"
+                },
+                {
+                  "title": "Plugins",
+                  "route": "info.plugins"
+                },
+                {
+                  "title": "Exchanges",
+                  "route": "info.exchanges"
+                },
+                {
+                  "title": "Misc",
+                  "route": "info.misc"
+                }
+              ]
+            }
+          ],
           "type": "page"
         },
         {

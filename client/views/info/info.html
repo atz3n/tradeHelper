@@ -1,89 +1,70 @@
 <template name="Info">
-  <div class="page-container container" id="content">
-    <div class="row" id="title_row">
-      <div class="col-md-12">
-        <div id="page_menu" class="pull-right">
-        </div>
-      </div>
-    </div>
-    {{> infoCont}}
-  </div>
+	<div class="page-container container">
+		<div class="row">
+			<div class="col-md-12" id="content">
+				<div class="row" id="title_row">
+					<div class="col-md-12">
+						<div id="page_menu" class="pull-right">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div id="menu" class="col-sm-3 col-md-2">
+				<h2>
+				</h2>
+				{{> InfoSideMenu}}
+			</div>
+			<div id="subcontent" class="col-sm-9 col-md-10">
+				{{> yield region='InfoSubcontent'}}
+			</div>
+		</div>
+	</div>
 </template>
 
-<template name="infoCont">
-  {{#markdown}}
-<h2 id="tableOfCont">Table of Content</h2> 
-+ <a href="#overview">Overview</a> 
-+ <a href="#howTo">How To</a> 
-+ <a href="#exchanges">Exchanges</a> 
-+ <a href="#plugins">Plugins</a>
-+ <a href="#changeLog">Change Log</a>
-
-
-<br/>
-{{> howTo}}
-{{> exchanges}}
-{{> plugins}}
-{{> changeLog}}
-
-  {{/markdown}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  How to
- ---------------------------------------------------------------->
-<template name='howTo'>
-<h3 id="howTo">How To</h3> 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-{{> RetToToC}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  Exchanges
- ---------------------------------------------------------------->
-<template name='exchanges'>
-<h3 id="exchanges">Exchanges</h3>
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-{{> RetToToC}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  Plugins
- ---------------------------------------------------------------->
-<template name='plugins'>
-<h3 id="plugins">Plugins</h3>
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-{{> RetToToC}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  Change Log
- ---------------------------------------------------------------->
-<template name='changeLog'>
-<h3 id="changeLog">Change Log</h3> 
-####v0.2.0
-- massive forum improvements
-- initial implementation of info page
-- extended tooltips support
-- some system relevant improvements
-- added chart zoom
-- fixed chromium based browser bug
-- integrated trading view widget in Charts view
-
-####v0.1.1
-- fixed manual buy/sell bug in Swing plugin
-
-####v0.1.0
-- initial version
-
-{{> RetToToC}}
+<template name="InfoSideMenu">
+	<ul id="menu-items" class="nav nav-stacked nav-pills">
+		<li id="menu-item-simple" class="{{menuItemClass 'info.howto'}}">
+			<a href="{{pathFor 'info.howto'}}">
+				<span class="item-title">
+					How To
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.pages'}}">
+			<a href="{{pathFor 'info.pages'}}">
+				<span class="item-title">
+					Pages
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.plugins'}}">
+			<a href="{{pathFor 'info.plugins'}}">
+				<span class="item-title">
+					Plugins
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.exchanges'}}">
+			<a href="{{pathFor 'info.exchanges'}}">
+				<span class="item-title">
+					Exchanges
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.misc'}}">
+			<a href="{{pathFor 'info.misc'}}">
+				<span class="item-title">
+					Misc
+				</span>
+			</a>
+		</li>
+	</ul>
 </template>
 
 
 <template name='RetToToC'>
   <br/>Return to <a href="#tableOfCont">Table of Content</a><br/><br/><br/>
 </template>
+

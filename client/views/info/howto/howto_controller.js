@@ -1,9 +1,10 @@
-this.InfoController = RouteController.extend({
+this.InfoHowtoController = RouteController.extend({
 	template: "Info",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'InfoHowto': { to: 'InfoSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.InfoController = RouteController.extend({
 	},
 
 	action: function() {
-		this.redirect('info.howto', this.params || {}, { replaceState: true });
+		if(this.isReady()) { this.render(); } else { this.render("Info"); this.render("loading", { to: "InfoSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
