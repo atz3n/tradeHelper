@@ -1,14 +1,41 @@
 <template name="HomePrivate">
-	<div class="page-container container" id="content">
-		<div class="row" id="title_row">
-			<div class="col-md-12">
-				<h2 id="page_title" class="pull-left">
-					Welcome {{userFullName}}!
-				</h2>
-				<div id="page_menu" class="pull-right">
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="page-container container" id="content">
+    <div class="row" id="title_row">
+      <div class="col-md-12">
+        <h2 id="page_title" class="pull-left">
+			Welcome {{userFullName}}! 
+		</h2>
+        <div id="page_menu" class="pull-right">
+        </div>
+      </div>
+    </div>
+    {{> HomePrivateView}}
+  </div>
 </template>
 
+<template name="HomePrivateView">
+  <form>
+    {{#if $eq numOfLogins 1}}
+    	<h4>You are logged in with 1 entity</h4> 
+    {{else}}
+    	<h4>You are logged in with {{numOfLogins}} entities</h4> 
+    {{/if}} 
+    {{#each logins}} {{> HomePrivateViewLogin}} {{/each}}
+    <br/>
+    <div>
+    	<a href="#" id="form-goToActives-button" class="btn btn-warning">
+			Goto Actives
+		</a>
+    </div>
+  </form>
+</template>
+<template name="HomePrivateViewLogin">
+  <div class="form-group">
+    <label class="col-sm-3">
+      Login at:
+    </label>
+    <p>
+      {{login}}
+    </p>
+  </div>
+</template>

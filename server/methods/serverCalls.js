@@ -1,7 +1,13 @@
 import { Strategy } from '../trading/strategy/Strategy.js';
 import { InstHandler } from '../lib/InstHandler.js';
 
+
 strategies = new InstHandler();
+
+
+/***********************************************************************
+  Callback functions
+ ***********************************************************************/
 
 var nOIdNfy = '';
 var nStrIdNfy = '';
@@ -21,8 +27,8 @@ var sOIdNfy = '';
 var sStrIdNfy = '';
 
 function strError(strategyId, errObj) {
-  // console.log(errObj)
-    /* to search as less as possible for the ownerId */
+
+  /* to search as less as possible for the ownerId */
   if (sStrIdNfy !== strategyId) {
     sOIdNfy = Strategies.findOne({ _id: strategyId }).ownerId;
     sStrIdNfy = strategyId;
@@ -30,6 +36,10 @@ function strError(strategyId, errObj) {
   Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj, strategyId)], function(error, result) {});
 }
 
+
+/***********************************************************************
+  Private functions
+ ***********************************************************************/
 
 var start = function(strategyId) {
   if (strategies.getObject(strategyId) === 'undefined') {
@@ -66,6 +76,7 @@ var pause = function(strategyId) {
   return errHandle(StrError.ok, null);
 }
 
+
 var stop = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     strategies.getObject(strategyId).inst.stop();
@@ -79,6 +90,7 @@ var stop = function(strategyId) {
   return errHandle(StrError.ok, null);
 }
 
+
 var buy = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     strategies.getObject(strategyId).inst.buy();
@@ -88,6 +100,7 @@ var buy = function(strategyId) {
 
   return errHandle(StrError.ok, null);
 }
+
 
 var sell = function(strategyId) {
 
@@ -122,6 +135,7 @@ var stopTrade = function(strategyId) {
   return errHandle(StrError.ok, null);
 }
 
+
 var tradePairInfos = function(exchangeType) {
   if (exchangeType === 'ExTestData') {
     var tmp = ExTestData.getTradePairInfos();
@@ -137,6 +151,7 @@ var tradePairInfos = function(exchangeType) {
 
   return errHandle(ExError.exTypNotFound, exchangeType);
 }
+
 
 var errMessage = function(errHandleObject, strategyId) {
 
@@ -177,8 +192,13 @@ var stopActives = function(userId) {
 }
 
 
+/***********************************************************************
+  Meteor server methods
+ ***********************************************************************/
 
 Meteor.methods({
+
+  /*************** trading functions  ***************/
 
   strategyStart: function(strategyId) {
     var tmp = start(strategyId);
@@ -191,7 +211,6 @@ Meteor.methods({
 
     return errMessage(tmp, strategyId);
   },
-
 
   strategyPause: function(strategyId) {
     return errMessage(pause(strategyId));
@@ -221,10 +240,25 @@ Meteor.methods({
     return errMessage(tradePairInfos(exchangeType));
   },
 
+
+  /*************** system functions  ***************/
+
   checkAccessCode: function(accessCode) {
     if(accessCode === Meteor.settings.private.AccessCode) return true;
     else return false;
   },
+
+  getLogins: function() {
+    var ret = [];
+    
+    var tmp = Meteor.user().services.resume.loginTokens;
+    for(i in tmp) ret.push({login: tmp[i].when});
+
+    return ret;
+  },
+
+
+  /*************** admin functions  ***************/
 
   stopUserActives: function(userId) {
     stopActives(userId);
@@ -255,14 +289,6 @@ Meteor.methods({
       if(getExchangeDbDoc({ownerId: userId}, tmp)){
         tmp.ref.remove({ownerId:userId});
       } else break;
-    }
-  },
-
-
-  develop: function(strategyId) {
-    console.log(strategyId);
-    if (strategies.getObject(strategyId) !== 'undefined') {
-      console.log(JSON.stringify(strategies.getObject(strategyId).inst.develop()))
     }
   }
 });
