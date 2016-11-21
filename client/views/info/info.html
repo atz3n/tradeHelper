@@ -1,29 +1,70 @@
 <template name="Info">
-	<div class="page-container container" id="content">
-		<div class="row" id="title_row">
-			<div class="col-md-12">
-				<div id="page_menu" class="pull-right">
+	<div class="page-container container">
+		<div class="row">
+			<div class="col-md-12" id="content">
+				<div class="row" id="title_row">
+					<div class="col-md-12">
+						<div id="page_menu" class="pull-right">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		{{> InfoContent}}
+		<div class="row">
+			<div id="menu" class="col-sm-3 col-md-2">
+				<h2>
+				</h2>
+				{{> InfoSideMenu}}
+			</div>
+			<div id="subcontent" class="col-sm-9 col-md-10">
+				{{> yield region='InfoSubcontent'}}
+			</div>
+		</div>
 	</div>
 </template>
 
-<template name="InfoContent">
-	{{#markdown}}Info
-====================
+<template name="InfoSideMenu">
+	<ul id="menu-items" class="nav nav-stacked nav-pills">
+		<li id="menu-item-simple" class="{{menuItemClass 'info.howto'}}">
+			<a href="{{pathFor 'info.howto'}}">
+				<span class="item-title">
+					How To
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.pages'}}">
+			<a href="{{pathFor 'info.pages'}}">
+				<span class="item-title">
+					Pages
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.plugins'}}">
+			<a href="{{pathFor 'info.plugins'}}">
+				<span class="item-title">
+					Plugins
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.exchanges'}}">
+			<a href="{{pathFor 'info.exchanges'}}">
+				<span class="item-title">
+					Exchanges
+				</span>
+			</a>
+		</li>
+		<li id="menu-item-simple" class="{{menuItemClass 'info.misc'}}">
+			<a href="{{pathFor 'info.misc'}}">
+				<span class="item-title">
+					Misc
+				</span>
+			</a>
+		</li>
+	</ul>
+</template>
 
-<hr />
 
-### Known Bugs
-
-Brief  | Side | Description
----------|------|------------
-Init Setting view | Settings | Settings are not shown until first configuration
-Referenced Item Name | Plugins, Bundles, Strategies | Referenced Item Id is shown instead of the name
-
- 
-{{/markdown}}
+<template name='RetToToC'>
+  <br/>Return to <a href="#tableOfCont">Table of Content</a><br/><br/><br/>
 </template>
 

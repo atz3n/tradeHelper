@@ -1,0 +1,87 @@
+<template name="AdminActives">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> AdminActivesView}}
+	</div>
+</template>
+
+<template name="AdminActivesView">
+	<div id="admin-actives-view" class="">
+		<h2 id="component-title">
+			Actives ({{numOfActvs}})
+		</h2>
+		<form id="dataview-controls" class="form-inline">
+			<div id="dataview-controls-search">
+				{{#if isNotEmpty}}
+				<div id="dataview-controls-search-group" class="form-group">
+					<label class="sr-only" for="search">
+						Search
+					</label>
+					<input type="text" class="form-control" id="dataview-search-input" placeholder="Search" name="search" value="{{searchString}}" autofocus="autofocus">
+					<button type="button" id="dataview-search-button" class="btn btn-primary">
+						<span class="fa fa-search">
+						</span>
+					</button>
+				</div>
+				{{/if}}
+			</div>
+		</form>
+		{{#if isNotEmpty}}
+			{{#if isNotFound}}
+		<div class="alert alert-warning">
+			"{{searchString}}" not found.
+		</div>
+		{{else}}
+		<div id="dataview-data">
+			{{#if viewAsTable}} {{> AdminActivesViewTable}} {{/if}}
+		</div>
+		{{/if}}
+		{{else}}
+		<div class="alert alert-info">
+			No active Strategies
+		</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="AdminActivesViewTable">
+	<table id="dataview-table" class="table table-striped">
+		<thead id="dataview-table-header">
+			<tr id="dataview-table-header-row">
+				<th class="th-sortable" data-sort="profile.name">
+					Name
+				</th>
+				<th class="th-sortable" data-sort="actives">
+					Actives
+				</th>
+				<th>
+					&nbsp;
+				</th>
+			</tr>
+		</thead>
+		<tbody id="dataview-table-items">
+			{{#each tableItems}} {{> AdminActivesViewTableItems}} {{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="AdminActivesViewTableItems">
+	<tr id="dataview-table-items-row">
+		<td>
+			{{profile.name}}
+		</td>
+		<td>
+			{{numOfUserActvs}}
+		</td>
+		<td class="td-icon">
+			<span id="stop-button" class="fa fa-stop" title="Stop Actives">
+			</span>
+		</td>
+	</tr>
+</template>
+

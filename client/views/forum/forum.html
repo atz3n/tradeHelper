@@ -60,18 +60,37 @@
 	<table id="dataview-table" class="table table-striped table-hover">
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
-				<th class="th-sortable" data-sort="topicNum">
+				<th class="th-sortable" data-sort="topicNum" data-toggle="tooltip" title={{tt.topicNumber}}>
 					Topic Number
 				</th>
-				<th class="th-sortable" data-sort="title">
+				<th class="th-sortable" data-sort="title" data-toggle="tooltip" title={{tt.title}}>
 					Titel
 				</th>
+				<th class="th-sortable" data-sort="date" data-toggle="tooltip" title={{tt.date}}>
+					Date
+				</th>
+				<th class="th-sortable" data-sort="type" data-toggle="tooltip" title={{tt.type}}>
+					Type
+				</th>
+				<th class="th-sortable" data-sort="autor" data-toggle="tooltip" title={{tt.autor}}>
+					Autor
+				</th>
+				<th class="th-sortable" data-sort="state" data-toggle="tooltip" title={{tt.state}}>
+					State
+				</th>
+				<th class="th-sortable" data-sort="numOfCmnt" data-toggle="tooltip" title={{tt.noc}}>
+					NoC
+				</th>
+				{{#if editButtonClass}}
 				<th>
 					&nbsp;
 				</th>
+				{{/if}}
+				{{#if deleteButtonClass}}
 				<th>
 					&nbsp;
 				</th>
+				{{/if}}
 			</tr>
 		</thead>
 		<tbody id="dataview-table-items">
@@ -83,19 +102,38 @@
 <template name="ForumViewTableItems">
 	<tr id="dataview-table-items-row">
 		<td>
-			{{topicNum}}
+			#{{topicNum}}
 		</td>
 		<td>
 			{{title}}
 		</td>
+		<td>
+			{{formatDate createdAt ''}}
+		</td>
+		<td>
+			{{type}}
+		</td>
+		<td>
+			{{autor}}
+		</td>
+		<td>
+			{{state}}
+		</td>
+		<td>
+			{{numOfCmnt}}
+		</td>
+		{{#if editButtonClass}}
 		<td class="td-icon">
 			<span id="edit-button" class="fa fa-pencil {{editButtonClass}}" title="Edit">
 			</span>
 		</td>
+		{{/if}}
+		{{#if deleteButtonClass}}
 		<td class="td-icon">
 			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">
 			</span>
 		</td>
+		{{/if}}
 	</tr>
 </template>
 

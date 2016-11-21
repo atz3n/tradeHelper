@@ -1,0 +1,48 @@
+<template name="InfoExchanges">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> exCont}}
+	</div>
+</template>
+
+
+<template name="exCont">
+  {{#markdown}}
+<h2 id="tableOfCont">Table of Content</h2> 
++ <a href="#kraken">Kraken.com</a> 
++ <a href="#testDatas">Test Datas</a> 
+
+
+<br/>
+{{> exKraken}}
+{{> exTestDatas}}
+
+  {{/markdown}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Kraken.com
+ ---------------------------------------------------------------->
+<template name='exKraken'>
+<h3 id="kraken">Kraken.com</h3> 
+tbd
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Test Datas
+ ---------------------------------------------------------------->
+<template name='exTestDatas'>
+<h3 id="testDatas">Test Datas</h3> 
+tbd
+{{> RetToToC}}
+</template>
+
+

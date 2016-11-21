@@ -125,6 +125,10 @@ Helpers.formatDate = function(date, dateFormat) {
 		return "";
 	}
 
+	if(date == "-") {
+		return "-";
+	}
+
 	var f = dateFormat || "MM/DD/YYYY";
 
 	if(_.isString(date)) {

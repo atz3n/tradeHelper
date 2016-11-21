@@ -1,9 +1,10 @@
-this.HistoryDetailsController = RouteController.extend({
-	template: "HistoryDetails",
+this.InfoMiscController = RouteController.extend({
+	template: "Info",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'InfoMisc': { to: 'InfoSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.HistoryDetailsController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		if(this.isReady()) { this.render(); } else { this.render("Info"); this.render("loading", { to: "InfoSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,7 +20,6 @@ this.HistoryDetailsController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("history", this.params.historyId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -33,8 +33,7 @@ this.HistoryDetailsController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {},
-			history: Histories.findOne({_id:this.params.historyId}, {})
+			params: this.params || {}
 		};
 		
 

@@ -255,7 +255,9 @@ Template.AdminUsersViewTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						Users.remove({ _id: me._id });
+						Meteor.call('deleteUser', me._id, function(e, r) {
+              				if (e) console.log(e);
+              			});
 					}
 				},
 				danger: {
@@ -280,6 +282,6 @@ Template.AdminUsersViewTableItems.helpers({
 	},
 
 	"deleteButtonClass": function() {
-		return Users.isAdmin(Meteor.userId()) ? "" : "hidden";
+		return Users.isAdmin(Meteor.userId()) && this._id !== Meteor.userId()? "" : "hidden";
 	}
 });

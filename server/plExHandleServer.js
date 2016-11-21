@@ -165,10 +165,21 @@ this.getExTradePairInfos = function() {
   Functions that must NOT be updated
  ***********************************************************************/
 
+/**
+ * Returns an Plugin and optional the corresponding db 
+ * @param  {Object} id    object which contains the id where the search depends on {id: <plugin id>, ownerId: <ownerId>}
+ * @param  {Object} dbRef referenced db as optional return value {ref: <db cursor>}
+ * @return {Object}       id corresponding plugin
+ */
 this.getPluginDbDoc = function(id, dbRef) {
+  var id_ = mergeObjects({_id: 'undefined', ownerId: 'undefined'}, id);
+
   for (let k = 0; k < pluginHandler.getObjectsArray().length; k++) {
+    var plugin;
     var pluginDb = pluginHandler.getObjectByIdx(k);
-    var plugin = pluginDb.find({ _id: id }).fetch()[0];
+
+    if(id_._id !== 'undefined') plugin = pluginDb.find({ _id: id_._id }).fetch()[0];
+    if(id_.ownerId !== 'undefined') plugin = pluginDb.find({ ownerId: id_.ownerId }).fetch()[0];
 
     if (typeof plugin !== "undefined") break;
   }
@@ -178,14 +189,85 @@ this.getPluginDbDoc = function(id, dbRef) {
 }
 
 
+/**
+ * Returns an Exchange and optional the corresponding db 
+ * @param  {Object} id    object which contains the id where the search depends on {id: <exchange id>, ownerId: <ownerId>}
+ * @param  {Object} dbRef referenced db as optional return value {ref: <db cursor>}
+ * @return {Object}       id corresponding exchange
+ */
 this.getExchangeDbDoc = function(id, dbRef) {
+  var id_ = mergeObjects({_id: 'undefined', ownerId: 'undefined'}, id);
+
   for (let k = 0; k < exchangeHandler.getObjectsArray().length; k++) {
+    var exchange;
     var exchangeDb = exchangeHandler.getObjectByIdx(k);
-    var exchange = exchangeDb.find({ _id: id }).fetch()[0];
+
+    if(id_._id !== 'undefined') exchange = exchangeDb.find({ _id: id_._id }).fetch()[0];
+    if(id_.ownerId !== 'undefined') exchange = exchangeDb.find({ ownerId: id_.ownerId }).fetch()[0];
 
     if (typeof exchange !== "undefined") break;
   }
 
   if (typeof dbRef === "object") dbRef.ref = exchangeDb;
   return exchange;
+}
+
+
+/**
+ * Sets active state to all used db's from an active strategie
+ * @param {String} strId   Strategy Id
+ * @param {bool} enabled state (true = active / false = inactive)
+ */
+this.setActiveState = function(strId, enabled) {
+
+  /* strategy */
+  var strategy = Strategies.findOne({ _id: strId });
+  Strategies.update({ _id: strId }, { $set: { active: enabled } });
+  Strategies.update({ _id: strId }, { $set: { paused: false } });
+
+  /* plugin bundles */
+  var bundles = strategy.pluginBundles;
+  for (i in bundles) {
+
+    bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
+    if (enabled) PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: bundles[i].actives + 1 } });
+    else if (bundles[i].actives >= 1) PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: bundles[i].actives - 1 } });
+
+
+    /* bundle plugins */
+    var bundlePlugins = bundles[i].bundlePlugins;
+    for (j in bundlePlugins) {
+
+
+      /* plugins */
+      for (let k = 0; k < pluginHandler.getObjectsArray().length; k++) {
+        var pluginDb = pluginHandler.getObjectByIdx(k);
+        var plugin = pluginDb.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
+
+        if (typeof plugin !== "undefined") {
+          if (enabled) pluginDb.update({ _id: plugin._id }, { $set: { actives: plugin.actives + 1 } });
+          else if (plugin.actives >= 1) pluginDb.update({ _id: plugin._id }, { $set: { actives: plugin.actives - 1 } });
+          break;
+        }
+      }
+
+
+      /* exchanges */
+      var exchange = plugin.exchange;
+      if (typeof exchange !== "undefined") {
+
+
+        for (let k = 0; k < exchangeHandler.getObjectsArray().length; k++) {
+          var exchangeDb = exchangeHandler.getObjectByIdx(k);
+          var tempEx = exchangeDb.find({ _id: exchange }).fetch()[0];
+
+          if (typeof tempEx !== "undefined") {
+            if (enabled) exchangeDb.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives + 1 } });
+            else if (tempEx.actives >= 1) exchangeDb.update({ _id: tempEx._id }, { $set: { actives: tempEx.actives - 1 } });
+            break;
+          }
+        }
+      }
+    }
+  }
 }

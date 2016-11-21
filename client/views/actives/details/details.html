@@ -86,7 +86,7 @@
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{activeData.inTime}}
+            {{formatDate activeData.inTime 'MMMM Do YYYY, h:mm:ss a'}}
           </p>
         </div>
       </div>
@@ -96,7 +96,7 @@
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{activeData.curTime}}
+            {{formatDate activeData.curTime 'MMMM Do YYYY, h:mm:ss a'}}
           </p>
         </div>
       </div>
@@ -182,7 +182,7 @@
       <h3>Chart</h3>
       <hr />
       <div class="form-group">
-        <div class="submit-div col-sm-9">
+        <div class="submit-div ">
           {{> ActivesDetailsChartForm}}
         </div>
       </div>

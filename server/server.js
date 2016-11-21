@@ -8,9 +8,13 @@ Meteor.startup(function() {
 
 deactivateStrategies();
 
-console.log('enable getExTradePairInfos in server.js!!!')
-// getExTradePairInfos();
-// SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
+if (Meteor.settings.private.UpdatePairs === 'true') {
+	getExTradePairInfos();
+	SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
+} else {
+	console.log('enable getExTradePairInfos in server.js!!!');
+	// getExTradePairInfos();
+}
 
 	// read environment variables from Meteor.settings
 	if(Meteor.settings && Meteor.settings.env && _.isObject(Meteor.settings.env)) {

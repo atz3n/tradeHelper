@@ -1,7 +1,13 @@
 import { Strategy } from '../trading/strategy/Strategy.js';
 import { InstHandler } from '../lib/InstHandler.js';
 
+
 strategies = new InstHandler();
+
+
+/***********************************************************************
+  Callback functions
+ ***********************************************************************/
 
 var nOIdNfy = '';
 var nStrIdNfy = '';
@@ -21,8 +27,8 @@ var sOIdNfy = '';
 var sStrIdNfy = '';
 
 function strError(strategyId, errObj) {
-  // console.log(errObj)
-    /* to search as less as possible for the ownerId */
+
+  /* to search as less as possible for the ownerId */
   if (sStrIdNfy !== strategyId) {
     sOIdNfy = Strategies.findOne({ _id: strategyId }).ownerId;
     sStrIdNfy = strategyId;
@@ -30,6 +36,10 @@ function strError(strategyId, errObj) {
   Meteor.ClientCall.apply(sOIdNfy, 'error', [errMessage(errObj, strategyId)], function(error, result) {});
 }
 
+
+/***********************************************************************
+  Private functions
+ ***********************************************************************/
 
 var start = function(strategyId) {
   if (strategies.getObject(strategyId) === 'undefined') {
@@ -66,17 +76,20 @@ var pause = function(strategyId) {
   return errHandle(StrError.ok, null);
 }
 
+
 var stop = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     strategies.getObject(strategyId).inst.stop();
     strategies.removeObject(strategyId);
     ActiveDatas.remove({ strategyId: strategyId });
+    setActiveState(strategyId, false);
   } else {
     return errHandle(StrError.notFound, strategyId)
   }
 
   return errHandle(StrError.ok, null);
 }
+
 
 var buy = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
@@ -87,6 +100,7 @@ var buy = function(strategyId) {
 
   return errHandle(StrError.ok, null);
 }
+
 
 var sell = function(strategyId) {
 
@@ -121,6 +135,7 @@ var stopTrade = function(strategyId) {
   return errHandle(StrError.ok, null);
 }
 
+
 var tradePairInfos = function(exchangeType) {
   if (exchangeType === 'ExTestData') {
     var tmp = ExTestData.getTradePairInfos();
@@ -136,6 +151,7 @@ var tradePairInfos = function(exchangeType) {
 
   return errHandle(ExError.exTypNotFound, exchangeType);
 }
+
 
 var errMessage = function(errHandleObject, strategyId) {
 
@@ -169,19 +185,32 @@ var errMessage = function(errHandleObject, strategyId) {
 }
 
 
+var stopActives = function(userId) {
+  Strategies.find({ownerId: userId}).forEach(function(item) {
+    stop(item._id);
+  });
+}
+
+
+/***********************************************************************
+  Meteor server methods
+ ***********************************************************************/
 
 Meteor.methods({
+
+  /*************** trading functions  ***************/
 
   strategyStart: function(strategyId) {
     var tmp = start(strategyId);
 
     if (tmp.error !== StrError.ok) {
       stop(strategyId);
+    } else {
+      setActiveState(strategyId, true);
     }
 
     return errMessage(tmp, strategyId);
   },
-
 
   strategyPause: function(strategyId) {
     return errMessage(pause(strategyId));
@@ -211,15 +240,72 @@ Meteor.methods({
     return errMessage(tradePairInfos(exchangeType));
   },
 
+
+  /*************** system functions  ***************/
+
   checkAccessCode: function(accessCode) {
     if(accessCode === Meteor.settings.private.AccessCode) return true;
     else return false;
   },
 
-  develop: function(strategyId) {
-    console.log(strategyId);
-    if (strategies.getObject(strategyId) !== 'undefined') {
-      console.log(JSON.stringify(strategies.getObject(strategyId).inst.develop()))
+
+  /*************** admin functions  ***************/
+
+  stopUserActives: function(userId) {
+    stopActives(userId);
+  },
+
+  deleteUser: function(userId) {
+    stopActives(userId);
+
+    Strategies.remove({ownerId: userId});
+    ActiveDatas.remove({ownerId: userId});
+    Histories.remove({ownerId: userId});
+    PluginBundles.remove({ownerId: userId});
+    Settings.remove({ownerId: userId});
+    Users.remove({_id: userId});
+
+
+    var tmp = {};
+
+    /* delete Plugins */
+    while(true) {
+      if(getPluginDbDoc({ownerId: userId}, tmp)){
+        tmp.ref.remove({ownerId:userId});
+      } else break;
+    }
+
+    /* delete Exchanges */
+    while(true) {
+      if(getExchangeDbDoc({ownerId: userId}, tmp)){
+        tmp.ref.remove({ownerId:userId});
+      } else break;
+    }
+  },
+
+
+  /*************** user functions  ***************/
+
+  getLogins: function() {
+    var ret = [];
+    
+    if(Meteor.user() !== null) {   
+      var tmp = Meteor.user().services.resume.loginTokens;
+      for(i in tmp) ret.push({login: tmp[i].when});
+    }
+  
+    return ret;
+  },
+
+  logoutEntity: function(date) {
+    if(Meteor.user() !== null) {
+      var tmp = Meteor.user().services.resume.loginTokens;
+
+      tmp = tmp.filter(function(obj){
+        return obj.when.toISOString() !== new Date(date).toISOString();
+      });
+
+      Users.update({_id : Meteor.userId()}, {$set: {"services.resume.loginTokens": tmp}});
     }
   }
 });

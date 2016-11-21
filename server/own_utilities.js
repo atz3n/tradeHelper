@@ -30,13 +30,13 @@ this.getStrategyObject = function(strategyId) {
     /* get bundle plugins from db */
     var bundlePlugins = bundles[i].bundlePlugins;
     for (var j = 0; j < bundlePlugins.length; j++) {
-      bundlePlugins[j] = getPluginDbDoc(bundlePlugins[j].plugin);
+      bundlePlugins[j] = getPluginDbDoc({_id: bundlePlugins[j].plugin});
 
 
       /* get exchanges from db */
       var exchange = bundlePlugins[j].exchange;
       if (typeof exchange !== "undefined") {
-        bundlePlugins[j].exchange = getExchangeDbDoc(exchange);
+        bundlePlugins[j].exchange = getExchangeDbDoc({_id: exchange});
       }
     }
   }
@@ -71,16 +71,17 @@ this.deactivateStrategies = function() {
 
         /* Plugins */
         var pluginDb = {};
-        var plugin = getPluginDbDoc(bundlePlugins[j].plugin, pluginDb);
+        var plugin = getPluginDbDoc({_id: bundlePlugins[j].plugin}, pluginDb);
         if (typeof plugin !== "undefined") pluginDb.ref.update({ _id: plugin._id }, { $set: { actives: 0 } });
 
 
         /* Exchanges */
         var exchangeDb = {};
-        var tempEx = getExchangeDbDoc(plugin.exchange, exchangeDb);
+        var tempEx = getExchangeDbDoc({_id: plugin.exchange}, exchangeDb);
         if (typeof tempEx !== "undefined") exchangeDb.ref.update({ _id: tempEx._id }, { $set: { actives: 0 } });
 
       }
     }
   });
+  ActiveDatas.remove({});
 }

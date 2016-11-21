@@ -13,7 +13,7 @@
 <template name="HistoryView">
 	<div id="history-view" class="">
 		<h2 id="component-title">
-			Trade History
+			Strategy Performance
 		</h2>
 		<form id="dataview-controls" class="form-inline">
 			<div id="dataview-controls-search">
@@ -54,22 +54,19 @@
 		<thead id="dataview-table-header">
 			<tr id="dataview-table-header-row">
 				<th class="th-sortable" data-sort="name">
-					Strategy Name
+					Name
 				</th>
-				<th class="th-sortable" data-sort="date">
-					Date
+				<th class="th-sortable" data-sort="run">
+					Run
 				</th>
-				<th class="th-sortable" data-sort="costIn">
-					Cost In
+				<th class="th-sortable" data-sort="startCap">
+					Start Capital
 				</th>
-				<th class="th-sortable" data-sort="costOut">
-					Cost Out
+				<th class="th-sortable" data-sort="lastCap">
+					Last Capital
 				</th>
 				<th class="th-sortable" data-sort="profit">
 					Profit
-				</th>
-				<th class="th-sortable" data-sort="position">
-					Position
 				</th>
 			</tr>
 		</thead>
@@ -85,19 +82,16 @@
 			{{strategyName}}
 		</td>
 		<td>
-			{{formatDate outTime MM/DD/YYYY}}
+			{{run}}
 		</td>
 		<td>
-			{{costIn}}
+			{{startCap}}
 		</td>
 		<td>
-			{{costOut}}
+			{{lastCap}}
 		</td>
 		<td>
 			{{profit}}
-		</td>
-		<td>
-			{{position}}
 		</td>
 		<td class="td-icon">
 			<span id="delete-button" class="fa fa-trash-o {{deleteButtonClass}}" title="Delete">

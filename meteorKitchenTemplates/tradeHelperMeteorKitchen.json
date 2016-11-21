@@ -170,7 +170,7 @@
         "name": "histories",
         "fields": [
           {
-            "name": "name",
+            "name": "strategyName",
             "title": "Strategy Name",
             "type": "string"
           },
@@ -858,6 +858,68 @@
             "input": "text",
             "required": true
           },
+	  {
+            "name": "date",
+            "title": "Date",
+            "type": "date",
+            "show_in_insert_form": false,
+            "show_in_update_form": false
+          },
+	  {
+            "name": "type",
+            "title": "Type",
+	    "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+	        "value": "soi",
+	        "title": "Suggestion of Improvement (soi)"
+	      },
+	      {
+	        "value": "bug",
+	        "title": "Bug"
+	      }
+	    ],
+            "required": true
+          },
+	  {
+            "name": "autor",
+            "title": "Autor",
+            "type": "string",
+            "input": "read-only",
+            "show_in_insert_form": false,
+	    "show_in_update_form": false
+          },
+	  {
+            "name": "state",
+            "title": "State",
+	    "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+	        "value": "created",
+	        "title": "Created"
+	      },
+	      {
+	        "value": "accepted",
+	        "title": "Accepted"
+	      },
+	      {
+	        "value": "denied",
+	        "title": "Denied"
+	      },
+	      {
+	        "value": "inProgress",
+	        "title": "In progress"
+	      },
+	      {
+	        "value": "solved",
+	        "title": "Solved"
+	      }
+	    ],
+	    "show_in_insert_form": false,
+            "required": true
+          },
           {
             "name": "desc",
             "title": "Description",
@@ -997,6 +1059,11 @@
         "filter": {}
       },
       {
+        "name": "activeDatasAdmin",
+        "collection": "activeDatas",
+        "filter": {}
+      },     
+      {
         "name": "activeData",
         "collection": "activeDatas",
         "filter": {
@@ -1016,6 +1083,13 @@
           "_id": ":historyId"
         },
         "find_one": true
+      },
+      {
+        "name": "strHistories",
+        "collection": "histories",
+        "filter": {
+          "activeId": ":activeId"
+        }
       },
       {
         "name": "strategies",
@@ -1762,12 +1836,55 @@
         },
         {
           "name": "info",
-          "template_rendered_code": "$('table').addClass('table');",
+          "pages": [
+            {
+              "name": "Howto",
+              "type": "page"
+            },
+            {
+              "name": "Pages",
+              "type": "page"
+            },
+            {
+              "name": "Plugins",
+              "type": "page"
+            },
+            {
+              "name": "Exchanges",
+              "type": "page"
+            },            
+            {
+              "name": "Misc",
+              "type": "page"
+            }
+          ],
           "components": [
             {
-              "name": "content",
-              "type": "markdown",
-              "source_file": "tradeHelper/files/info.md"
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
+                {
+                  "title": "Howto",
+                  "route": "info.howto"
+                },
+                {
+                  "title": "Pages",
+                  "route": "info.pages"
+                },
+                {
+                  "title": "Plugins",
+                  "route": "info.plugins"
+                },
+                {
+                  "title": "Exchanges",
+                  "route": "info.exchanges"
+                },
+                {
+                  "title": "Misc",
+                  "route": "info.misc"
+                }
+              ]
             }
           ],
           "type": "page"
@@ -1777,21 +1894,49 @@
           "components": [
             {
               "name": "view",
-              "title": "Trade History",
+              "title": "Strategy Results",
               "type": "data_view",
               "text_if_empty": "No History available",
               "query_name": "histories",
               "query_params": [],
-              "details_route": "history.details",
+              "details_route": "history.strHistory",
               "details_route_params": [
                 {
-                  "name": "historyId",
-                  "value": "this._id"
+                  "name": "activeId",
+                  "value": "this.activeId"
                 }
               ]
             }
           ],
-          "pages": [
+        "pages": [
+            {
+              "name": "strHistory",
+              "route_params": [
+                "activeId"
+              ],
+              "components": [
+                {
+              "name": "view",
+              "title": "Trade History",
+              "type": "data_view",
+              "text_if_empty": "No History available",
+              "query_name": "strHistories",
+              "query_params": "activeId",
+              "details_route": "history.strHistory.details",
+              "close_route": "history",
+              "details_route_params": [
+                {
+                  "name": "historyId",
+                  "value": "this._id"
+                },
+                {
+                  "name": "activeId",
+                  "value": "this.aciveId"
+                }
+              ]
+            }
+              ],
+              "pages": [
             {
               "name": "details",
               "route_params": [
@@ -1806,12 +1951,27 @@
                   "layout": "horizontal",
                   "query_name": "history",
                   "query_params": [],
-                  "close_route": "history",
-                  "back_route": "history"
+                  "close_route": "history.strHistory",
+                  "back_route": "history.strHistory",
+                  "back_route_params": [
+                    {
+                      "name": "activeId",
+                      "value": "this.params.activeId"
+                    }
+                  ],
+                  "close_route_params": [
+                    {
+                      "name": "activeId",
+                      "value": "this.params.activeId"
+                    }
+                  ],
                 }
               ]
             }
           ],
+            }
+          ],
+          
           "type": "page"
         },
         {
@@ -2133,12 +2293,42 @@
                               "title": "Admin"
                             },
                             {
+                              "value": "developer",
+                              "title": "Developer"
+                            },
+                            {
                               "value": "blocked",
                               "title": "Blocked"
                             }
                           ]
                         }
                       ]
+                    }
+                  ],
+                  "type": "page"
+                }
+              ],
+              "type": "page"
+            },
+            {
+              "name": "actives",
+              "components": [
+                {
+                  "name": "view",
+                  "type": "data_view",
+                  "title": "Actives",
+                  "text_if_empty": "No active Strategies",
+                  "query_name": "admin_users",
+                  "fields": [
+                    {
+                      "name": "profile.name",
+                      "title": "Name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "actives",
+                      "title": "Actives",
+                      "type": "string"
                     }
                   ],
                   "type": "page"
@@ -2156,6 +2346,10 @@
                 {
                   "title": "Users",
                   "route": "admin.users"
+                },
+                {
+                  "title": "Actives",
+                  "route": "admin.actives"
                 }
               ]
             }
@@ -2309,12 +2503,8 @@
               "title": "Forum",
               "route": "forum",
               "icon_class": "fa fa-inbox"
-            },
-            {
-              "title": "Develop",
-              "route": "develop",
-              "icon_class": "fa fa-desktop"
             }
+           
           ]
         },
         {

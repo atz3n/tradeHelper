@@ -33,7 +33,7 @@
 				</label>
 				<div class="input-div">
 					<p class="form-control-static">
-						{{topic.topicNum}}
+						#{{topic.topicNum}}
 					</p>
 				</div>
 			</div>
@@ -42,19 +42,68 @@
 					Titel
 				</label>
 				<div class="input-div">
-					<input type="text" name="title" value="{{topic.title}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="title" value="{{topic.title}}" class="form-control" autofocus="autofocus" required="required" data-type="string" disabled>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
 					</span>
 				</div>
 			</div>
+			<div class="form-group  field-type">
+				<label for="type">
+					Type
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="soi" name="type" data-type="string" {{itemIsChecked topic.type "soi"}}>
+							Suggestion of Improvement (soi)
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="bug" name="type" data-type="string" {{itemIsChecked topic.type "bug"}}>
+							Bug
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="misc" name="type" data-type="string" {{itemIsChecked topic.type "misc"}}>
+							Miscellaneous
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{#if isDeveloper}}
+			<div class="form-group  field-state">
+				<label for="state">
+					State
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="state" data-type="string" required="required">
+						<option value="created" {{optionIsSelected topic.state "created"}}>							Created</option>
+						<option value="accepted" {{optionIsSelected topic.state "accepted"}}>							Accepted</option>
+						<option value="denied" {{optionIsSelected topic.state "denied"}}>							Denied</option>
+						<option value="inProgress" {{optionIsSelected topic.state "inProgress"}}>							In progress</option>
+						<option value="solved" {{optionIsSelected topic.state "solved"}}>							Solved</option>
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{/if}}
 			<div class="form-group  field-desc">
 				<label for="desc">
 					Description
 				</label>
 				<div class="input-div">
-					<textarea class="form-control" name="desc">{{topic.desc}}</textarea>
+					<textarea class="form-control" name="desc" disabled>{{topic.desc}}</textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

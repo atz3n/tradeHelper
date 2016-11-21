@@ -1,14 +1,14 @@
 var pageSession = new ReactiveDict();
 
-Template.HistoryDetails.rendered = function() {
+Template.HistoryStrHistoryDetails.rendered = function() {
   Session.set('activePage', 'history');
 };
 
-Template.HistoryDetails.events({
+Template.HistoryStrHistoryDetails.events({
 
 });
 
-Template.HistoryDetails.helpers({
+Template.HistoryStrHistoryDetails.helpers({
 
 });
 
@@ -120,10 +120,10 @@ var setExchangeSessionVar = function(data, state){
 
 
 
-Template.HistoryDetailsDetailsForm.rendered = function() {
+Template.HistoryStrHistoryDetailsDetailsForm.rendered = function() {
 
-  pageSession.set("historyDetailsDetailsFormInfoMessage", "");
-  pageSession.set("historyDetailsDetailsFormErrorMessage", "");
+  pageSession.set("HistoryStrHistoryDetailsDetailsFormInfoMessage", "");
+  pageSession.set("HistoryStrHistoryDetailsDetailsFormErrorMessage", "");
   pageSession.set('showBundles', false);
   pageSession.set('showExchanges', false);
   setPluginSessionVar(this.data.history, false);
@@ -154,18 +154,18 @@ Template.HistoryDetailsDetailsForm.rendered = function() {
   $("input[autofocus]").focus();
 };
 
-Template.HistoryDetailsDetailsForm.events({
+Template.HistoryStrHistoryDetailsDetailsForm.events({
   "submit": function(e, t) {
     e.preventDefault();
-    pageSession.set("historyDetailsDetailsFormInfoMessage", "");
-    pageSession.set("historyDetailsDetailsFormErrorMessage", "");
+    pageSession.set("historyStrHistoryDetailsDetailsFormInfoMessage", "");
+    pageSession.set("historyStrHistoryDetailsDetailsFormErrorMessage", "");
 
     var self = this;
 
     function submitAction(msg) {
-      var historyDetailsDetailsFormMode = "read_only";
+      var historyStrHistoryDetailsDetailsFormMode = "read_only";
       if (!t.find("#form-cancel-button")) {
-        switch (historyDetailsDetailsFormMode) {
+        switch (historyStrHistoryDetailsDetailsFormMode) {
           case "insert":
             {
               $(e.target)[0].reset();
@@ -175,7 +175,7 @@ Template.HistoryDetailsDetailsForm.events({
           case "update":
             {
               var message = msg || "Saved.";
-              pageSession.set("historyDetailsDetailsFormInfoMessage", message);
+              pageSession.set("historyStrHistoryDetailsDetailsFormInfoMessage", message);
             };
             break;
         }
@@ -187,7 +187,7 @@ Template.HistoryDetailsDetailsForm.events({
     function errorAction(msg) {
       msg = msg || "";
       var message = msg.message || msg || "Error.";
-      pageSession.set("historyDetailsDetailsFormErrorMessage", message);
+      pageSession.set("historyStrHistoryDetailsDetailsFormErrorMessage", message);
     }
 
     validateForm(
@@ -215,12 +215,12 @@ Template.HistoryDetailsDetailsForm.events({
   "click #form-close-button": function(e, t) {
     e.preventDefault();
 
-    Router.go("history", {});
+    Router.go("history.str_history", {activeId: this.params.activeId});
   },
   "click #form-back-button": function(e, t) {
     e.preventDefault();
 
-    Router.go("history", {});
+    Router.go("history.str_history", {activeId: this.params.activeId});
   },
   "click #form-exchanges-button": function(e, t) {
     e.preventDefault();
@@ -256,12 +256,12 @@ Template.HistoryDetailsDetailsForm.events({
   }
 });
 
-Template.HistoryDetailsDetailsForm.helpers({
+Template.HistoryStrHistoryDetailsDetailsForm.helpers({
   "infoMessage": function() {
-    return pageSession.get("historyDetailsDetailsFormInfoMessage");
+    return pageSession.get("historyStrHistoryDetailsDetailsFormInfoMessage");
   },
   "errorMessage": function() {
-    return pageSession.get("historyDetailsDetailsFormErrorMessage");
+    return pageSession.get("historyStrHistoryDetailsDetailsFormErrorMessage");
   },
   "historyData": function() {
     return processHistoryData(this.history);
@@ -276,10 +276,10 @@ Template.HistoryDetailsDetailsForm.helpers({
 
 
 
-Template.HistoryDetailsDetailsFormExchanges.rendered = function() {
+Template.HistoryStrHistoryDetailsDetailsFormExchanges.rendered = function() {
 };
 
-Template.HistoryDetailsDetailsFormExchanges.events({
+Template.HistoryStrHistoryDetailsDetailsFormExchanges.events({
   "click #exchange-button": function(e, t) {
     e.preventDefault();
 
@@ -287,7 +287,7 @@ Template.HistoryDetailsDetailsFormExchanges.events({
   }
 });
 
-Template.HistoryDetailsDetailsFormExchanges.helpers({
+Template.HistoryStrHistoryDetailsDetailsFormExchanges.helpers({
   "showExchange": function(){
     return pageSession.get('showEx' + this.num);
   }
@@ -295,10 +295,10 @@ Template.HistoryDetailsDetailsFormExchanges.helpers({
 
 
 
-Template.HistoryDetailsDetailsFormPlugins.rendered = function() {
+Template.HistoryStrHistoryDetailsDetailsFormPlugins.rendered = function() {
 };
 
-Template.HistoryDetailsDetailsFormPlugins.events({
+Template.HistoryStrHistoryDetailsDetailsFormPlugins.events({
   "click #plugin-button": function(e, t) {
     e.preventDefault();
 
@@ -306,7 +306,7 @@ Template.HistoryDetailsDetailsFormPlugins.events({
   }
 });
 
-Template.HistoryDetailsDetailsFormPlugins.helpers({
+Template.HistoryStrHistoryDetailsDetailsFormPlugins.helpers({
   "showPlugin": function(){
     return pageSession.get('showPl' + this.num);
   }

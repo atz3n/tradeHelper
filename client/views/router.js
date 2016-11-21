@@ -48,8 +48,14 @@ var privateRoutes = [
 	"exchanges.details_ex_test_data",
 	"settings",
 	"info",
+	"info.howto",
+	"info.pages",
+	"info.plugins",
+	"info.exchanges",
+	"info.misc",
 	"history",
-	"history.details",
+	"history.str_history",
+	"history.str_history.details",
 	"forum",
 	"forum.insert",
 	"forum.details",
@@ -62,6 +68,7 @@ var privateRoutes = [
 	"admin.users.details",
 	"admin.users.insert",
 	"admin.users.edit",
+	"admin.actives",
 	"user_settings",
 	"user_settings.profile",
 	"user_settings.change_pass",
@@ -78,6 +85,7 @@ var roleMap = [
 	{ route: "admin.users.details",	roles: ["admin"] },
 	{ route: "admin.users.insert",	roles: ["admin"] },
 	{ route: "admin.users.edit",	roles: ["admin"] },
+	{ route: "admin.actives",	roles: ["admin"] },
 	{ route: "user_settings",	roles: ["user","admin"] },
 	{ route: "user_settings.profile",	roles: ["user","admin"] },
 	{ route: "user_settings.change_pass",	roles: ["user","admin"] }
@@ -268,8 +276,14 @@ Router.map(function () {
 	this.route("exchanges.details_ex_test_data", {path: "/exchanges/details_ex_test_data/:exTestDataId", controller: "ExchangesDetailsExTestDataController"});
 	this.route("settings", {path: "/settings", controller: "SettingsController"});
 	this.route("info", {path: "/info", controller: "InfoController"});
+	this.route("info.howto", {path: "/info/howto", controller: "InfoHowtoController"});
+	this.route("info.pages", {path: "/info/pages", controller: "InfoPagesController"});
+	this.route("info.plugins", {path: "/info/plugins", controller: "InfoPluginsController"});
+	this.route("info.exchanges", {path: "/info/exchanges", controller: "InfoExchangesController"});
+	this.route("info.misc", {path: "/info/misc", controller: "InfoMiscController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
-	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
+	this.route("history.str_history", {path: "/history/str_history/:activeId", controller: "HistoryStrHistoryController"});
+	this.route("history.str_history.details", {path: "/history/str_history/:activeId/details/:historyId", controller: "HistoryStrHistoryDetailsController"});
 	this.route("forum", {path: "/forum", controller: "ForumController"});
 	this.route("forum.insert", {path: "/forum/insert", controller: "ForumInsertController"});
 	this.route("forum.details", {path: "/forum/details/:topicId", controller: "ForumDetailsController"});
@@ -282,6 +296,7 @@ Router.map(function () {
 	this.route("admin.users.details", {path: "/admin/users/details/:userId", controller: "AdminUsersDetailsController"});
 	this.route("admin.users.insert", {path: "/admin/users/insert", controller: "AdminUsersInsertController"});
 	this.route("admin.users.edit", {path: "/admin/users/edit/:userId", controller: "AdminUsersEditController"});
+	this.route("admin.actives", {path: "/admin/actives", controller: "AdminActivesController"});
 	this.route("user_settings", {path: "/user_settings", controller: "UserSettingsController"});
 	this.route("user_settings.profile", {path: "/user_settings/profile", controller: "UserSettingsProfileController"});
 	this.route("user_settings.change_pass", {path: "/user_settings/change_pass", controller: "UserSettingsChangePassController"});

@@ -40,6 +40,8 @@ Alert
 - meteor add juliancwirko:s-alert
 - meteor add juliancwirko:s-alert-stackslide
 
+Multi Thread:
+- meteor add meteorhacks:cluster
 
 
 ======================================================
@@ -52,6 +54,10 @@ Alert
 ======================================================
 
 Start:
+
+For multithreading
+- export CLUSTER_WORKERS_COUNT=auto
+
 development mode:
 - npm run startDev
 

@@ -228,9 +228,9 @@ var setChartValues = function(self) {
     // subchart: {
     //   show: true
     // },
-    // zoom: {
-    //   enabled: true
-    // },
+    zoom: {
+      enabled: true
+    },
     axis: {
       x: {
         type: 'category',
@@ -421,7 +421,6 @@ Template.ActivesDetailsDetailsForm.events({
             Meteor.call('strategyStop', strId, function(e, r) {
               if (e) console.log(e);
               else if (r) {
-                setActiveState(strId, false);
                 Router.go("actives", {});
               }
             });

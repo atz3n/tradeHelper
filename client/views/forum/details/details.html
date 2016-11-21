@@ -31,36 +31,118 @@
 				{{infoMessage}}
 			</div>
 			{{/if}}
+			<h3>Details</h3>
+      		<hr />
 			<div class="form-group  field-topic-num">
-				<label for="topicNum" class="col-sm-3 control-label">
+				<label for="topicNum" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.topicNum}}>
 					Topic Number
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{topic.topicNum}}
+					<p class="form-control-static  control-field-topic-num">
+						#{{topic.topicNum}}
 					</p>
 				</div>
 			</div>
 			<div class="form-group  field-title">
-				<label for="title" class="col-sm-3 control-label">
+				<label for="title" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.title}}>
 					Titel
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-title">
 						{{topic.title}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-desc">
-				<label for="desc" class="col-sm-3 control-label">
-					Description
+			<div class="form-group  field-date">
+				<label for="date" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.date}}>
+					Date
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
-						{{topic.desc}}
+					<p class="form-control-static  control-field-date">
+						{{formatDate topic.createdAt 'MMMM Do YYYY, h:mm:ss a'}}
 					</p>
 				</div>
 			</div>
+			<div class="form-group  field-type">
+				<label for="type" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.type}}>
+					Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-type">
+						{{topic.type}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-autor">
+				<label for="autor" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.autor}}>
+					Autor
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-autor">
+						{{topic.autor}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-state">
+				<label for="state" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.state}}>
+					State
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-state">
+						{{topic.state}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-desc">
+				<label for="desc" class="col-sm-3 control-label" data-toggle="tooltip" title={{tt.desc}}>
+					Description
+				</label>
+			</div>
+				<div class="input-div">
+					<pre class="pre-scrollable"><h6>{{#markdown}}{{topic.desc}}{{/markdown}}</h6></pre>
+				</div>
+			<h3>Comments ({{topic.numOfCmnt}})</h3>
+			<div class="input-div ">
+	      <table class="table table-striped">
+	        <thead>
+	          <tr class="crud-table-header">
+	            <th>
+	              
+	            </th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	        {{#each topicComments.comments}}
+	      <tr class="crud-table-row">
+	        <td>
+	          {{autor}} ({{role}}) {{formatDate date 'MMMM Do YYYY, h:mm:ss a'}}:
+	          <br> 
+	          <pre class="pre-scrollable"><h6>{{#markdown}}{{comment}}{{/markdown}}</h6></pre>
+	          {{#if isAdmin}}
+						<a href="#" id="delete-button" class="btn btn-default btn-xs">
+							<span class="fa fa-trash-o">
+							</span>
+						</a>
+						{{/if}}
+	        </td>
+	      </tr>
+	      {{/each}}
+	        </tbody>
+	      </table>
+	     </div>
+			<div class="input-div">
+				<textarea class="form-control " name="comment" id="comment" data-toggle="tooltip" title={{tt.cmnt}}></textarea>
+			</div>
+			<div class="form-group">
+				<div class="submit-div col-sm-9">
+					<button id="comment-insert-button" class="btn btn-success btn-xs" type="submit">
+						<span class="fa fa-plus">
+						</span>
+						Add
+					</button>
+				</div>
+			</div>
+			<hr/>
 			<div class="form-group">
 				<div class="submit-div col-sm-9">
 					<a href="#" id="form-close-button" class="btn btn-primary">
@@ -71,4 +153,3 @@
 		</form>
 	</div>
 </template>
-

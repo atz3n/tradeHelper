@@ -120,6 +120,9 @@ Template.ForumInsertInsertForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("forumInsertInsertFormErrorMessage");
+	},
+	"tt": function() {
+		return ttTopic.insEdi;
 	}
 	
 });

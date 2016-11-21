@@ -398,6 +398,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       tmp.exchanges[i].config = ret;
     }
 
+    tmp.activeId = ActiveDatas.findOne({ strategyId: _data.strategyId })._id;
     Histories.insert(tmp);
   }
 

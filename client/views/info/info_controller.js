@@ -11,7 +11,7 @@ this.InfoController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		this.redirect('info.howto', this.params || {}, { replaceState: true });
 		/*ACTION_FUNCTION*/
 	},
 

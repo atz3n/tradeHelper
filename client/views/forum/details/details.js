@@ -13,8 +13,6 @@ Template.ForumDetails.helpers({
 });
 
 Template.ForumDetailsDetailsForm.rendered = function() {
-	
-
 	pageSession.set("forumDetailsDetailsFormInfoMessage", "");
 	pageSession.set("forumDetailsDetailsFormErrorMessage", "");
 
@@ -52,24 +50,6 @@ Template.ForumDetailsDetailsForm.events({
 
 		var self = this;
 
-		function submitAction(msg) {
-			var forumDetailsDetailsFormMode = "read_only";
-			if(!t.find("#form-cancel-button")) {
-				switch(forumDetailsDetailsFormMode) {
-					case "insert": {
-						$(e.target)[0].reset();
-					}; break;
-
-					case "update": {
-						var message = msg || "Saved.";
-						pageSession.set("forumDetailsDetailsFormInfoMessage", message);
-					}; break;
-				}
-			}
-
-			/*SUBMIT_REDIRECT*/
-		}
-
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
@@ -86,8 +66,23 @@ Template.ForumDetailsDetailsForm.events({
 			},
 			function(values) {
 				
+				var cmmntObj = {};
+				cmmntObj.date = new Date();
+				cmmntObj.autor = self.current_user_data.profile.name;
+				cmmntObj.role = self.current_user_data.roles[0];
+				cmmntObj.comment = values.comment;
+
+
+				var tmp = self.topicComments.comments;
+				tmp.push(cmmntObj);
 
 				
+				var id = Comments.findOne({ topicId: t.data.topic._id })['_id'];
+				Comments.update({ _id: id }, { $set: { comments: tmp } }, function(e) { if(e) errorAction(e);});
+
+
+				var el = document.getElementById("comment")
+				el.value = '';
 			}
 		);
 
@@ -109,9 +104,22 @@ Template.ForumDetailsDetailsForm.events({
 		e.preventDefault();
 
 		Router.go("forum", {});
-	}
+	},
+	"click #delete-button": function(e, t) {
+	  e.preventDefault();
 
-	
+	  var self = this;
+	  var tmp = t.data.topicComments.comments;
+	  
+	  var idx = tmp.findIndex(function(element, index, array){
+	  	if(element.date == self.date) return true;
+	  });
+
+	  tmp[idx].comment = '__*erased by admin*__';
+
+	  var id = Comments.findOne({ topicId: t.data.topic._id })['_id'];
+	  Comments.update({ _id: id }, { $set: { comments: tmp } });
+	},
 });
 
 Template.ForumDetailsDetailsForm.helpers({
@@ -120,6 +128,12 @@ Template.ForumDetailsDetailsForm.helpers({
 	},
 	"errorMessage": function() {
 		return pageSession.get("forumDetailsDetailsFormErrorMessage");
+	},
+	"tt": function() {
+		return ttTopic.desc;
+	},
+	"isAdmin": function() {
+		return getUserRole(Meteor.userId()) === 'admin';
 	}
 	
 });
