@@ -43,3 +43,43 @@ Template.HomePrivateView.helpers({
 			return pageSession.get('Logins').length;
 	}
 });
+
+
+
+
+Template.HomePrivateViewLogin.rendered = function() {
+};
+
+Template.HomePrivateViewLogin.events({
+	"click #logout-button": function(e, t) {
+    e.preventDefault();
+    var me = this;
+    bootbox.dialog({
+      message: "Logout? Are you sure?",
+      title: "Logout",
+      animate: false,
+      buttons: {
+        success: {
+          label: "Yes",
+          className: "btn-success",
+          callback: function() {
+            Meteor.call('logoutEntity', me.login, function(e, r) {
+              if (e) console.log(e);
+              else(Template.HomePrivateView.rendered())
+            });
+          }
+        },
+        danger: {
+          label: "No",
+          className: "btn-default"
+        }
+      }
+    });
+    return false;
+  },
+});
+
+Template.HomePrivateViewLogin.helpers({
+
+});
+

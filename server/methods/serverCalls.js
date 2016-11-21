@@ -248,15 +248,6 @@ Meteor.methods({
     else return false;
   },
 
-  getLogins: function() {
-    var ret = [];
-    
-    var tmp = Meteor.user().services.resume.loginTokens;
-    for(i in tmp) ret.push({login: tmp[i].when});
-
-    return ret;
-  },
-
 
   /*************** admin functions  ***************/
 
@@ -289,6 +280,32 @@ Meteor.methods({
       if(getExchangeDbDoc({ownerId: userId}, tmp)){
         tmp.ref.remove({ownerId:userId});
       } else break;
+    }
+  },
+
+
+  /*************** user functions  ***************/
+
+  getLogins: function() {
+    var ret = [];
+    
+    if(Meteor.user() !== null) {   
+      var tmp = Meteor.user().services.resume.loginTokens;
+      for(i in tmp) ret.push({login: tmp[i].when});
+    }
+  
+    return ret;
+  },
+
+  logoutEntity: function(date) {
+    if(Meteor.user() !== null) {
+      var tmp = Meteor.user().services.resume.loginTokens;
+
+      tmp = tmp.filter(function(obj){
+        return obj.when.toISOString() !== new Date(date).toISOString();
+      });
+
+      Users.update({_id : Meteor.userId()}, {$set: {"services.resume.loginTokens": tmp}});
     }
   }
 });
