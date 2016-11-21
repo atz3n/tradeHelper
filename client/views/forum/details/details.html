@@ -59,7 +59,7 @@
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-date">
-						{{formatDate topic.createdAt ''}}
+						{{formatDate topic.createdAt 'MMMM Do YYYY, h:mm:ss a'}}
 					</p>
 				</div>
 			</div>
@@ -115,7 +115,7 @@
 	        {{#each topicComments.comments}}
 	      <tr class="crud-table-row">
 	        <td>
-	          {{autor}} ({{role}}) {{formatDate date ''}}:
+	          {{autor}} ({{role}}) {{formatDate date 'MMMM Do YYYY, h:mm:ss a'}}:
 	          <br> 
 	          <pre class="pre-scrollable"><h6>{{#markdown}}{{comment}}{{/markdown}}</h6></pre>
 	          {{#if isAdmin}}

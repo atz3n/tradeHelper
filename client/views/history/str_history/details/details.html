@@ -74,7 +74,7 @@
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{historyData.inTime}}
+            {{formatDate historyData.inTime 'MMMM Do YYYY, h:mm:ss a'}}
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@
         </label>
         <div class="input-div col-sm-9">
           <p class="form-control-static">
-            {{historyData.outTime}}
+            {{formatDate historyData.outTime 'MMMM Do YYYY, h:mm:ss a'}}
           </p>
         </div>
       </div>
