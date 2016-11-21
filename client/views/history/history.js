@@ -23,54 +23,111 @@ var HistoryViewItems = function(cursor) {
   if (typeof(sortAscending) == "undefined") sortAscending = true;
 
   var raw = cursor.fetch();
+  var combined = [];
+  var bunch = [];
+
+  
+  while(true) {
+
+    /* get bunch of histories from one acive Id */
+    bunch = raw.filter(function(obj){
+      return obj.activeId == raw[0].activeId;
+    });
+
+    /* sort bunch time ascending */
+    bunch = bunch.sort(function(a,b){
+      return moment(a.createdAt - b.createdAt);
+    });
+    
+
+    var tmp = {};
+    var startCap = [];
+    var lastCap = [];
+    var profitT = [];
+    var profitP = [];
+
+    tmp.strategyName = bunch[0].strategyName;
+    tmp.strategyId = bunch[0].strategyId;
+    tmp.activeId = bunch[0].activeId;
+    tmp.profit = '';
+    tmp.startCap = '';
+    tmp.lastCap = '';
+    tmp.ownerId = bunch[0].ownerId;
 
 
-  for (i in raw) {
+    /* get start Cap */
+    _.each(bunch[0].exchanges, function(ex){
+      startCap.push(ex.inPrice * ex.volume);
+    });
 
-    raw[i].costIn = '';
-    raw[i].profit = '';
-    raw[i].costOut = '';
+    /* get last Cap */
+    _.each(bunch[bunch.length - 1].exchanges, function(ex){
+      lastCap.push(ex.outPrice * ex.volume);
+    });
+    
+    /* get profits */
+    for(j in bunch[0].exchanges) {
+      profitT.push(cropFracDigits(lastCap[j] - startCap[j], 2));
+      profitP.push(cropFracDigits(percentage(lastCap[j], startCap[j]), 2));
+    }
 
-    for (j in raw[i].exchanges) {
-      var tmp = raw[i].exchanges[j];
 
-      if (j != 0) raw[i].costIn += ', ';
-      if (j != 0) raw[i].profit += ', ';
-      if (j != 0) raw[i].costOut += ', ';
+    var tmpEx = {};
+    for(l in bunch[0].exchanges) {
+      tmpEx = bunch[0].exchanges[l];
 
-      var cosIn = tmp.inPrice * tmp.volume;
-      var cosOut = tmp.outPrice * tmp.volume;
 
-      raw[i].costIn += cropFracDigits(cosIn, 3);
-      raw[i].costOut += cropFracDigits(cosOut, 3);
-
-      var tmpP = cropFracDigits(percentage(cosOut, cosIn), 2);
-      var tmpT = cropFracDigits(cosOut - cosIn, 2);
-      if (raw[i].position === 'short') {
-      	tmpP *= -1;
-        tmpT *= -1;
+      if(l != 0){
+        tmp.startCap += ',rrr '; 
+        tmp.lastCap += ', '; 
+        tmp.profit += ', ';
       }
 
-      if (tmp.units.base != '' && tmp.units.quote != '') {
-        raw[i].costIn += tmp.units.quote;
-        raw[i].costOut += tmp.units.quote;
-        raw[i].profit += tmpT + tmp.units.quote + ' (' + tmpP + '%)';
+      tmp.startCap += cropFracDigits(startCap[l], 2);
+      tmp.lastCap += cropFracDigits(lastCap[l], 2);
+
+      if (tmpEx.units.base != '' && tmpEx.units.quote != '') {
+        tmp.startCap += tmpEx.units.quote;
+        tmp.lastCap += tmpEx.units.quote;
+        tmp.profit += profitT[l] + tmpEx.units.quote + ' (' + profitP[l] + '%)';
       } else {
-        raw[i].profit += tmpT + ' (' + tmpP + '%)';
+        tmp.profit += profitT[l] +  ' (' + profitP[l] + '%)';
       }
     }
+
+    /* set run number */
+    var tmp2 = combined.filter(function(obj){
+      return obj.strategyId == tmp.strategyId;
+    });
+
+    if(tmp2.length !== 0) tmp.run = tmp2.length + 1;
+    else tmp.run = 1;
+
+
+    combined.push(tmp);
+      
+    for(i in bunch) raw.splice(raw.indexOf(bunch[i]), 1);
+    if(raw.length === 0) break;
   }
+
+
+  /* sort by name */
+  combined = combined.sort(function(a, b) {
+    if (a.strategyName < b.strategyName) return -1;
+    else if (a.strategyName > b.strategyName) return 1;
+    else return 0;
+  });
 
 
   // filter
   var filtered = [];
   if (!searchString || searchString == "") {
-    filtered = raw;
+    filtered = combined;
   } else {
     searchString = searchString.replace(".", "\\.");
     var regEx = new RegExp(searchString, "i");
-    var searchFields = ["name", "date", "costIn", "costOut", "profit", "position"];
-    filtered = _.filter(raw, function(item) {
+    var searchFields = ["name", "date", "startCap", "lastCap", "profit"];
+    filtered = _.filter(combined, function(item) {
       var match = false;
       _.each(searchFields, function(field) {
         var value = (getPropertyValue(field, item) || "") + "";
@@ -261,7 +318,7 @@ Template.HistoryViewTableItems.events({
   "click td": function(e, t) {
     e.preventDefault();
 
-    Router.go("history.details", { historyId: this._id });
+    Router.go("history.str_history", {activeId: this.activeId});
     return false;
   },
 
@@ -293,7 +350,8 @@ Template.HistoryViewTableItems.events({
           label: "Yes",
           className: "btn-success",
           callback: function() {
-            Histories.remove({ _id: me._id });
+            var tmp = Histories.find({activeId: me.activeId}).fetch();
+            for(i in tmp) Histories.remove({ _id: tmp[i]._id });
           }
         },
         danger: {
@@ -319,6 +377,7 @@ Template.HistoryViewTableItems.helpers({
   },
 
   "deleteButtonClass": function() {
+
     return Histories.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
   }
 });

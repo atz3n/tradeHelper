@@ -54,7 +54,8 @@ var privateRoutes = [
 	"info.exchanges",
 	"info.misc",
 	"history",
-	"history.details",
+	"history.str_history",
+	"history.str_history.details",
 	"forum",
 	"forum.insert",
 	"forum.details",
@@ -281,7 +282,8 @@ Router.map(function () {
 	this.route("info.exchanges", {path: "/info/exchanges", controller: "InfoExchangesController"});
 	this.route("info.misc", {path: "/info/misc", controller: "InfoMiscController"});
 	this.route("history", {path: "/history", controller: "HistoryController"});
-	this.route("history.details", {path: "/history/details/:historyId", controller: "HistoryDetailsController"});
+	this.route("history.str_history", {path: "/history/str_history/:activeId", controller: "HistoryStrHistoryController"});
+	this.route("history.str_history.details", {path: "/history/str_history/:activeId/details/:historyId", controller: "HistoryStrHistoryDetailsController"});
 	this.route("forum", {path: "/forum", controller: "ForumController"});
 	this.route("forum.insert", {path: "/forum/insert", controller: "ForumInsertController"});
 	this.route("forum.details", {path: "/forum/details/:topicId", controller: "ForumDetailsController"});

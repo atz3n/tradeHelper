@@ -1,4 +1,4 @@
-<template name="HistoryDetails">
+<template name="HistoryStrHistoryDetails">
   <div class="page-container container" id="content">
     <div class="row" id="title_row">
       <div class="col-md-12">
@@ -6,10 +6,10 @@
         </div>
       </div>
     </div>
-    {{> HistoryDetailsDetailsForm}}
+    {{> HistoryStrHistoryDetailsDetailsForm}}
   </div>
 </template>
-<template name="HistoryDetailsDetailsForm">
+<template name="HistoryStrHistoryDetailsDetailsForm">
   <div id="history-details-details-form" class="">
     <h2 id="component-title">
       <a href="#" id="form-back-button" class="btn btn-default" title="back">
@@ -119,7 +119,7 @@
           <table class="table table-striped">
             {{#if showExchanges}}
             <tbody>
-              {{#each historyData.exchanges}} {{> HistoryDetailsDetailsFormExchanges}} {{/each}}
+              {{#each historyData.exchanges}} {{> HistoryStrHistoryDetailsDetailsFormExchanges}} {{/each}}
             </tbody>
             {{/if}}
           </table>
@@ -162,7 +162,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each plugins}} {{> HistoryDetailsDetailsFormPlugins}} {{/each}}
+                      {{#each plugins}} {{> HistoryStrHistoryDetailsDetailsFormPlugins}} {{/each}}
                     </tbody>
                   </table>
                 </td>
@@ -187,7 +187,7 @@
     </form>
   </div>
 </template>
-<template name="HistoryDetailsDetailsFormPlugins">
+<template name="HistoryStrHistoryDetailsDetailsFormPlugins">
   <tr class="crud-table-row">
     <td>
       <table class="table table-striped">
@@ -231,7 +231,7 @@
     </td>
   </tr>
 </template>
-<template name="HistoryDetailsDetailsFormExchanges">
+<template name="HistoryStrHistoryDetailsDetailsFormExchanges">
   <tr class="crud-table-row">
     <td>
       <table class="table table-striped">

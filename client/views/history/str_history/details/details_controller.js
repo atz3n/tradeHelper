@@ -1,5 +1,5 @@
-this.HistoryDetailsController = RouteController.extend({
-	template: "HistoryDetails",
+this.HistoryStrHistoryDetailsController = RouteController.extend({
+	template: "HistoryStrHistoryDetails",
 	
 
 	yieldTemplates: {

@@ -170,7 +170,7 @@
         "name": "histories",
         "fields": [
           {
-            "name": "name",
+            "name": "strategyName",
             "title": "Strategy Name",
             "type": "string"
           },
@@ -1085,6 +1085,13 @@
         "find_one": true
       },
       {
+        "name": "strHistories",
+        "collection": "histories",
+        "filter": {
+          "activeId": ":activeId"
+        }
+      },
+      {
         "name": "strategies",
         "collection": "strategies",
         "filter": {}
@@ -1887,21 +1894,49 @@
           "components": [
             {
               "name": "view",
-              "title": "Trade History",
+              "title": "Strategy Results",
               "type": "data_view",
               "text_if_empty": "No History available",
               "query_name": "histories",
               "query_params": [],
-              "details_route": "history.details",
+              "details_route": "history.strHistory",
               "details_route_params": [
                 {
-                  "name": "historyId",
-                  "value": "this._id"
+                  "name": "activeId",
+                  "value": "this.activeId"
                 }
               ]
             }
           ],
-          "pages": [
+        "pages": [
+            {
+              "name": "strHistory",
+              "route_params": [
+                "activeId"
+              ],
+              "components": [
+                {
+              "name": "view",
+              "title": "Trade History",
+              "type": "data_view",
+              "text_if_empty": "No History available",
+              "query_name": "strHistories",
+              "query_params": "activeId",
+              "details_route": "history.strHistory.details",
+              "close_route": "history",
+              "details_route_params": [
+                {
+                  "name": "historyId",
+                  "value": "this._id"
+                },
+                {
+                  "name": "activeId",
+                  "value": "this.aciveId"
+                }
+              ]
+            }
+              ],
+              "pages": [
             {
               "name": "details",
               "route_params": [
@@ -1916,12 +1951,27 @@
                   "layout": "horizontal",
                   "query_name": "history",
                   "query_params": [],
-                  "close_route": "history",
-                  "back_route": "history"
+                  "close_route": "history.strHistory",
+                  "back_route": "history.strHistory",
+                  "back_route_params": [
+                    {
+                      "name": "activeId",
+                      "value": "this.params.activeId"
+                    }
+                  ],
+                  "close_route_params": [
+                    {
+                      "name": "activeId",
+                      "value": "this.params.activeId"
+                    }
+                  ],
                 }
               ]
             }
           ],
+            }
+          ],
+          
           "type": "page"
         },
         {
