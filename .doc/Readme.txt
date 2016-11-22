@@ -55,14 +55,15 @@ Multi Thread:
 
 Start:
 
-For multithreading
-- export CLUSTER_WORKERS_COUNT=auto
-
 development mode:
 - npm run startDev
 
 production mode:
 - npm run startProd
+
+For multithreading
+- npm run startDevMltCore
+- npm run startProdMltCore
 
 
 
