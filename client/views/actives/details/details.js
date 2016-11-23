@@ -169,7 +169,6 @@ var postloadChartFunc = function() {
 }
 
 var setChartValues = function(self) {
-
   var aD = self.active_data;
   var timeUnit = self.strategy.timeUnit;
   var cols = [];
@@ -248,6 +247,7 @@ var setChartValues = function(self) {
       }
     }
   };
+
   Session.set('chartData', retVal);
 }
 
@@ -584,9 +584,9 @@ Template.ActivesDetailsDetailsForm.helpers({
     return pageSession.get("activesDetailsDetailsFormErrorMessage");
   },
   "activeData": function() {
-    setChartValues(this);
+    if(this.active_data) setChartValues(this);
     Session.set('data1', ['data1', 30, 200, 100, 400, cnt++]);
-    return processActiveData(this.active_data);
+    if(this.active_data) return processActiveData(this.active_data);
   },
   "strategyData": function() {
     return documentArray(this.strategies_active, this.params.strategyId);
@@ -598,10 +598,13 @@ Template.ActivesDetailsDetailsForm.helpers({
     return pageSession.get('showExchanges');
   },
   "strategyPaused": function() {
-    if (documentArray(this.strategies_active, this.params.strategyId).paused)
-      return true;
-    else
-      return false;
+    var tmp = documentArray(this.strategies_active, this.params.strategyId);
+    if(tmp){
+      if (tmp.paused)
+        return true;
+      else
+        return false;
+    }
   }
 });
 
