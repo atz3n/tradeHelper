@@ -4,7 +4,7 @@
  *
  * 
  * @author Atzen
- * @version 0.5.3
+ * @version 0.5.4
  * 
  * CHANGES:
  * 04-Jul-2016 : Initial version
@@ -15,6 +15,7 @@
  * 22-Jul-2016 : adapted to IExchange v1.1
  * 24-Jul-2016 : adapted to IExchange v1.3
  * 12-Aug-2016 : bugfix: counter now starts with 0 instead of 1
+ * 22-Nov-2016 : bugfix: return value from getPrice().result is now last price instead of 0 in finished mode
  */
 
 
@@ -368,7 +369,7 @@ export function ExTestData() {
           price = Math.abs(_config.gain * _dataArray[_counter % _dataArray.length] + _config.offset);
         } else {
           price = Math.abs(_config.gain * _dataArray[_dataArray.length - 1] + _config.offset);
-          return errHandle(ExError.finished, null);
+          return errHandle(ExError.finished, price);
         }
         break;
 

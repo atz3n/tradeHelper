@@ -3,7 +3,9 @@ Meteor.publish("active_datas", function() {
 });
 
 Meteor.publish("active_datas_admin", function() {
-	if(getUserRole(this.userId) === "admin") return ActiveDatas.find({}, {});
+	if(this.userId){
+		if(getUserRole(this.userId) === "admin") return ActiveDatas.find({}, {});
+	}
 });
 
 Meteor.publish("active_data", function(activeDataId) {
