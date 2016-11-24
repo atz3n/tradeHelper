@@ -121,10 +121,10 @@
             "crud_fields": [
               {
                 "name": "bundle",
-                "title": "Plugin Bundle",
+                "title": "Plugins (logical connected via 'and')",
                 "type": "string",
                 "input": "select",
-                "lookup_query_name": "pluginbundles",
+                "lookup_query_name": "plSwings",
                 "lookup_field": "name",
                 "lookup_key": "_id",
                 "required": true
@@ -209,48 +209,6 @@
         ],
         "roles_allowed_to_update": [
           "nobody"
-        ],
-        "roles_allowed_to_delete": [
-          "owner"
-        ]
-      },
-      {
-        "name": "pluginBundles",
-        "fields": [
-          {
-            "name": "name",
-            "title": "Name",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "bundlePlugins",
-            "title": "Plugins (logical connected via 'and')",
-            "type": "array",
-            "array_item_type": "object",
-            "input": "crud",
-            "crud_fields": [
-              {
-                "name": "plugin",
-                "title": "Plugin",
-                "type": "string",
-                "input": "select",
-                "lookup_query_name": "plSwings",
-                "lookup_field": "name",
-                "lookup_key": "_id",
-                "required": true
-                
-              }
-            ],
-            "required": true
-          }
-        ],
-        "owner_field": "ownerId",
-        "roles_allowed_to_read": [
-          "owner"
-        ],
-        "roles_allowed_to_update": [
-          "owner"
         ],
         "roles_allowed_to_delete": [
           "owner"
@@ -1120,27 +1078,6 @@
         "find_one": true
       },
       {
-        "name": "pluginbundles",
-        "collection": "pluginBundles",
-        "filter": {}
-      },
-      {
-        "name": "pluginbundles_empty",
-        "collection": "pluginBundles",
-        "filter": {
-          "_id": null
-        },
-        "find_one": true
-      },
-      {
-        "name": "pluginbundle",
-        "collection": "pluginBundles",
-        "filter": {
-          "_id": ":pluginbundleId"
-        },
-        "find_one": true
-      },
-      {
         "name": "topics",
         "collection": "topics",
         "filter": {}
@@ -1300,7 +1237,7 @@
               "details_route": "actives.details",
               "details_route_params": [
                 {
-                  "name": "activeDataId",
+                  "name": "strategyId",
                   "value": "this._id"
                 }
               ]
@@ -1311,7 +1248,7 @@
             {
               "name": "details",
               "route_params": [
-                "activeDataId"
+                "strategyId"
               ],
               "components": [
                 {
@@ -1413,89 +1350,6 @@
                   "submit_route": "strategies",
                   "cancel_route": "strategies",
                   "query_name": "strategy",
-                  "query_params": []
-                }
-              ]
-            }
-          ],
-          "type": "page"
-        },
-        {
-          "name": "pluginbundles",
-          "components": [
-            {
-              "name": "view",
-              "title": "Plugin Bundles",
-              "type": "data_view",
-              "text_if_empty": "No Bundle configured",
-              "query_name": "pluginbundles",
-              "query_params": [],
-              "insert_route": "pluginbundles.insert",
-              "edit_route": "pluginbundles.edit",
-              "edit_route_params": [
-                {
-                  "name": "pluginbundleId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "pluginbundles.details",
-              "details_route_params": [
-                {
-                  "name": "pluginbundleId",
-                  "value": "this._id"
-                }
-              ]
-            }
-          ],
-          "pages": [
-            {
-              "name": "insert",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Plugin Bundle",
-                  "query_name": "pluginbundles_empty",
-                  "query_params": [],
-                  "submit_route": "pluginbundles",
-                  "cancel_route": "pluginbundles"
-                }
-              ]
-            },
-            {
-              "name": "details",
-              "route_params": [
-                "pluginbundleId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "pluginbundle",
-                  "query_params": [],
-                  "close_route": "pluginbundles",
-                  "back_route": "pluginbundles"
-                }
-              ]
-            },
-            {
-              "name": "edit",
-              "route_params": [
-                "pluginbundleId"
-              ],
-              "components": [
-                {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Bundle",
-                  "submit_route": "pluginbundles",
-                  "cancel_route": "pluginbundles",
-                  "query_name": "pluginbundle",
                   "query_params": []
                 }
               ]
@@ -2468,11 +2322,6 @@
               "title": "Strategies",
               "route": "strategies",
               "icon_class": "fa fa-flask"
-            },
-            {
-              "title": "Bundles",
-              "route": "pluginbundles",
-              "icon_class": "fa fa-cubes"
             },
             {
               "title": "Plugins",

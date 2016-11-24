@@ -229,20 +229,15 @@ this.setActiveState = function(strId, enabled) {
   var bundles = strategy.pluginBundles;
   for (i in bundles) {
 
-    bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
-    if (enabled) PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: bundles[i].actives + 1 } });
-    else if (bundles[i].actives >= 1) PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: bundles[i].actives - 1 } });
-
-
-    /* bundle plugins */
-    var bundlePlugins = bundles[i].bundlePlugins;
-    for (j in bundlePlugins) {
+     /* bundle plugins */
+      var pluginIds = bundles[i].pluginIds;
+      for (j in pluginIds) {
 
 
       /* plugins */
       for (let k = 0; k < pluginHandler.getObjectsArray().length; k++) {
         var pluginDb = pluginHandler.getObjectByIdx(k);
-        var plugin = pluginDb.find({ _id: bundlePlugins[j].plugin }).fetch()[0];
+        var plugin = pluginDb.find({ _id: pluginIds[j] }).fetch()[0];
 
         if (typeof plugin !== "undefined") {
           if (enabled) pluginDb.update({ _id: plugin._id }, { $set: { actives: plugin.actives + 1 } });

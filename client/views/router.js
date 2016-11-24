@@ -25,10 +25,6 @@ var privateRoutes = [
 	"strategies.insert",
 	"strategies.details",
 	"strategies.edit",
-	"pluginbundles",
-	"pluginbundles.insert",
-	"pluginbundles.details",
-	"pluginbundles.edit",
 	"plugins",
 	"plugins.insert_pl_swing",
 	"plugins.details_pl_swing",
@@ -253,10 +249,6 @@ Router.map(function () {
 	this.route("strategies.insert", {path: "/strategies/insert", controller: "StrategiesInsertController"});
 	this.route("strategies.details", {path: "/strategies/details/:strategyId", controller: "StrategiesDetailsController"});
 	this.route("strategies.edit", {path: "/strategies/edit/:strategyId", controller: "StrategiesEditController"});
-	this.route("pluginbundles", {path: "/pluginbundles", controller: "PluginbundlesController"});
-	this.route("pluginbundles.insert", {path: "/pluginbundles/insert", controller: "PluginbundlesInsertController"});
-	this.route("pluginbundles.details", {path: "/pluginbundles/details/:pluginbundleId", controller: "PluginbundlesDetailsController"});
-	this.route("pluginbundles.edit", {path: "/pluginbundles/edit/:pluginbundleId", controller: "PluginbundlesEditController"});
 	this.route("plugins", {path: "/plugins", controller: "PluginsController"});
 	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
 	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});

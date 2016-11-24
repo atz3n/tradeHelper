@@ -150,10 +150,15 @@ Template.StrategiesDetailsDetailsForm.helpers({
         var ret = pageSession.get("pluginBundlesCrudItems");
         
         for(var i = 0 ; i < ret.length ; i++){
-          ret[i].bundle = getPluginBundleName(ret[i].bundle);
-        }
-
-        return ret;
+			for(var k = 0 ; k < ret[i].pluginIds.length ; k++){
+				if(k === 0) ret[i].plugins = '';
+				else ret[i].plugins += ', ';
+				
+				ret[i].plugins += getPluginName(ret[i].pluginIds[k]);
+			}
+			delete 	ret[i].pluginIds;
+		}
+		return ret;
       }
     }
       

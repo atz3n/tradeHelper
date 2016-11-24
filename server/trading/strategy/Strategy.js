@@ -9,11 +9,13 @@
  * 
  * @author Atzen
  * @version 0.1.1
+ * @version 0.2.0
  *
  * 
  * CHANGES:
  * 26-Jul-2016 : Initial version
  * 12-Aug-2016 : bugfix: every plugins start api will be called in first updatFunc call now
+ * 24-Nov-2016 : adaption for post pluginBundle db time
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -1089,7 +1091,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _strDesc = Object.assign({}, strDesc);
 
     _data.strategyId = _strDesc._id;
-    _data.ownerId = Strategies.findOne({ _id: _data.strategyId }).ownerId;
+    _data.ownerId = _strDesc.ownerId;
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
@@ -1098,7 +1100,6 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
 
       _data.bundles[i] = {};
-      _data.bundles[i].name = _strDesc.pluginBundles[i].name;
       _data.bundles[i].plugins = new Array(_strDesc.pluginBundles[i].bundlePlugins.length);
 
 

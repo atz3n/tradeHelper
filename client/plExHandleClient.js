@@ -98,30 +98,6 @@ this.getPlugins = function() {
 }
 
 
-/*++++++++++ Plugin Bundles ++++++++++*/
-
-this.getPluginBundleName = function(plBuId) {
-
-  if (typeof PluginBundles.findOne({ _id: plBuId }) !== 'undefined')
-    return PluginBundles.findOne({ _id: plBuId }).name;
-
-  return '';
-}
-
-
-this.getPluginBundles = function() {
-  var res = [];
-
-
-  _.each(PluginBundles.find().fetch(), function(item) {
-    res.push({ name: item.name, _id: item._id })
-  });
-
-  res.sort(byName);
-  return res;
-}
-
-
 /***********************************************************************
   Local Function
  ***********************************************************************/
