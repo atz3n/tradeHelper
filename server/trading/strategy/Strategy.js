@@ -8,14 +8,15 @@
  *
  * 
  * @author Atzen
- * @version 0.1.1
- * @version 0.2.0
+ * @version 0.3.0
  *
  * 
  * CHANGES:
  * 26-Jul-2016 : Initial version
  * 12-Aug-2016 : bugfix: every plugins start api will be called in first updatFunc call now
  * 24-Nov-2016 : adaption for post pluginBundle db time
+ * 28-Nov-2016 : adaption to IPlugin 2.2
+ *               simplified plugins trade finished function calls
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -306,7 +307,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
         _data.plugins[i].state = pl.inst.getState();
         _data.plugins[i].info = pl.inst.getInfo();
 
-        if(i === numOfPl - 1) _firstRun = false;
+        if (i === numOfPl - 1) _firstRun = false;
       }
 
 
@@ -712,26 +713,23 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       } else {
 
 
-        /* get trade price */
-        var tPrice = _exchanges.getObject(pl.exId).getTradePrice();
+        /* call trade finished function for in position */
+        if (_data.position === 'none') {
+          var tmpP = _data.exchanges[exIdx].inPrice;
+          var tmpV = _data.exchanges[exIdx].volume;
 
-        /* error handling */
-        if (tPrice.error !== ExError.ok) {
-          var instInfo = _exchanges.getObject(pl.exId).getInstInfo();
-
-          if (instInfo.error !== ExError.ok) {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
-          } else {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x007', strId: _strDesc._id, name: instInfo.result.name }));
-          }
-
-          tPrice.result = _data.exchanges[exIdx].price[_data.exchanges[exIdx].price.length - 1];
+          if (trade === 'buy') pl.inst.bought(tmpP, tmpV);
+          if (trade === 'sell') pl.inst.sold(tmpP, tmpV);
         }
 
 
-        /* call trade finished function */
-        if (trade === 'buy') pl.inst.bought(tPrice.result);
-        if (trade === 'sell') pl.inst.sold(tPrice.result);
+        /* call trade finished function for out position */
+        if (_data.position === posOut) {
+          var tmpP = _data.exchanges[exIdx].outPrice;
+
+          if (trade === 'buy') pl.inst.bought(tmpP);
+          if (trade === 'sell') pl.inst.sold(tmpP);
+        }
       }
     }
 

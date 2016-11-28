@@ -332,6 +332,24 @@
             "required": true
           },
           {
+            "name": "stopValueBase",
+            "title": "Stop Value Base",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "price",
+                "value": "price"
+              },
+              {
+                "title": "profit",
+                "value": "profit"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
             "name": "stopValueType",
             "title": "Stop Value Type",
             "type": "string",

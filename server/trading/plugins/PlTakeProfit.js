@@ -13,6 +13,7 @@
  * CHANGES:
  * 05-Sep-2016 : Initial version
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
+ * 28-Nov-2016 : Added takeValueBase option
  */
 
 
@@ -34,6 +35,8 @@ import { IPlugin } from '../../apis/IPlugin.js'
 PlTakeProfit.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
+
+  takeValueBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
 
   takeValueType: 'value', // value (total amount), percentage (relative to in price)
   takeValueAmount: 0,
@@ -87,6 +90,12 @@ export function PlTakeProfit(logger) {
   var _curPrice = 0;
 
   /**
+   * Position in Volume
+   * @type {Number}
+   */
+  var _inVolume = 0;
+
+  /**
    * Trade position
    * @type {String}
    */
@@ -117,6 +126,8 @@ export function PlTakeProfit(logger) {
    */
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
+
+    if (_config.takeValueBase !== 'price' && _config.takeValueBase !== 'profit') return false;
 
     if (_config.takeValueType !== 'value' && _config.takeValueType !== 'percentage') return false;
 
@@ -152,6 +163,7 @@ export function PlTakeProfit(logger) {
    */
   this.getConfig = function() {
     return [
+      { title: 'Take Value Base', value: _config.takeValueBase },
       { title: 'Take Value Type', value: _config.takeValueType },
       { title: 'Take Value', value: _config.takeValueAmount },
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
@@ -193,37 +205,34 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
+    var diff = 0;
     _curPrice = price;
+
+
+    /* get difference */
+    if (_config.takeValueType === 'percentage') {
+      diff = percentage(_curPrice, _inPrice);
+    } else {
+      diff = _curPrice - _inPrice;
+
+      if (_config.takeValueBase === 'profit') diff *= _inVolume;
+    }
 
 
     /* stop long position */
     if (_position === 'long' && _config.enLong) {
-      if (_config.takeValueType === 'value') {
-        if (_curPrice - _inPrice > _config.takeValueAmount) {
-          _sellNotifyFunc(this.getInstInfo());
-        }
-      }
-
-      if (_config.takeValueType === 'percentage') {
-        if (percentage(_curPrice, _inPrice) > _config.takeValueAmount) {
-          _sellNotifyFunc(this.getInstInfo());
-        }
+      if (diff > _config.takeValueAmount) {
+        _sellNotifyFunc(this.getInstInfo());
       }
     }
 
 
     /* stop short position */
     if (_position === 'short' && _config.enShort) {
-      if (_config.takeValueType === 'value') {
-        if (_curPrice - _inPrice < -_config.takeValueAmount) {
-          _buyNotifyFunc(this.getInstInfo());
-        }
-      }
-
-      if (_config.takeValueType === 'percentage') {
-        if (percentage(_curPrice, _inPrice) < -_config.takeValueAmount) {
-          _buyNotifyFunc(this.getInstInfo());
-        }
+      console.log(diff)
+      if (diff < - _config.takeValueAmount) {
+        console.log('go')
+        _buyNotifyFunc(this.getInstInfo());
       }
     }
   }
@@ -232,15 +241,17 @@ export function PlTakeProfit(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.bought = function(price) {
+  this.bought = function(price, volume) {
     if (_position !== 'long') { // for savety reasons
 
       if (_position === 'none') {
         _position = 'long';
         _inPrice = price;
+        _inVolume = volume;
       } else {
         _position = 'none';
         _inPrice = 0;
+        _inVolume = 0;
       }
 
       _curPrice = price;
@@ -251,15 +262,17 @@ export function PlTakeProfit(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.sold = function(price) {
+  this.sold = function(price, volume) {
     if (_position !== 'short') { // for savety reasons
       
       if (_position === 'none') {
         _position = 'short';
         _inPrice = price;
+        _inVolume = volume;
       } else {
         _position = 'none';
         _inPrice = 0;
+        _inVolume = 0;
       }
 
       _curPrice = price;
