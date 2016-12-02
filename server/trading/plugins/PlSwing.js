@@ -232,11 +232,8 @@ export function PlSwing(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.getState = function() {
-    if (_position !== 'none')
-      return 'in';
-    else
-      return 'out';
+  this.getActiveState = function() {
+    return false;
   }
 
 

@@ -123,9 +123,6 @@ Template.PluginsEditPlTakeProfitEditForm.helpers({
 	},
 	"exchanges": function() {
 		return getExchanges();
-	},
-	"exchangeName": function() {
-		return getExchangeName(this.pl_take_profit.exchange);
 	}
 	
 });

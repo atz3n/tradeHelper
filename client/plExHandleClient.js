@@ -18,6 +18,8 @@ Meteor.subscribe("ex_test_datas");
 Meteor.subscribe("pl_swings");
 Meteor.subscribe("pl_stop_losses");
 Meteor.subscribe("pl_take_profits");
+Meteor.subscribe("pl_threshold_ins");
+Meteor.subscribe("pl_threshold_outs");
 
 
 /***********************************************************************
@@ -32,6 +34,8 @@ var exchangeHandler = new InstHandler();
 pluginHandler.setObject('PlSwings', PlSwings);
 pluginHandler.setObject('PlStopLosses', PlStopLosses);
 pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
+pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
+pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
 
 
 /* Exchanges */

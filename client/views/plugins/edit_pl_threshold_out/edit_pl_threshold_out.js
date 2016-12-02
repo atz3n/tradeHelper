@@ -1,22 +1,22 @@
 var pageSession = new ReactiveDict();
 
-Template.PluginsEditPlStopLoss.rendered = function() {
+Template.PluginsEditPlThresholdOut.rendered = function() {
 	
 };
 
-Template.PluginsEditPlStopLoss.events({
+Template.PluginsEditPlThresholdOut.events({
 	
 });
 
-Template.PluginsEditPlStopLoss.helpers({
+Template.PluginsEditPlThresholdOut.helpers({
 	
 });
 
-Template.PluginsEditPlStopLossEditForm.rendered = function() {
+Template.PluginsEditPlThresholdOutEditForm.rendered = function() {
 	
 
-	pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", "");
-	pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", "");
+	pageSession.set("pluginsEditPlThresholdOutEditFormInfoMessage", "");
+	pageSession.set("pluginsEditPlThresholdOutEditFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -44,25 +44,25 @@ Template.PluginsEditPlStopLossEditForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.PluginsEditPlStopLossEditForm.events({
+Template.PluginsEditPlThresholdOutEditForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", "");
-		pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", "");
+		pageSession.set("pluginsEditPlThresholdOutEditFormInfoMessage", "");
+		pageSession.set("pluginsEditPlThresholdOutEditFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var pluginsEditPlStopLossEditFormMode = "update";
+			var pluginsEditPlThresholdOutEditFormMode = "update";
 			if(!t.find("#form-cancel-button")) {
-				switch(pluginsEditPlStopLossEditFormMode) {
+				switch(pluginsEditPlThresholdOutEditFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", message);
+						pageSession.set("pluginsEditPlThresholdOutEditFormInfoMessage", message);
 					}; break;
 				}
 			}
@@ -73,7 +73,7 @@ Template.PluginsEditPlStopLossEditForm.events({
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", message);
+			pageSession.set("pluginsEditPlThresholdOutEditFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -87,7 +87,7 @@ Template.PluginsEditPlStopLossEditForm.events({
 			function(values) {
 				
 
-				PlStopLosses.update({ _id: t.data.pl_stop_loss._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				PlThresholdOuts.update({ _id: t.data.pl_threshold_out._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 
@@ -114,12 +114,12 @@ Template.PluginsEditPlStopLossEditForm.events({
 	
 });
 
-Template.PluginsEditPlStopLossEditForm.helpers({
+Template.PluginsEditPlThresholdOutEditForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("pluginsEditPlStopLossEditFormInfoMessage");
+		return pageSession.get("pluginsEditPlThresholdOutEditFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("pluginsEditPlStopLossEditFormErrorMessage");
+		return pageSession.get("pluginsEditPlThresholdOutEditFormErrorMessage");
 	},
 	"exchanges": function() {
 		return getExchanges();

@@ -1,22 +1,22 @@
 var pageSession = new ReactiveDict();
 
-Template.PluginsEditPlStopLoss.rendered = function() {
+Template.PluginsDetailsPlThresholdOut.rendered = function() {
 	
 };
 
-Template.PluginsEditPlStopLoss.events({
+Template.PluginsDetailsPlThresholdOut.events({
 	
 });
 
-Template.PluginsEditPlStopLoss.helpers({
+Template.PluginsDetailsPlThresholdOut.helpers({
 	
 });
 
-Template.PluginsEditPlStopLossEditForm.rendered = function() {
+Template.PluginsDetailsPlThresholdOutDetailsForm.rendered = function() {
 	
 
-	pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", "");
-	pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", "");
+	pageSession.set("pluginsDetailsPlThresholdOutDetailsFormInfoMessage", "");
+	pageSession.set("pluginsDetailsPlThresholdOutDetailsFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -44,36 +44,36 @@ Template.PluginsEditPlStopLossEditForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.PluginsEditPlStopLossEditForm.events({
+Template.PluginsDetailsPlThresholdOutDetailsForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", "");
-		pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", "");
+		pageSession.set("pluginsDetailsPlThresholdOutDetailsFormInfoMessage", "");
+		pageSession.set("pluginsDetailsPlThresholdOutDetailsFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var pluginsEditPlStopLossEditFormMode = "update";
+			var pluginsDetailsPlThresholdOutDetailsFormMode = "read_only";
 			if(!t.find("#form-cancel-button")) {
-				switch(pluginsEditPlStopLossEditFormMode) {
+				switch(pluginsDetailsPlThresholdOutDetailsFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("pluginsEditPlStopLossEditFormInfoMessage", message);
+						pageSession.set("pluginsDetailsPlThresholdOutDetailsFormInfoMessage", message);
 					}; break;
 				}
 			}
 
-			Router.go("plugins", {});
+			/*SUBMIT_REDIRECT*/
 		}
 
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("pluginsEditPlStopLossEditFormErrorMessage", message);
+			pageSession.set("pluginsDetailsPlThresholdOutDetailsFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -87,7 +87,7 @@ Template.PluginsEditPlStopLossEditForm.events({
 			function(values) {
 				
 
-				PlStopLosses.update({ _id: t.data.pl_stop_loss._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				
 			}
 		);
 
@@ -98,31 +98,31 @@ Template.PluginsEditPlStopLossEditForm.events({
 
 		
 
-		Router.go("plugins", {});
+		/*CANCEL_REDIRECT*/
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
 
-		/*CLOSE_REDIRECT*/
+		Router.go("plugins", {});
 	},
 	"click #form-back-button": function(e, t) {
 		e.preventDefault();
 
-		/*BACK_REDIRECT*/
+		Router.go("plugins", {});
 	}
 
 	
 });
 
-Template.PluginsEditPlStopLossEditForm.helpers({
+Template.PluginsDetailsPlThresholdOutDetailsForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("pluginsEditPlStopLossEditFormInfoMessage");
+		return pageSession.get("pluginsDetailsPlThresholdOutDetailsFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("pluginsEditPlStopLossEditFormErrorMessage");
+		return pageSession.get("pluginsDetailsPlThresholdOutDetailsFormErrorMessage");
 	},
-	"exchanges": function() {
-		return getExchanges();
+	"exchangeName": function() {
+		return getExchangeName(this.pl_threshold_out.exchange);
 	}
 	
 });

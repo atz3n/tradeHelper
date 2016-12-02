@@ -1,5 +1,5 @@
-this.PluginsController = RouteController.extend({
-	template: "Plugins",
+this.PluginsDetailsPlThresholdInController = RouteController.extend({
+	template: "PluginsDetailsPlThresholdIn",
 	
 
 	yieldTemplates: {
@@ -19,11 +19,7 @@ this.PluginsController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_swings"),
-			Meteor.subscribe("pl_stop_losses"),
-			Meteor.subscribe("pl_take_profits"),
-			Meteor.subscribe("pl_threshold_ins"),
-			Meteor.subscribe("pl_threshold_outs")
+			Meteor.subscribe("pl_threshold_in", this.params.plThresholdInId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -38,11 +34,7 @@ this.PluginsController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_swings: PlSwings.find({}, {}),
-			pl_stop_losses: PlStopLosses.find({}, {}),
-			pl_take_profits: PlTakeProfits.find({}, {}),
-			pl_threshold_ins: PlThresholdIns.find({}, {}),
-			pl_threshold_outs: PlThresholdOuts.find({}, {})
+			pl_threshold_in: PlThresholdIns.findOne({_id:this.params.plThresholdInId}, {})
 		};
 		
 

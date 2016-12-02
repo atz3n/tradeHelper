@@ -5,7 +5,7 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 2.2
+ * @version 3.0.0
  * 
  * CHANGES:
  * 01-Jul-2016 : Initial version
@@ -14,6 +14,7 @@
  * 26-Jul-2016 : included default configuration object
  * 12-Aug-2016 : bugfix: added configuration parameter in setConfig() signature
  * 26-Nov-2016 : added volume parameter in bought/sold function
+ * 30-Nov-2016 : changed getState function to getActiveState
  */
 
 /***********************************************************************
@@ -62,10 +63,10 @@ IPlugin.prototype.getConfig = function() {
 
 
 /**
- * Returns the state of a plugin
- * @return {String} in/out
+ * Returns the active state of a plugin (true = active / false = inactive)
+ * @return {boolean} true/false
  */
-IPlugin.prototype.getState = function() {
+IPlugin.prototype.getActiveState = function() {
     throw new Error('This method must be overwritten!');
 }
 

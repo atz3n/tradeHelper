@@ -1,19 +1,17 @@
 /**
  * @description:
- * Class for take profit mechanism
+ * Class for threshold trading (for in to out positioning)
  *
  * 
- * This class implements a safety take profit to safely take profit
+ * This class implements a configurable threshold to go out of a position
  *
  * 
  * @author Atzen
- * @version 0.2.0
+ * @version 0.1.0
  *
  * 
  * CHANGES:
- * 05-Sep-2016 : Initial version
- * 31-Oct-2016 : Added savety mechanism in bought/sold functions
- * 28-Nov-2016 : Added takeValueBase option
+ * 02-Dez-2016 : Initial version
  */
 
 
@@ -32,14 +30,14 @@ import { IPlugin } from '../../apis/IPlugin.js'
  * Configuration structure
  * @type {Object}
  */
-PlTakeProfit.ConfigDefault = {
+PlThresholdOut.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
 
-  takeValueBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
+  thresholdBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
 
-  takeValueType: 'value', // value (total amount), percentage (relative to in price)
-  takeValueAmount: 0,
+  thresholdType: 'value', // value (total amount), percentage (relative to in price)
+  thresholdAmount: 0,
 
   enLong: true, // enable long trading
   enShort: true // enable short trading
@@ -58,7 +56,7 @@ PlTakeProfit.ConfigDefault = {
   Class
  ***********************************************************************/
 
-export function PlTakeProfit(logger) {
+export function PlThresholdOut(logger) {
 
   /***********************************************************************
     Inheritances
@@ -75,13 +73,13 @@ export function PlTakeProfit(logger) {
    * Internal configuration object
    * @type {Object}
    */
-  var _config = Object.assign({}, PlTakeProfit.ConfigDefault);
+  var _config = Object.assign({}, PlThresholdOut.ConfigDefault);
 
   /**
-   * Position in price
+   * High / Low Price
    * @type {Number}
    */
-  var _inPrice = 0;
+  var _highLowPrice = 0;
 
   /**
    * Current Price
@@ -100,6 +98,12 @@ export function PlTakeProfit(logger) {
    * @type {String}
    */
   var _position = 'none';
+
+  /**
+   * Active state
+   * @type {Boolean}
+   */
+  var _active = false;
 
   /**
    * Callback function that will be called when a buy action is calculated
@@ -127,15 +131,15 @@ export function PlTakeProfit(logger) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
 
-    if (_config.takeValueBase !== 'price' && _config.takeValueBase !== 'profit') return false;
+    if (_config.thresholdBase !== 'price' && _config.thresholdBase !== 'profit') return false;
 
-    if (_config.takeValueType !== 'value' && _config.takeValueType !== 'percentage') return false;
+    if (_config.thresholdType !== 'value' && _config.thresholdType !== 'percentage') return false;
 
-    if (isNaN(_config.takeValueAmount)) return false;
-    if (_config.takeValueAmount < 0) return false;
+    if (isNaN(_config.thresholdAmount)) return false;
+    if (_config.thresholdAmount < 0) return false;
 
-    if (_config.takeValueType === 'percentage') {
-      if (_config.takeValueAmount > 100) return false;
+    if (_config.thresholdType === 'percentage') {
+      if (_config.thresholdAmount > 100) return false;
     }
 
     if (typeof _config.enLong !== 'boolean') return false;
@@ -163,9 +167,9 @@ export function PlTakeProfit(logger) {
    */
   this.getConfig = function() {
     return [
-      { title: 'Take Value Base', value: _config.takeValueBase },
-      { title: 'Take Value Type', value: _config.takeValueType },
-      { title: 'Take Value', value: _config.takeValueAmount },
+      { title: 'Threshold Base', value: _config.thresholdBase },
+      { title: 'Threshold Type', value: _config.thresholdType },
+      { title: 'Threshold', value: _config.thresholdAmount },
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
       { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
     ];
@@ -176,7 +180,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
-    return false;
+    return _active;
   }
 
 
@@ -184,10 +188,18 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
-    return [
-      { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
-      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) },
+    var tmp = [
+      { title: 'High Price', value: '-' },
+      { title: 'Low Price', value: '-' },
+      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
+
+    if(_position === 'long') tmp[0].value = cropFracDigits(_highLowPrice, 6)
+    if(_position === 'short') tmp[1].value = cropFracDigits(_highLowPrice, 6)
+
+    if(!_active) for(i in tmp) tmp[i].value = '-';
+
+    return tmp;
   }
 
 
@@ -195,8 +207,10 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
-    _curPrice = price;
     _position = 'none';
+
+    /* set active state */
+    _active = false;
   }
 
 
@@ -204,54 +218,75 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
-    var diff = 0;
-    _curPrice = price;
+    if(_active){
+    
+      var diff = 0;
+      _curPrice = price;
 
 
-    /* get difference */
-    if (_config.takeValueType === 'percentage') {
-      diff = percentage(_curPrice, _inPrice);
-    } else {
-      diff = _curPrice - _inPrice;
-
-      if (_config.takeValueBase === 'profit') diff *= _inVolume;
-    }
+      /* set base value */
+      if (_position === 'long') _highLowPrice = Math.max(_highLowPrice, _curPrice);
+      if (_position === 'short') _highLowPrice = Math.min(_highLowPrice, _curPrice);
 
 
-    /* stop long position */
-    if (_position === 'long' && _config.enLong) {
-      if (diff > _config.takeValueAmount) {
-        _sellNotifyFunc(this.getInstInfo());
+      /* get difference */
+      if (_config.thresholdType === 'percentage') {
+        diff = percentage(_curPrice, _highLowPrice);
+      } else {
+        diff = _curPrice - _highLowPrice;
+
+        if (_config.thresholdBase === 'profit') diff *= _inVolume;
       }
-    }
 
 
-    /* stop short position */
-    if (_position === 'short' && _config.enShort) {
-      console.log(diff)
-      if (diff < - _config.takeValueAmount) {
-        console.log('go')
-        _buyNotifyFunc(this.getInstInfo());
+      /* stop long position */
+      if (_position === 'long') {
+        if (diff < -_config.thresholdAmount) {
+          _sellNotifyFunc(this.getInstInfo());
+        }
       }
+
+
+      /* stop short position */
+      if (_position === 'short') {
+        if (diff > _config.thresholdAmount) {
+          _buyNotifyFunc(this.getInstInfo());
+        }
+      }
+
     }
   }
 
 
-  /**
+/**
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
     if (_position !== 'long') { // for savety reasons
 
-      if (_position === 'none') {
+      /* long in */
+      if (_position === 'none') 
+      {
         _position = 'long';
-        _inPrice = price;
+        
+        if(_config.enLong) _active = true;
+        _highLowPrice = price;
+
         _inVolume = volume;
-      } else {
+      } 
+
+
+      /* short out */
+      else 
+      {
         _position = 'none';
-        _inPrice = 0;
+        
+        _active = false;
+        _highLowPrice = 0;
+
         _inVolume = 0;
       }
+
 
       _curPrice = price;
     }
@@ -263,16 +298,30 @@ export function PlTakeProfit(logger) {
    */
   this.sold = function(price, volume) {
     if (_position !== 'short') { // for savety reasons
-      
-      if (_position === 'none') {
+
+      /* short in */
+      if (_position === 'none') 
+      {
         _position = 'short';
-        _inPrice = price;
+
+        if(_config.enShort) _active = true;
+        _highLowPrice = price;
+
         _inVolume = volume;
-      } else {
+      } 
+
+
+      /* long out */
+      else 
+      {
         _position = 'none';
-        _inPrice = 0;
+
+        _active = false;
+        _highLowPrice = 0;
+
         _inVolume = 0;
       }
+
 
       _curPrice = price;
     }
@@ -299,7 +348,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
-    return { id: _config.id, name: _config.name, type: "PlTakeProfit" };
+    return { id: _config.id, name: _config.name, type: "PlThresholdOut" };
   }
 
 
@@ -314,5 +363,4 @@ export function PlTakeProfit(logger) {
   /***********************************************************************
     Constructor
    ***********************************************************************/
-
 }

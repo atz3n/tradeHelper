@@ -123,9 +123,6 @@ Template.PluginsEditPlSwingEditForm.helpers({
 	},
 	"exchanges": function() {
 		return getExchanges();
-	},
-	"exchangeName": function() {
-		return getExchangeName(this.pl_swing.exchange);
 	}
 	
 	

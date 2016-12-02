@@ -175,9 +175,8 @@ export function PlStopLoss(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.getState = function() {
-    if (_position === 'none') return 'out';
-    else return 'in';
+  this.getActiveState = function() {
+    return false;
   }
 
 
@@ -306,7 +305,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
-    return { long: _config.enableLong, short: _config.enableShort }
+    return { long: _config.enLong, short: _config.enLong }
   }
 
 

@@ -304,7 +304,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
           else pl.inst.update(price);
         }
 
-        _data.plugins[i].state = pl.inst.getState();
+        if(pl.inst.getActiveState()) _data.plugins[i].state = 'active';
+        else _data.plugins[i].state = 'idle';
+
         _data.plugins[i].info = pl.inst.getInfo();
 
         if (i === numOfPl - 1) _firstRun = false;

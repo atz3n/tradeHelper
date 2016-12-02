@@ -1,20 +1,39 @@
+
 /**
  * @description:
- * Class for take profit mechanism
+ * <Description>
  *
  * 
- * This class implements a safety take profit to safely take profit
+ * <Optional informations>
  *
  * 
- * @author Atzen
- * @version 0.2.0
+ * @author <Your Name>
+ * @version 1.0.0
  *
  * 
  * CHANGES:
- * 05-Sep-2016 : Initial version
- * 31-Oct-2016 : Added savety mechanism in bought/sold functions
- * 28-Nov-2016 : Added takeValueBase option
+ * 02-Jun-2015 : Initial version
  */
+
+/***********************************************************************
+------------------------
+    HOW TO USE
+------------------------
+
+This is a template for an Plugin. It includes the IPlugin interface functions
+and some basic logic.
+
+
+Replace the fields marked with <YOUR CODE: <some description>> with your code inside.
+
+Of course, your allowed to add any, delete or modify every line inside this template as long
+as the functionality is kept and the api's are served.
+
+
+Delete this How To area after finishing your work.
+
+************************************************************************/
+
 
 
 import { IPlugin } from '../../apis/IPlugin.js'
@@ -32,14 +51,11 @@ import { IPlugin } from '../../apis/IPlugin.js'
  * Configuration structure
  * @type {Object}
  */
-PlTakeProfit.ConfigDefault = {
+<YOUR CODE: plugin name with prefix "Pl">.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
 
-  takeValueBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
-
-  takeValueType: 'value', // value (total amount), percentage (relative to in price)
-  takeValueAmount: 0,
+  <YOUR CODE: plugin specific config variables> 
 
   enLong: true, // enable long trading
   enShort: true // enable short trading
@@ -58,7 +74,7 @@ PlTakeProfit.ConfigDefault = {
   Class
  ***********************************************************************/
 
-export function PlTakeProfit(logger) {
+export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
 
   /***********************************************************************
     Inheritances
@@ -75,13 +91,7 @@ export function PlTakeProfit(logger) {
    * Internal configuration object
    * @type {Object}
    */
-  var _config = Object.assign({}, PlTakeProfit.ConfigDefault);
-
-  /**
-   * Position in price
-   * @type {Number}
-   */
-  var _inPrice = 0;
+  var _config = Object.assign({}, <YOUR CODE: Plugin name with prefix "Pl">.ConfigDefault);
 
   /**
    * Current Price
@@ -100,6 +110,16 @@ export function PlTakeProfit(logger) {
    * @type {String}
    */
   var _position = 'none';
+
+  /**
+  * Active state
+  * @type {Boolean}
+  */
+  var _active = false;
+
+
+  <YOUR CODE: private variables>
+
 
   /**
    * Callback function that will be called when a buy action is calculated
@@ -127,16 +147,7 @@ export function PlTakeProfit(logger) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
 
-    if (_config.takeValueBase !== 'price' && _config.takeValueBase !== 'profit') return false;
-
-    if (_config.takeValueType !== 'value' && _config.takeValueType !== 'percentage') return false;
-
-    if (isNaN(_config.takeValueAmount)) return false;
-    if (_config.takeValueAmount < 0) return false;
-
-    if (_config.takeValueType === 'percentage') {
-      if (_config.takeValueAmount > 100) return false;
-    }
+    <YOUR CODE: configuration checks>
 
     if (typeof _config.enLong !== 'boolean') return false;
     if (typeof _config.enShort !== 'boolean') return false;
@@ -163,9 +174,7 @@ export function PlTakeProfit(logger) {
    */
   this.getConfig = function() {
     return [
-      { title: 'Take Value Base', value: _config.takeValueBase },
-      { title: 'Take Value Type', value: _config.takeValueType },
-      { title: 'Take Value', value: _config.takeValueAmount },
+      <YOUR CODE: configuration array objects>
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
       { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
     ];
@@ -176,7 +185,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
-    return false;
+    return _active;
   }
 
 
@@ -184,10 +193,15 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
-    return [
-      { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
-      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) },
+    var tmp = [
+      <YOUR CODE: information array objects>
     ];
+
+    <YOUR CODE: some view logic>
+
+    if(!_active) for(i in tmp) tmp[i].value = '-';
+
+    return tmp;
   }
 
 
@@ -195,8 +209,10 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
-    _curPrice = price;
     _position = 'none';
+
+    /* set active state */
+    <YOUR CODE: set _active value to true/false>
   }
 
 
@@ -204,35 +220,10 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
-    var diff = 0;
-    _curPrice = price;
+    if(_active){
+    
+      <YOUR CODE: update logic>
 
-
-    /* get difference */
-    if (_config.takeValueType === 'percentage') {
-      diff = percentage(_curPrice, _inPrice);
-    } else {
-      diff = _curPrice - _inPrice;
-
-      if (_config.takeValueBase === 'profit') diff *= _inVolume;
-    }
-
-
-    /* stop long position */
-    if (_position === 'long' && _config.enLong) {
-      if (diff > _config.takeValueAmount) {
-        _sellNotifyFunc(this.getInstInfo());
-      }
-    }
-
-
-    /* stop short position */
-    if (_position === 'short' && _config.enShort) {
-      console.log(diff)
-      if (diff < - _config.takeValueAmount) {
-        console.log('go')
-        _buyNotifyFunc(this.getInstInfo());
-      }
     }
   }
 
@@ -243,15 +234,29 @@ export function PlTakeProfit(logger) {
   this.bought = function(price, volume) {
     if (_position !== 'long') { // for savety reasons
 
-      if (_position === 'none') {
+      /* long in */
+      if (_position === 'none') 
+      {
         _position = 'long';
-        _inPrice = price;
+        
+        <YOUR CODE: set _active variable to true/false>
+        <YOUR CODE: set your price variable>
+
         _inVolume = volume;
-      } else {
+      } 
+
+
+      /* short out */
+      else 
+      {
         _position = 'none';
-        _inPrice = 0;
+        
+        <YOUR CODE: set _active variable to true/false>
+        <YOUR CODE: set your price variable>
+
         _inVolume = 0;
       }
+
 
       _curPrice = price;
     }
@@ -263,16 +268,30 @@ export function PlTakeProfit(logger) {
    */
   this.sold = function(price, volume) {
     if (_position !== 'short') { // for savety reasons
-      
-      if (_position === 'none') {
+
+      /* short in */
+      if (_position === 'none') 
+      {
         _position = 'short';
-        _inPrice = price;
+
+        <YOUR CODE: set _active variable to true/false>
+        <YOUR CODE: set your price variable>
+
         _inVolume = volume;
-      } else {
+      } 
+
+
+      /* long out */
+      else 
+      {
         _position = 'none';
-        _inPrice = 0;
+
+        <YOUR CODE: set _active variable to true/false>
+        <YOUR CODE: set your price variable>
+
         _inVolume = 0;
       }
+
 
       _curPrice = price;
     }
@@ -299,7 +318,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
-    return { id: _config.id, name: _config.name, type: "PlTakeProfit" };
+    return { id: _config.id, name: _config.name, type: "<YOUR CODE: plugin name with prefix "Pl">" };
   }
 
 
@@ -314,5 +333,4 @@ export function PlTakeProfit(logger) {
   /***********************************************************************
     Constructor
    ***********************************************************************/
-
 }
