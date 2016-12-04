@@ -26,9 +26,6 @@ var privateRoutes = [
 	"strategies.details",
 	"strategies.edit",
 	"plugins",
-	"plugins.insert_pl_swing",
-	"plugins.details_pl_swing",
-	"plugins.edit_pl_swing",
 	"plugins.insert_pl_stop_loss",
 	"plugins.details_pl_stop_loss",
 	"plugins.edit_pl_stop_loss",
@@ -256,9 +253,6 @@ Router.map(function () {
 	this.route("strategies.details", {path: "/strategies/details/:strategyId", controller: "StrategiesDetailsController"});
 	this.route("strategies.edit", {path: "/strategies/edit/:strategyId", controller: "StrategiesEditController"});
 	this.route("plugins", {path: "/plugins", controller: "PluginsController"});
-	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
-	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});
-	this.route("plugins.edit_pl_swing", {path: "/plugins/edit_pl_swing/:plSwingId", controller: "PluginsEditPlSwingController"});
 	this.route("plugins.insert_pl_stop_loss", {path: "/plugins/insert_pl_stop_loss", controller: "PluginsInsertPlStopLossController"});
 	this.route("plugins.details_pl_stop_loss", {path: "/plugins/details_pl_stop_loss/:plStopLossId", controller: "PluginsDetailsPlStopLossController"});
 	this.route("plugins.edit_pl_stop_loss", {path: "/plugins/edit_pl_stop_loss/:plStopLossId", controller: "PluginsEditPlStopLossController"});

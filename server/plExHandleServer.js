@@ -5,7 +5,6 @@ import { InstHandler } from './lib/InstHandler.js';
   Import Plugin / Exchange
  ***********************************************************************/
 
-import { PlSwing } from './trading/plugins/PlSwing.js';
 import { PlStopLoss } from './trading/plugins/PlStopLoss.js';
 import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
 import { PlThresholdIn } from './trading/plugins/PlThresholdIn.js';
@@ -24,7 +23,6 @@ exchangeHandler = new InstHandler();
 
 
 /* Plugins */
-pluginHandler.setObject('PlSwings', PlSwings);
 pluginHandler.setObject('PlStopLosses', PlStopLosses);
 pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
 pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
@@ -52,7 +50,6 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   /***** add plugin default config here ******/
 
-  if (plugin.type === 'plSwing') conf = Object.assign({}, PlSwing.ConfigDefault);
   if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
   if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlTakeProfit.ConfigDefault);
   if (plugin.type === 'plThresholdIns') conf = Object.assign({}, PlThresholdIn.ConfigDefault);
@@ -77,7 +74,6 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   /***** add plugin instance creation here ******/
 
-  if (plugin.type === 'plSwing') strPlHandler.setObject(plugin._id, { inst: new PlSwing(), exId: plugin.exchange._id });
   if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
   if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(), exId: plugin.exchange._id });
   if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(), exId: plugin.exchange._id });

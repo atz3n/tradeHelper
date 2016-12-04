@@ -124,9 +124,6 @@
                 "title": "Plugins (logical connected via 'and')",
                 "type": "string",
                 "input": "select",
-                "lookup_query_name": "plSwings",
-                "lookup_field": "name",
-                "lookup_key": "_id",
                 "required": true
               }
             ],
@@ -213,101 +210,6 @@
         "roles_allowed_to_delete": [
           "owner"
         ]
-      },
-      {
-        "name": "plSwings",
-        "fields": [
-          {
-            "name": "name",
-            "title": "Name",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "exchange",
-            "title": "Exchange",
-            "type": "string",
-            "input": "select",
-            "lookup_query_name": "exKrakens",
-            "lookup_field": "name",
-            "lookup_key": "_id",
-            "required": true,
-            "show_in_dataview": false,
-            "show_in_read_only_form": false,
-            "exportable": false,
-            "join_collection": "exKrakens",
-            "join_fields": [
-              "name"
-            ],
-            "join_container": "exKrakenCont"
-          },
-          {
-            "name": "exKrakenCont.name",
-            "title": "Exchange",
-            "show_in_insert_form": false,
-            "show_in_update_form": false
-          },
-          {
-            "name": "oLngPosPer",
-            "title": "Open Long Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "cLngPosPer",
-            "title": "Close Long Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "oShrtPosPer",
-            "title": "Open Short Positon [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "cShrtPosPer",
-            "title": "Close Short Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "enLong",
-            "title": "Enable Long",
-            "type": "bool",
-            "input": "checkbox",
-            "display_helper": "booleanToYesNo",
-            "default": "true"
-          },
-          {
-            "name": "enShort",
-            "title": "Enable Short",
-            "type": "bool",
-            "input": "checkbox",
-            "display_helper": "booleanToYesNo",
-            "default": "false"
-          }
-        ],
-        "owner_field": "ownerId",
-        "roles_allowed_to_read": [
-          "owner"
-        ],
-        "roles_allowed_to_update": [
-          "owner"
-        ],
-        "roles_allowed_to_delete": [
-          "owner"
-        ],
-        "before_insert_code": "doc.type = 'plSwing';"
-        
       },
       {
         "name": "plStopLosses",
@@ -1313,27 +1215,6 @@
         "find_one": true
       },
       {
-        "name": "plSwings",
-        "collection": "plSwings",
-        "filter": {}
-      },
-      {
-        "name": "plSwings_empty",
-        "collection": "plSwings",
-        "filter": {
-          "_id": null
-        },
-        "find_one": true
-      },
-      {
-        "name": "plSwing",
-        "collection": "plSwings",
-        "filter": {
-          "_id": ":plSwingId"
-        },
-        "find_one": true
-      },
-      {
         "name": "settings",
         "collection": "settings",
         "filter": {}
@@ -1710,29 +1591,6 @@
           "name": "plugins",
           "components": [
             {
-              "name": "viewPlSwings",
-              "title": "Swing",
-              "type": "data_view",
-              "text_if_empty": "No Swing configured",
-              "query_name": "plSwings",
-              "query_params": [],
-              "insert_route": "plugins.insertPlSwing",
-              "edit_route": "plugins.editPlSwing",
-              "edit_route_params": [
-                {
-                  "name": "plSwingId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlSwing",
-              "details_route_params": [
-                {
-                  "name": "plSwingId",
-                  "value": "this._id"
-                }
-              ]
-            },
-            {
               "name": "viewPlStopLosses",
               "title": "StopLoss",
               "type": "data_view",
@@ -1780,7 +1638,7 @@
             },
             {
               "name": "viewPlThresholdIns",
-              "title": "Threshold In",
+              "title": "ThresholdIn",
               "type": "data_view",
               "text_if_empty": "No Threshold configured",
               "query_name": "plThresholdIns",
@@ -1803,7 +1661,7 @@
             },
             {
               "name": "viewPlThresholdOuts",
-              "title": "Threshold Out",
+              "title": "ThresholdOut",
               "type": "data_view",
               "text_if_empty": "No Threshold configured",
               "query_name": "plThresholdOuts",
@@ -1826,58 +1684,6 @@
             }
           ],
           "pages": [
-            {
-              "name": "insertPlSwing",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Swing",
-                  "query_name": "plSwings_empty",
-                  "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "detailsPlSwing",
-              "route_params": [
-                "plSwingId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plSwing",
-                  "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "editPlSwing",
-              "route_params": [
-                "plSwingId"
-              ],
-              "components": [
-                {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Swing",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plSwing",
-                  "query_params": []
-                }
-              ]
-            },
             {
               "name": "insertPlStopLoss",
               "components": [
@@ -1989,7 +1795,7 @@
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
-                  "title": "New Threshold In",
+                  "title": "New ThresholdIn",
                   "query_name": "plThresholdIns_empty",
                   "query_params": [],
                   "submit_route": "plugins",
@@ -2026,7 +1832,7 @@
                   "name": "edit_form",
                   "type": "form",
                   "mode": "update",
-                  "title": "Edit Threshold In",
+                  "title": "Edit ThresholdIn",
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
                   "query_name": "plThresholdIn",
@@ -2041,7 +1847,7 @@
                   "name": "insert_form",
                   "type": "form",
                   "mode": "insert",
-                  "title": "New Threshold Out",
+                  "title": "New ThresholdOut",
                   "query_name": "plThresholdOuts_empty",
                   "query_params": [],
                   "submit_route": "plugins",
@@ -2078,7 +1884,7 @@
                   "name": "edit_form",
                   "type": "form",
                   "mode": "update",
-                  "title": "Edit Threshold Out",
+                  "title": "Edit ThresholdOut",
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
                   "query_name": "plThresholdOut",
