@@ -39,12 +39,14 @@ var privateRoutes = [
 	"plugins.details_pl_threshold_out",
 	"plugins.edit_pl_threshold_out",
 	"exchanges",
-	"exchanges.insert_ex_kraken",
-	"exchanges.edit_ex_kraken",
-	"exchanges.details_ex_kraken",
-	"exchanges.insert_ex_test_data",
-	"exchanges.edit_ex_test_data",
-	"exchanges.details_ex_test_data",
+	"exchanges.kraken_com",
+	"exchanges.kraken_com.insert_ex_kraken",
+	"exchanges.kraken_com.edit_ex_kraken",
+	"exchanges.kraken_com.details_ex_kraken",
+	"exchanges.test_data",
+	"exchanges.test_data.insert_ex_test_data",
+	"exchanges.test_data.edit_ex_test_data",
+	"exchanges.test_data.details_ex_test_data",
 	"settings",
 	"info",
 	"info.howto",
@@ -266,12 +268,14 @@ Router.map(function () {
 	this.route("plugins.details_pl_threshold_out", {path: "/plugins/details_pl_threshold_out/:plThresholdOutId", controller: "PluginsDetailsPlThresholdOutController"});
 	this.route("plugins.edit_pl_threshold_out", {path: "/plugins/edit_pl_threshold_out/:plThresholdOutId", controller: "PluginsEditPlThresholdOutController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
-	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
-	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});
-	this.route("exchanges.details_ex_kraken", {path: "/exchanges/details_ex_kraken/:exKrakenId", controller: "ExchangesDetailsExKrakenController"});
-	this.route("exchanges.insert_ex_test_data", {path: "/exchanges/insert_ex_test_data", controller: "ExchangesInsertExTestDataController"});
-	this.route("exchanges.edit_ex_test_data", {path: "/exchanges/edit_ex_test_data/:exTestDataId", controller: "ExchangesEditExTestDataController"});
-	this.route("exchanges.details_ex_test_data", {path: "/exchanges/details_ex_test_data/:exTestDataId", controller: "ExchangesDetailsExTestDataController"});
+	this.route("exchanges.kraken_com", {path: "/exchanges/kraken_com", controller: "ExchangesKrakenComController"});
+	this.route("exchanges.kraken_com.insert_ex_kraken", {path: "/exchanges/kraken_com/insert_ex_kraken", controller: "ExchangesKrakenComInsertExKrakenController"});
+	this.route("exchanges.kraken_com.edit_ex_kraken", {path: "/exchanges/kraken_com/edit_ex_kraken/:exKrakenId", controller: "ExchangesKrakenComEditExKrakenController"});
+	this.route("exchanges.kraken_com.details_ex_kraken", {path: "/exchanges/kraken_com/details_ex_kraken/:exKrakenId", controller: "ExchangesKrakenComDetailsExKrakenController"});
+	this.route("exchanges.test_data", {path: "/exchanges/test_data", controller: "ExchangesTestDataController"});
+	this.route("exchanges.test_data.insert_ex_test_data", {path: "/exchanges/test_data/insert_ex_test_data", controller: "ExchangesTestDataInsertExTestDataController"});
+	this.route("exchanges.test_data.edit_ex_test_data", {path: "/exchanges/test_data/edit_ex_test_data/:exTestDataId", controller: "ExchangesTestDataEditExTestDataController"});
+	this.route("exchanges.test_data.details_ex_test_data", {path: "/exchanges/test_data/details_ex_test_data/:exTestDataId", controller: "ExchangesTestDataDetailsExTestDataController"});
 	this.route("settings", {path: "/settings", controller: "SettingsController"});
 	this.route("info", {path: "/info", controller: "InfoController"});
 	this.route("info.howto", {path: "/info/howto", controller: "InfoHowtoController"});

@@ -1,4 +1,4 @@
-<template name="ExchangesInsertExTestData">
+<template name="ExchangesTestDataEditExTestData">
 	<div class="page-container container" id="content">
 		<div class="row" id="title_row">
 			<div class="col-md-12">
@@ -6,14 +6,15 @@
 				</div>
 			</div>
 		</div>
-		{{> ExchangesInsertExTestDataInsertForm}}
+		{{> ExchangesTestDataEditExTestDataEditForm}}
 	</div>
 </template>
 
-<template name="ExchangesInsertExTestDataInsertForm">
-	<div id="exchanges-insert-ex-test-data-insert-form" class="">
+
+<template name="ExchangesTestDataEditExTestDataEditForm">
+	<div id="exchanges-test-data-edit-ex-test-data-edit-form" class="">
 		<h2 id="component-title">
-			New Dataset
+			Edit Dataset
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -32,7 +33,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value="{{ex_test_data.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -46,7 +47,7 @@
 				<div class="input-div">
 					<select class="form-control" name="tradePair" data-type="string" required="required">
 						{{#each pairs}}
-						<option value={{name}} selected>							{{name}}</option>
+						<option value={{name}} {{selected}}>							{{name}}</option>
 						{{/each}}
 					</select>
 					<span id="help-text" class="help-block">
@@ -60,7 +61,7 @@
 					Simulated balance amount to trade with
 				</label>
 				<div class="input-div">
-					<input type="text" name="balanceAmount" value="100" class="form-control" required="required" data-type="float">
+					<input type="text" name="balanceAmount" value="{{ex_test_data.balanceAmount}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -72,7 +73,7 @@
 					Gain (multiplier)
 				</label>
 				<div class="input-div">
-					<input type="text" name="gain" value="1" class="form-control" required="required" data-type="float">
+					<input type="text" name="gain" value="{{ex_test_data.gain}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -84,7 +85,7 @@
 					Offset
 				</label>
 				<div class="input-div">
-					<input type="text" name="offset" value="0" class="form-control" required="required" data-type="float">
+					<input type="text" name="offset" value="{{ex_test_data.offset}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -96,7 +97,7 @@
 					Start Value (counter starts with this value)
 				</label>
 				<div class="input-div">
-					<input type="text" name="startVal" value="0" class="form-control" required="required" data-type="float">
+					<input type="text" name="startVal" value="{{ex_test_data.startVal}}" class="form-control" required="required" data-type="float">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -108,7 +109,7 @@
 					Step Width (counter inscreases by this value each time)
 				</label>
 				<div class="input-div">
-					<input type="text" name="stepWidth" value="1" class="form-control" required="required" data-type="integer">
+					<input type="text" name="stepWidth" value="{{ex_test_data.stepWidth}}" class="form-control" required="required" data-type="integer">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -120,7 +121,7 @@
 					Simulated time for a trade (buying/selling)
 				</label>
 				<div class="input-div">
-					<input type="text" name="tradeDelaySec" value="3" class="form-control" required="required" data-type="integer">
+					<input type="text" name="tradeDelaySec" value="{{ex_test_data.tradeDelaySec}}" class="form-control" required="required" data-type="integer">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -134,13 +135,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="sinus" name="priceType" data-type="string" checked>
+							<input type="radio" value="sinus" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "sinus"}}>
 							Sinus
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="data" name="priceType" data-type="string">
+							<input type="radio" value="data" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "data"}}>
 							Data
 						</label>
 					</div>
@@ -155,7 +156,7 @@
 					Data
 				</label>
 				<div class="input-div">
-					<textarea class="form-control" name="data"></textarea>
+					<textarea class="form-control" name="data">{{ex_test_data.data}}</textarea>
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -166,7 +167,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo true}}" name="enLong" data-type="bool" checked>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.enLong}}" name="enLong" data-type="bool" {{itemIsChecked ex_test_data.enLong true}}>
 							Enable Long Position
 						</label>
 					</div>
@@ -180,7 +181,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo true}}" name="enShort" data-type="bool" checked>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.enShort}}" name="enShort" data-type="bool" {{itemIsChecked ex_test_data.enShort true}}>
 							Enable Short Position
 						</label>
 					</div>
@@ -195,7 +196,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSC" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSC}}" name="errSC" data-type="bool" {{itemIsChecked ex_test_data.errSC true}}>
 							Error setConfig()
 						</label>
 					</div>
@@ -209,7 +210,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGC" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGC}}" name="errGC" data-type="bool" {{itemIsChecked ex_test_data.errGC true}}>
 							Error getConfig()
 						</label>
 					</div>
@@ -223,7 +224,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGI" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGI}}" name="errGI" data-type="bool" {{itemIsChecked ex_test_data.errGI true}}>
 							Error getInfo()
 						</label>
 					</div>
@@ -237,7 +238,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGPU" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGPU}}" name="errGPU" data-type="bool" {{itemIsChecked ex_test_data.errGPU true}}>
 							Error getPairUnits()
 						</label>
 					</div>
@@ -251,7 +252,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGV" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGV}}" name="errGV" data-type="bool" {{itemIsChecked ex_test_data.errGV true}}>
 							Error getVolume()
 						</label>
 					</div>
@@ -265,7 +266,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGP" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGP}}" name="errGP" data-type="bool" {{itemIsChecked ex_test_data.errGP true}}>
 							Error getPrice()
 						</label>
 					</div>
@@ -279,7 +280,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGTP" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGTP}}" name="errGTP" data-type="bool" {{itemIsChecked ex_test_data.errGTP true}}>
 							Error getTradePrice()
 						</label>
 					</div>
@@ -293,7 +294,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errU" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errU}}" name="errU" data-type="bool" {{itemIsChecked ex_test_data.errU true}}>
 							Error update()
 						</label>
 					</div>
@@ -307,7 +308,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errS" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errS}}" name="errS" data-type="bool" {{itemIsChecked ex_test_data.errS true}}>
 							Error sell()
 						</label>
 					</div>
@@ -321,7 +322,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errB" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errB}}" name="errB" data-type="bool" {{itemIsChecked ex_test_data.errB true}}>
 							Error buy()
 						</label>
 					</div>
@@ -335,7 +336,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errST" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errST}}" name="errST" data-type="bool" {{itemIsChecked ex_test_data.errST true}}>
 							Error stopTrade()
 						</label>
 					</div>
@@ -349,7 +350,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGII" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGII}}" name="errGII" data-type="bool" {{itemIsChecked ex_test_data.errGII true}}>
 							Error getInstInfo()
 						</label>
 					</div>
@@ -363,7 +364,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errGPO" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGPO}}" name="errGPO" data-type="bool" {{itemIsChecked ex_test_data.errGPO true}}>
 							Error getPositions()
 						</label>
 					</div>
@@ -377,7 +378,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSBNF" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSBNF}}" name="errSBNF" data-type="bool" {{itemIsChecked ex_test_data.errSBNF true}}>
 							Error setBoughtNotifyFunc()
 						</label>
 					</div>
@@ -391,7 +392,7 @@
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="errSSNF" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSSNF}}" name="errSSNF" data-type="bool" {{itemIsChecked ex_test_data.errSSNF true}}>
 							Error setSoldNotifyFunc()
 						</label>
 					</div>
@@ -417,4 +418,3 @@
 		</form>
 	</div>
 </template>
-

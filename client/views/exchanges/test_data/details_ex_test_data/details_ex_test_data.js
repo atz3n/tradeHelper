@@ -1,22 +1,23 @@
 var pageSession = new ReactiveDict();
 
-Template.ExchangesEditExTestData.rendered = function() {
+Template.ExchangesTestDataDetailsExTestData.rendered = function() {
 	Session.set('activePage', 'exchanges');
 };
 
-Template.ExchangesEditExTestData.events({
+Template.ExchangesTestDataDetailsExTestData.events({
 	
 });
 
-Template.ExchangesEditExTestData.helpers({
+Template.ExchangesTestDataDetailsExTestData.helpers({
 	
 });
 
-Template.ExchangesEditExTestDataEditForm.rendered = function() {
+
+Template.ExchangesTestDataDetailsExTestDataDetailsForm.rendered = function() {
 	
 
-	pageSession.set("exchangesEditExTestDataEditFormInfoMessage", "");
-	pageSession.set("exchangesEditExTestDataEditFormErrorMessage", "");
+	pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormInfoMessage", "");
+	pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -44,36 +45,36 @@ Template.ExchangesEditExTestDataEditForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.ExchangesEditExTestDataEditForm.events({
+Template.ExchangesTestDataDetailsExTestDataDetailsForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("exchangesEditExTestDataEditFormInfoMessage", "");
-		pageSession.set("exchangesEditExTestDataEditFormErrorMessage", "");
+		pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormInfoMessage", "");
+		pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var exchangesEditExTestDataEditFormMode = "update";
+			var ExchangesTestDataDetailsExTestDataDetailsFormMode = "read_only";
 			if(!t.find("#form-cancel-button")) {
-				switch(exchangesEditExTestDataEditFormMode) {
+				switch(ExchangesTestDataDetailsExTestDataDetailsFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("exchangesEditExTestDataEditFormInfoMessage", message);
+						pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormInfoMessage", message);
 					}; break;
 				}
 			}
 
-			Router.go("exchanges", {});
+			/*SUBMIT_REDIRECT*/
 		}
 
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("exchangesEditExTestDataEditFormErrorMessage", message);
+			pageSession.set("ExchangesTestDataDetailsExTestDataDetailsFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -87,7 +88,7 @@ Template.ExchangesEditExTestDataEditForm.events({
 			function(values) {
 				
 
-				ExTestDatas.update({ _id: t.data.ex_test_data._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				
 			}
 		);
 
@@ -98,37 +99,28 @@ Template.ExchangesEditExTestDataEditForm.events({
 
 		
 
-		Router.go("exchanges", {});
+		/*CANCEL_REDIRECT*/
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
 
-		/*CLOSE_REDIRECT*/
+		Router.go("exchanges.test_data", {});
 	},
 	"click #form-back-button": function(e, t) {
 		e.preventDefault();
 
-		/*BACK_REDIRECT*/
+		Router.go("exchanges.test_data", {});
 	}
 
 	
 });
 
-Template.ExchangesEditExTestDataEditForm.helpers({
+Template.ExchangesTestDataDetailsExTestDataDetailsForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("exchangesEditExTestDataEditFormInfoMessage");
+		return pageSession.get("ExchangesTestDataDetailsExTestDataDetailsFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("exchangesEditExTestDataEditFormErrorMessage");
-	},
-	"pairs": function() {
-		var pairs = this.exTestData_tradePairs.pairs;
-
-		for(i in pairs){
-			if(pairs[i].name === this.ex_test_data.tradePair) pairs[i] = mergeObjects(pairs[i], {selected: 'selected'});
-			else pairs[i] = mergeObjects(pairs[i], {selected: ''});
-		}
-		return pairs;
+		return pageSession.get("ExchangesTestDataDetailsExTestDataDetailsFormErrorMessage");
 	},
 	'enError': function() {
 		return Meteor.settings.public.ExTestDataErrorConfig;

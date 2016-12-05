@@ -1897,156 +1897,187 @@
         },
         {
           "name": "exchanges",
-          "components": [
-            {
-              "name": "viewExKraken",
-              "title": "Kraken.com",
-              "type": "data_view",
-              "text_if_empty": "No Settings configured",
-              "query_name": "exKrakens",
-              "query_params": [],
-              "insert_route": "exchanges.insertExKraken",
-              "edit_route": "exchanges.editExKraken",
-              "edit_route_params": [
-                {
-                  "name": "exKrakenId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "exchanges.detailsExKraken",
-              "details_route_params": [
-                {
-                  "name": "exKrakenId",
-                  "value": "this._id"
-                }
-              ]
-            },
-            {
-              "name": "viewExTestData",
-              "title": "Test Data",
-              "type": "data_view",
-              "text_if_empty": "No Dataset configured",
-              "query_name": "exTestDatas",
-              "query_params": [],
-              "insert_route": "exchanges.insertExTestData",
-              "edit_route": "exchanges.editExTestData",
-              "edit_route_params": [
-                {
-                  "name": "exTestDataId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "exchanges.detailsExTestData",
-              "details_route_params": [
-                {
-                  "name": "exTestDataId",
-                  "value": "this._id"
-                }
-              ]
-            }
-          ],
           "pages": [
             {
-              "name": "insertExKraken",
+              "name": "krakenCom",
               "components": [
                 {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Settings",
-                  "query_name": "exKrakens_empty",
+                  "name": "viewExKraken",
+                  "title": "Kraken.com",
+                  "type": "data_view",
+                  "text_if_empty": "No Settings configured",
+                  "query_name": "exKrakens",
                   "query_params": [],
-                  "submit_route": "exchanges",
-                  "cancel_route": "exchanges"
+                  "insert_route": "exchanges.krakenCom.insertExKraken",
+                  "edit_route": "exchanges.krakenCom.editExKraken",
+                  "edit_route_params": [
+                    {
+                      "name": "exKrakenId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "exchanges.krakenCom.detailsExKraken",
+                  "details_route_params": [
+                    {
+                      "name": "exKrakenId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "pages": [
+                {
+                  "name": "insertExKraken",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New Settings",
+                      "query_name": "exKrakens_empty",
+                      "query_params": [],
+                      "submit_route": "exchanges.krakenCom",
+                      "cancel_route": "exchanges.krakenCom"
+                    }
+                  ]
+                },
+                {
+                  "name": "editExKraken",
+                  "route_params": [
+                    "exKrakenId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit Settings",
+                      "submit_route": "exchanges.krakenCom",
+                      "cancel_route": "exchanges.krakenCom",
+                      "query_name": "exKraken",
+                      "query_params": []
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsExKraken",
+                  "route_params": [
+                    "exKrakenId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "exKraken",
+                      "query_params": [],
+                      "close_route": "exchanges.krakenCom",
+                      "back_route": "exchanges.krakenCom"
+                    }
+                  ]
+                }
+              ],
+              "type": "page"
             },
             {
-              "name": "editExKraken",
-              "route_params": [
-                "exKrakenId"
-              ],
+              "name": "testData",
               "components": [
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Settings",
-                  "submit_route": "exchanges",
-                  "cancel_route": "exchanges",
-                  "query_name": "exKraken",
-                  "query_params": []
-                }
-              ]
-            },
-            {
-              "name": "detailsExKraken",
-              "route_params": [
-                "exKrakenId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "exKraken",
+                  "name": "viewExTestData",
+                  "title": "TestData",
+                  "type": "data_view",
+                  "text_if_empty": "No Dataset configured",
+                  "query_name": "exTestDatas",
                   "query_params": [],
-                  "close_route": "exchanges",
-                  "back_route": "exchanges"
+                  "insert_route": "exchanges.testData.insertExTestData",
+                  "edit_route": "exchanges.testData.editExTestData",
+                  "edit_route_params": [
+                    {
+                      "name": "exTestDataId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "exchanges.testData.detailsExTestData",
+                  "details_route_params": [
+                    {
+                      "name": "exTestDataId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
-            },
-            {
-              "name": "insertExTestData",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Dataset",
-                  "query_name": "exTestDatas_empty",
-                  "query_params": [],
-                  "submit_route": "exchanges",
-                  "cancel_route": "exchanges"
-                }
-              ]
-            },
-            {
-              "name": "editExTestData",
-              "route_params": [
-                "exTestDataId"
               ],
-              "components": [
+              "pages": [
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Dataset",
-                  "submit_route": "exchanges",
-                  "cancel_route": "exchanges",
-                  "query_name": "exTestData",
-                  "query_params": []
+                  "name": "insertExTestData",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New Dataset",
+                      "query_name": "exTestDatas_empty",
+                      "query_params": [],
+                      "submit_route": "exchanges.testData",
+                      "cancel_route": "exchanges.testData"
+                    }
+                  ]
+                },
+                {
+                  "name": "editExTestData",
+                  "route_params": [
+                    "exTestDataId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit Dataset",
+                      "submit_route": "exchanges.testData",
+                      "cancel_route": "exchanges.testData",
+                      "query_name": "exTestData",
+                      "query_params": []
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsExTestData",
+                  "route_params": [
+                    "exTestDataId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "exTestData",
+                      "query_params": [],
+                      "close_route": "exchanges.testData",
+                      "back_route": "exchanges.testData"
+                    }
+                  ]
                 }
-              ]
-            },
-            {
-              "name": "detailsExTestData",
-              "route_params": [
-                "exTestDataId"
               ],
-              "components": [
+              "type": "page"
+            }
+          ],
+          "components": [
+            {
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
                 {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "exTestData",
-                  "query_params": [],
-                  "close_route": "exchanges",
-                  "back_route": "exchanges"
+                  "title": "Kraken.com",
+                  "route": "exchanges.krakenCom"
+                },
+                {
+                  "title": "TestData",
+                  "route": "exchanges.testData"
                 }
               ]
             }

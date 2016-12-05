@@ -1,21 +1,22 @@
 var pageSession = new ReactiveDict();
 
-Template.ExchangesInsertExTestData.rendered = function() {
+Template.ExchangesTestDataInsertExTestData.rendered = function() {
 	Session.set('activePage', 'exchanges');
 };
 
-Template.ExchangesInsertExTestData.events({
+Template.ExchangesTestDataInsertExTestData.events({
 	
 });
 
-Template.ExchangesInsertExTestData.helpers({
+Template.ExchangesTestDataInsertExTestData.helpers({
 	
 });
 
-Template.ExchangesInsertExTestDataInsertForm.rendered = function() {
+
+Template.ExchangesTestDataInsertExTestDataInsertForm.rendered = function() {
 	
-	pageSession.set("exchangesInsertExTestDataInsertFormInfoMessage", "");
-	pageSession.set("exchangesInsertExTestDataInsertFormErrorMessage", "");
+	pageSession.set("ExchangesTestDataInsertExTestDataInsertFormInfoMessage", "");
+	pageSession.set("ExchangesTestDataInsertExTestDataInsertFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -43,36 +44,36 @@ Template.ExchangesInsertExTestDataInsertForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.ExchangesInsertExTestDataInsertForm.events({
+Template.ExchangesTestDataInsertExTestDataInsertForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("exchangesInsertExTestDataInsertFormInfoMessage", "");
-		pageSession.set("exchangesInsertExTestDataInsertFormErrorMessage", "");
+		pageSession.set("ExchangesTestDataInsertExTestDataInsertFormInfoMessage", "");
+		pageSession.set("ExchangesTestDataInsertExTestDataInsertFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var exchangesInsertExTestDataInsertFormMode = "insert";
+			var ExchangesTestDataInsertExTestDataInsertFormMode = "insert";
 			if(!t.find("#form-cancel-button")) {
-				switch(exchangesInsertExTestDataInsertFormMode) {
+				switch(ExchangesTestDataInsertExTestDataInsertFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("exchangesInsertExTestDataInsertFormInfoMessage", message);
+						pageSession.set("ExchangesTestDataInsertExTestDataInsertFormInfoMessage", message);
 					}; break;
 				}
 			}
 
-			Router.go("exchanges", {});
+			Router.go("exchanges.test_data", {});
 		}
 
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("exchangesInsertExTestDataInsertFormErrorMessage", message);
+			pageSession.set("ExchangesTestDataInsertExTestDataInsertFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -97,7 +98,7 @@ Template.ExchangesInsertExTestDataInsertForm.events({
 
 		
 
-		Router.go("exchanges", {});
+		Router.go("exchanges.test_data", {});
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
@@ -113,12 +114,12 @@ Template.ExchangesInsertExTestDataInsertForm.events({
 	
 });
 
-Template.ExchangesInsertExTestDataInsertForm.helpers({
+Template.ExchangesTestDataInsertExTestDataInsertForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("exchangesInsertExTestDataInsertFormInfoMessage");
+		return pageSession.get("ExchangesTestDataInsertExTestDataInsertFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("exchangesInsertExTestDataInsertFormErrorMessage");
+		return pageSession.get("ExchangesTestDataInsertExTestDataInsertFormErrorMessage");
 	},
 	'pairs': function() {
 		return this.exTestData_tradePairs.pairs;

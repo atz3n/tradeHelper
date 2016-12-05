@@ -1,18 +1,19 @@
 var pageSession = new ReactiveDict();
 
-Template.ExchangesEditExKraken.rendered = function() {
+Template.ExchangesKrakenComEditExKraken.rendered = function() {
 	Session.set('activePage', 'exchanges');
 };
 
-Template.ExchangesEditExKraken.events({
+Template.ExchangesKrakenComEditExKraken.events({
 	
 });
 
-Template.ExchangesEditExKraken.helpers({
+Template.ExchangesKrakenComEditExKraken.helpers({
 	
 });
 
-Template.ExchangesEditExKrakenEditForm.rendered = function() {
+
+Template.ExchangesKrakenComEditExKrakenEditForm.rendered = function() {
 	var tmp = this.data.ex_kraken
 
 	pageSession.set('disableOwBaConfig', false);
@@ -23,8 +24,8 @@ Template.ExchangesEditExKrakenEditForm.rendered = function() {
 	if(tmp.balanceType === 'krakenBalance') pageSession.set('disableOwBaConfig', true);
 	if(tmp.hotMode) pageSession.set('disableHotModeConfig', false);
 
-	pageSession.set("exchangesEditExKrakenEditFormInfoMessage", "");
-	pageSession.set("exchangesEditExKrakenEditFormErrorMessage", "");
+	pageSession.set("ExchangesKrakenComEditExKrakenEditFormInfoMessage", "");
+	pageSession.set("ExchangesKrakenComEditExKrakenEditFormErrorMessage", "");
 
 	$(".input-group.date").each(function() {
 		var format = $(this).find("input[type='text']").attr("data-format");
@@ -52,36 +53,36 @@ Template.ExchangesEditExKrakenEditForm.rendered = function() {
 	$("input[autofocus]").focus();
 };
 
-Template.ExchangesEditExKrakenEditForm.events({
+Template.ExchangesKrakenComEditExKrakenEditForm.events({
 	"submit": function(e, t) {
 		e.preventDefault();
-		pageSession.set("exchangesEditExKrakenEditFormInfoMessage", "");
-		pageSession.set("exchangesEditExKrakenEditFormErrorMessage", "");
+		pageSession.set("ExchangesKrakenComEditExKrakenEditFormInfoMessage", "");
+		pageSession.set("ExchangesKrakenComEditExKrakenEditFormErrorMessage", "");
 
 		var self = this;
 
 		function submitAction(msg) {
-			var exchangesEditExKrakenEditFormMode = "update";
+			var ExchangesKrakenComEditExKrakenEditFormMode = "update";
 			if(!t.find("#form-cancel-button")) {
-				switch(exchangesEditExKrakenEditFormMode) {
+				switch(ExchangesKrakenComEditExKrakenEditFormMode) {
 					case "insert": {
 						$(e.target)[0].reset();
 					}; break;
 
 					case "update": {
 						var message = msg || "Saved.";
-						pageSession.set("exchangesEditExKrakenEditFormInfoMessage", message);
+						pageSession.set("ExchangesKrakenComEditExKrakenEditFormInfoMessage", message);
 					}; break;
 				}
 			}
 
-			Router.go("exchanges", {});
+			Router.go("exchanges.kraken_com", {});
 		}
 
 		function errorAction(msg) {
 			msg = msg || "";
 			var message = msg.message || msg || "Error.";
-			pageSession.set("exchangesEditExKrakenEditFormErrorMessage", message);
+			pageSession.set("ExchangesKrakenComEditExKrakenEditFormErrorMessage", message);
 		}
 
 		validateForm(
@@ -106,7 +107,7 @@ Template.ExchangesEditExKrakenEditForm.events({
 
 		
 
-		Router.go("exchanges", {});
+		Router.go("exchanges.kraken_com", {});
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
@@ -148,12 +149,12 @@ Template.ExchangesEditExKrakenEditForm.events({
 	
 });
 
-Template.ExchangesEditExKrakenEditForm.helpers({
+Template.ExchangesKrakenComEditExKrakenEditForm.helpers({
 	"infoMessage": function() {
-		return pageSession.get("exchangesEditExKrakenEditFormInfoMessage");
+		return pageSession.get("ExchangesKrakenComEditExKrakenEditFormInfoMessage");
 	},
 	"errorMessage": function() {
-		return pageSession.get("exchangesEditExKrakenEditFormErrorMessage");
+		return pageSession.get("ExchangesKrakenComEditExKrakenEditFormErrorMessage");
 	},
 	"pairs": function() {
 		var pairs = this.exKraken_tradePairs.pairs;
@@ -175,3 +176,4 @@ Template.ExchangesEditExKrakenEditForm.helpers({
 	}
 	
 });
+

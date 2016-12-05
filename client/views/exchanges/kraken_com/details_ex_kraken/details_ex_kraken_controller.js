@@ -1,9 +1,10 @@
-this.ExchangesDetailsExKrakenController = RouteController.extend({
-	template: "ExchangesDetailsExKraken",
+this.ExchangesKrakenComDetailsExKrakenController = RouteController.extend({
+	template: "Exchanges",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'ExchangesKrakenComDetailsExKraken': { to: 'ExchangesSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.ExchangesDetailsExKrakenController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		if(this.isReady()) { this.render(); } else { this.render("Exchanges"); this.render("loading", { to: "ExchangesSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 

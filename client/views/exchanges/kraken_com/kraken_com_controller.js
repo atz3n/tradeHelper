@@ -1,9 +1,10 @@
-this.ExchangesEditExKrakenController = RouteController.extend({
-	template: "ExchangesEditExKraken",
+this.ExchangesKrakenComController = RouteController.extend({
+	template: "Exchanges",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'ExchangesKrakenCom': { to: 'ExchangesSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.ExchangesEditExKrakenController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		if(this.isReady()) { this.render(); } else { this.render("Exchanges"); this.render("loading", { to: "ExchangesSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,8 +20,7 @@ this.ExchangesEditExKrakenController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_kraken", this.params.exKrakenId),
-			Meteor.subscribe("exKraken_tradePairs")
+			Meteor.subscribe("ex_krakens")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,8 +35,7 @@ this.ExchangesEditExKrakenController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			ex_kraken: ExKrakens.findOne({_id:this.params.exKrakenId}, {}),
-			exKraken_tradePairs: TradePairs.findOne({type: 'ExKraken'}, {})
+			ex_krakens: ExKrakens.find({}, {})
 		};
 		
 

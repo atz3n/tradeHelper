@@ -1,9 +1,10 @@
-this.ExchangesInsertExTestDataController = RouteController.extend({
-	template: "ExchangesInsertExTestData",
+this.ExchangesTestDataEditExTestDataController = RouteController.extend({
+	template: "Exchanges",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'ExchangesTestDataEditExTestData': { to: 'ExchangesSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.ExchangesInsertExTestDataController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		if(this.isReady()) { this.render(); } else { this.render("Exchanges"); this.render("loading", { to: "ExchangesSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,7 +20,7 @@ this.ExchangesInsertExTestDataController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_test_datas_empty"),
+			Meteor.subscribe("ex_test_data", this.params.exTestDataId),
 			Meteor.subscribe("exTestData_tradePairs")
 		];
 		var ready = true;
@@ -35,7 +36,7 @@ this.ExchangesInsertExTestDataController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			ex_test_datas_empty: ExTestDatas.findOne({_id:null}, {}),
+			ex_test_data: ExTestDatas.findOne({_id:this.params.exTestDataId}, {}),
 			exTestData_tradePairs: TradePairs.findOne({type: 'ExTestData'}, {})
 		};
 		

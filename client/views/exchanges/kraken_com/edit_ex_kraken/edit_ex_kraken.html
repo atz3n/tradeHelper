@@ -1,4 +1,4 @@
-<template name="ExchangesInsertExKraken">
+<template name="ExchangesKrakenComEditExKraken">
 	<div class="page-container container" id="content">
 		<div class="row" id="title_row">
 			<div class="col-md-12">
@@ -6,14 +6,15 @@
 				</div>
 			</div>
 		</div>
-		{{> ExchangesInsertExKrakenInsertForm}}
+		{{> ExchangesKrakenComEditExKrakenEditForm}}
 	</div>
 </template>
 
-<template name="ExchangesInsertExKrakenInsertForm">
-	<div id="exchanges-insert-ex-kraken-insert-form" class="">
+
+<template name="ExchangesKrakenComEditExKrakenEditForm">
+	<div id="exchanges-kraken-com-edit-ex-kraken-edit-form" class="">
 		<h2 id="component-title">
-			New Settings
+			Edit Settings
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -32,7 +33,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value="{{ex_kraken.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -46,7 +47,7 @@
 				<div class="input-div">
 					<select class="form-control" name="pair" data-type="string" required="required">
 						{{#each pairs}}
-						<option value={{name}} selected>							{{name}}</option>
+						<option value={{name}} {{selected}}>							{{name}}</option>
 						{{/each}}
 					</select>
 					<span id="help-text" class="help-block">
@@ -62,13 +63,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="24Average" name="priceType" data-type="string">
+							<input type="radio" value="24Average" name="priceType" data-type="string" {{itemIsChecked ex_kraken.priceType "24Average"}}>
 							24Average
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="tradesAverage" name="priceType" data-type="string" checked>
+							<input type="radio" value="tradesAverage" name="priceType" data-type="string" {{itemIsChecked ex_kraken.priceType "tradesAverage"}}>
 							tradesAverage
 						</label>
 					</div>
@@ -86,9 +87,9 @@
 					<div class="radio">
 						<label>
 						{{#if disableAvConfig}}
-							<input type="radio" value="time" name="trAvType" data-type="string" checked disabled>
+							<input type="radio" value="time" name="trAvType" data-type="string" {{itemIsChecked ex_kraken.trAvType "time"}} disabled>
 						{{else}}
-							<input type="radio" value="time" name="trAvType" data-type="string" checked>
+							<input type="radio" value="time" name="trAvType" data-type="string" {{itemIsChecked ex_kraken.trAvType "time"}}>
 						{{/if}}
 							time
 						</label>
@@ -96,10 +97,10 @@
 					<div class="radio">
 						<label>
 						{{#if disableAvConfig}}
-							<input type="radio" value="quantity" name="trAvType" data-type="string" disabled>
-						{{else}}
-							<input type="radio" value="quantity" name="trAvType" data-type="string">
-						{{/if}}
+							<input type="radio" value="quantity" name="trAvType" data-type="string" {{itemIsChecked ex_kraken.trAvType "quantity"}} disabled>
+							{{else}}
+							<input type="radio" value="quantity" name="trAvType" data-type="string" {{itemIsChecked ex_kraken.trAvType "quantity"}}>
+							{{/if}}
 							quantity
 						</label>
 					</div>
@@ -115,9 +116,9 @@
 				</label>
 				<div class="input-div">
 				{{#if disableAvConfig}}
-					<input type="text" name="trAvVal" value="60" class="form-control" data-type="integer" data-min="1" disabled>
+					<input type="text" name="trAvVal" value="{{ex_kraken.trAvVal}}" class="form-control" data-type="integer" data-min="1" disabled>
 				{{else}}
-					<input type="text" name="trAvVal" value="60" class="form-control" required="required" data-type="integer" data-min="1">
+					<input type="text" name="trAvVal" value="{{ex_kraken.trAvVal}}" class="form-control" required="required" data-type="integer" data-min="1">
 				{{/if}}
 					<span id="help-text" class="help-block">
 					</span>
@@ -132,13 +133,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="market" name="orderType" data-type="string" checked>
+							<input type="radio" value="market" name="orderType" data-type="string" {{itemIsChecked ex_kraken.orderType "market"}}>
 							market
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="limit" name="orderType" data-type="string">
+							<input type="radio" value="limit" name="orderType" data-type="string" {{itemIsChecked ex_kraken.orderType "limit"}}>
 							limit
 						</label>
 					</div>
@@ -148,12 +149,11 @@
 					</span>
 				</div>
 			</div>
-			
 			<div class="form-group  field-hot-mode">
 				<div class="input-div">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="{{booleanToYesNo false}}" name="hotMode" data-type="bool">
+							<input type="checkbox" value="{{booleanToYesNo ex_kraken.hotMode}}" name="hotMode" data-type="bool" {{itemIsChecked ex_kraken.hotMode true}}>
 							Hot Mode
 						</label>
 					</div>
@@ -169,10 +169,10 @@
 				</label>
 				<div class="input-div">
 				{{#if disableHotModeConfig}}
-					<input type="text" name="key" value="" class="form-control" data-type="string" disabled>
-				{{else}}
-					<input type="text" name="key" value="" class="form-control" required="required" data-type="string">
-				{{/if}}
+					<input type="text" name="key" value="{{ex_kraken.key}}" class="form-control" data-type="string" disabled>
+					{{else}}
+					<input type="text" name="key" value="{{ex_kraken.key}}" class="form-control" required="required" data-type="string">
+					{{/if}}
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -185,10 +185,10 @@
 				</label>
 				<div class="input-div">
 				{{#if disableHotModeConfig}}
-					<input type="text" name="secret" value="" class="form-control" data-type="string" disabled>
-				{{else}}
-					<input type="text" name="secret" value="" class="form-control" required="required" data-type="string">
-				{{/if}}
+					<input type="text" name="secret" value="{{ex_kraken.secret}}" class="form-control" data-type="string" disabled>
+					{{else}}
+					<input type="text" name="secret" value="{{ex_kraken.secret}}" class="form-control" required="required" data-type="string">
+					{{/if}}
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -203,16 +203,16 @@
 					<div class="radio">
 						<label>
 						{{#if disableHotModeConfig}}
-							<input type="radio" value="krakenBalance" name="balanceType" data-type="string" disabled>
-						{{else}}
-							<input type="radio" value="krakenBalance" name="balanceType" data-type="string">
-						{{/if}}
+							<input type="radio" value="krakenBalance" name="balanceType" data-type="string" {{itemIsChecked ex_kraken.balanceType "krakenBalance"}} disabled>
+							{{else}}
+							<input type="radio" value="krakenBalance" name="balanceType" data-type="string" {{itemIsChecked ex_kraken.balanceType "krakenBalance"}} >
+							{{/if}}
 							krakenBalance
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="ownBalance" name="balanceType" data-type="string" checked>
+							<input type="radio" value="ownBalance" name="balanceType" data-type="string" {{itemIsChecked ex_kraken.balanceType "ownBalance"}}>
 							ownBalance
 						</label>
 					</div>
@@ -228,10 +228,10 @@
 				</label>
 				<div class="input-div">
 				{{#if disableOwBaConfig}}
-					<input type="text" name="oBalanceAmount" value="1" class="form-control" data-type="float" data-min="0.1" disabled>
-				{{else}}
-					<input type="text" name="oBalanceAmount" value="1" class="form-control" required="required" data-type="float" data-min="0.1">
-				{{/if}}
+					<input type="text" name="oBalanceAmount" value="{{ex_kraken.oBalanceAmount}}" class="form-control" data-type="float" data-min="0.1" disabled>
+					{{else}}
+					<input type="text" name="oBalanceAmount" value="{{ex_kraken.oBalanceAmount}}" class="form-control" required="required" data-type="float" data-min="0.1">
+					{{/if}}
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -245,13 +245,13 @@
 				<div class="input-div">
 					<div class="radio">
 						<label>
-							<input type="radio" value="value" name="qAmountType" data-type="string" checked>
+							<input type="radio" value="value" name="qAmountType" data-type="string" {{itemIsChecked ex_kraken.qAmountType "value"}}>
 							value
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" value="percentage" name="qAmountType" data-type="string">
+							<input type="radio" value="percentage" name="qAmountType" data-type="string" {{itemIsChecked ex_kraken.qAmountType "percentage"}}>
 							percentage
 						</label>
 					</div>
@@ -266,7 +266,7 @@
 					Amount from Balance
 				</label>
 				<div class="input-div">
-					<input type="text" name="qAmount" value="0" class="form-control" required="required" data-type="float" data-min="0">
+					<input type="text" name="qAmount" value="{{ex_kraken.qAmount}}" class="form-control" required="required" data-type="float" data-min="0">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -278,7 +278,7 @@
 					Connect to Server tries
 				</label>
 				<div class="input-div">
-					<input type="text" name="conErrorCycles" value="3" class="form-control" required="required" data-type="integer" data-min="1">
+					<input type="text" name="conErrorCycles" value="{{ex_kraken.conErrorCycles}}" class="form-control" required="required" data-type="integer" data-min="1">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -290,7 +290,7 @@
 					Delay seconds before next try
 				</label>
 				<div class="input-div">
-					<input type="text" name="conErrorWaitSec" value="3" class="form-control" required="required" data-type="integer" data-min="1">
+					<input type="text" name="conErrorWaitSec" value="{{ex_kraken.conErrorWaitSec}}" class="form-control" required="required" data-type="integer" data-min="1">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -302,7 +302,7 @@
 					Delay seconds before trade finished check
 				</label>
 				<div class="input-div">
-					<input type="text" name="orderCheckWaitSec" value="10" class="form-control" required="required" data-type="integer" data-min="1">
+					<input type="text" name="orderCheckWaitSec" value="{{ex_kraken.orderCheckWaitSec}}" class="form-control" required="required" data-type="integer" data-min="1">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -324,4 +324,3 @@
 		</form>
 	</div>
 </template>
-
