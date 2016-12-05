@@ -184,11 +184,11 @@ Template.AdminActivesView.helpers({
 		return pageSession.get("AdminActivesViewStyle") == "gallery";
 	},
 	"numOfActvs": function(){
-		pageSession.set('actives', this.active_datas_admin.fetch());
-		return pageSession.get('actives').length;
+		if(this.active_datas_admin){
+			pageSession.set('actives', this.active_datas_admin.fetch());
+			return pageSession.get('actives').length;
+		}
 	}
-
-	
 });
 
 

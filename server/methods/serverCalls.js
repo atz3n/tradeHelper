@@ -186,7 +186,7 @@ var errMessage = function(errHandleObject, strategyId) {
 
 
 var stopActives = function(userId) {
-  Strategies.find({ownerId: userId}).forEach(function(item) {
+  Strategies.find({ownerId: userId}).fetch().forEach(function(item) {
     stop(item._id);
   });
 }

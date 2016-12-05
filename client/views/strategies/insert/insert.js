@@ -131,9 +131,14 @@ Template.StrategiesInsertInsertForm.helpers({
 				var ret = pageSession.get("pluginBundlesCrudItems");
 				
 				for(var i = 0 ; i < ret.length ; i++){
-					ret[i].bundle = getPluginBundleName(ret[i].bundle);
+					for(var k = 0 ; k < ret[i].pluginIds.length ; k++){
+						if(k === 0) ret[i].plugins = '';
+						else ret[i].plugins += ', ';
+						
+						ret[i].plugins += getPluginName(ret[i].pluginIds[k]);
+					}
+					delete 	ret[i].pluginIds;
 				}
-
 				return ret;
 			}
 		}
@@ -216,9 +221,16 @@ Template.StrategiesInsertFieldPluginBundlesInsertFormContainerFieldPluginBundles
 
 			},
 			function(values) {
-				
+				var data = pageSession.get("pluginBundlesCrudItems") || []; 
 
-				var data = pageSession.get("pluginBundlesCrudItems") || []; values._id = Random.id(); data.push(values); pageSession.set("pluginBundlesCrudItems", data); $("#field-plugin-bundles-insert-form").modal("hide"); e.currentTarget.reset();
+				values.pluginIds = values.pluginIds.split(',');
+				values._id = Random.id(); 
+
+				data.push(values); 
+
+				pageSession.set("pluginBundlesCrudItems", data); 
+				$("#field-plugin-bundles-insert-form").modal("hide"); 
+				e.currentTarget.reset();
 			}
 		);
 
@@ -252,8 +264,8 @@ Template.StrategiesInsertFieldPluginBundlesInsertFormContainerFieldPluginBundles
 	"errorMessage": function() {
 		return pageSession.get("strategiesInsertFieldPluginBundlesInsertFormContainerFieldPluginBundlesInsertFormErrorMessage");
 	},
-	"pluginBundles": function() {
-		return getPluginBundles();
+	"plugins": function() {
+		return getPlugins();
 	}
 	
 });

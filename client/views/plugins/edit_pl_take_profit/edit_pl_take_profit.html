@@ -55,6 +55,29 @@
 					</span>
 				</div>
 			</div>
+			<div class="form-group  field-take-value-base">
+				<label for="takeValueBase">
+					Take Value Base
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="price" name="takeValueBase" data-type="string" {{itemIsChecked pl_take_profit.takeValueBase "price"}}>
+							price
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="profit" name="takeValueBase" data-type="string" {{itemIsChecked pl_take_profit.takeValueBase "profit"}}>
+							profit
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
 			<div class="form-group  field-take-value-type">
 				<label for="takeValueType">
 					Take Value Type

@@ -13,6 +13,7 @@
  * CHANGES:
  * 12-Aug-2016 : Initial version
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
+ * 28-Nov-2016 : Added stopValueBase option
  */
 
 
@@ -34,6 +35,8 @@ import { IPlugin } from '../../apis/IPlugin.js'
 PlStopLoss.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
+
+  stopValueBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
 
   stopValueType: 'value', // value (total amount), percentage (relative to in price)
   stopValueAmount: 0,
@@ -87,6 +90,12 @@ export function PlStopLoss(logger) {
   var _curPrice = 0;
 
   /**
+   * Position in Volume
+   * @type {Number}
+   */
+  var _inVolume = 0;
+
+  /**
    * Trade position
    * @type {String}
    */
@@ -118,6 +127,8 @@ export function PlStopLoss(logger) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
 
+    if (_config.stopValueBase !== 'price' && _config.stopValueBase !== 'profit') return false;
+    
     if (_config.stopValueType !== 'value' && _config.stopValueType !== 'percentage') return false;
 
     if (isNaN(_config.stopValueAmount)) return false;
@@ -152,6 +163,7 @@ export function PlStopLoss(logger) {
    */
   this.getConfig = function() {
     return [
+      { title: 'Stop Value Base', value: _config.stopValueBase },
       { title: 'Stop Value Type', value: _config.stopValueType },
       { title: 'Stop Value', value: _config.stopValueAmount },
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
@@ -163,9 +175,8 @@ export function PlStopLoss(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.getState = function() {
-    if (_position === 'none') return 'out';
-    else return 'in';
+  this.getActiveState = function() {
+    return false;
   }
 
 
@@ -193,37 +204,32 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
+    var diff = 0;
     _curPrice = price;
+
+
+    /* get difference */
+    if (_config.stopValueType === 'percentage') {
+      diff = percentage(_curPrice, _inPrice);
+    } else {
+      diff = _curPrice - _inPrice;
+
+      if (_config.stopValueBase === 'profit') diff *= _inVolume;
+    }
 
 
     /* stop long position */
     if (_position === 'long' && _config.enLong) {
-      if (_config.stopValueType === 'value') {
-        if (_curPrice - _inPrice < -_config.stopValueAmount) {
-          _sellNotifyFunc(this.getInstInfo());
-        }
-      }
-
-      if (_config.stopValueType === 'percentage') {
-        if (percentage(_curPrice, _inPrice) < -_config.stopValueAmount) {
-          _sellNotifyFunc(this.getInstInfo());
-        }
+      if (diff < -_config.stopValueAmount) {
+        _sellNotifyFunc(this.getInstInfo());
       }
     }
 
 
     /* stop short position */
     if (_position === 'short' && _config.enShort) {
-      if (_config.stopValueType === 'value') {
-        if (_curPrice - _inPrice > _config.stopValueAmount) {
-          _buyNotifyFunc(this.getInstInfo());
-        }
-      }
-
-      if (_config.stopValueType === 'percentage') {
-        if (percentage(_curPrice, _inPrice) > _config.stopValueAmount) {
-          _buyNotifyFunc(this.getInstInfo());
-        }
+      if (diff > _config.stopValueAmount) {
+        _buyNotifyFunc(this.getInstInfo());
       }
     }
   }
@@ -232,15 +238,17 @@ export function PlStopLoss(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.bought = function(price) {
+  this.bought = function(price, volume) {
     if (_position !== 'long') { // for savety reasons
 
       if (_position === 'none') {
         _position = 'long';
         _inPrice = price;
+        _inVolume = volume;
       } else {
         _position = 'none';
         _inPrice = 0;
+        _inVolume = 0;
       }
 
       _curPrice = price;
@@ -251,15 +259,17 @@ export function PlStopLoss(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
-  this.sold = function(price) {
+  this.sold = function(price, volume) {
     if (_position !== 'short') { // for savety reasons
 
       if (_position === 'none') {
         _position = 'short';
         _inPrice = price;
+        _inVolume = volume;
       } else {
         _position = 'none';
         _inPrice = 0;
+        _inVolume = 0;
       }
 
       _curPrice = price;
@@ -295,7 +305,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
-    return { long: _config.enableLong, short: _config.enableShort }
+    return { long: _config.enLong, short: _config.enLong }
   }
 
 

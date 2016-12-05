@@ -24,14 +24,12 @@ this.getStrategyObject = function(strategyId) {
   var bundles = strategy.pluginBundles;
   for (var i = 0; i < bundles.length; i++) {
 
-    bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
-
-
-    /* get bundle plugins from db */
+    bundles[i].bundlePlugins = [];
     var bundlePlugins = bundles[i].bundlePlugins;
-    for (var j = 0; j < bundlePlugins.length; j++) {
-      bundlePlugins[j] = getPluginDbDoc({_id: bundlePlugins[j].plugin});
+    for (var j = 0; j < bundles[i].pluginIds.length; j++) {
 
+      /* get bundle plugins from db */
+      bundlePlugins.push(getPluginDbDoc({_id: bundles[i].pluginIds[j]}))
 
       /* get exchanges from db */
       var exchange = bundlePlugins[j].exchange;
@@ -39,6 +37,8 @@ this.getStrategyObject = function(strategyId) {
         bundlePlugins[j].exchange = getExchangeDbDoc({_id: exchange});
       }
     }
+
+    delete bundles[i].pluginIds;
   }
 
   return strategy;
@@ -61,25 +61,22 @@ this.deactivateStrategies = function() {
     var bundles = strategy.pluginBundles;
     for (i in bundles) {
 
-      bundles[i] = PluginBundles.find({ _id: bundles[i].bundle }).fetch()[0];
-      PluginBundles.update({ _id: bundles[i]._id }, { $set: { actives: 0 } });
-
-
       /* bundle plugins */
-      var bundlePlugins = bundles[i].bundlePlugins;
-      for (j in bundlePlugins) {
+      var pluginIds = bundles[i].pluginIds;
+      for (j in pluginIds) {
 
         /* Plugins */
         var pluginDb = {};
-        var plugin = getPluginDbDoc({_id: bundlePlugins[j].plugin}, pluginDb);
-        if (typeof plugin !== "undefined") pluginDb.ref.update({ _id: plugin._id }, { $set: { actives: 0 } });
+        var plugin = getPluginDbDoc({_id: pluginIds[j]}, pluginDb);
+        if (typeof plugin !== "undefined") {
+          pluginDb.ref.update({ _id: plugin._id }, { $set: { actives: 0 } });
 
 
-        /* Exchanges */
-        var exchangeDb = {};
-        var tempEx = getExchangeDbDoc({_id: plugin.exchange}, exchangeDb);
-        if (typeof tempEx !== "undefined") exchangeDb.ref.update({ _id: tempEx._id }, { $set: { actives: 0 } });
-
+          /* Exchanges */
+          var exchangeDb = {};
+          var tempEx = getExchangeDbDoc({_id: plugin.exchange}, exchangeDb);
+          if (typeof tempEx !== "undefined") exchangeDb.ref.update({ _id: tempEx._id }, { $set: { actives: 0 } });
+        }
       }
     }
   });

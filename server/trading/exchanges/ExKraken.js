@@ -670,7 +670,6 @@ export function ExKraken(ConstrParam) {
         return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
-      console.log('')
 
       /* set order */
       var oRet = _cycFuncCall(function() {

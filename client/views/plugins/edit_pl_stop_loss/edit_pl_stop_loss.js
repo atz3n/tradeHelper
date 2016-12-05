@@ -123,9 +123,6 @@ Template.PluginsEditPlStopLossEditForm.helpers({
 	},
 	"exchanges": function() {
 		return getExchanges();
-	},
-	"exchangeName": function() {
-		return getExchangeName(this.pl_stop_loss.exchange);
 	}
 	
 });

@@ -121,12 +121,9 @@
             "crud_fields": [
               {
                 "name": "bundle",
-                "title": "Plugin Bundle",
+                "title": "Plugins (logical connected via 'and')",
                 "type": "string",
                 "input": "select",
-                "lookup_query_name": "pluginbundles",
-                "lookup_field": "name",
-                "lookup_key": "_id",
                 "required": true
               }
             ],
@@ -215,143 +212,6 @@
         ]
       },
       {
-        "name": "pluginBundles",
-        "fields": [
-          {
-            "name": "name",
-            "title": "Name",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "bundlePlugins",
-            "title": "Plugins (logical connected via 'and')",
-            "type": "array",
-            "array_item_type": "object",
-            "input": "crud",
-            "crud_fields": [
-              {
-                "name": "plugin",
-                "title": "Plugin",
-                "type": "string",
-                "input": "select",
-                "lookup_query_name": "plSwings",
-                "lookup_field": "name",
-                "lookup_key": "_id",
-                "required": true
-                
-              }
-            ],
-            "required": true
-          }
-        ],
-        "owner_field": "ownerId",
-        "roles_allowed_to_read": [
-          "owner"
-        ],
-        "roles_allowed_to_update": [
-          "owner"
-        ],
-        "roles_allowed_to_delete": [
-          "owner"
-        ]
-      },
-      {
-        "name": "plSwings",
-        "fields": [
-          {
-            "name": "name",
-            "title": "Name",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "exchange",
-            "title": "Exchange",
-            "type": "string",
-            "input": "select",
-            "lookup_query_name": "exKrakens",
-            "lookup_field": "name",
-            "lookup_key": "_id",
-            "required": true,
-            "show_in_dataview": false,
-            "show_in_read_only_form": false,
-            "exportable": false,
-            "join_collection": "exKrakens",
-            "join_fields": [
-              "name"
-            ],
-            "join_container": "exKrakenCont"
-          },
-          {
-            "name": "exKrakenCont.name",
-            "title": "Exchange",
-            "show_in_insert_form": false,
-            "show_in_update_form": false
-          },
-          {
-            "name": "oLngPosPer",
-            "title": "Open Long Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "cLngPosPer",
-            "title": "Close Long Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "oShrtPosPer",
-            "title": "Open Short Positon [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "cShrtPosPer",
-            "title": "Close Short Position [%]",
-            "type": "float",
-            "default": 5,
-            "min": 0,
-            "required": true
-          },
-          {
-            "name": "enLong",
-            "title": "Enable Long",
-            "type": "bool",
-            "input": "checkbox",
-            "display_helper": "booleanToYesNo",
-            "default": "true"
-          },
-          {
-            "name": "enShort",
-            "title": "Enable Short",
-            "type": "bool",
-            "input": "checkbox",
-            "display_helper": "booleanToYesNo",
-            "default": "false"
-          }
-        ],
-        "owner_field": "ownerId",
-        "roles_allowed_to_read": [
-          "owner"
-        ],
-        "roles_allowed_to_update": [
-          "owner"
-        ],
-        "roles_allowed_to_delete": [
-          "owner"
-        ],
-        "before_insert_code": "doc.type = 'plSwing';"
-        
-      },
-      {
         "name": "plStopLosses",
         "fields": [
           {
@@ -372,6 +232,24 @@
               }
             ],
             "required": true
+          },
+          {
+            "name": "stopValueBase",
+            "title": "Stop Value Base",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "price",
+                "value": "price"
+              },
+              {
+                "title": "profit",
+                "value": "profit"
+              }
+            ],
+            "required": true,
+            "default": "profit"
           },
           {
             "name": "stopValueType",
@@ -427,6 +305,274 @@
           "owner"
         ],
         "before_insert_code": "doc.type = 'plStopLoss';"
+      },
+      ,
+      {
+        "name": "plTakeProfits",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "takeValueBase",
+            "title": "Take Value Base",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "price",
+                "value": "price"
+              },
+              {
+                "title": "profit",
+                "value": "profit"
+              }
+            ],
+            "required": true,
+            "default": "profit"
+          },
+          {
+            "name": "takeValueType",
+            "title": "Take Value Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "value",
+                "value": "value"
+              },
+              {
+                "title": "percentage",
+                "value": "percentage"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
+            "name": "takeValueAmount",
+            "title": "Take Value",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 0
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ],
+        "before_insert_code": "doc.type = 'plTakeProfit';"
+      },
+      {
+        "name": "plThresholdOuts",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "thresholdBaseBase",
+            "title": "Threshold Base",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "price",
+                "value": "price"
+              },
+              {
+                "title": "profit",
+                "value": "profit"
+              }
+            ],
+            "required": true,
+            "default": "profit"
+          },
+          {
+            "name": "thresholdType",
+            "title": "Threshold Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "value",
+                "value": "value"
+              },
+              {
+                "title": "percentage",
+                "value": "percentage"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
+            "name": "thresholdAmount",
+            "title": "Threshold Value",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 0
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ],
+        "before_insert_code": "doc.type = 'plThresholdOut';"
+      },
+      {
+        "name": "plThresholdIns",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "thresholdType",
+            "title": "Threshold Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "value",
+                "value": "value"
+              },
+              {
+                "title": "percentage",
+                "value": "percentage"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
+            "name": "thresholdAmount",
+            "title": "Threshold Value",
+            "type": "integer",
+            "required": true,
+            "default": 3,
+            "min": 0
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ],
+        "before_insert_code": "doc.type = 'plThresholdIn';"
       },
       {
         "name": "exKrakens",
@@ -943,6 +1089,48 @@
  ***********************************************************************/
     "queries": [
       {
+        "name": "plThresholdIns",
+        "collection": "plThresholdIns",
+        "filter": {}
+      },
+      {
+        "name": "plThresholdIns_empty",
+        "collection": "plThresholdIns",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "plThresholdIn",
+        "collection": "plThresholdIns",
+        "filter": {
+          "_id": ":plThresholdInId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "plThresholdOuts",
+        "collection": "plThresholdOuts",
+        "filter": {}
+      },
+      {
+        "name": "plThresholdOuts_empty",
+        "collection": "plThresholdOuts",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "plThresholdOut",
+        "collection": "plThresholdOuts",
+        "filter": {
+          "_id": ":plThresholdOutId"
+        },
+        "find_one": true
+      },
+      {
         "name": "plStopLosses",
         "collection": "plStopLosses",
         "filter": {}
@@ -960,6 +1148,27 @@
         "collection": "plStopLosses",
         "filter": {
           "_id": ":plStopLossId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "plTakeProfits",
+        "collection": "plTakeProfits",
+        "filter": {}
+      },
+      {
+        "name": "plTakeProfits_empty",
+        "collection": "plTakeProfits",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "plTakeProfit",
+        "collection": "plTakeProfits",
+        "filter": {
+          "_id": ":plTakeProfitId"
         },
         "find_one": true
       },
@@ -1002,27 +1211,6 @@
         "collection": "exTestDatas",
         "filter": {
           "_id": ":exTestDataId"
-        },
-        "find_one": true
-      },
-      {
-        "name": "plSwings",
-        "collection": "plSwings",
-        "filter": {}
-      },
-      {
-        "name": "plSwings_empty",
-        "collection": "plSwings",
-        "filter": {
-          "_id": null
-        },
-        "find_one": true
-      },
-      {
-        "name": "plSwing",
-        "collection": "plSwings",
-        "filter": {
-          "_id": ":plSwingId"
         },
         "find_one": true
       },
@@ -1116,27 +1304,6 @@
         "collection": "strategies",
         "filter": {
           "_id": ":strategyId"
-        },
-        "find_one": true
-      },
-      {
-        "name": "pluginbundles",
-        "collection": "pluginBundles",
-        "filter": {}
-      },
-      {
-        "name": "pluginbundles_empty",
-        "collection": "pluginBundles",
-        "filter": {
-          "_id": null
-        },
-        "find_one": true
-      },
-      {
-        "name": "pluginbundle",
-        "collection": "pluginBundles",
-        "filter": {
-          "_id": ":pluginbundleId"
         },
         "find_one": true
       },
@@ -1300,7 +1467,7 @@
               "details_route": "actives.details",
               "details_route_params": [
                 {
-                  "name": "activeDataId",
+                  "name": "strategyId",
                   "value": "this._id"
                 }
               ]
@@ -1311,7 +1478,7 @@
             {
               "name": "details",
               "route_params": [
-                "activeDataId"
+                "strategyId"
               ],
               "components": [
                 {
@@ -1421,114 +1588,8 @@
           "type": "page"
         },
         {
-          "name": "pluginbundles",
-          "components": [
-            {
-              "name": "view",
-              "title": "Plugin Bundles",
-              "type": "data_view",
-              "text_if_empty": "No Bundle configured",
-              "query_name": "pluginbundles",
-              "query_params": [],
-              "insert_route": "pluginbundles.insert",
-              "edit_route": "pluginbundles.edit",
-              "edit_route_params": [
-                {
-                  "name": "pluginbundleId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "pluginbundles.details",
-              "details_route_params": [
-                {
-                  "name": "pluginbundleId",
-                  "value": "this._id"
-                }
-              ]
-            }
-          ],
-          "pages": [
-            {
-              "name": "insert",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Plugin Bundle",
-                  "query_name": "pluginbundles_empty",
-                  "query_params": [],
-                  "submit_route": "pluginbundles",
-                  "cancel_route": "pluginbundles"
-                }
-              ]
-            },
-            {
-              "name": "details",
-              "route_params": [
-                "pluginbundleId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "pluginbundle",
-                  "query_params": [],
-                  "close_route": "pluginbundles",
-                  "back_route": "pluginbundles"
-                }
-              ]
-            },
-            {
-              "name": "edit",
-              "route_params": [
-                "pluginbundleId"
-              ],
-              "components": [
-                {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Bundle",
-                  "submit_route": "pluginbundles",
-                  "cancel_route": "pluginbundles",
-                  "query_name": "pluginbundle",
-                  "query_params": []
-                }
-              ]
-            }
-          ],
-          "type": "page"
-        },
-        {
           "name": "plugins",
           "components": [
-            {
-              "name": "viewPlSwings",
-              "title": "Swing",
-              "type": "data_view",
-              "text_if_empty": "No Swing configured",
-              "query_name": "plSwings",
-              "query_params": [],
-              "insert_route": "plugins.insertPlSwing",
-              "edit_route": "plugins.editPlSwing",
-              "edit_route_params": [
-                {
-                  "name": "plSwingId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlSwing",
-              "details_route_params": [
-                {
-                  "name": "plSwingId",
-                  "value": "this._id"
-                }
-              ]
-            },
             {
               "name": "viewPlStopLosses",
               "title": "StopLoss",
@@ -1540,7 +1601,7 @@
               "edit_route": "plugins.editPlStopLoss",
               "edit_route_params": [
                 {
-                  "name": "plStopLossesId",
+                  "name": "plStopLossId",
                   "value": "this._id"
                 }
               ],
@@ -1551,61 +1612,78 @@
                   "value": "this._id"
                 }
               ]
+            },
+            {
+              "name": "viewPlTakeProfits",
+              "title": "TakeProfit",
+              "type": "data_view",
+              "text_if_empty": "No TakeProfit configured",
+              "query_name": "plTakeProfits",
+              "query_params": [],
+              "insert_route": "plugins.insertPlTakeProfit",
+              "edit_route": "plugins.editPlTakeProfit",
+              "edit_route_params": [
+                {
+                  "name": "plTakeProfitId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "plugins.detailsPlTakeProfit",
+              "details_route_params": [
+                {
+                  "name": "plTakeProfitId",
+                  "value": "this._id"
+                }
+              ]
+            },
+            {
+              "name": "viewPlThresholdIns",
+              "title": "ThresholdIn",
+              "type": "data_view",
+              "text_if_empty": "No Threshold configured",
+              "query_name": "plThresholdIns",
+              "query_params": [],
+              "insert_route": "plugins.insertPlThresholdIn",
+              "edit_route": "plugins.editPlThresholdIn",
+              "edit_route_params": [
+                {
+                  "name": "plThresholdInId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "plugins.detailsPlThresholdIn",
+              "details_route_params": [
+                {
+                  "name": "plThresholdInId",
+                  "value": "this._id"
+                }
+              ]
+            },
+            {
+              "name": "viewPlThresholdOuts",
+              "title": "ThresholdOut",
+              "type": "data_view",
+              "text_if_empty": "No Threshold configured",
+              "query_name": "plThresholdOuts",
+              "query_params": [],
+              "insert_route": "plugins.insertPlThresholdOut",
+              "edit_route": "plugins.editPlThresholdOut",
+              "edit_route_params": [
+                {
+                  "name": "plThresholdOutId",
+                  "value": "this._id"
+                }
+              ],
+              "details_route": "plugins.detailsPlThresholdOut",
+              "details_route_params": [
+                {
+                  "name": "plThresholdOutId",
+                  "value": "this._id"
+                }
+              ]
             }
           ],
           "pages": [
-            {
-              "name": "insertPlSwing",
-              "components": [
-                {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New Swing",
-                  "query_name": "plSwings_empty",
-                  "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "detailsPlSwing",
-              "route_params": [
-                "plSwingId"
-              ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plSwing",
-                  "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "editPlSwing",
-              "route_params": [
-                "plSwingId"
-              ],
-              "components": [
-                {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit Swing",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plSwing",
-                  "query_params": []
-                }
-              ]
-            },
             {
               "name": "insertPlStopLoss",
               "components": [
@@ -1654,6 +1732,162 @@
                   "submit_route": "plugins",
                   "cancel_route": "plugins",
                   "query_name": "plStopLoss",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "insertPlTakeProfit",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New TakeProfit",
+                  "query_name": "plTakeProfits_empty",
+                  "query_params": [],
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "detailsPlTakeProfit",
+              "route_params": [
+                "plTakeProfitId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "plTakeProfit",
+                  "query_params": [],
+                  "close_route": "plugins",
+                  "back_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "editPlTakeProfit",
+              "route_params": [
+                "plTakeProfitId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit TakeProfit",
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins",
+                  "query_name": "plTakeProfit",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "insertPlThresholdIn",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New ThresholdIn",
+                  "query_name": "plThresholdIns_empty",
+                  "query_params": [],
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "detailsPlThresholdIn",
+              "route_params": [
+                "plThresholdInId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "plThresholdIn",
+                  "query_params": [],
+                  "close_route": "plugins",
+                  "back_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "editPlThresholdIn",
+              "route_params": [
+                "plThresholdInId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit ThresholdIn",
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins",
+                  "query_name": "plThresholdIn",
+                  "query_params": []
+                }
+              ]
+            },
+            {
+              "name": "insertPlThresholdOut",
+              "components": [
+                {
+                  "name": "insert_form",
+                  "type": "form",
+                  "mode": "insert",
+                  "title": "New ThresholdOut",
+                  "query_name": "plThresholdOuts_empty",
+                  "query_params": [],
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "detailsPlThresholdOut",
+              "route_params": [
+                "plThresholdOutId"
+              ],
+              "components": [
+                {
+                  "name": "details_form",
+                  "type": "form",
+                  "mode": "read_only",
+                  "title": "Details",
+                  "layout": "horizontal",
+                  "query_name": "plThresholdOut",
+                  "query_params": [],
+                  "close_route": "plugins",
+                  "back_route": "plugins"
+                }
+              ]
+            },
+            {
+              "name": "editPlThresholdOut",
+              "route_params": [
+                "plThresholdOutId"
+              ],
+              "components": [
+                {
+                  "name": "edit_form",
+                  "type": "form",
+                  "mode": "update",
+                  "title": "Edit ThresholdOut",
+                  "submit_route": "plugins",
+                  "cancel_route": "plugins",
+                  "query_name": "plThresholdOut",
                   "query_params": []
                 }
               ]
@@ -2468,11 +2702,6 @@
               "title": "Strategies",
               "route": "strategies",
               "icon_class": "fa fa-flask"
-            },
-            {
-              "title": "Bundles",
-              "route": "pluginbundles",
-              "icon_class": "fa fa-cubes"
             },
             {
               "title": "Plugins",

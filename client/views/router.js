@@ -25,20 +25,19 @@ var privateRoutes = [
 	"strategies.insert",
 	"strategies.details",
 	"strategies.edit",
-	"pluginbundles",
-	"pluginbundles.insert",
-	"pluginbundles.details",
-	"pluginbundles.edit",
 	"plugins",
-	"plugins.insert_pl_swing",
-	"plugins.details_pl_swing",
-	"plugins.edit_pl_swing",
 	"plugins.insert_pl_stop_loss",
 	"plugins.details_pl_stop_loss",
 	"plugins.edit_pl_stop_loss",
 	"plugins.insert_pl_take_profit",
 	"plugins.details_pl_take_profit",
 	"plugins.edit_pl_take_profit",
+	"plugins.insert_pl_threshold_in",
+	"plugins.details_pl_threshold_in",
+	"plugins.edit_pl_threshold_in",
+	"plugins.insert_pl_threshold_out",
+	"plugins.details_pl_threshold_out",
+	"plugins.edit_pl_threshold_out",
 	"exchanges",
 	"exchanges.insert_ex_kraken",
 	"exchanges.edit_ex_kraken",
@@ -253,20 +252,19 @@ Router.map(function () {
 	this.route("strategies.insert", {path: "/strategies/insert", controller: "StrategiesInsertController"});
 	this.route("strategies.details", {path: "/strategies/details/:strategyId", controller: "StrategiesDetailsController"});
 	this.route("strategies.edit", {path: "/strategies/edit/:strategyId", controller: "StrategiesEditController"});
-	this.route("pluginbundles", {path: "/pluginbundles", controller: "PluginbundlesController"});
-	this.route("pluginbundles.insert", {path: "/pluginbundles/insert", controller: "PluginbundlesInsertController"});
-	this.route("pluginbundles.details", {path: "/pluginbundles/details/:pluginbundleId", controller: "PluginbundlesDetailsController"});
-	this.route("pluginbundles.edit", {path: "/pluginbundles/edit/:pluginbundleId", controller: "PluginbundlesEditController"});
 	this.route("plugins", {path: "/plugins", controller: "PluginsController"});
-	this.route("plugins.insert_pl_swing", {path: "/plugins/insert_pl_swing", controller: "PluginsInsertPlSwingController"});
-	this.route("plugins.details_pl_swing", {path: "/plugins/details_pl_swing/:plSwingId", controller: "PluginsDetailsPlSwingController"});
-	this.route("plugins.edit_pl_swing", {path: "/plugins/edit_pl_swing/:plSwingId", controller: "PluginsEditPlSwingController"});
 	this.route("plugins.insert_pl_stop_loss", {path: "/plugins/insert_pl_stop_loss", controller: "PluginsInsertPlStopLossController"});
 	this.route("plugins.details_pl_stop_loss", {path: "/plugins/details_pl_stop_loss/:plStopLossId", controller: "PluginsDetailsPlStopLossController"});
 	this.route("plugins.edit_pl_stop_loss", {path: "/plugins/edit_pl_stop_loss/:plStopLossId", controller: "PluginsEditPlStopLossController"});
 	this.route("plugins.insert_pl_take_profit", {path: "/plugins/insert_pl_take_profit", controller: "PluginsInsertPlTakeProfitController"});
 	this.route("plugins.details_pl_take_profit", {path: "/plugins/details_pl_take_profit/:plTakeProfitId", controller: "PluginsDetailsPlTakeProfitController"});
 	this.route("plugins.edit_pl_take_profit", {path: "/plugins/edit_pl_take_profit/:plTakeProfitId", controller: "PluginsEditPlTakeProfitController"});
+	this.route("plugins.insert_pl_threshold_in", {path: "/plugins/insert_pl_threshold_in", controller: "PluginsInsertPlThresholdInController"});
+	this.route("plugins.details_pl_threshold_in", {path: "/plugins/details_pl_threshold_in/:plThresholdInId", controller: "PluginsDetailsPlThresholdInController"});
+	this.route("plugins.edit_pl_threshold_in", {path: "/plugins/edit_pl_threshold_in/:plThresholdInId", controller: "PluginsEditPlThresholdInController"});
+	this.route("plugins.insert_pl_threshold_out", {path: "/plugins/insert_pl_threshold_out", controller: "PluginsInsertPlThresholdOutController"});
+	this.route("plugins.details_pl_threshold_out", {path: "/plugins/details_pl_threshold_out/:plThresholdOutId", controller: "PluginsDetailsPlThresholdOutController"});
+	this.route("plugins.edit_pl_threshold_out", {path: "/plugins/edit_pl_threshold_out/:plThresholdOutId", controller: "PluginsEditPlThresholdOutController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
 	this.route("exchanges.insert_ex_kraken", {path: "/exchanges/insert_ex_kraken", controller: "ExchangesInsertExKrakenController"});
 	this.route("exchanges.edit_ex_kraken", {path: "/exchanges/edit_ex_kraken/:exKrakenId", controller: "ExchangesEditExKrakenController"});

@@ -5,7 +5,7 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 2.1
+ * @version 3.0.0
  * 
  * CHANGES:
  * 01-Jul-2016 : Initial version
@@ -13,6 +13,8 @@
  * 24-Jul-2016 : changed getConfig() return result object to array (same structure as getInfo())
  * 26-Jul-2016 : included default configuration object
  * 12-Aug-2016 : bugfix: added configuration parameter in setConfig() signature
+ * 26-Nov-2016 : added volume parameter in bought/sold function
+ * 30-Nov-2016 : changed getState function to getActiveState
  */
 
 /***********************************************************************
@@ -61,10 +63,10 @@ IPlugin.prototype.getConfig = function() {
 
 
 /**
- * Returns the state of a plugin
- * @return {String} in/out
+ * Returns the active state of a plugin (true = active / false = inactive)
+ * @return {boolean} true/false
  */
-IPlugin.prototype.getState = function() {
+IPlugin.prototype.getActiveState = function() {
     throw new Error('This method must be overwritten!');
 }
 
@@ -99,8 +101,9 @@ IPlugin.prototype.update = function(price) {
 /**
  * Will be called from Strategy class after a successfully performed buy
  * @param  {Number} price buy price
+ * @param  {Number} volume bought volume (undefined if position out trade)
  */
-IPlugin.prototype.bought = function(price) {
+IPlugin.prototype.bought = function(price, volume) {
     throw new Error('This method must be overwritten!');
 }
 
@@ -108,8 +111,9 @@ IPlugin.prototype.bought = function(price) {
 /**
  * Will be called from Strategy class after a successfully performed sell
  * @param  {Number} price sell price
+ * @param  {Number} volume sold volume (undefined if position out trade)
  */
-IPlugin.prototype.sold = function(price) {
+IPlugin.prototype.sold = function(price, volume) {
     throw new Error('This method must be overwritten!');
 }
 
