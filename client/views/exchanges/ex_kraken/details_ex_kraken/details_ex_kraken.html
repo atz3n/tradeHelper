@@ -1,0 +1,203 @@
+<template name="ExchangesExKrakenDetailsExKraken">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> ExchangesExKrakenDetailsExKrakenDetailsForm}}
+	</div>
+</template>
+
+<template name="ExchangesExKrakenDetailsExKrakenDetailsForm">
+	<div id="exchanges-ex-kraken-details-ex-kraken-details-form" class="">
+		<h2 id="component-title">
+			<a href="#" id="form-back-button" class="btn btn-default" title="back">
+				<span class="fa fa-chevron-left">
+				</span>
+			</a>
+			Details
+		</h2>
+		<form role="form" class="form-horizontal">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name" class="col-sm-3 control-label">
+					Name
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.name}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-pair">
+				<label for="pair" class="col-sm-3 control-label">
+					Trade Pair
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.pair}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-price-type">
+				<label for="priceType" class="col-sm-3 control-label">
+					Price Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.priceType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-tr-av-type">
+				<label for="trAvType" class="col-sm-3 control-label">
+					Self Average Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.trAvType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-tr-av-val">
+				<label for="trAvVal" class="col-sm-3 control-label">
+					Self Average Value
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.trAvVal}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-order-type">
+				<label for="orderType" class="col-sm-3 control-label">
+					Order Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.orderType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-hot-mode">
+				<label for="hotMode" class="col-sm-3 control-label">
+					Hot Mode
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{booleanToYesNo ex_kraken.hotMode}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-key">
+				<label for="key" class="col-sm-3 control-label">
+					Kraken.com API Key
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.key}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-secret">
+				<label for="secret" class="col-sm-3 control-label">
+					Kraken.com API Secret
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.secret}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-balance-type">
+				<label for="balanceType" class="col-sm-3 control-label">
+					Balance Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.balanceType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-o-balance-amount">
+				<label for="oBalanceAmount" class="col-sm-3 control-label">
+					Amount of own Balance
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.oBalanceAmount}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-q-amount-type">
+				<label for="qAmountType" class="col-sm-3 control-label">
+					Balance Amount Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.qAmountType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-q-amount">
+				<label for="qAmount" class="col-sm-3 control-label">
+					Amount from Balance
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.qAmount}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-con-error-cycles">
+				<label for="conErrorCycles" class="col-sm-3 control-label">
+					Connect to Server tries
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.conErrorCycles}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-con-error-wait-sec">
+				<label for="conErrorWaitSec" class="col-sm-3 control-label">
+					Delay seconds before next try
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.conErrorWaitSec}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-order-check-wait-sec">
+				<label for="orderCheckWaitSec" class="col-sm-3 control-label">
+					Delay seconds before trade finished check
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{ex_kraken.orderCheckWaitSec}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div col-sm-9">
+					<a href="#" id="form-close-button" class="btn btn-primary">
+						OK
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>

@@ -1586,309 +1586,364 @@
             }
           ],
           "type": "page"
-        },
+        },     
         {
           "name": "plugins",
-          "components": [
-            {
-              "name": "viewPlStopLosses",
-              "title": "StopLoss",
-              "type": "data_view",
-              "text_if_empty": "No StopLoss configured",
-              "query_name": "plStopLosses",
-              "query_params": [],
-              "insert_route": "plugins.insertPlStopLoss",
-              "edit_route": "plugins.editPlStopLoss",
-              "edit_route_params": [
-                {
-                  "name": "plStopLossId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlStopLoss",
-              "details_route_params": [
-                {
-                  "name": "plStopLossId",
-                  "value": "this._id"
-                }
-              ]
-            },
-            {
-              "name": "viewPlTakeProfits",
-              "title": "TakeProfit",
-              "type": "data_view",
-              "text_if_empty": "No TakeProfit configured",
-              "query_name": "plTakeProfits",
-              "query_params": [],
-              "insert_route": "plugins.insertPlTakeProfit",
-              "edit_route": "plugins.editPlTakeProfit",
-              "edit_route_params": [
-                {
-                  "name": "plTakeProfitId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlTakeProfit",
-              "details_route_params": [
-                {
-                  "name": "plTakeProfitId",
-                  "value": "this._id"
-                }
-              ]
-            },
-            {
-              "name": "viewPlThresholdIns",
-              "title": "ThresholdIn",
-              "type": "data_view",
-              "text_if_empty": "No Threshold configured",
-              "query_name": "plThresholdIns",
-              "query_params": [],
-              "insert_route": "plugins.insertPlThresholdIn",
-              "edit_route": "plugins.editPlThresholdIn",
-              "edit_route_params": [
-                {
-                  "name": "plThresholdInId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlThresholdIn",
-              "details_route_params": [
-                {
-                  "name": "plThresholdInId",
-                  "value": "this._id"
-                }
-              ]
-            },
-            {
-              "name": "viewPlThresholdOuts",
-              "title": "ThresholdOut",
-              "type": "data_view",
-              "text_if_empty": "No Threshold configured",
-              "query_name": "plThresholdOuts",
-              "query_params": [],
-              "insert_route": "plugins.insertPlThresholdOut",
-              "edit_route": "plugins.editPlThresholdOut",
-              "edit_route_params": [
-                {
-                  "name": "plThresholdOutId",
-                  "value": "this._id"
-                }
-              ],
-              "details_route": "plugins.detailsPlThresholdOut",
-              "details_route_params": [
-                {
-                  "name": "plThresholdOutId",
-                  "value": "this._id"
-                }
-              ]
-            }
-          ],
           "pages": [
             {
-              "name": "insertPlStopLoss",
+              "name": "plStopLoss",
               "components": [
                 {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New StopLoss",
-                  "query_name": "plStopLosses_empty",
+                  "name": "viewPlStopLosses",
+                  "title": "StopLoss",
+                  "type": "data_view",
+                  "text_if_empty": "No StopLoss configured",
+                  "query_name": "plStopLosses",
                   "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
+                  "insert_route": "plugins.plStopLoss.insertPlStopLoss",
+                  "edit_route": "plugins.plStopLoss.editPlStopLoss",
+                  "edit_route_params": [
+                    {
+                      "name": "plStopLossId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plStopLoss.detailsPlStopLoss",
+                  "details_route_params": [
+                    {
+                      "name": "plStopLossId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "pages": [
+                {
+                  "name": "insertPlStopLoss",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New StopLoss",
+                      "query_name": "plStopLosses_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plStopLoss",
+                      "cancel_route": "plugins.plStopLoss"
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsPlStopLoss",
+                  "route_params": [
+                    "plStopLossId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plStopLoss",
+                      "query_params": [],
+                      "close_route": "plugins.plStopLoss",
+                      "back_route": "plugins.plStopLoss"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlStopLoss",
+                  "route_params": [
+                    "plStopLossId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit StopLoss",
+                      "submit_route": "plugins.plStopLoss",
+                      "cancel_route": "plugins.plStopLoss",
+                      "query_name": "plStopLoss",
+                      "query_params": []
+                    }
+                  ]
+                },
+              ],
+              "type": "page"
             },
             {
-              "name": "detailsPlStopLoss",
-              "route_params": [
-                "plStopLossId"
-              ],
+              "name": "plTakeProfit",
               "components": [
                 {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plStopLoss",
+                  "name": "viewPlTakeProfits",
+                  "title": "TakeProfit",
+                  "type": "data_view",
+                  "text_if_empty": "No TakeProfit configured",
+                  "query_name": "plTakeProfits",
                   "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
+                  "insert_route": "plugins.plTakeProfit.insertPlTakeProfit",
+                  "edit_route": "plugins.plTakeProfit.editPlTakeProfit",
+                  "edit_route_params": [
+                    {
+                      "name": "plTakeProfitId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plTakeProfit.detailsPlTakeProfit",
+                  "details_route_params": [
+                    {
+                      "name": "plTakeProfitId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
-            },
-            {
-              "name": "editPlStopLoss",
-              "route_params": [
-                "plStopLossId"
               ],
-              "components": [
+              "pages": [
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit StopLoss",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plStopLoss",
-                  "query_params": []
+                  "name": "insertPlTakeProfit",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New TakeProfit",
+                      "query_name": "plTakeProfits_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plTakeProfit",
+                      "cancel_route": "plugins.plTakeProfit"
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsPlTakeProfit",
+                  "route_params": [
+                    "plTakeProfitId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plTakeProfit",
+                      "query_params": [],
+                      "close_route": "plugins.plTakeProfit",
+                      "back_route": "plugins.plTakeProfit"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlTakeProfit",
+                  "route_params": [
+                    "plTakeProfitId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit TakeProfit",
+                      "submit_route": "plugins.plTakeProfit",
+                      "cancel_route": "plugins.plTakeProfit",
+                      "query_name": "plTakeProfit",
+                      "query_params": []
+                    }
+                  ]
                 }
-              ]
+              ],
+              "type": "page"
             },
             {
-              "name": "insertPlTakeProfit",
+              "name": "plThresholdIn",
               "components": [
                 {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New TakeProfit",
-                  "query_name": "plTakeProfits_empty",
+                  "name": "viewPlThresholdIns",
+                  "title": "ThresholdIn",
+                  "type": "data_view",
+                  "text_if_empty": "No Threshold configured",
+                  "query_name": "plThresholdIns",
                   "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
+                  "insert_route": "plugins.plThresholdIn.insertPlThresholdIn",
+                  "edit_route": "plugins.plThresholdIn.editPlThresholdIn",
+                  "edit_route_params": [
+                    {
+                      "name": "plThresholdInId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plThresholdIn.detailsPlThresholdIn",
+                  "details_route_params": [
+                    {
+                      "name": "plThresholdInId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "pages": [
+                {
+                  "name": "insertPlThresholdIn",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New ThresholdIn",
+                      "query_name": "plThresholdIns_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plThresholdIn",
+                      "cancel_route": "plugins.plThresholdIn"
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsPlThresholdIn",
+                  "route_params": [
+                    "plThresholdInId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plThresholdIn",
+                      "query_params": [],
+                      "close_route": "plugins.plThresholdIn",
+                      "back_route": "plugins.plThresholdIn"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlThresholdIn",
+                  "route_params": [
+                    "plThresholdInId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit ThresholdIn",
+                      "submit_route": "plugins.plThresholdIn",
+                      "cancel_route": "plugins.plThresholdIn",
+                      "query_name": "plThresholdIn",
+                      "query_params": []
+                    }
+                  ]
+                }
+              ],
+              "type": "page"
             },
             {
-              "name": "detailsPlTakeProfit",
-              "route_params": [
-                "plTakeProfitId"
-              ],
+              "name": "plThresholdOut",
               "components": [
                 {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plTakeProfit",
+                  "name": "viewPlThresholdOuts",
+                  "title": "ThresholdOut",
+                  "type": "data_view",
+                  "text_if_empty": "No Threshold configured",
+                  "query_name": "plThresholdOuts",
                   "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
+                  "insert_route": "plugins.plThresholdOut.insertPlThresholdOut",
+                  "edit_route": "plugins.plThresholdOut.editPlThresholdOut",
+                  "edit_route_params": [
+                    {
+                      "name": "plThresholdOutId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plThresholdOut.detailsPlThresholdOut",
+                  "details_route_params": [
+                    {
+                      "name": "plThresholdOutId",
+                      "value": "this._id"
+                    }
+                  ]
                 }
-              ]
-            },
-            {
-              "name": "editPlTakeProfit",
-              "route_params": [
-                "plTakeProfitId"
               ],
-              "components": [
+              "pages": [
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit TakeProfit",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plTakeProfit",
-                  "query_params": []
-                }
-              ]
-            },
-            {
-              "name": "insertPlThresholdIn",
-              "components": [
+                  "name": "insertPlThresholdOut",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New ThresholdOut",
+                      "query_name": "plThresholdOuts_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plThresholdOut",
+                      "cancel_route": "plugins.plThresholdOut"
+                    }
+                  ]
+                },
                 {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New ThresholdIn",
-                  "query_name": "plThresholdIns_empty",
-                  "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
+                  "name": "detailsPlThresholdOut",
+                  "route_params": [
+                    "plThresholdOutId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plThresholdOut",
+                      "query_params": [],
+                      "close_route": "plugins.plThresholdOut",
+                      "back_route": "plugins.plThresholdOut"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlThresholdOut",
+                  "route_params": [
+                    "plThresholdOutId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit ThresholdOut",
+                      "submit_route": "plugins.plThresholdOut",
+                      "cancel_route": "plugins.plThresholdOut",
+                      "query_name": "plThresholdOut",
+                      "query_params": []
+                    }
+                  ]
                 }
-              ]
-            },
-            {
-              "name": "detailsPlThresholdIn",
-              "route_params": [
-                "plThresholdInId"
               ],
-              "components": [
-                {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plThresholdIn",
-                  "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
-                }
-              ]
-            },
+              "type": "page"
+            }
+          ],
+          "components": [
             {
-              "name": "editPlThresholdIn",
-              "route_params": [
-                "plThresholdInId"
-              ],
-              "components": [
+              "name": "side_menu",
+              "type": "menu",
+              "class": "nav nav-stacked nav-pills",
+              "items": [
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit ThresholdIn",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plThresholdIn",
-                  "query_params": []
-                }
-              ]
-            },
-            {
-              "name": "insertPlThresholdOut",
-              "components": [
+                  "title": "StopLoss",
+                  "route": "plugins.plStopLoss"
+                },
                 {
-                  "name": "insert_form",
-                  "type": "form",
-                  "mode": "insert",
-                  "title": "New ThresholdOut",
-                  "query_name": "plThresholdOuts_empty",
-                  "query_params": [],
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "detailsPlThresholdOut",
-              "route_params": [
-                "plThresholdOutId"
-              ],
-              "components": [
+                  "title": "TakeProfit",
+                  "route": "plugins.plTakeProfit"
+                },
                 {
-                  "name": "details_form",
-                  "type": "form",
-                  "mode": "read_only",
-                  "title": "Details",
-                  "layout": "horizontal",
-                  "query_name": "plThresholdOut",
-                  "query_params": [],
-                  "close_route": "plugins",
-                  "back_route": "plugins"
-                }
-              ]
-            },
-            {
-              "name": "editPlThresholdOut",
-              "route_params": [
-                "plThresholdOutId"
-              ],
-              "components": [
+                  "title": "ThresholdIn",
+                  "route": "plugins.plThresholdIn"
+                },
                 {
-                  "name": "edit_form",
-                  "type": "form",
-                  "mode": "update",
-                  "title": "Edit ThresholdOut",
-                  "submit_route": "plugins",
-                  "cancel_route": "plugins",
-                  "query_name": "plThresholdOut",
-                  "query_params": []
+                  "title": "ThresholdOut",
+                  "route": "plugins.plThresholdOut"
                 }
               ]
             }
@@ -1899,7 +1954,7 @@
           "name": "exchanges",
           "pages": [
             {
-              "name": "krakenCom",
+              "name": "exKraken",
               "components": [
                 {
                   "name": "viewExKraken",
@@ -1936,8 +1991,8 @@
                       "title": "New Settings",
                       "query_name": "exKrakens_empty",
                       "query_params": [],
-                      "submit_route": "exchanges.krakenCom",
-                      "cancel_route": "exchanges.krakenCom"
+                      "submit_route": "exchanges.exKraken",
+                      "cancel_route": "exchanges.exKraken"
                     }
                   ]
                 },
@@ -1952,8 +2007,8 @@
                       "type": "form",
                       "mode": "update",
                       "title": "Edit Settings",
-                      "submit_route": "exchanges.krakenCom",
-                      "cancel_route": "exchanges.krakenCom",
+                      "submit_route": "exchanges.exKraken",
+                      "cancel_route": "exchanges.exKraken",
                       "query_name": "exKraken",
                       "query_params": []
                     }
@@ -1973,8 +2028,8 @@
                       "layout": "horizontal",
                       "query_name": "exKraken",
                       "query_params": [],
-                      "close_route": "exchanges.krakenCom",
-                      "back_route": "exchanges.krakenCom"
+                      "close_route": "exchanges.exKraken",
+                      "back_route": "exchanges.exKraken"
                     }
                   ]
                 }
@@ -1982,7 +2037,7 @@
               "type": "page"
             },
             {
-              "name": "testData",
+              "name": "exTestData",
               "components": [
                 {
                   "name": "viewExTestData",
@@ -2019,8 +2074,8 @@
                       "title": "New Dataset",
                       "query_name": "exTestDatas_empty",
                       "query_params": [],
-                      "submit_route": "exchanges.testData",
-                      "cancel_route": "exchanges.testData"
+                      "submit_route": "exchanges.exTestData",
+                      "cancel_route": "exchanges.exTestData"
                     }
                   ]
                 },
@@ -2035,8 +2090,8 @@
                       "type": "form",
                       "mode": "update",
                       "title": "Edit Dataset",
-                      "submit_route": "exchanges.testData",
-                      "cancel_route": "exchanges.testData",
+                      "submit_route": "exchanges.exTestData",
+                      "cancel_route": "exchanges.exTestData",
                       "query_name": "exTestData",
                       "query_params": []
                     }
@@ -2056,8 +2111,8 @@
                       "layout": "horizontal",
                       "query_name": "exTestData",
                       "query_params": [],
-                      "close_route": "exchanges.testData",
-                      "back_route": "exchanges.testData"
+                      "close_route": "exchanges.exTestData",
+                      "back_route": "exchanges.exTestData"
                     }
                   ]
                 }
@@ -2073,11 +2128,11 @@
               "items": [
                 {
                   "title": "Kraken.com",
-                  "route": "exchanges.krakenCom"
+                  "route": "exchanges.exKraken"
                 },
                 {
                   "title": "TestData",
-                  "route": "exchanges.testData"
+                  "route": "exchanges.exTestData"
                 }
               ]
             }

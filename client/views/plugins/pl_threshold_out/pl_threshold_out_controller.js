@@ -1,9 +1,10 @@
-this.ExchangesController = RouteController.extend({
-	template: "Exchanges",
+this.PluginsPlThresholdOutController = RouteController.extend({
+	template: "Plugins",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'PluginsPlThresholdOut': { to: 'PluginsSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.ExchangesController = RouteController.extend({
 	},
 
 	action: function() {
-		this.redirect('exchanges.ex_kraken', this.params || {}, { replaceState: true });
+		if(this.isReady()) { this.render(); } else { this.render("Plugins"); this.render("loading", { to: "PluginsSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,6 +20,7 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var subs = [
+			Meteor.subscribe("pl_threshold_outs")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -32,7 +34,8 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			pl_threshold_outs: PlThresholdOuts.find({}, {})
 		};
 		
 

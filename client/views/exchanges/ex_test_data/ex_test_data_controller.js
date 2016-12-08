@@ -1,9 +1,10 @@
-this.ExchangesController = RouteController.extend({
+this.ExchangesExTestDataController = RouteController.extend({
 	template: "Exchanges",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'ExchangesExTestData': { to: 'ExchangesSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.ExchangesController = RouteController.extend({
 	},
 
 	action: function() {
-		this.redirect('exchanges.ex_kraken', this.params || {}, { replaceState: true });
+		if(this.isReady()) { this.render(); } else { this.render("Exchanges"); this.render("loading", { to: "ExchangesSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,6 +20,7 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var subs = [
+			Meteor.subscribe("ex_test_datas")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -32,7 +34,8 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			ex_test_datas: ExTestDatas.find({}, {})
 		};
 		
 
