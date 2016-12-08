@@ -8,4 +8,3 @@
 - logging system
 - push notification
 - ssl connection
-- amount field in Swing configuration

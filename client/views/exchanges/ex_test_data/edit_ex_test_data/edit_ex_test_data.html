@@ -1,0 +1,419 @@
+<template name="ExchangesExTestDataEditExTestData">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> ExchangesExTestDataEditExTestDataEditForm}}
+	</div>
+</template>
+
+<template name="ExchangesExTestDataEditExTestDataEditForm">
+	<div id="exchanges-ex-test-data-edit-ex-test-data-edit-form" class="">
+		<h2 id="component-title">
+			Edit TestData
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name">
+					Name
+				</label>
+				<div class="input-div">
+					<input type="text" name="name" value="{{ex_test_data.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-trade-pair">
+				<label for="tradePair">
+					Trade Pair
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="tradePair" data-type="string" required="required">
+						{{#each pairs}}
+						<option value={{name}} {{selected}}>							{{name}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-balance-amount">
+				<label for="balanceAmount">
+					Simulated balance amount to trade with
+				</label>
+				<div class="input-div">
+					<input type="text" name="balanceAmount" value="{{ex_test_data.balanceAmount}}" class="form-control" required="required" data-type="float">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-gain">
+				<label for="gain">
+					Gain (multiplier)
+				</label>
+				<div class="input-div">
+					<input type="text" name="gain" value="{{ex_test_data.gain}}" class="form-control" required="required" data-type="float">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-offset">
+				<label for="offset">
+					Offset
+				</label>
+				<div class="input-div">
+					<input type="text" name="offset" value="{{ex_test_data.offset}}" class="form-control" required="required" data-type="float">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-start-val">
+				<label for="startVal">
+					Start Value (counter starts with this value)
+				</label>
+				<div class="input-div">
+					<input type="text" name="startVal" value="{{ex_test_data.startVal}}" class="form-control" required="required" data-type="float">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-step-width">
+				<label for="stepWidth">
+					Step Width (counter inscreases by this value each time)
+				</label>
+				<div class="input-div">
+					<input type="text" name="stepWidth" value="{{ex_test_data.stepWidth}}" class="form-control" required="required" data-type="integer">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-trade-delay-sec">
+				<label for="tradeDelaySec">
+					Simulated time for a trade (buying/selling)
+				</label>
+				<div class="input-div">
+					<input type="text" name="tradeDelaySec" value="{{ex_test_data.tradeDelaySec}}" class="form-control" required="required" data-type="integer">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-price-type">
+				<label for="priceType">
+					Price Type
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="sinus" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "sinus"}}>
+							Sinus
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="data" name="priceType" data-type="string" {{itemIsChecked ex_test_data.priceType "data"}}>
+							Data
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-data">
+				<label for="data">
+					Data
+				</label>
+				<div class="input-div">
+					<textarea class="form-control" name="data">{{ex_test_data.data}}</textarea>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-long">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.enLong}}" name="enLong" data-type="bool" {{itemIsChecked ex_test_data.enLong true}}>
+							Enable Long Position
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-short">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.enShort}}" name="enShort" data-type="bool" {{itemIsChecked ex_test_data.enShort true}}>
+							Enable Short Position
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{#if $eq enError 'true'}}
+			<div class="form-group  field-err-sc">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSC}}" name="errSC" data-type="bool" {{itemIsChecked ex_test_data.errSC true}}>
+							Error setConfig()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gc">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGC}}" name="errGC" data-type="bool" {{itemIsChecked ex_test_data.errGC true}}>
+							Error getConfig()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gi">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGI}}" name="errGI" data-type="bool" {{itemIsChecked ex_test_data.errGI true}}>
+							Error getInfo()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpu">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGPU}}" name="errGPU" data-type="bool" {{itemIsChecked ex_test_data.errGPU true}}>
+							Error getPairUnits()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gv">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGV}}" name="errGV" data-type="bool" {{itemIsChecked ex_test_data.errGV true}}>
+							Error getVolume()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gp">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGP}}" name="errGP" data-type="bool" {{itemIsChecked ex_test_data.errGP true}}>
+							Error getPrice()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gtp">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGTP}}" name="errGTP" data-type="bool" {{itemIsChecked ex_test_data.errGTP true}}>
+							Error getTradePrice()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-u">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errU}}" name="errU" data-type="bool" {{itemIsChecked ex_test_data.errU true}}>
+							Error update()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-s">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errS}}" name="errS" data-type="bool" {{itemIsChecked ex_test_data.errS true}}>
+							Error sell()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-b">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errB}}" name="errB" data-type="bool" {{itemIsChecked ex_test_data.errB true}}>
+							Error buy()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-st">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errST}}" name="errST" data-type="bool" {{itemIsChecked ex_test_data.errST true}}>
+							Error stopTrade()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gii">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGII}}" name="errGII" data-type="bool" {{itemIsChecked ex_test_data.errGII true}}>
+							Error getInstInfo()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-gpo">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errGPO}}" name="errGPO" data-type="bool" {{itemIsChecked ex_test_data.errGPO true}}>
+							Error getPositions()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-sbnf">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSBNF}}" name="errSBNF" data-type="bool" {{itemIsChecked ex_test_data.errSBNF true}}>
+							Error setBoughtNotifyFunc()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-err-ssnf">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo ex_test_data.errSSNF}}" name="errSSNF" data-type="bool" {{itemIsChecked ex_test_data.errSSNF true}}>
+							Error setSoldNotifyFunc()
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{/if}}
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+					<a href="#" id="form-cancel-button" class="btn btn-default">
+						Cancel
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>

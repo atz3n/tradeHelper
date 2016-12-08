@@ -1,0 +1,159 @@
+<template name="PluginsPlThresholdOutInsertPlThresholdOut">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> PluginsPlThresholdOutInsertPlThresholdOutInsertForm}}
+	</div>
+</template>
+
+<template name="PluginsPlThresholdOutInsertPlThresholdOutInsertForm">
+	<div id="plugins-pl-threshold-out-insert-pl-threshold-out-insert-form" class="">
+		<h2 id="component-title">
+			New ThresholdOut
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name">
+					Name
+				</label>
+				<div class="input-div">
+					<input type="text" name="name" value={{prefix}} class="form-control " autofocus="autofocus" required="required" data-type="string">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-exchange">
+				<label for="exchange">
+					Exchange
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="exchange" data-type="string" required="required">
+						{{#each exchanges}}
+						<option value="{{_id}}">							{{name}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-base-base">
+				<label for="thresholdBaseBase">
+					Threshold Base
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="price" name="thresholdBaseBase" data-type="string">
+							price
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="profit" name="thresholdBaseBase" data-type="string" checked>
+							profit
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-type">
+				<label for="thresholdType">
+					Threshold Type
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="value" name="thresholdType" data-type="string">
+							value
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="percentage" name="thresholdType" data-type="string" checked>
+							percentage
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-amount">
+				<label for="thresholdAmount">
+					Threshold Value
+				</label>
+				<div class="input-div">
+					<input type="text" name="thresholdAmount" value="3" class="form-control " required="required" data-type="integer" data-min="0">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-long">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo true}}" name="enLong" data-type="bool" checked>
+							Enable Long
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-en-short">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo false}}" name="enShort" data-type="bool">
+							Enable Short
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+					<a href="#" id="form-cancel-button" class="btn btn-default">
+						Cancel
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+

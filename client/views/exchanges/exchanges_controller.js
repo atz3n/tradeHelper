@@ -11,7 +11,7 @@ this.ExchangesController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		this.redirect('exchanges.ex_kraken', this.params || {}, { replaceState: true });
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,8 +19,6 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("ex_krakens"),
-			Meteor.subscribe("ex_test_datas")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,9 +32,7 @@ this.ExchangesController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {},
-			ex_krakens: ExKrakens.find({}, {}),
-			ex_test_datas: ExTestDatas.find({}, {})
+			params: this.params || {}
 		};
 		
 

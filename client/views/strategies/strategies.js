@@ -26,13 +26,26 @@ var StrategiesViewItems = function(cursor) {
 
   	for (var i = 0; i < raw.length; i++) {
 
-  	var tmp = '';
-    for (var j = 0; j < raw[i].pluginBundles.length; j++) {
-    	if(tmp != 0) tmp += ', ';
-    	tmp += getPluginBundleName(raw[i].pluginBundles[j].bundle);
-    }
-      raw[i].pluginBundlesString = tmp;
-  }
+  		var pluginsCnt = 0;
+		var bundlesCnt = 0;
+
+	    for (var j = 0; j < raw[i].pluginBundles.length; j++) {
+	    	var bundles = raw[i].pluginBundles[j];
+	    	bundlesCnt++;
+
+	    	for(var k = 0 ; k < bundles.pluginIds.length ; k++){
+	    		pluginsCnt++;
+	    	}
+	    }
+	      raw[i].pluginsBundlesString = pluginsCnt + ' / ' + bundlesCnt;
+	}
+
+	/* sort by name */
+    raw = raw.sort(function(a, b) {
+      if (a.name < b.name) return -1;
+      else if (a.name > b.name) return 1;
+      else return 0;
+    });
 
 	// filter
 	var filtered = [];

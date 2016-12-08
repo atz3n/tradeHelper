@@ -11,7 +11,7 @@ this.PluginsController = RouteController.extend({
 	},
 
 	action: function() {
-		if(this.isReady()) { this.render(); } else { this.render("loading"); }
+		this.redirect('plugins.pl_stop_loss', this.params || {}, { replaceState: true });
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,9 +19,6 @@ this.PluginsController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_swings"),
-			Meteor.subscribe("pl_stop_losses"),
-			Meteor.subscribe("pl_take_profits")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,10 +32,7 @@ this.PluginsController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {},
-			pl_swings: PlSwings.find({}, {}),
-			pl_stop_losses: PlStopLosses.find({}, {}),
-			pl_take_profits: PlTakeProfits.find({}, {})
+			params: this.params || {}
 		};
 		
 
