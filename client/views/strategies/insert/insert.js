@@ -144,6 +144,9 @@ Template.StrategiesInsertInsertForm.helpers({
 		}
 			
 	return pageSession.get("pluginBundlesCrudItems");
+	},
+	'prefix': function() {
+		return this.settings.enStrPrefix ? "Str_" : "";
 	}
 });
 

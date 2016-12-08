@@ -19,7 +19,8 @@ this.StrategiesInsertController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("strategies_empty")
+			Meteor.subscribe("strategies_empty"),
+			Meteor.subscribe("settings_first")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -34,7 +35,8 @@ this.StrategiesInsertController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			strategies_empty: Strategies.findOne({_id:null}, {})
+			strategies_empty: Strategies.findOne({_id:null}, {}),
+			settings: Settings.findOne({ownerId: Meteor.userId()})
 		};
 		
 

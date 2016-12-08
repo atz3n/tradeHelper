@@ -20,7 +20,8 @@ this.PluginsPlTakeProfitInsertPlTakeProfitController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_take_profits_empty")
+			Meteor.subscribe("pl_take_profits_empty"),
+			Meteor.subscribe("settings_first")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,7 +36,8 @@ this.PluginsPlTakeProfitInsertPlTakeProfitController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_take_profits_empty: PlTakeProfits.findOne({_id:null}, {})
+			pl_take_profits_empty: PlTakeProfits.findOne({_id:null}, {}),
+			settings: Settings.findOne({ownerId: Meteor.userId()})
 		};
 		
 

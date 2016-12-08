@@ -123,6 +123,9 @@ Template.PluginsPlTakeProfitInsertPlTakeProfitInsertForm.helpers({
 	},
 	"exchanges": function() {
 		return getExchanges();
+	},
+	'prefix': function() {
+		return this.settings.enPlPrefix ? "PlTaP_" : "";
 	}
 	
 });

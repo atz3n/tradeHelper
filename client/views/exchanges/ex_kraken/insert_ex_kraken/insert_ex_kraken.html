@@ -13,7 +13,7 @@
 <template name="ExchangesExKrakenInsertExKrakenInsertForm">
 	<div id="exchanges-ex-kraken-com-insert-ex-kraken-insert-form" class="">
 		<h2 id="component-title">
-			New Settings
+			New Kraken.com
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -29,10 +29,10 @@
 			{{/if}}
 			<div class="form-group  field-name">
 				<label for="name">
-					NameKrakenComInsertExKrakenInsertForm
+					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value={{prefix}} class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

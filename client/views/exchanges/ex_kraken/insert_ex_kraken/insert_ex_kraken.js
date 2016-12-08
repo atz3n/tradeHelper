@@ -160,6 +160,9 @@ Template.ExchangesExKrakenInsertExKrakenInsertForm.helpers({
 	},
 	'disableOwBaConfig': function() {
 		return pageSession.get('disableOwBaConfig');
+	},
+	'prefix': function() {
+		return this.settings.enExPrefix ? "ExKrC_" : "";
 	}
 	
 });

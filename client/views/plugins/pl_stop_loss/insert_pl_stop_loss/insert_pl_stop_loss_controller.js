@@ -20,7 +20,8 @@ this.PluginsPlStopLossInsertPlStopLossController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_stop_losses_empty")
+			Meteor.subscribe("pl_stop_losses_empty"),
+			Meteor.subscribe("settings_first")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,7 +36,8 @@ this.PluginsPlStopLossInsertPlStopLossController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_stop_losses_empty: PlStopLosses.findOne({_id:null}, {})
+			pl_stop_losses_empty: PlStopLosses.findOne({_id:null}, {}),
+			settings: Settings.findOne({ownerId: Meteor.userId()})
 		};
 		
 

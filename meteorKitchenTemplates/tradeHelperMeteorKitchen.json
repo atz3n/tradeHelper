@@ -1,7 +1,7 @@
 {
   "application": {
     "title": "Trade Helper",
-    "theme": "bootswatch-simplex",
+    "theme": "bootswatch-yeti",
     "on_user_created_code": "Settings.insert({ enNotification: 'true', dummy: 'false', ownerId: user._id, modifiedBy: user._id });",
     "roles": [
       "admin",

@@ -123,6 +123,9 @@ Template.PluginsPlThresholdInInsertPlThresholdInInsertForm.helpers({
 	},
 	"exchanges": function() {
 		return getExchanges();
+	},
+	'prefix': function() {
+		return this.settings.enPlPrefix ? "PlThI_" : "";
 	}
 	
 });

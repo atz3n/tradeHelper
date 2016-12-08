@@ -209,7 +209,20 @@ Accounts.onCreateUser(function (options, user) {
 	}
 
 	
-Settings.insert({ enBrNtfctn: false, enBrNtfctnSnd: false, enAppNtfctn: false, enAppNtfctnSnd: false, ownerId: user._id, modifiedBy: user._id, createdBy: user._id });
+Settings.insert({ 
+	enBrNtfctn: false, 
+	enBrNtfctnSnd: false, 
+	enAppNtfctn: false, 
+	enAppNtfctnSnd: false, 
+
+	enExPrefix: true,
+	enPlPrefix: true,
+	enStrPrefix: false,
+
+	ownerId: user._id, 
+	modifiedBy: user._id, 
+	createdBy: user._id 
+});
 	return user;
 });
 

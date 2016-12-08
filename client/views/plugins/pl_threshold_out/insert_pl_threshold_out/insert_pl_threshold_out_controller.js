@@ -20,7 +20,8 @@ this.PluginsPlThresholdOutInsertPlThresholdOutController = RouteController.exten
 		
 
 		var subs = [
-			Meteor.subscribe("pl_threshold_outs_empty")
+			Meteor.subscribe("pl_threshold_outs_empty"),
+			Meteor.subscribe("settings_first")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,7 +36,8 @@ this.PluginsPlThresholdOutInsertPlThresholdOutController = RouteController.exten
 
 		var data = {
 			params: this.params || {},
-			pl_threshold_outs_empty: PlThresholdOuts.findOne({_id:null}, {})
+			pl_threshold_outs_empty: PlThresholdOuts.findOne({_id:null}, {}),
+			settings: Settings.findOne({ownerId: Meteor.userId()})
 		};
 		
 

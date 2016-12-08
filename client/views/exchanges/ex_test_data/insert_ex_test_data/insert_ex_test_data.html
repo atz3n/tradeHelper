@@ -13,7 +13,7 @@
 <template name="ExchangesExTestDataInsertExTestDataInsertForm">
 	<div id="exchanges-ex-test-data-insert-ex-test-data-insert-form" class="">
 		<h2 id="component-title">
-			New Dataset
+			New TestData
 		</h2>
 		<form role="form">
 			{{#if errorMessage}}
@@ -32,7 +32,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value={{prefix}} class="form-control" autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">

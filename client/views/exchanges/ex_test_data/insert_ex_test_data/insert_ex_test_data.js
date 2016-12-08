@@ -237,5 +237,8 @@ Template.ExchangesExTestDataInsertExTestDataInsertForm.helpers({
 	},
 	'enError': function() {
 		return Meteor.settings.public.ExTestDataErrorConfig;
+	},
+	'prefix': function() {
+		return this.settings.enExPrefix ? "ExTsD_" : "";
 	}
 });
