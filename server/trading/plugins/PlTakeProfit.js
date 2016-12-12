@@ -7,13 +7,14 @@
  *
  * 
  * @author Atzen
- * @version 0.2.0
+ * @version 0.2.1
  *
  * 
  * CHANGES:
  * 05-Sep-2016 : Initial version
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
  * 28-Nov-2016 : Added takeValueBase option
+ * 12-Dez-2016 : Added _active mechanism
  */
 
 
@@ -102,6 +103,12 @@ export function PlTakeProfit(logger) {
   var _position = 'none';
 
   /**
+  * Active state
+  * @type {Boolean}
+  */
+  var _active = false;
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -176,7 +183,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
-    return false;
+    return _active;
   }
 
 
@@ -184,10 +191,14 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
-    return [
+    var tmp = [
       { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
-      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) },
+      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
+
+    if(!_active) for(i in tmp) tmp[i].value = '-';
+
+    return tmp;
   }
 
 
@@ -195,8 +206,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
-    _curPrice = price;
     _position = 'none';
+
+    _active = false;
   }
 
 
@@ -204,34 +216,37 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
-    var diff = 0;
-    _curPrice = price;
+    if(_active){
+
+      var diff = 0;
+      _curPrice = price;
 
 
-    /* get difference */
-    if (_config.takeValueType === 'percentage') {
-      diff = percentage(_curPrice, _inPrice);
-    } else {
-      diff = _curPrice - _inPrice;
+      /* get difference */
+      if (_config.takeValueType === 'percentage') {
+        diff = percentage(_curPrice, _inPrice);
+      } else {
+        diff = _curPrice - _inPrice;
 
-      if (_config.takeValueBase === 'profit') diff *= _inVolume;
-    }
-
-
-    /* stop long position */
-    if (_position === 'long' && _config.enLong) {
-      if (diff > _config.takeValueAmount) {
-        _sellNotifyFunc(this.getInstInfo());
+        if (_config.takeValueBase === 'profit') diff *= _inVolume;
       }
-    }
 
 
-    /* stop short position */
-    if (_position === 'short' && _config.enShort) {
-      console.log(diff)
-      if (diff < - _config.takeValueAmount) {
-        console.log('go')
-        _buyNotifyFunc(this.getInstInfo());
+      /* stop long position */
+      if (_position === 'long' && _config.enLong) {
+        if (diff > _config.takeValueAmount) {
+          _sellNotifyFunc(this.getInstInfo());
+        }
+      }
+
+
+      /* stop short position */
+      if (_position === 'short' && _config.enShort) {
+        console.log(diff)
+        if (diff < - _config.takeValueAmount) {
+          console.log('go')
+          _buyNotifyFunc(this.getInstInfo());
+        }
       }
     }
   }
@@ -245,10 +260,12 @@ export function PlTakeProfit(logger) {
 
       if (_position === 'none') {
         _position = 'long';
+        _active = true;
         _inPrice = price;
         _inVolume = volume;
       } else {
         _position = 'none';
+        _active = false;
         _inPrice = 0;
         _inVolume = 0;
       }
@@ -266,10 +283,12 @@ export function PlTakeProfit(logger) {
       
       if (_position === 'none') {
         _position = 'short';
+        _active = true;
         _inPrice = price;
         _inVolume = volume;
       } else {
         _position = 'none';
+        _active = false;
         _inPrice = 0;
         _inVolume = 0;
       }

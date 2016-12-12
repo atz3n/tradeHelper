@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.2.1
+ * @version 0.2.2
  *
  * 
  * CHANGES:
@@ -15,6 +15,7 @@
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
  * 28-Nov-2016 : Added stopValueBase option
  * 28-Nov-2016 : fixed bug: getPosition returned enLong config twice instead of enLong and enShort
+ * 12-Dez-2016 : added _active mechanism
  */
 
 
@@ -103,6 +104,12 @@ export function PlStopLoss(logger) {
   var _position = 'none';
 
   /**
+  * Active state
+  * @type {Boolean}
+  */
+  var _active = false;
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -177,7 +184,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
-    return false;
+    return _active;
   }
 
 
@@ -185,10 +192,14 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
-    return [
+    var tmp =  [
       { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
-      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) },
+      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
+
+    if(!_active) for(i in tmp) tmp[i].value = '-';
+
+    return tmp;
   }
 
 
@@ -196,8 +207,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
-    _curPrice = price;
     _position = 'none';
+
+    _active = false;
   }
 
 
@@ -205,32 +217,35 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.update = function(price) {
-    var diff = 0;
-    _curPrice = price;
+    if(_active){
+
+      var diff = 0;
+      _curPrice = price;
 
 
-    /* get difference */
-    if (_config.stopValueType === 'percentage') {
-      diff = percentage(_curPrice, _inPrice);
-    } else {
-      diff = _curPrice - _inPrice;
+      /* get difference */
+      if (_config.stopValueType === 'percentage') {
+        diff = percentage(_curPrice, _inPrice);
+      } else {
+        diff = _curPrice - _inPrice;
 
-      if (_config.stopValueBase === 'profit') diff *= _inVolume;
-    }
-
-
-    /* stop long position */
-    if (_position === 'long' && _config.enLong) {
-      if (diff < -_config.stopValueAmount) {
-        _sellNotifyFunc(this.getInstInfo());
+        if (_config.stopValueBase === 'profit') diff *= _inVolume;
       }
-    }
 
 
-    /* stop short position */
-    if (_position === 'short' && _config.enShort) {
-      if (diff > _config.stopValueAmount) {
-        _buyNotifyFunc(this.getInstInfo());
+      /* stop long position */
+      if (_position === 'long' && _config.enLong) {
+        if (diff < -_config.stopValueAmount) {
+          _sellNotifyFunc(this.getInstInfo());
+        }
+      }
+
+
+      /* stop short position */
+      if (_position === 'short' && _config.enShort) {
+        if (diff > _config.stopValueAmount) {
+          _buyNotifyFunc(this.getInstInfo());
+        }
       }
     }
   }
@@ -244,10 +259,12 @@ export function PlStopLoss(logger) {
 
       if (_position === 'none') {
         _position = 'long';
+        _active = true;
         _inPrice = price;
         _inVolume = volume;
       } else {
         _position = 'none';
+        _active = false;
         _inPrice = 0;
         _inVolume = 0;
       }
@@ -265,10 +282,12 @@ export function PlStopLoss(logger) {
 
       if (_position === 'none') {
         _position = 'short';
+        _active = true;
         _inPrice = price;
         _inVolume = volume;
       } else {
         _position = 'none';
+        _active = false;
         _inPrice = 0;
         _inVolume = 0;
       }

@@ -211,6 +211,8 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   this.start = function(price) {
     _position = 'none';
 
+    <YOUR CODE: set some price values>
+
     /* set active state */
     <YOUR CODE: set _active value to true/false>
   }
