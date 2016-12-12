@@ -7,13 +7,14 @@
  *
  * 
  * @author Atzen
- * @version 0.2.0
+ * @version 0.2.1
  *
  * 
  * CHANGES:
  * 12-Aug-2016 : Initial version
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
  * 28-Nov-2016 : Added stopValueBase option
+ * 28-Nov-2016 : fixed bug: getPosition returned enLong config twice instead of enLong and enShort
  */
 
 
@@ -305,7 +306,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
-    return { long: _config.enLong, short: _config.enLong }
+    return { long: _config.enLong, short: _config.enShort }
   }
 
 
