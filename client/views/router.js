@@ -91,9 +91,9 @@ var roleMap = [
 	{ route: "admin.users.insert",	roles: ["admin"] },
 	{ route: "admin.users.edit",	roles: ["admin"] },
 	{ route: "admin.actives",	roles: ["admin"] },
-	{ route: "user_settings",	roles: ["user","admin"] },
-	{ route: "user_settings.profile",	roles: ["user","admin"] },
-	{ route: "user_settings.change_pass",	roles: ["user","admin"] }
+	{ route: "user_settings",	roles: ["user","admin", "developer"] },
+	{ route: "user_settings.profile",	roles: ["user","admin", "developer"] },
+	{ route: "user_settings.change_pass",	roles: ["user","admin", "developer"] }
 ];
 
 this.firstGrantedRoute = function(preferredRoute) {
