@@ -8,7 +8,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.0
+ * @version 0.3.1
  *
  * 
  * CHANGES:
@@ -17,6 +17,7 @@
  * 24-Nov-2016 : adaption for post pluginBundle db time
  * 28-Nov-2016 : adaption to IPlugin 2.2
  *               simplified plugins trade finished function calls
+ * 22-Dez-2016 : added exchange dependent long or short trading availability at manual buy/sell
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -38,11 +39,9 @@ import { SchMSC } from '../../lib/SchMSC.js';
  */
 StrError = {
   ok: 'OK',
-  ExConfigError: 'EXCHANGE_CONFIG_ERROR',
-  PlConfigError: 'PLUGIN_CONFIG_ERROR',
+  info: 'INFO',
   error: 'ERROR',
   notFound: 'STRATEGY_NOT_FOUND',
-  errCode: 'ERROR_CODE'
 }
 
 
@@ -304,7 +303,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
           else pl.inst.update(price);
         }
 
-        if(pl.inst.getActiveState()) _data.plugins[i].state = 'active';
+        if (pl.inst.getActiveState()) _data.plugins[i].state = 'active';
         else _data.plugins[i].state = 'idle';
 
         _data.plugins[i].info = pl.inst.getInfo();
@@ -851,7 +850,15 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     }
 
     if (errObj.code === '0x012') {
-      return errHandle(ExError.error, erPreMsg + 'Configuration of Plugin "' + errObj.name + '" could not be set!');
+      return errHandle(StrError.error, erPreMsg + 'Configuration of Plugin "' + errObj.name + '" could not be set!');
+    }
+
+     if (errObj.code === '0x013') {
+      return errHandle(StrError.info, infPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading');
+    }
+
+     if (errObj.code === '0x014') {
+      return errHandle(StrError.info, infPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading');
     }
   }
 
@@ -1049,8 +1056,40 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    * Initiates a buy action
    */
   this.buy = function() {
-    if (_data.state !== 'buying' && _data.state !== 'selling') {
-      _tradeFunction('buy');
+    if (_data.state !== 'buying' && _data.state !== 'selling' && _data.position !== 'long') {
+      
+      /* long position */
+      if (_data.position === 'none') {
+        var error = false;
+
+        /* check if exchanges allow long positioning */
+        for (i = 0; i < _exchanges.getObjectsArray().length; i++) {
+          var ex = _exchanges.getObjectByIdx(i);
+
+          if (!ex.getPositions().result.long) {
+            var instInfo = ex.getInstInfo();
+
+            /* error handling */
+            if (instInfo.error !== ExError.ok) {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+            } else {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x013', strId: _strDesc._id, name: instInfo.result.name }));
+            }
+
+            error = true;
+            break;
+          }
+
+        }
+
+        if (!error) _tradeFunction('buy');
+
+
+      /* end position */
+      } else {
+        _tradeFunction('buy');
+      }
+    
     }
   }
 
@@ -1059,8 +1098,40 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    * Initiates a sell action
    */
   this.sell = function() {
-    if (_data.state !== 'buying' && _data.state !== 'selling') {
-      _tradeFunction('sell')
+    if (_data.state !== 'buying' && _data.state !== 'selling' && _data.position !== 'short') {
+
+       /* short position */
+      if (_data.position === 'none') {
+        var error = false;
+
+        /* check if exchanges allow short positioning */
+        for (i = 0; i < _exchanges.getObjectsArray().length; i++) {
+          var ex = _exchanges.getObjectByIdx(i);
+
+          if (!ex.getPositions().result.short) {
+            var instInfo = ex.getInstInfo();
+
+            /* error handling */
+            if (instInfo.error !== ExError.ok) {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+            } else {
+              _errorFunc(_strDesc._id, errorMessage({ code: '0x014', strId: _strDesc._id, name: instInfo.result.name }));
+            }
+
+            error = true;
+            break;
+          }
+
+        }
+
+        if (!error) _tradeFunction('sell');
+
+
+      /* end position */
+      } else {
+        _tradeFunction('sell');
+      }
+
     }
   }
 

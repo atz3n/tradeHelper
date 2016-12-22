@@ -42,6 +42,10 @@ var privateRoutes = [
 	"plugins.pl_threshold_out.insert_pl_threshold_out",
 	"plugins.pl_threshold_out.details_pl_threshold_out",
 	"plugins.pl_threshold_out.edit_pl_threshold_out",
+	"plugins.pl_dummy",
+	"plugins.pl_dummy.insert_pl_dummy",
+	"plugins.pl_dummy.details_pl_dummy",
+	"plugins.pl_dummy.edit_pl_dummy",
 	"exchanges",
 	"exchanges.ex_kraken",
 	"exchanges.ex_kraken.insert_ex_kraken",
@@ -290,6 +294,10 @@ Router.map(function () {
 	this.route("plugins.pl_threshold_out.insert_pl_threshold_out", {path: "/plugins/pl_threshold_out/insert_pl_threshold_out", controller: "PluginsPlThresholdOutInsertPlThresholdOutController"});
 	this.route("plugins.pl_threshold_out.details_pl_threshold_out", {path: "/plugins/pl_threshold_out/details_pl_threshold_out/:plThresholdOutId", controller: "PluginsPlThresholdOutDetailsPlThresholdOutController"});
 	this.route("plugins.pl_threshold_out.edit_pl_threshold_out", {path: "/plugins/pl_threshold_out/edit_pl_threshold_out/:plThresholdOutId", controller: "PluginsPlThresholdOutEditPlThresholdOutController"});
+	this.route("plugins.pl_dummy", {path: "/plugins/pl_dummy", controller: "PluginsPlDummyController"});
+	this.route("plugins.pl_dummy.insert_pl_dummy", {path: "/plugins/pl_dummy/insert_pl_dummy", controller: "PluginsPlDummyInsertPlDummyController"});
+	this.route("plugins.pl_dummy.details_pl_dummy", {path: "/plugins/pl_dummy/details_pl_dummy/:plDummyId", controller: "PluginsPlDummyDetailsPlDummyController"});
+	this.route("plugins.pl_dummy.edit_pl_dummy", {path: "/plugins/pl_dummy/edit_pl_dummy/:plDummyId", controller: "PluginsPlDummyEditPlDummyController"});
 	this.route("exchanges", {path: "/exchanges", controller: "ExchangesController"});
 	this.route("exchanges.ex_kraken", {path: "/exchanges/ex_kraken", controller: "ExchangesExKrakenController"});
 	this.route("exchanges.ex_kraken.insert_ex_kraken", {path: "/exchanges/ex_kraken/insert_ex_kraken", controller: "ExchangesExKrakenInsertExKrakenController"});

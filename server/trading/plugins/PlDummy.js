@@ -1,39 +1,19 @@
-
 /**
  * @description:
- * <Description>
+ * Class for dummy plugin
  *
  * 
- * <Optional informations>
+ * This class implements a dummy plugin. It can be used when the user wants to trade manually 
+ * without any plugin help.
  *
  * 
- * @author <Your Name>
- * @version 1.0.0
+ * @author Atzen
+ * @version 0.1.0
  *
  * 
  * CHANGES:
- * 02-Jun-2015 : Initial version
+ * 22-Dez-2016 : Initial version
  */
-
-/***********************************************************************
-------------------------
-    HOW TO USE
-------------------------
-
-This is a template for an Plugin. It includes the IPlugin interface functions
-and some basic logic.
-
-
-Replace the fields marked with <YOUR CODE: <some description>> with your code inside.
-
-Of course, your allowed to add any, delete or modify every line inside this template as long
-as the functionality is kept and the api's are served.
-
-
-Delete this How To area after finishing your work.
-
-************************************************************************/
-
 
 
 import { IPlugin } from '../../apis/IPlugin.js'
@@ -51,14 +31,12 @@ import { IPlugin } from '../../apis/IPlugin.js'
  * Configuration structure
  * @type {Object}
  */
-<YOUR CODE: plugin name with prefix "Pl">.ConfigDefault = {
+PlDummy.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
 
-  <YOUR CODE: plugin specific config variables> 
-
-  enLong: true, // enable long trading
-  enShort: true // enable short trading
+  enLong: false,
+  enShort: false 
 }
 
 
@@ -74,7 +52,7 @@ import { IPlugin } from '../../apis/IPlugin.js'
   Class
  ***********************************************************************/
 
-export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
+export function PlDummy(logger) {
 
   /***********************************************************************
     Inheritances
@@ -91,19 +69,13 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Internal configuration object
    * @type {Object}
    */
-  var _config = Object.assign({}, <YOUR CODE: Plugin name with prefix "Pl">.ConfigDefault);
+  var _config = Object.assign({}, PlDummy.ConfigDefault);
 
   /**
    * Current Price
    * @type {Number}
    */
   var _curPrice = 0;
-
-  /**
-   * Position in Volume
-   * @type {Number}
-   */
-  var _inVolume = 0;
 
   /**
    * Trade position
@@ -116,10 +88,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   * @type {Boolean}
   */
   var _active = false;
-
-
-  <YOUR CODE: private variables>
-
 
   /**
    * Callback function that will be called when a buy action is calculated
@@ -147,8 +115,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
 
-    <YOUR CODE: configuration checks>
-
     if (typeof _config.enLong !== 'boolean') return false;
     if (typeof _config.enShort !== 'boolean') return false;
 
@@ -173,11 +139,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
-    return [
-      <YOUR CODE: configuration array objects>
-      { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
-      { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
-    ];
+    return [];
   }
 
 
@@ -193,15 +155,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
-    var tmp = [
-      <YOUR CODE: information array objects>
+    return tmp = [
+      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
-
-    <YOUR CODE: some view logic>
-
-    if(!_active) for(i in tmp) tmp[i].value = '-';
-
-    return tmp;
   }
 
 
@@ -211,10 +167,8 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   this.start = function(price) {
     _position = 'none';
 
-    <YOUR CODE: set some price values>
-
     /* set active state */
-    <YOUR CODE: set _active value to true/false>
+    _active = true;
   }
 
 
@@ -224,10 +178,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   this.update = function(price) {
     if(_active){
        _curPrice = price;
-
-       
-      <YOUR CODE: update logic>
-
     }
   }
 
@@ -242,11 +192,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       if (_position === 'none') 
       {
         _position = 'long';
-        
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
-
-        _inVolume = volume;
       } 
 
 
@@ -254,11 +199,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       else 
       {
         _position = 'none';
-        
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
-
-        _inVolume = 0;
       }
 
 
@@ -277,11 +217,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       if (_position === 'none') 
       {
         _position = 'short';
-
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
-
-        _inVolume = volume;
       } 
 
 
@@ -289,11 +224,6 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       else 
       {
         _position = 'none';
-
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
-
-        _inVolume = 0;
       }
 
 
@@ -322,7 +252,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
-    return { id: _config.id, name: _config.name, type: "<YOUR CODE: plugin name with prefix "Pl">" };
+    return { id: _config.id, name: _config.name, type: "PlDummy" };
   }
 
 
