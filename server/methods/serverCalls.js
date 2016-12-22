@@ -181,6 +181,10 @@ var errMessage = function(errHandleObject, strategyId) {
     return errHandle('info', errHandleObject.result);
   }
 
+  if (errHandleObject.error === StrError.info) {
+    return errHandle('info', errHandleObject.result);
+  }
+
   return errHandle('error', 'Sorry, an unknown error occurred!');
 }
 

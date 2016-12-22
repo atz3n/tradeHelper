@@ -1,9 +1,10 @@
-this.PluginsController = RouteController.extend({
+this.PluginsPlDummyEditPlDummyController = RouteController.extend({
 	template: "Plugins",
 	
 
 	yieldTemplates: {
-		/*YIELD_TEMPLATES*/
+		'PluginsPlDummyEditPlDummy': { to: 'PluginsSubcontent'}
+		
 	},
 
 	onBeforeAction: function() {
@@ -11,7 +12,7 @@ this.PluginsController = RouteController.extend({
 	},
 
 	action: function() {
-		this.redirect('plugins.pl_dummy', this.params || {}, { replaceState: true });
+		if(this.isReady()) { this.render(); } else { this.render("Plugins"); this.render("loading", { to: "PluginsSubcontent" });}
 		/*ACTION_FUNCTION*/
 	},
 
@@ -19,6 +20,7 @@ this.PluginsController = RouteController.extend({
 		
 
 		var subs = [
+			Meteor.subscribe("pl_dummy", this.params.plDummyId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -32,7 +34,8 @@ this.PluginsController = RouteController.extend({
 		
 
 		var data = {
-			params: this.params || {}
+			params: this.params || {},
+			pl_dummy: PlDummies.findOne({_id:this.params.plDummyId}, {})
 		};
 		
 

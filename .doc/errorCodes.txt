@@ -54,3 +54,9 @@ An Exchange called ExError.finished
 
 ID: 0x012
 Plugin API setConfig() returned an error
+
+ID: 0x013
+An Echange doesn't allow long positioning
+
+ID: 0x014
+An Echange doesn't allow short positioning
