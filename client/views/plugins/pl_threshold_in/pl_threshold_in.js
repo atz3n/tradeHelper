@@ -248,6 +248,16 @@ Template.PluginsPlThresholdInViewPlThresholdInsTableItems.events({
 		return false;
 	},
 
+	"click #duplicate-button": function(e, t) {
+		e.preventDefault();
+
+		var tmp = this;
+		delete tmp._id;
+
+		PlThresholdIns.insert(tmp);
+		return false;
+	},
+
 	"click #delete-button": function(e, t) {
 		e.preventDefault();
 		var me = this;
