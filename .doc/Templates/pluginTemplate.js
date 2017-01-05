@@ -221,6 +221,16 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
+  this.reset = function(price) {
+    if(_active) {
+      <YOUR CODE: set some price values>
+    }
+  }
+
+
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.update = function(price) {
     if(_active){
        _curPrice = price;

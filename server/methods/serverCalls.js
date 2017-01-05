@@ -125,6 +125,17 @@ var refresh = function(strategyId) {
 }
 
 
+var reset = function(strategyId) {
+  if (strategies.getObject(strategyId) !== 'undefined') {
+    strategies.getObject(strategyId).inst.reset();
+  } else {
+    return errHandle(StrError.notFound, strategyId)
+  }
+
+  return errHandle(StrError.ok, null);
+}
+
+
 var stopTrade = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     strategies.getObject(strategyId).inst.stopTrading();
@@ -234,6 +245,10 @@ Meteor.methods({
 
   strategyRefresh: function(strategyId) {
     return errMessage(refresh(strategyId));
+  },
+
+  strategyReset: function(strategyId) {
+    return errMessage(reset(strategyId));
   },
 
   strategyStopTrade: function(strategyId) {

@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.2.1
+ * @version 0.3.0
  *
  * 
  * CHANGES:
@@ -15,6 +15,7 @@
  * 31-Oct-2016 : Added savety mechanism in bought/sold functions
  * 28-Nov-2016 : Added takeValueBase option
  * 12-Dez-2016 : Added _active mechanism
+ * 05-Jan-2017 : adapted to IPlugin v 4.0.0
  */
 
 
@@ -209,6 +210,14 @@ export function PlTakeProfit(logger) {
     _position = 'none';
 
     _active = false;
+  }
+
+
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
+  this.reset = function(price) {
+
   }
 
 

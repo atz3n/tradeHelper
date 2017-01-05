@@ -7,11 +7,12 @@
  *
  * 
  * @author Atzen
- * @version 0.1.0
+ * @version 0.2.0
  *
  * 
  * CHANGES:
  * 02-Dez-2016 : Initial version
+ * 05-Jan-2017 : adapted to IPlugin v 4.0.0
  */
 
 
@@ -211,6 +212,17 @@ export function PlThresholdOut(logger) {
 
     /* set active state */
     _active = false;
+  }
+
+
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
+  this.reset = function(price) {
+    if(_active) {
+      _highLowPrice = price;
+      _curPrice = price;
+    }
   }
 
 
