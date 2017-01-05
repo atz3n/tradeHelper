@@ -5,7 +5,7 @@
  * All Plugins must implement these functions to work probably
  * 
  * @author Atzen
- * @version 3.0.0
+ * @version 4.0.0
  * 
  * CHANGES:
  * 01-Jul-2016 : Initial version
@@ -15,6 +15,7 @@
  * 12-Aug-2016 : bugfix: added configuration parameter in setConfig() signature
  * 26-Nov-2016 : added volume parameter in bought/sold function
  * 30-Nov-2016 : changed getState function to getActiveState
+ * 05-Jan-2017 : added reset function
  */
 
 /***********************************************************************
@@ -85,6 +86,15 @@ IPlugin.prototype.getInfo = function() {
  * @param  {Number} price trade price calculated from an exchange
  */
 IPlugin.prototype.start = function(price) {
+    throw new Error('This method must be overwritten!');
+}
+
+
+/**
+ * This function will be called at an reset request of an plugin
+ * @param  {Number} price trade price calculated from an exchange
+ */
+IPlugin.prototype.reset = function(price) {
     throw new Error('This method must be overwritten!');
 }
 

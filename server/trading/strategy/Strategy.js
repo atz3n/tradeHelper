@@ -8,7 +8,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.1
+ * @version 0.4.0
  *
  * 
  * CHANGES:
@@ -18,6 +18,7 @@
  * 28-Nov-2016 : adaption to IPlugin 2.2
  *               simplified plugins trade finished function calls
  * 22-Dez-2016 : added exchange dependent long or short trading availability at manual buy/sell
+ * 05-Jan-2017 : added reset function
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -181,6 +182,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    */
   var _firstRun = false;
 
+   /**
+   * Used for first run (update) handling
+   * @type {Boolean}
+   */
+  var _reset = false;
+
   /**
    * Indicates if the _updateFunc function is running
    * Used for synchronous call management
@@ -232,9 +239,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x004', strId: _strDesc._id, name: instInfo.result.name }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x004', strId: _strDesc._id, name: instInfo.result.name }));
             }
           }
 
@@ -250,12 +257,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             var instInfo = ex.getInstInfo();
 
             if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
               if (pEx.error === ExError.finished) {
-                _errorFunc(_strDesc._id, errorMessage({ code: '0x011', strId: _strDesc._id, name: instInfo.result.name }));
+                _errorFunc(_strDesc._id, _errorMessage({ code: '0x011', strId: _strDesc._id, name: instInfo.result.name }));
               } else {
-                _errorFunc(_strDesc._id, errorMessage({ code: '0x002', strId: _strDesc._id, name: instInfo.result.name }));
+                _errorFunc(_strDesc._id, _errorMessage({ code: '0x002', strId: _strDesc._id, name: instInfo.result.name }));
               }
             }
 
@@ -277,9 +284,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
           var instInfo = ex.getInstInfo();
 
           if (instInfo.error !== ExError.ok) {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+            _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
           } else {
-            _errorFunc(_strDesc._id, errorMessage({ code: '0x003', strId: _strDesc._id, name: instInfo.result.name }));
+            _errorFunc(_strDesc._id, _errorMessage({ code: '0x003', strId: _strDesc._id, name: instInfo.result.name }));
           }
 
           iEx.result = [];
@@ -295,12 +302,16 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
 
         /* update each plugin */
-        if (fullUpdate) {
+        if (fullUpdate || _reset) {
           var eIdx = _exchanges.getObjectIdx(pl.exId);
           var price = _data.exchanges[eIdx].price[_data.exchanges[eIdx].price.length - 1];
 
-          if (_firstRun) pl.inst.start(price);
-          else pl.inst.update(price);
+          if(_reset) {
+            pl.inst.reset(price);
+          } else {
+            if (_firstRun) pl.inst.start(price);
+            else pl.inst.update(price);
+          }
         }
 
         if (pl.inst.getActiveState()) _data.plugins[i].state = 'active';
@@ -395,7 +406,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
       /* error handling */
       if (ret.error !== ExError.ok) {
-        _errorFunc(_strDesc._id, errorMessage({ code: '0x001', strId: _strDesc._id, name: tmp.exchanges[i].instInfo.name }));
+        _errorFunc(_strDesc._id, _errorMessage({ code: '0x001', strId: _strDesc._id, name: tmp.exchanges[i].instInfo.name }));
         ret = {};
       }
 
@@ -573,7 +584,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
     /* check if an error occurred */
     if (errObject.error != ExError.ok) {
-      if (trade === 'buy') _errorFunc(_strDesc._id, errorMessage({ code: '0x00B', strId: _strDesc._id, name: instInfo.name }));
+      if (trade === 'buy') _errorFunc(_strDesc._id, _errorMessage({ code: '0x00B', strId: _strDesc._id, name: instInfo.name }));
       if (trade === 'sell') _errorFunc(_strDesc._id, errorMessage({ code: '0x00C', strId: _strDesc._id, name: instInfo.name }));
       return _exTrading[idx].error = true;
     }
@@ -771,7 +782,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    * @param  {Object} errObj error Object
    * @return {Object}        an errHandle object containing the error message
    */
-  var errorMessage = function(errObj) {
+  var _errorMessage = function(errObj) {
 
     var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + _strDesc.name + '":' + '\n';
     var infPreMsg = 'AN INFO FROM STRATEGY "' + _strDesc.name + '":' + '\n';
@@ -860,6 +871,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
      if (errObj.code === '0x014') {
       return errHandle(StrError.info, infPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading');
     }
+
   }
 
 
@@ -1033,9 +1045,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
             /* error handling */
             if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x00D', strId: _strDesc._id, name: instInfo.result.name }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x00D', strId: _strDesc._id, name: instInfo.result.name }));
             }
           }
         }
@@ -1049,6 +1061,16 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    */
   this.refresh = function() {
     _syncUpdateFuncCall(true);
+  }
+
+
+  /**
+   * Reset the Strategy
+   */
+  this.reset = function() {
+    _reset = true;
+    _syncUpdateFuncCall(false);
+    _reset = false;
   }
 
 
@@ -1071,9 +1093,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
             /* error handling */
             if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x013', strId: _strDesc._id, name: instInfo.result.name }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x013', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
             error = true;
@@ -1113,9 +1135,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
             /* error handling */
             if (instInfo.error !== ExError.ok) {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x005', strId: _strDesc._id }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x005', strId: _strDesc._id }));
             } else {
-              _errorFunc(_strDesc._id, errorMessage({ code: '0x014', strId: _strDesc._id, name: instInfo.result.name }));
+              _errorFunc(_strDesc._id, _errorMessage({ code: '0x014', strId: _strDesc._id, name: instInfo.result.name }));
             }
 
             error = true;
@@ -1193,7 +1215,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
           /* Plugin Creation Function */
           if (!createPlFunc(plugin, _plugins)) {
-            return _constrError = errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
+            return _constrError = _errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
           }
 
           var pl = _plugins.getObject(plugin._id).inst;
@@ -1214,31 +1236,31 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
             /* Exchange Creation Function */
             if (!createExFunc(plugin.exchange, _exchanges)) {
-              return _constrError = errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
+              return _constrError = _errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
 
             /* check if position configuration works */
             var plPositions = _plugins.getObject(plugin._id).inst.getPositions();
             var exPositions = _exchanges.getObject(plugin.exchange._id).getPositions();
-            if (exPositions.error !== ExError.ok) return _constrError = errorMessage({ code: '0x00E', strId: _strDesc._id, name: plugin.exchange.name });
+            if (exPositions.error !== ExError.ok) return _constrError = _errorMessage({ code: '0x00E', strId: _strDesc._id, name: plugin.exchange.name });
 
             if (plPositions.long) {
-              if (!exPositions.result.long) return _constrError = errorMessage({ code: '0x00F', strId: _strDesc._id, name: plugin.exchange.name });
+              if (!exPositions.result.long) return _constrError = _errorMessage({ code: '0x00F', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             if (plPositions.short) {
-              if (!exPositions.result.short) return _constrError = errorMessage({ code: '0x010', strId: _strDesc._id, name: plugin.exchange.name });
+              if (!exPositions.result.short) return _constrError = _errorMessage({ code: '0x010', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
 
             /* set notify functions */
             if (_exchanges.getObject(plugin.exchange._id).setBoughtNotifyFunc(_exBoughtNotifyFunc).error !== ExError.ok) {
-              return _constrError = errorMessage({ code: '0x009', strId: _strDesc._id, name: plugin.exchange.name });
+              return _constrError = _errorMessage({ code: '0x009', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             if (_exchanges.getObject(plugin.exchange._id).setSoldNotifyFunc(_exSoldNotifyFunc).error !== ExError.ok) {
-              return _constrError = errorMessage({ code: '0x00A', strId: _strDesc._id, name: plugin.exchange.name });
+              return _constrError = _errorMessage({ code: '0x00A', strId: _strDesc._id, name: plugin.exchange.name });
             }
 
             _exTrading.push({ trading: false, error: false });
@@ -1251,11 +1273,11 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             _data.exchanges[exCnt].name = plugin.exchange.name;
 
             var iTmp = ex.getInstInfo();
-            if (iTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x005', strId: _strDesc._id });
+            if (iTmp.error !== ExError.ok) return _constrError = _errorMessage({ code: '0x005', strId: _strDesc._id });
             _data.exchanges[exCnt].instInfo = iTmp.result;
 
             var pTmp = ex.getPairUnits();
-            if (pTmp.error !== ExError.ok) return _constrError = errorMessage({ code: '0x006', strId: _strDesc._id, name: plugin.exchange.name });
+            if (pTmp.error !== ExError.ok) return _constrError = _errorMessage({ code: '0x006', strId: _strDesc._id, name: plugin.exchange.name });
             _data.exchanges[exCnt].units = pTmp.result;
 
             exCnt++;
