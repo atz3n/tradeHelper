@@ -113,7 +113,7 @@ ExKraken.getTradePairInfos = function() {
   Class
  ***********************************************************************/
 
-export function ExKraken(ConstrParam) {
+export function ExKraken(logger) {
 
   /***********************************************************************
     Inheritances
@@ -197,6 +197,12 @@ export function ExKraken(ConstrParam) {
    * @type {Function}
    */
   var _soldNotifyFunc = function() {}; // sold notification function
+
+  /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
 
 
   /***********************************************************************
@@ -530,6 +536,10 @@ export function ExKraken(ConstrParam) {
     if (!_checkConfig()) return errHandle(ExError.error, null);
 
 
+    /* set logging pre message */
+    _logPreMsg = 'ExKraken ' + _config.id + ' ';
+
+
     /* set balance */
     if (_config.oBalance !== 'kBalance') _oBalance = _config.oBalanceAmount;
 
@@ -682,7 +692,7 @@ export function ExKraken(ConstrParam) {
 
       _orderOpen = true;
 
-
+console.log('start buy')
       /* check every _config.orderCheckWaitSec seconds if order is closed */
       while (true) {
         Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
@@ -701,8 +711,9 @@ export function ExKraken(ConstrParam) {
 
           return _boughtNotifyFunc(this.getInstInfo().result, coRet);
         }
+        console.log('cycle')
       }
-
+console.log('stop')
 
       /* short position */
     } else if (position === 'short') {
@@ -754,6 +765,7 @@ export function ExKraken(ConstrParam) {
 
 
       /* check every _config.orderCheckWaitSec seconds if order is closed */
+      console.log('start sell')
       while (true) {
         Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
 
@@ -771,7 +783,9 @@ export function ExKraken(ConstrParam) {
 
           return _soldNotifyFunc(this.getInstInfo().result, coRet);
         }
+        console.log('cycle')
       }
+      console.log('stop')
 
 
       /* short position */

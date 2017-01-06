@@ -44,6 +44,15 @@ Logger.ConfigDefault = {
 }
 
 
+Logger.DummyLogger = {
+  verbose: function(dummy) {},
+  debug: function(dummy) {},
+  info: function(dummy) {},
+  warn: function(dummy) {},
+  error: function(dummy) {}
+}
+
+
 /***********************************************************************
   Private Static Function
   ***********************************************************************/
@@ -321,6 +330,7 @@ export function Logger(name) {
     _createLogger();
   }
 
+
   this.removeDatabaseLogger = function() {
     _dbLg = null;
     _createLogger();
@@ -331,25 +341,31 @@ export function Logger(name) {
     _logger.debug(message);
   }
 
+
   this.verbose = function(message) {
     _logger.verbose(message);
   }
+
 
   this.info = function(message) {
     _logger.info(message);
   }
 
+
   this.warn = function(message) {
     _logger.warn(message);
   }
+
 
   this.error = function(message) {
     _logger.error(message);
   }
 
+
   this.getLogger = function() {
     return _logger;
   }
+
 
   this.getDatabase = function() {
     return _db;

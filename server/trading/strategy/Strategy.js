@@ -24,6 +24,7 @@
 import { InstHandler } from '../../lib/InstHandler.js';
 import { SchM } from '../../lib/SchM.js';
 import { SchMSC } from '../../lib/SchMSC.js';
+import { Logger } from '../../lib/Logger.js';
 
 
 /***********************************************************************
@@ -194,6 +195,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    * @type {Boolean}
    */
   var _updateRunning = false;
+
+  /**
+   * Logger instance (dummy instantiation, will be overwritten if logging is enabled)
+   * @type {Object}
+   */
+  var _logger = Logger.DummyLogger;
 
 
   /***********************************************************************
@@ -525,8 +532,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       (_data.position !== 'short' && trade === 'sell')) {
 
       /* update state */
-      if (trade === 'buy') _data.state = 'buying';
-      if (trade === 'sell') _data.state = 'selling';
+      if (trade === 'buy') { _data.state = 'buying'; _logger.info('buying...'); }
+      if (trade === 'sell') { _data.state = 'selling'; _logger.info('selling...'); }
       _updateActiveData();
 
 
@@ -759,6 +766,10 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
     /* call update function */
     _syncUpdateFuncCall(false);
+
+
+    if (trade === 'buy') _logger.info('...bought. Position: ' + _data.position);
+    if (trade === 'sell') _logger.info('...sold. Position: ' + _data.position);
   }
 
 
@@ -784,94 +795,157 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    */
   var _errorMessage = function(errObj) {
 
-    var erPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + _strDesc.name + '":' + '\n';
+    var errPreMsg = 'AN ERROR OCCURRED IN STRATEGY "' + _strDesc.name + '":' + '\n';
     var infPreMsg = 'AN INFO FROM STRATEGY "' + _strDesc.name + '":' + '\n';
-
+    var errMsg = '';
+    var infMsg = '';
 
     if (errObj.code === '0x000') {
-      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be set!');
+      errMsg = errPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be set!';
+
+      _logger.error(errMsg); 
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x001') {
-      return errHandle(StrError.error, erPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Configuration of Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x002') {
-      return errHandle(StrError.error, erPreMsg + 'Current price from Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Current price from Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x003') {
-      return errHandle(StrError.error, erPreMsg + 'Additional informations of Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Additional informations of Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x004') {
-      return errHandle(StrError.error, erPreMsg + 'Current Price from Exchange "' + errObj.name + '" could not be updated!');
+      errMsg = errPreMsg + 'Current Price from Exchange "' + errObj.name + '" could not be updated!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x005') {
-      return errHandle(StrError.error, erPreMsg + 'Instance informations from an Exchange could not be fetched!');
+      errMsg = errPreMsg + 'Instance informations from an Exchange could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x006') {
-      return errHandle(StrError.error, erPreMsg + 'Trade pair units from Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Trade pair units from Exchange "' + errObj.name + '" could not be fetched!'
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x007') {
-      return errHandle(StrError.error, erPreMsg + 'Trade price from Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Trade price from Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x008') {
-      return errHandle(StrError.error, erPreMsg + 'Trade volume from Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Trade volume from Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x009') {
-      return errHandle(StrError.error, erPreMsg + 'Bought notify function from Exchange "' + errObj.name + '" could not be set!');
+      errMsg = errPreMsg + 'Bought notify function from Exchange "' + errObj.name + '" could not be set!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00A') {
-      return errHandle(StrError.error, erPreMsg + 'Sold notify function from Exchange "' + errObj.name + '" could not be set!');
+      errMsg = errPreMsg + 'Sold notify function from Exchange "' + errObj.name + '" could not be set!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00B') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while buying at Exchange "' + errObj.name + '"');
+      errMsg = errPreMsg + 'Something went wrong while buying at Exchange "' + errObj.name + '"';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00C') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while selling at Exchange "' + errObj.name + '"');
+      errMsg = errPreMsg + 'Something went wrong while selling at Exchange "' + errObj.name + '"';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00D') {
-      return errHandle(StrError.error, erPreMsg + 'Something went wrong while stopping a trade from Exchange "' + errObj.name + '"');
+      errMsg = errPreMsg + 'Something went wrong while stopping a trade from Exchange "' + errObj.name + '"';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00E') {
-      return errHandle(StrError.error, erPreMsg + 'Available  position informations of Exchange "' + errObj.name + '" could not be fetched!');
+      errMsg = errPreMsg + 'Available  position informations of Exchange "' + errObj.name + '" could not be fetched!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x00F') {
-      return errHandle(StrError.error, erPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading. Change Exchange depending plugin configurations');
+      errMsg = errPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading. Change Exchange depending plugin configurations';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x010') {
-      return errHandle(StrError.error, erPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading. Change Exchange depending plugin configurations');
+      errMsg = errPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading. Change Exchange depending plugin configurations';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
     if (errObj.code === '0x011') {
-      return errHandle(ExError.finished, infPreMsg + 'Exchange "' + errObj.name + '" finished');
+      infMsg = infPreMsg + 'Exchange "' + errObj.name + '" finished';
+      
+      _logger.info(infMsg);
+      return errHandle(ExError.finished, infMsg);
     }
 
     if (errObj.code === '0x012') {
-      return errHandle(StrError.error, erPreMsg + 'Configuration of Plugin "' + errObj.name + '" could not be set!');
+      errMsg = errPreMsg + 'Configuration of Plugin "' + errObj.name + '" could not be set!';
+      
+      _logger.error(errMsg);
+      return errHandle(StrError.error, errMsg);
     }
 
      if (errObj.code === '0x013') {
-      return errHandle(StrError.info, infPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading');
+      infMsg = infPreMsg + 'Exchange "' + errObj.name + '" does not support long position trading';
+      
+      _logger.info(infMsg);
+      return errHandle(StrError.info, infMsg);
     }
 
      if (errObj.code === '0x014') {
-      return errHandle(StrError.info, infPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading');
-    }
+      infMsg = infPreMsg + 'Exchange "' + errObj.name + '" does not support short position trading';
 
+      _logger.error(infMsg);
+      return errHandle(StrError.info, infMsg);
+    }
   }
 
 
@@ -971,6 +1045,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     }
 
     _syncUpdateFuncCall(true);
+
+    _logger.info('Strategy started');
   }
 
 
@@ -992,6 +1068,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     }
 
     _syncUpdateFuncCall(true);
+
+    _logger.info('Strategy resumed');
   }
 
 
@@ -1010,6 +1088,12 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
         SchMSC.removeSchedule(_strDesc._id)
       }
 
+    }
+
+    _logger.info('Strategy stopped');
+
+    if(Meteor.settings.private.Logging === 'true'){
+      _logger.removeDailyFileLogger(_strDesc._id + '_fl');
     }
   }
 
@@ -1030,6 +1114,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       }
 
     }
+
+    _logger.info('Strategy paused');
   }
 
 
@@ -1061,6 +1147,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    */
   this.refresh = function() {
     _syncUpdateFuncCall(true);
+
+    _logger.info('Strategy refreshed');
   }
 
 
@@ -1071,6 +1159,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _reset = true;
     _syncUpdateFuncCall(false);
     _reset = false;
+
+    _logger.info('Strategy reseted');
   }
 
 
@@ -1188,6 +1278,15 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
+    if(Meteor.settings.private.Logging === 'true'){
+      _logger = new Logger();
+      _logger.setConfig({fileLevel: Meteor.settings.private.LogLevel});
+      _logger.setDailyFileLogger(_strDesc._id + '_fl', Meteor.settings.private.LogFolderPath + '/Actives/', '__' + _strDesc.name  + '__' + _strDesc._id);
+    }
+
+    _logger.verbose('Creating strategy instance...');
+    _logger.debug('Configurtion: ' + JSON.stringify(strDesc));
+
 
     /* create plugin and exchange instances */
     for (var i = 0; i < _strDesc.pluginBundles.length; i++) {
@@ -1285,6 +1384,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
         }
       }
     }
+
+    _logger.verbose('...creation done');
   }
 
   /* constructor call */
