@@ -8,7 +8,7 @@
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.5.0
  *
  * 
  * CHANGES:
@@ -19,6 +19,7 @@
  *               simplified plugins trade finished function calls
  * 22-Dez-2016 : added exchange dependent long or short trading availability at manual buy/sell
  * 05-Jan-2017 : added reset function
+ * 11-Jan-2017 : added logging mechanism
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -226,7 +227,6 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
       /* prepare variables for full update */
       if (fullUpdate) {
-
         _clearNotifyValues();
 
         if (_data.curTime.length >= _numOfChartData) _data.curTime.shift();
@@ -350,6 +350,9 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
       }
 
       _lastPosition = _data.position;
+
+
+      if (fullUpdate) _logger.info('Strategy updated');
     }
   }
 
@@ -1135,6 +1138,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
             } else {
               _errorFunc(_strDesc._id, _errorMessage({ code: '0x00D', strId: _strDesc._id, name: instInfo.result.name }));
             }
+          } else {
+            _logger.info('Trading stopped');
           }
         }
       }
@@ -1278,6 +1283,8 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
+
+    /* create Logger */
     if(Meteor.settings.private.Logging === 'true'){
       _logger = new Logger();
       _logger.setConfig({fileLevel: Meteor.settings.private.LogLevel});
@@ -1285,7 +1292,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     }
 
     _logger.verbose('Creating strategy instance...');
-    _logger.debug('Configurtion: ' + JSON.stringify(strDesc));
+    _logger.debug('Configuration: ' + JSON.stringify(strDesc));
 
 
     /* create plugin and exchange instances */
@@ -1313,7 +1320,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
 
           /* Plugin Creation Function */
-          if (!createPlFunc(plugin, _plugins)) {
+          if (!createPlFunc(plugin, _logger, _plugins)) {
             return _constrError = _errorMessage({ code: '0x012', strId: _strDesc._id, name: plugin.name });
           }
 
@@ -1334,7 +1341,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
 
 
             /* Exchange Creation Function */
-            if (!createExFunc(plugin.exchange, _exchanges)) {
+            if (!createExFunc(plugin.exchange, _logger, _exchanges)) {
               return _constrError = _errorMessage({ code: '0x000', strId: _strDesc._id, name: plugin.exchange.name });
             }
 

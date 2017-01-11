@@ -8,12 +8,13 @@
  *
  * 
  * @author Atzen
- * @version 0.2.0
+ * @version 0.3.0
  *
  * 
  * CHANGES:
  * 22-Dez-2016 : Initial version
  * 05-Jan-2017 : adapted to IPlugin v 4.0.0
+ * 11-Jan-2017 : added logging mechanism
  */
 
 
@@ -91,6 +92,12 @@ export function PlDummy(logger) {
   var _active = false;
 
   /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -131,7 +138,13 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
+    _logPreMsg = 'PlDummy ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+
+
     _config = mergeObjects(_config, configuration);
+
+
     return _checkConfig();
   }
 
@@ -140,6 +153,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
     return [];
   }
 
@@ -148,6 +162,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
+    logger.debug(_logPreMsg + 'getActiveState()');
     return _active;
   }
 
@@ -156,6 +171,9 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
+
+
     return tmp = [
       { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
@@ -166,6 +184,9 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
+    logger.debug(_logPreMsg + 'start()');
+
+
     _position = 'none';
 
     /* set active state */
@@ -177,7 +198,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.reset = function(price) {
-
+    logger.debug(_logPreMsg + 'reset()');
   }
 
 
@@ -186,7 +207,14 @@ export function PlDummy(logger) {
    */
   this.update = function(price) {
     if(_active){
+
+      logger.debug(_logPreMsg + 'update() start');
+
+
        _curPrice = price;
+
+
+       logger.debug(_logPreMsg + 'update() end');
     }
   }
 
@@ -195,6 +223,9 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
+    logger.debug(_logPreMsg + 'bought()');
+
+
     if (_position !== 'long') { // for savety reasons
 
       /* long in */
@@ -220,6 +251,9 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price, volume) {
+    logger.debug(_logPreMsg + 'sold()');
+
+
     if (_position !== 'short') { // for savety reasons
 
       /* short in */
@@ -245,6 +279,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBuyNotifyFunc()');
     _buyNotifyFunc = buyNotifyFunction;
   }
 
@@ -253,6 +288,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSellNotifyFunc()');
     _sellNotifyFunc = sellNotifyFunction;
   }
 
@@ -261,6 +297,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return { id: _config.id, name: _config.name, type: "PlDummy" };
   }
 
@@ -269,6 +306,7 @@ export function PlDummy(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return { long: _config.enLong, short: _config.enShort }
   }
 

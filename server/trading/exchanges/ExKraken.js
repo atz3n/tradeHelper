@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.4
+ * @version 0.4.0
  *
  * 
  * CHANGES:
@@ -18,6 +18,7 @@
  * 22-July-2016 : adapted to IExchange v1.1
  * 22-July-2016 : adapted to IExchange v1.3
  * 24-July-2016 : fixed bug in default config and getConfig() function
+ * 11-Jan-2017 : added logging mechanism
  */
 
 /***********************************************************************
@@ -424,23 +425,32 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.update = function() {
+    logger.debug(_logPreMsg + 'update() start');
+    logger.verbose(_logPreMsg + 'updating...')
+
 
     /* get 24 average price from kraken.com */
     if (_config.priceType === '24Average') {
 
       /* call kraken.com ticker api */
+      logger.verbose(_logPreMsg + '...getting price from kraken.com...');
       var sRet = _cycFuncCall(function() {
         return _syncApiCall('Ticker', { pair: _config.pair });
       });
       if (sRet.error !== ExError.ok) return sRet;
 
+
       /* check returned average price */
       var tmp = parseFloat(sRet.result[_config.pair].p[1]);
       if (isNaN(tmp)) return errHandle(ExError.parseError, null);
 
+
       /* set price */
       _price = tmp;
 
+
+      logger.verbose(_logPreMsg + '...done. updated');
+      logger.debug(_logPreMsg + 'update() end');
       return errHandle(ExError.ok, null);
     }
 
@@ -449,11 +459,15 @@ export function ExKraken(logger) {
     if (_config.priceType === 'tradesAverage') {
 
       /* get recent trades from kraken.com */
+      logger.verbose(_logPreMsg + '...getting recent trades...');
       var sRet = _cycFuncCall(function() {
         return _syncApiCall('Trades', { pair: _config.pair });
       });
       if (sRet.error !== ExError.ok) return sRet;
       var trArray = sRet.result[_config.pair];
+
+
+      logger.verbose(_logPreMsg + '...calculating price...');
 
 
       /* calculate average price depending on time */
@@ -489,6 +503,9 @@ export function ExKraken(logger) {
         /* calculate average price */
         _price = average(priceArray);
 
+
+        logger.verbose(_logPreMsg + '...done. updated');
+        logger.debug(_logPreMsg + 'update() end');
         return errHandle(ExError.ok, null);
       }
 
@@ -511,6 +528,9 @@ export function ExKraken(logger) {
         /* calculate average price */
         _price = average(priceArray);
 
+
+        logger.verbose(_logPreMsg + '...done. updated');
+        logger.debug(_logPreMsg + 'update() end');
         return errHandle(ExError.ok, null);
       }
 
@@ -527,6 +547,9 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.setConfig = function(configuration) {
+    _logPreMsg = 'ExKraken ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig() start');
+
 
     /* set internal configuration object */
     _config = mergeObjects(_config, configuration);
@@ -534,10 +557,6 @@ export function ExKraken(logger) {
 
     /* check config elements */
     if (!_checkConfig()) return errHandle(ExError.error, null);
-
-
-    /* set logging pre message */
-    _logPreMsg = 'ExKraken ' + _config.id + ' ';
 
 
     /* set balance */
@@ -549,6 +568,7 @@ export function ExKraken(logger) {
 
 
     /* set trade pair settings */
+    logger.verbose(_logPreMsg + 'setting trade pair settings...');
     tRet = ExKraken.getTradePairInfos();
     if (tRet.error !== ExError.ok) return tRet;
 
@@ -559,6 +579,9 @@ export function ExKraken(logger) {
     _pairUnits.quote = tRet.result[_config.pair].quote;
     _cropFactor = cF;
 
+
+    logger.verbose(_logPreMsg + '...trade pair settings set');
+    logger.debug(_logPreMsg + 'setConfig() end');
     return errHandle(ExError.ok, null);
   }
 
@@ -567,6 +590,9 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
+
+
     var tmpA = [];
 
 
@@ -625,6 +651,7 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
     return errHandle(ExError.ok, [{ title: 'Own Balance', value: _oBalance }]);
   }
 
@@ -633,6 +660,7 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPairUnits = function() {
+    logger.debug(_logPreMsg + 'getPairUnits()');
     return errHandle(ExError.ok, { base: _pairUnits.base.substring(1, 4), quote: _pairUnits.quote.substring(1, 4) });
   }
 
@@ -641,6 +669,7 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPrice = function() {
+    logger.debug(_logPreMsg + 'getPrice()');
     return errHandle(ExError.ok, _price);
   }
 
@@ -649,6 +678,7 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getTradePrice = function() {
+    logger.debug(_logPreMsg + 'getTradePrice()');
     return errHandle(ExError.ok, _tPrice);
   }
 
@@ -657,11 +687,15 @@ export function ExKraken(logger) {
    * Interface function (see IExchange.js for detail informations)
    */
   this.buy = async function(position) {
+    logger.debug(_logPreMsg + 'buy() start');
+    logger.verbose(_logPreMsg + 'buying...');
+
 
     /* long position */
     if (position === 'none') {
 
       /* calculate volume */
+      logger.verbose(_logPreMsg + '...calculating volume...');
       var cRet = _cycFuncCall(function() {
         return _calcVolume();
       });
@@ -677,11 +711,14 @@ export function ExKraken(logger) {
         _volume = cRet.result;
         _oBalance -= _tPrice * _volume;
 
+        logger.verbose(_logPreMsg + '...bought');
+        logger.debug(_logPreMsg + 'buy() end');
         return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
 
       /* set order */
+      logger.verbose(_logPreMsg + '...setting order...');
       var oRet = _cycFuncCall(function() {
         return _setOrder('buy', _config.orderType, cRet.result, _price, false);
       });
@@ -692,11 +729,12 @@ export function ExKraken(logger) {
 
       _orderOpen = true;
 
-console.log('start buy')
+
       /* check every _config.orderCheckWaitSec seconds if order is closed */
       while (true) {
         Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
 
+        logger.verbose(_logPreMsg + '...checking order...');
         var coRet = _cycFuncCall(function() {
           return _checkOrderClosed();
         });
@@ -709,18 +747,23 @@ console.log('start buy')
           _orderOpen = false;
           _oBalance -= _tPrice * _volume;
 
+          logger.verbose(_logPreMsg + '...order closed. bought');         
+          logger.debug(_logPreMsg + 'buy() end');
           return _boughtNotifyFunc(this.getInstInfo().result, coRet);
         }
-        console.log('cycle')
       }
-console.log('stop')
 
-      /* short position */
-    } else if (position === 'short') {
+    } 
+
+
+    /* short position */
+    else if (position === 'short') {
       if (!_config.hotMode) {
         _tPrice = _price;
         _oBalance += _volume * _tPrice;
 
+        logger.verbose(_logPreMsg + '...bought');
+        logger.debug(_logPreMsg + 'buy() end');
         return _boughtNotifyFunc(this.getInstInfo().result, true);
       } else {
 
@@ -735,10 +778,14 @@ console.log('stop')
   }
 
 
+
   /**
    * Interface function (see IExchange.js for detail informations)
    */
   this.sell = async function(position) {
+    logger.debug(_logPreMsg + 'sell() start');
+    logger.verbose(_logPreMsg + 'selling...');
+
 
     /* long position */
     if (position === 'long') {
@@ -748,11 +795,14 @@ console.log('stop')
         _tPrice = _price;
         _oBalance += _tPrice * _volume;
 
+        logger.verbose(_logPreMsg + '...sold');
+        logger.debug(_logPreMsg + 'sell() end');
         return _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, true));
       }
 
 
       /* set order (volume = _volume) */
+      logger.verbose(_logPreMsg + '...setting order...');
       var oRet = _cycFuncCall(function() {
         return _setOrder('sell', _config.orderType, _volume, _price, false);
       });
@@ -765,10 +815,10 @@ console.log('stop')
 
 
       /* check every _config.orderCheckWaitSec seconds if order is closed */
-      console.log('start sell')
       while (true) {
         Meteor._sleepForMs(_config.orderCheckWaitSec * 1000);
 
+        logger.verbose(_logPreMsg + '...checking order...');
         var coRet = _cycFuncCall(function() {
           return _checkOrderClosed();
         });
@@ -781,17 +831,20 @@ console.log('stop')
           _orderOpen = false;
           _oBalance += _tPrice * _volume;
 
+          logger.verbose(_logPreMsg + '...order closed. Sold'); 
+          logger.debug(_logPreMsg + 'sell() end');
           return _soldNotifyFunc(this.getInstInfo().result, coRet);
         }
-        console.log('cycle')
       }
-      console.log('stop')
+
+    } 
 
 
-      /* short position */
-    } else if (position === 'none') {
+    /* short position */
+    else if (position === 'none') {
 
       /* calculate volume */
+      logger.verbose(_logPreMsg + '...calculating volume...');
       var cRet = _cycFuncCall(function() {
         return _calcVolume();
       });
@@ -806,6 +859,8 @@ console.log('stop')
         _volume = cRet.result;
         _oBalance += _volume * _tPrice;
 
+        logger.verbose(_logPreMsg + '...sold');
+        logger.debug(_logPreMsg + 'sell() end');
         return _soldNotifyFunc(this.getInstInfo().result, true);
       } else {
 
@@ -824,13 +879,19 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.stopTrade = function() {
+    logger.debug(_logPreMsg + 'stopTrade() start');
+
+
     if (_orderOpen) {
+      logger.verbose(_logPreMsg + 'stopping trade...');
       var cRet = _cycFuncCall(function() {
         return _syncApiCall('CancelOrder', { txid: _orderId[0] });
       });
 
       if (cRet !== ExError.ok) return cRet;
 
+      logger.verbose(_logPreMsg + '...trade stopped');
+      logger.debug(_logPreMsg + 'stopTrade() end');
       return errHandle(ExError.ok, null);
     }
 
@@ -842,6 +903,7 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.setBoughtNotifyFunc = function(boughtNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBoughtNotifyFunc()');
     _boughtNotifyFunc = boughtNotifyFunction;
     return errHandle(ExError.ok, null);
   }
@@ -851,6 +913,7 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.setSoldNotifyFunc = function(soldNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSoldNotifyFunc()');
     _soldNotifyFunc = soldNotifyFunction;
     return errHandle(ExError.ok, null);
   }
@@ -860,6 +923,7 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExKraken" });
   }
 
@@ -868,6 +932,7 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.getVolume = function() {
+    logger.debug(_logPreMsg + 'getVolume()');
     return errHandle(ExError.ok, _volume);
   }
 
@@ -876,6 +941,7 @@ console.log('stop')
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return errHandle(ExError.ok, { long: true, short: false });
   }
 

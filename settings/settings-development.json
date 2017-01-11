@@ -35,7 +35,7 @@
     "LogFolderPath": "../../../../../../Logs/",
 
     "_":        "Sets log level (ascending order: debug, verbose, info, warn, error)",
-    "LogLevel": "error"
+    "LogLevel": "verbose"
   
   }
 }

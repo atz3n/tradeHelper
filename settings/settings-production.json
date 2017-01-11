@@ -32,10 +32,10 @@
     "Logging": "true",
 
     "_":             "Sets the parent log folder",
-    "LogFolderPath": "./Logs",
+    "LogFolderPath": "../../../../../../Logs/",
 
     "_":        "Sets log level (ascending order: debug, verbose, info, error)",
-    "LogLevel": "debug"
+    "LogLevel": "info"
   
   }
 }

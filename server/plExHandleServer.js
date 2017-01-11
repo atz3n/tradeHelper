@@ -46,7 +46,7 @@ exchangeHandler.setObject('ExKrakens', ExKrakens);
  * @param  {InstHandler} strPlHandler Strategy's plugin handler
  * @return {bool}                     error
  */
-this.createPlugin = function(plugin, strPlHandler) {
+this.createPlugin = function(plugin, logger, strPlHandler) {
   var conf = {};
 
 
@@ -77,11 +77,11 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   /***** add plugin instance creation here ******/
 
-  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
-  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(), exId: plugin.exchange._id });
-  if (plugin.type === 'plDummy') strPlHandler.setObject(plugin._id, { inst: new PlDummy(), exId: plugin.exchange._id });
+  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plDummy') strPlHandler.setObject(plugin._id, { inst: new PlDummy(logger), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 
@@ -93,10 +93,11 @@ this.createPlugin = function(plugin, strPlHandler) {
 /**
  * Function that creates an Exchange instance for Strategy.js
  * @param  {Object} exchange          exchange object including exchange configuration
+ * @param  {Object} logger            logger instance 
  * @param  {InstHandler} strPlHandler Strategy's exchange handler
  * @return {errHandle object}         error
  */
-this.createExchange = function(exchange, strExHandler) {
+this.createExchange = function(exchange, logger, strExHandler) {
   var conf = {};
 
 
@@ -123,8 +124,8 @@ this.createExchange = function(exchange, strExHandler) {
 
   /***** add exchange instance creation here ******/
 
-  if (exchange.type === 'exKraken') strExHandler.setObject(exchange._id, new ExKraken());
-  if (exchange.type === 'exTestData') strExHandler.setObject(exchange._id, new ExTestData());
+  if (exchange.type === 'exKraken') strExHandler.setObject(exchange._id, new ExKraken(logger));
+  if (exchange.type === 'exTestData') strExHandler.setObject(exchange._id, new ExTestData(logger));
 
   /***** add exchange instance creation here ******/
 

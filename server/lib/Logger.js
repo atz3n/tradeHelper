@@ -10,12 +10,13 @@
  * 
  * 
  * @author Atzen
- * @version 0.9.1
+ * @version 0.2.0
  *
  * 
  * CHANGES:
  * 15-Apr-2016 : Initial version
  * 19-July-2016 : BugFix: setDailyFileLogger() did not create daily schedule
+ * 09-Jan-2017 : Added recursive folder creation
  */
 
 
@@ -198,9 +199,29 @@ export function Logger(name) {
   }
 
 
+  function mkdirSyncRecursive(dir) {
+    var path = Npm.require('path');
+    var fs = Npm.require('fs');
+
+    var baseDir = path.dirname(dir);
+
+    // Base dir exists, no recursion necessary
+    if (fs.existsSync(baseDir)) {
+      fs.mkdirSync(dir, parseInt('0777', 8));
+      return;
+    }
+
+    // Base dir does not exist, go recursive
+    mkdirSyncRecursive(baseDir);
+
+    // Base dir created, can create dir
+    fs.mkdirSync(dir, parseInt('0777', 8));
+  }
+
+
   var _createFileLogger = function(path, fileName) {
     var fs = Npm.require('fs');
-    if (!fs.existsSync(path)) fs.mkdirSync(path);
+    if (!fs.existsSync(path)) mkdirSyncRecursive(path);
 
     _fileLg = new winston.transports.File({
       name: _name + 'file',
@@ -338,7 +359,7 @@ export function Logger(name) {
 
 
   this.debug = function(message) {
-    _logger.debug(message);
+    _logger.debug('  ' + message);
   }
 
 
@@ -348,17 +369,17 @@ export function Logger(name) {
 
 
   this.info = function(message) {
-    _logger.info(message);
+    _logger.info('   ' + message);
   }
 
 
   this.warn = function(message) {
-    _logger.warn(message);
+    _logger.warn('   ' + message);
   }
 
 
   this.error = function(message) {
-    _logger.error(message);
+    _logger.error('  ' + message);
   }
 
 
