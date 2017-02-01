@@ -4,38 +4,36 @@
 
   "public": {
 
-    "_":       "The version number in <Major>.<Minor>.<Patch> format",
+    "_":  "The version number in <Major>.<Minor>.<Patch> format",
   	"Version": "",
 
-    "_":                     "Enables error selection in TestData exchange",
+    "_":  "Enables error selection in TestData exchange",
   	"ExTestDataErrorConfig": "true",
 
-    "_":               "Enables an additional view for development",
+    "_":  "Enables an additional view for development",
   	"ShowDevelopView": "true",
 
-    "_":                "Enables an additional AccessCode field in register view",
-  	"EnableAccessCode": "false"
+    "_":  "Enables an additional AccessCode field in register view",
+  	"EnableAccessCode": "false",
   
+
+    "_":  "Enables Logging per default",
+    "DefaultLogEnabled": "true",
+    
+    "_":  "Sets default log level (ascending order: debug, verbose, info, warn, error)",
+    "DefaultLogLevel": "verbose"
   },
 
 
   "private": {
 
-    "_":          "The AccessCode that is requiered by the AccessCode field",
-  	"AccessCode": "YouAr3ACh0sen0ne",
-  	
-    "_":           "Activates the periodic update function that updates the available trading pairs from each exchange (once every day)",
+    "_":  "The AccessCode that is requiered by the AccessCode field",
+    "AccessCode": "YouAr3ACh0sen0ne",
+    
+    "_":  "Activates the periodic update function that updates the available trading pairs from each exchange (once every day)",
     "UpdatePairs": "false",
 
-
-    "_":       "Enables Logging",
-    "Logging": "true",
-
-    "_":             "Sets the parent log folder",
-    "LogFolderPath": "../../../../../../Logs/",
-
-    "_":        "Sets log level (ascending order: debug, verbose, info, warn, error)",
-    "LogLevel": "verbose"
-  
+    "_":  "Sets the parent log folder",
+    "LogFolderPath": "../../../../../../Logs/"
   }
 }

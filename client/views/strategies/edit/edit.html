@@ -41,7 +41,7 @@
 					Name
 				</label>
 				<div class="input-div">
-					<input type="text" name="name" value="{{strategy.name}}" class="form-control" autofocus="autofocus" required="required" data-type="string">
+					<input type="text" name="name" value="{{strategy.name}}" class="form-control " autofocus="autofocus" required="required" data-type="string">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -53,7 +53,7 @@
 					Update Time
 				</label>
 				<div class="input-div">
-					<input type="text" name="updateTime" value="{{strategy.updateTime}}" class="form-control" required="required" data-type="integer" data-min="0">
+					<input type="text" name="updateTime" value="{{strategy.updateTime}}" class="form-control " required="required" data-type="integer" data-min="1">
 					<span id="help-text" class="help-block">
 					</span>
 					<span id="error-text" class="help-block">
@@ -65,7 +65,7 @@
 					Time Unit
 				</label>
 				<div class="input-div">
-					<select class="form-control" name="timeUnit" data-type="string" required="required">
+					<select class="form-control " name="timeUnit" data-type="string" required="required">
 						<option value="none" {{optionIsSelected strategy.timeUnit "none"}}>							None</option>
 						<option value="year" {{optionIsSelected strategy.timeUnit "year"}}>							Year</option>
 						<option value="month" {{optionIsSelected strategy.timeUnit "month"}}>							Months</option>
@@ -114,6 +114,63 @@
 					</span>
 				</div>
 			</div>
+			{{#if showLogSettings}}
+			<div class="form-group  field-en-log">
+				<div class="input-div">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="{{booleanToYesNo strategy.enLog}}" name="enLog" data-type="bool" {{itemIsChecked strategy.enLog true}}>
+							Enable Logging
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-log-level">
+				<label for="logLevel">
+					Logging Level
+				</label>
+				<div class="input-div">
+					<div class="radio">
+						<label>
+							<input type="radio" value="error" name="logLevel" data-type="string" {{itemIsChecked strategy.logLevel "error"}}>
+							Error
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="warn" name="logLevel" data-type="string" {{itemIsChecked strategy.logLevel "warn"}}>
+							Warning
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="info" name="logLevel" data-type="string" {{itemIsChecked strategy.logLevel "info"}}>
+							Info
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="verbose" name="logLevel" data-type="string" {{itemIsChecked strategy.logLevel "verbose"}}>
+							Verbose
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" value="debug" name="logLevel" data-type="string" {{itemIsChecked strategy.logLevel "debug"}}>
+							Debug
+						</label>
+					</div>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			{{/if}}
 			<div class="form-group  field-plugin-bundles">
 				<label for="pluginBundles">
 					Plugin Bundles (logical connected via 'or')

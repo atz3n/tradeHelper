@@ -63,10 +63,11 @@ StrError = {
 /**
  * Strategy class
  * @param {Object} strategyDescription object which contains all necessary strategy informations
+ * @param {Object} logConfig  logging configuration object
  * @param {function} createPluginFunc    callback function which will be called to create an plugin instance
  * @param {function} createExchangeFunc  callback function which will be called to create an exchange instance
  */
-export function Strategy(strategyDescription, createPluginFunc, createExchangeFunc) {
+export function Strategy(strategyDescription, logConfig, createPluginFunc, createExchangeFunc) {
 
   /***********************************************************************
     Inheritances
@@ -1096,7 +1097,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _logger.info('Strategy stopped');
 
     if(Meteor.settings.private.Logging === 'true'){
-      _logger.removeDailyFileLogger(_strDesc._id + '_fl');
+      _logger.removeDailyFileLogger();
     }
   }
 
@@ -1273,7 +1274,7 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
    * @param  {function} createPlFunc classes createPluginFunc parameter
    * @param  {function} createExFunc classes createExchangeFunc parameter
    */
-  var _constructor = function(strDesc, createPlFunc, createExFunc) {
+  var _constructor = function(strDesc, createPlFunc, createExFunc, logConfig) {
     var plCnt = 0;
     var exCnt = 0;
     _strDesc = Object.assign({}, strDesc);
@@ -1283,11 +1284,17 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
     _data.strategyName = _strDesc.name;
     _data.bundles = new Array(_strDesc.pluginBundles.length);
 
-
+    
     /* create Logger */
-    if(Meteor.settings.private.Logging === 'true'){
+    if(Object.keys(logConfig).length === 0) {
+      logConfig.logEnabled = (Meteor.settings.public.DefaultLogEnabled === 'true');
+      logConfig.logLevel = Meteor.settings.public.DefaultLogLevel;
+    }
+    
+    if(logConfig.logEnabled === true){
+      console.log('bös')
       _logger = new Logger();
-      _logger.setConfig({fileLevel: Meteor.settings.private.LogLevel});
+      _logger.setConfig({fileLevel: logConfig.logLevel});
       _logger.setDailyFileLogger(_strDesc._id + '_fl', Meteor.settings.private.LogFolderPath + '/Actives/', '__' + _strDesc.name  + '__' + _strDesc._id);
     }
 
@@ -1396,5 +1403,5 @@ export function Strategy(strategyDescription, createPluginFunc, createExchangeFu
   }
 
   /* constructor call */
-  _constructor(strategyDescription, createPluginFunc, createExchangeFunc)
+  _constructor(strategyDescription, createPluginFunc, createExchangeFunc, logConfig)
 }

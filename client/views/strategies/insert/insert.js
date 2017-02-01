@@ -147,6 +147,22 @@ Template.StrategiesInsertInsertForm.helpers({
 	},
 	'prefix': function() {
 		return this.settings.enStrPrefix ? "Str_" : "";
+	},
+	'showLogSettings': function() {
+		var tmp = getUserRole(Meteor.userId());
+		if(tmp === 'admin' || tmp === 'developer') return true;
+		else return false;
+	},
+	'getDefValue': function() {
+		return Meteor.settings.public.DefaultLogEnabled === 'true';
+	},
+	'getDefChecked': function() {
+		if(Meteor.settings.public.DefaultLogEnabled === 'true') return 'checked';
+		else return '';
+	},
+	getDefCheckedLvl: function(val) {
+		if(Meteor.settings.public.DefaultLogLevel === val) return 'checked';
+		else return '';
 	}
 });
 

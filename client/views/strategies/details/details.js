@@ -122,13 +122,14 @@ Template.StrategiesDetailsDetailsForm.events({
   "click #form-activate-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
+    var logConf = {logEnabled: this.strategy.enLog, logLevel: this.strategy.logLevel};
 
 	
     if (!Strategies.findOne({ _id: strId }).active) {
-      Meteor.call('strategyStart', strId, function(e, r) {
+      Meteor.call('strategyStart', [strId,  logConf], function(e, r) {
         if (e) {
         	console.log(e);
-        	sAlert.error('Server connection failed');
+        	sAlert.error('Server connection lost or server error occurred');
         } else if (r.error === 'error') {
         	sAlert.error(r.result);
         }
@@ -144,30 +145,35 @@ Template.StrategiesDetailsDetailsForm.helpers({
 	"errorMessage": function() {
 		return pageSession.get("strategiesDetailsDetailsFormErrorMessage");
 	}, 
-		"pluginBundlesCrudItems": function() {
-    if(pageSession.get("pluginBundlesCrudItems")){
-      if(pageSession.get("pluginBundlesCrudItems").length > 0){
-        var ret = pageSession.get("pluginBundlesCrudItems");
-        
-        for(var i = 0 ; i < ret.length ; i++){
-			for(var k = 0 ; k < ret[i].pluginIds.length ; k++){
-				if(k === 0) ret[i].plugins = '';
-				else ret[i].plugins += ', ';
-				
-				ret[i].plugins += getPluginName(ret[i].pluginIds[k]);
+	"pluginBundlesCrudItems": function() {
+	    if(pageSession.get("pluginBundlesCrudItems")){
+	      if(pageSession.get("pluginBundlesCrudItems").length > 0){
+	        var ret = pageSession.get("pluginBundlesCrudItems");
+	        
+	        for(var i = 0 ; i < ret.length ; i++){
+				for(var k = 0 ; k < ret[i].pluginIds.length ; k++){
+					if(k === 0) ret[i].plugins = '';
+					else ret[i].plugins += ', ';
+					
+					ret[i].plugins += getPluginName(ret[i].pluginIds[k]);
+				}
+				delete 	ret[i].pluginIds;
 			}
-			delete 	ret[i].pluginIds;
-		}
-		return ret;
-      }
-    }
-      
-		return pageSession.get("pluginBundlesCrudItems");
+			return ret;
+	      }
+	    }
+	      
+	return pageSession.get("pluginBundlesCrudItems");
   },
   "strategyActive": function() {
     if (Strategies.findOne({ _id: this.params.strategyId }).active)
       return true;
     else
       return false;
-	}
+	},
+	'showLogSettings': function() {
+		var tmp = getUserRole(Meteor.userId());
+		if(tmp === 'admin' || tmp === 'developer') return true;
+		else return false;
+	},
 });
