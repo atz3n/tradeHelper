@@ -4,7 +4,7 @@
  *
  * 
  * @author Atzen
- * @version 0.5.4
+ * @version 0.6.0
  * 
  * CHANGES:
  * 04-Jul-2016 : Initial version
@@ -16,6 +16,7 @@
  * 24-Jul-2016 : adapted to IExchange v1.3
  * 12-Aug-2016 : bugfix: counter now starts with 0 instead of 1
  * 22-Nov-2016 : bugfix: return value from getPrice().result is now last price instead of 0 in finished mode
+ * 11-Jan-2017 : added logging mechanism
  */
 
 
@@ -92,7 +93,7 @@ ExTestData.getTradePairInfos = function() {
   Class
  ***********************************************************************/
 
-export function ExTestData() {
+export function ExTestData(logger) {
 
   /***********************************************************************
     Inheritances
@@ -158,6 +159,12 @@ export function ExTestData() {
    * @type {Boolean}
    */
   var firstRun = true;
+
+  /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
 
   /***********************************************************************
     Public Instance Variable
@@ -242,11 +249,15 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.update = function() {
+    logger.debug(_logPreMsg + 'update() start');
     if (_config.errU) return errHandle(ExError.error, null);
+
 
     if (firstRun) firstRun = false;
     else _counter += _config.stepWidth;
 
+
+    logger.debug(_logPreMsg + 'update() end');
     return errHandle(ExError.ok, null);
   }
 
@@ -255,7 +266,11 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.setConfig = function(configuration) {
-    if (configuration.errSC === undefined) {
+    _logPreMsg = 'ExTestData ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+
+
+    if (configuration.errSC === undefined) { // check if setConfig error field exists. Usually such an error will be checked in _checkConfig function.
       if (_config.errSC) return errHandle(ExError.error, null);
     } else {
       if (configuration.errSC) return errHandle(ExError.error, null);
@@ -263,11 +278,14 @@ export function ExTestData() {
 
     _config = mergeObjects(_config, configuration);
 
+
     if (!_checkConfig()) return errHandle(ExError.error, null);
+
 
     _counter = _config.startVal;
     _balance = _config.balanceAmount;
     _dataArray = _dataString2Array(_config.data);
+
 
     return errHandle(ExError.ok, null);
   }
@@ -277,6 +295,7 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
     if (_config.errGC) return errHandle(ExError.error, null);
 
 
@@ -324,6 +343,7 @@ export function ExTestData() {
       tmpA.push({ title: 'Error setSoldNotifyFunc()', value: JSON.stringify(_config.errSSNF) });
     }
 
+
     return errHandle(ExError.ok, tmpA);
   }
 
@@ -332,7 +352,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
     if (_config.errGI) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, [{ title: 'Counter Value', value: _counter },
       { title: 'Balance', value: _balance }
@@ -344,7 +366,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPairUnits = function() {
+    logger.debug(_logPreMsg + 'getPairUnits()');
     if (_config.errGPU) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, { base: 'BAS', quote: 'QTE' });
   }
@@ -354,7 +378,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPrice = function() {
+    logger.debug(_logPreMsg + 'getPrice()');
     if (_config.errGP) return errHandle(ExError.error, null);
+
 
     var price;
 
@@ -377,6 +403,7 @@ export function ExTestData() {
         price = 0;
     }
 
+
     return errHandle(ExError.ok, price);
   }
 
@@ -385,7 +412,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getTradePrice = function() {
+    logger.debug(_logPreMsg + 'getTradePrice()');
     if (_config.errGTP) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, this.getPrice().result);
   }
@@ -395,7 +424,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getVolume = function() {
+    logger.debug(_logPreMsg + 'getVolume()');
     if (_config.errGV) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, _volume);
   }
@@ -405,7 +436,10 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.buy = async function(positon) {
+    logger.debug(_logPreMsg + 'buy() start');
+    logger.verbose(_logPreMsg + 'buying...');
     if (_config.errB) return _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
+
 
     _cancelTrade = false;
 
@@ -430,7 +464,11 @@ export function ExTestData() {
     }
 
     _cancelTrade = false;
+
+
     _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, null));
+    logger.verbose(_logPreMsg + '...bought');
+    logger.debug(_logPreMsg + 'buy() end');
   }
 
 
@@ -438,7 +476,10 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.sell = async function(positon) {
+    logger.debug(_logPreMsg + 'sell() start');
+    logger.verbose(_logPreMsg + 'selling...');
     if (_config.errS) return _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
+
 
     _cancelTrade = false;
 
@@ -463,14 +504,26 @@ export function ExTestData() {
     }
 
     _cancelTrade = false;
+
+
     _soldNotifyFunc(this.getInstInfo().result, errHandle(ExError.ok, null));
+    logger.verbose(_logPreMsg + '...sold');
+    logger.debug(_logPreMsg + 'sell() end');
   }
 
 
+  /**
+   * Interface function (see IExchange.js for detail informations)
+   */
   this.stopTrade = function() {
+    logger.debug(_logPreMsg + 'stopTrade() start');
     if (_config.errST) return errHandle(ExError.error, null);
 
+
     _cancelTrade = true;
+
+
+    logger.debug(_logPreMsg + 'stopTrade() end');
     return errHandle(ExError.ok, null);
   }
 
@@ -479,7 +532,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     if (_config.errGII) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, { id: _config.id, name: _config.name, type: "ExTestData" });
   }
@@ -489,9 +544,13 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.setBoughtNotifyFunc = function(boughtNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBoughtNotifyFunc()');
     if (_config.errSBNF) return errHandle(ExError.error, null);
 
+
     _boughtNotifyFunc = boughtNotifyFunction;
+
+
     return errHandle(ExError.ok, null);
   }
 
@@ -500,9 +559,13 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.setSoldNotifyFunc = function(soldNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSoldNotifyFunc()');
     if (_config.errSSNF) return errHandle(ExError.error, null);
 
+    
     _soldNotifyFunc = soldNotifyFunction;
+
+
     return errHandle(ExError.ok, null);
   }
 
@@ -511,7 +574,9 @@ export function ExTestData() {
    * Interface function (see IExchange.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     if (_config.errGPO) return errHandle(ExError.error, null);
+
 
     return errHandle(ExError.ok, { long: _config.enLong, short: _config.enShort });
   }

@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.0
+ * @version 0.4.0
  *
  * 
  * CHANGES:
@@ -17,6 +17,7 @@
  * 28-Nov-2016 : fixed bug: getPosition returned enLong config twice instead of enLong and enShort
  * 12-Dez-2016 : added _active mechanism
  * 05-Jan-2017 : adapted to IPlugin v 4.0.0
+ * 11-Jan-2017 : added logging mechanism
  */
 
 
@@ -111,6 +112,12 @@ export function PlStopLoss(logger) {
   var _active = false;
 
   /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -162,7 +169,13 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
+     _logPreMsg = 'PlStopLoss ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+
+
     _config = mergeObjects(_config, configuration);
+
+
     return _checkConfig();
   }
 
@@ -171,6 +184,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
+
+
     return [
       { title: 'Stop Value Base', value: _config.stopValueBase },
       { title: 'Stop Value Type', value: _config.stopValueType },
@@ -185,6 +201,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
+    logger.debug(_logPreMsg + 'getActiveState()');
     return _active;
   }
 
@@ -193,6 +210,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
+
+
     var tmp =  [
       { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
       { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
@@ -208,6 +228,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
+    logger.debug(_logPreMsg + 'start()');
+
+
     _position = 'none';
 
     _active = false;
@@ -218,7 +241,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.reset = function(price) {
-
+    logger.debug(_logPreMsg + 'reset()');
   }
 
 
@@ -227,6 +250,9 @@ export function PlStopLoss(logger) {
    */
   this.update = function(price) {
     if(_active){
+
+      logger.debug(_logPreMsg + 'update() start');
+
 
       var diff = 0;
       _curPrice = price;
@@ -245,6 +271,7 @@ export function PlStopLoss(logger) {
       /* stop long position */
       if (_position === 'long' && _config.enLong) {
         if (diff < -_config.stopValueAmount) {
+          logger.verbose(_logPreMsg + 'sell notification');
           _sellNotifyFunc(this.getInstInfo());
         }
       }
@@ -253,9 +280,13 @@ export function PlStopLoss(logger) {
       /* stop short position */
       if (_position === 'short' && _config.enShort) {
         if (diff > _config.stopValueAmount) {
+          logger.verbose(_logPreMsg + 'buy notification');
           _buyNotifyFunc(this.getInstInfo());
         }
       }
+
+
+      logger.debug(_logPreMsg + 'update() end');
     }
   }
 
@@ -264,6 +295,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
+    logger.debug(_logPreMsg + 'bought()');
+
+
     if (_position !== 'long') { // for savety reasons
 
       if (_position === 'none') {
@@ -287,6 +321,9 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price, volume) {
+    logger.debug(_logPreMsg + 'sold()');
+
+
     if (_position !== 'short') { // for savety reasons
 
       if (_position === 'none') {
@@ -310,6 +347,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBuyNotifyFunc()');
     _buyNotifyFunc = buyNotifyFunction;
   }
 
@@ -318,6 +356,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSellNotifyFunc()');
     _sellNotifyFunc = sellNotifyFunction;
   }
 
@@ -326,6 +365,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return { id: _config.id, name: _config.name, type: "PlStopLoss" };
   }
 
@@ -334,6 +374,7 @@ export function PlStopLoss(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return { long: _config.enLong, short: _config.enShort }
   }
 

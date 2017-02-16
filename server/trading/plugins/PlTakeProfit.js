@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.3.0
+ * @version 0.4.0
  *
  * 
  * CHANGES:
@@ -16,6 +16,7 @@
  * 28-Nov-2016 : Added takeValueBase option
  * 12-Dez-2016 : Added _active mechanism
  * 05-Jan-2017 : adapted to IPlugin v 4.0.0
+ * 11-Jan-2017 : added logging mechanism
  */
 
 
@@ -110,6 +111,12 @@ export function PlTakeProfit(logger) {
   var _active = false;
 
   /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -161,7 +168,13 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
+    _logPreMsg = 'PlTakeProfit ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+
+
     _config = mergeObjects(_config, configuration);
+
+
     return _checkConfig();
   }
 
@@ -170,6 +183,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
+
+
     return [
       { title: 'Take Value Base', value: _config.takeValueBase },
       { title: 'Take Value Type', value: _config.takeValueType },
@@ -184,6 +200,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
+    logger.debug(_logPreMsg + 'getActiveState()');
     return _active;
   }
 
@@ -192,6 +209,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
+
+
     var tmp = [
       { title: 'In Price', value: cropFracDigits(_inPrice, 6) },
       { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
@@ -207,6 +227,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
+    logger.debug(_logPreMsg + 'start()');
+
+
     _position = 'none';
 
     _active = false;
@@ -217,7 +240,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.reset = function(price) {
-
+    logger.debug(_logPreMsg + 'reset()');
   }
 
 
@@ -226,6 +249,9 @@ export function PlTakeProfit(logger) {
    */
   this.update = function(price) {
     if(_active){
+
+      logger.debug(_logPreMsg + 'update() start');
+
 
       var diff = 0;
       _curPrice = price;
@@ -244,6 +270,7 @@ export function PlTakeProfit(logger) {
       /* stop long position */
       if (_position === 'long' && _config.enLong) {
         if (diff > _config.takeValueAmount) {
+          logger.verbose(_logPreMsg + 'sell notification');
           _sellNotifyFunc(this.getInstInfo());
         }
       }
@@ -251,12 +278,14 @@ export function PlTakeProfit(logger) {
 
       /* stop short position */
       if (_position === 'short' && _config.enShort) {
-        console.log(diff)
         if (diff < - _config.takeValueAmount) {
-          console.log('go')
+          logger.verbose(_logPreMsg + 'buy notification');
           _buyNotifyFunc(this.getInstInfo());
         }
       }
+
+
+      logger.debug(_logPreMsg + 'update() end');
     }
   }
 
@@ -265,6 +294,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
+    logger.debug(_logPreMsg + 'bought()');
+
+
     if (_position !== 'long') { // for savety reasons
 
       if (_position === 'none') {
@@ -288,6 +320,9 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price, volume) {
+    logger.debug(_logPreMsg + 'sold()');
+
+
     if (_position !== 'short') { // for savety reasons
       
       if (_position === 'none') {
@@ -311,6 +346,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBuyNotifyFunc()');
     _buyNotifyFunc = buyNotifyFunction;
   }
 
@@ -319,6 +355,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSellNotifyFunc()');
     _sellNotifyFunc = sellNotifyFunction;
   }
 
@@ -327,6 +364,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return { id: _config.id, name: _config.name, type: "PlTakeProfit" };
   }
 
@@ -335,6 +373,7 @@ export function PlTakeProfit(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return { long: _config.enLong, short: _config.enShort }
   }
 
@@ -342,5 +381,4 @@ export function PlTakeProfit(logger) {
   /***********************************************************************
     Constructor
    ***********************************************************************/
-
 }

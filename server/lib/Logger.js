@@ -10,12 +10,14 @@
  * 
  * 
  * @author Atzen
- * @version 0.9.1
+ * @version 0.2.1
  *
  * 
  * CHANGES:
  * 15-Apr-2016 : Initial version
  * 19-July-2016 : BugFix: setDailyFileLogger() did not create daily schedule
+ * 09-Jan-2017 : Added recursive folder creation
+ * 01-Feb-2017 : setConfig function now has effect while logger is running
  */
 
 
@@ -41,6 +43,24 @@ Logger.ConfigDefault = {
   cnslLevel: 'info',
   fileLevel: 'info',
   dbLevel: 'info'
+}
+
+
+Logger.DummyLogger = {
+  setConfig: function(dummy) {},
+  setFileLogger: function(dummy, dummy) {},
+  setDailyFileLogger:  function(dummy, dummy, dummy) {},
+  setConsoleLogger: function() {},
+  setDatabaseLogger: function() {},
+  removeFileLogger: function() {},
+  removeDailyFileLogger: function() {},
+  removeConsoleLogger: function() {},
+  removeDatabaseLogger: function() {},
+  verbose: function(dummy) {},
+  debug: function(dummy) {},
+  info: function(dummy) {},
+  warn: function(dummy) {},
+  error: function(dummy) {}
 }
 
 
@@ -161,6 +181,9 @@ export function Logger(name) {
   var _db = null;
   var _dbCreated = false;
 
+  var _dFileLgSettings = null;
+  var _fileLgSettings = null;
+
 
   /***********************************************************************
     Public Instance Variable
@@ -189,9 +212,29 @@ export function Logger(name) {
   }
 
 
+  function mkdirSyncRecursive(dir) {
+    var path = Npm.require('path');
+    var fs = Npm.require('fs');
+
+    var baseDir = path.dirname(dir);
+
+    // Base dir exists, no recursion necessary
+    if (fs.existsSync(baseDir)) {
+      fs.mkdirSync(dir, parseInt('0777', 8));
+      return;
+    }
+
+    // Base dir does not exist, go recursive
+    mkdirSyncRecursive(baseDir);
+
+    // Base dir created, can create dir
+    fs.mkdirSync(dir, parseInt('0777', 8));
+  }
+
+
   var _createFileLogger = function(path, fileName) {
     var fs = Npm.require('fs');
-    if (!fs.existsSync(path)) fs.mkdirSync(path);
+    if (!fs.existsSync(path)) mkdirSyncRecursive(path);
 
     _fileLg = new winston.transports.File({
       name: _name + 'file',
@@ -270,16 +313,38 @@ export function Logger(name) {
 
   this.setConfig = function(config) {
     _config = mergeObjects(_config, config);
+
+    if(_consoleLg !== null) {
+      this.removeConsoleLogger();
+      this.setConsoleLogger();
+    }
+
+    if(_dFileLgSettings !== null && _fileLg !== null) {
+      this.removeDailyFileLogger();
+      this.setDailyFileLogger(_dFileLgSettings.scheduleName, _dFileLgSettings.path, _dFileLgSettings.suffix);
+    } 
+
+    else if(_fileLgSettings !== null && _fileLg !== null) {
+      this.removeFileLogger();
+      this.setFileLogger(filename, path);
+    } 
+
+    if(_dbLg !== null) {
+      this.removeDatabaseLogger();
+      this.setDatabaseLogger();
+    }
   }
 
 
   this.setFileLogger = function(filename, path) {
+    _fileLgSettings = {filename: filename, path: path};
     _createFileLogger(path, filename);
     _createLogger();
   }
 
 
   this.setDailyFileLogger = function(scheduleName, path, suffix) {
+    _dFileLgSettings = {scheduleName: scheduleName, path: path, suffix: suffix};
     _createFileLogger(path, _createFileName(suffix));
     _createLogger();
 
@@ -309,8 +374,8 @@ export function Logger(name) {
   }
 
 
-  this.removeDailyFileLogger = function(scheduleName) {
-    SchMSC.removeSchedule(scheduleName);
+  this.removeDailyFileLogger = function() {
+    SchMSC.removeSchedule(_dFileLgSettings.scheduleName);
     _fileLg = null;
     _createLogger();
   }
@@ -321,6 +386,7 @@ export function Logger(name) {
     _createLogger();
   }
 
+
   this.removeDatabaseLogger = function() {
     _dbLg = null;
     _createLogger();
@@ -328,28 +394,34 @@ export function Logger(name) {
 
 
   this.debug = function(message) {
-    _logger.debug(message);
+    _logger.debug('  ' + message);
   }
+
 
   this.verbose = function(message) {
     _logger.verbose(message);
   }
 
+
   this.info = function(message) {
-    _logger.info(message);
+    _logger.info('   ' + message);
   }
+
 
   this.warn = function(message) {
-    _logger.warn(message);
+    _logger.warn('   ' + message);
   }
 
+
   this.error = function(message) {
-    _logger.error(message);
+    _logger.error('  ' + message);
   }
+
 
   this.getLogger = function() {
     return _logger;
   }
+
 
   this.getDatabase = function() {
     return _db;

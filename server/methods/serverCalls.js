@@ -41,10 +41,10 @@ function strError(strategyId, errObj) {
   Private functions
  ***********************************************************************/
 
-var start = function(strategyId) {
+var start = function(strategyId, logConfig) {
   if (strategies.getObject(strategyId) === 'undefined') {
 
-    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId), createPlugin, createExchange), startFlag: true });
+    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId), logConfig, createPlugin, createExchange), startFlag: true });
     var ret = strategies.getObject(strategyId).inst.getStatus();
     if (ret.error !== StrError.ok) return ret;
 
@@ -215,8 +215,10 @@ Meteor.methods({
 
   /*************** trading functions  ***************/
 
-  strategyStart: function(strategyId) {
-    var tmp = start(strategyId);
+  strategyStart: function(params) {
+    var strategyId = params[0];
+    var logConfig = params[1];
+    var tmp = start(strategyId, logConfig);
 
     if (tmp.error !== StrError.ok) {
       stop(strategyId);

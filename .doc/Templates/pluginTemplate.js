@@ -117,6 +117,12 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   */
   var _active = false;
 
+  /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
+
 
   <YOUR CODE: private variables>
 
@@ -164,7 +170,13 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
+    _logPreMsg = '<YOUR CODE: plugin name with prefix "Pl"> ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+
+
     _config = mergeObjects(_config, configuration);
+
+
     return _checkConfig();
   }
 
@@ -173,6 +185,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
+    
+
     return [
       <YOUR CODE: configuration array objects>
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
@@ -185,6 +200,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
+    logger.debug(_logPreMsg + 'getActiveState()');
     return _active;
   }
 
@@ -193,6 +209,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
+
+    
     var tmp = [
       <YOUR CODE: information array objects>
     ];
@@ -209,6 +228,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
+    logger.debug(_logPreMsg + 'start()');
+
+
     _position = 'none';
 
     <YOUR CODE: set some price values>
@@ -222,6 +244,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.reset = function(price) {
+    logger.debug(_logPreMsg + 'reset()');
+
+
     if(_active) {
       <YOUR CODE: set some price values>
     }
@@ -233,11 +258,18 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    */
   this.update = function(price) {
     if(_active){
+
+      logger.debug(_logPreMsg + 'update() start');
+
+      
        _curPrice = price;
 
        
-      <YOUR CODE: update logic>
+      <YOUR CODE: update logic> // add logger.verbose(_logPreMsg + 'buy notification'); / logger.verbose(_logPreMsg + 'sell notification')); 
+                                // when calling _buyNotifyFunc / _sellNotifyFunc
 
+
+      logger.debug(_logPreMsg + 'update() end');
     }
   }
 
@@ -246,6 +278,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
+    logger.debug(_logPreMsg + 'bought()');
+
+
     if (_position !== 'long') { // for savety reasons
 
       /* long in */
@@ -281,6 +316,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price, volume) {
+    logger.debug(_logPreMsg + 'sold()');
+
+
     if (_position !== 'short') { // for savety reasons
 
       /* short in */
@@ -316,6 +354,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBuyNotifyFunc()');
     _buyNotifyFunc = buyNotifyFunction;
   }
 
@@ -324,6 +363,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSellNotifyFunc()');
     _sellNotifyFunc = sellNotifyFunction;
   }
 
@@ -332,6 +372,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return { id: _config.id, name: _config.name, type: "<YOUR CODE: plugin name with prefix "Pl">" };
   }
 
@@ -340,6 +381,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return { long: _config.enLong, short: _config.enShort }
   }
 
