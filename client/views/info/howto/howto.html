@@ -13,11 +13,45 @@
 <template name="howtoCont">
   {{#markdown}}
 <h2 id="tableOfCont">Table of Content</h2> 
-+ <a href="#tbd">Tbd</a> 
++ <a href="#general">General</a> 
++ <a href="#example">Example</a> 
 
 
 
 <br/>
+{{> howtoGeneral}}
+{{> howtoExample}}
+
+
 
   {{/markdown}}
+</template>
+
+
+
+<!--------------------------------------------------------------- 
+  General
+ ---------------------------------------------------------------->
+<template name='howtoGeneral'>
+<h3 id="general">General</h3> 
+First of all you need to instantiate an exchange binding which connects an exchange to the trade helper platform. To do so, go to the <a href="/exchanges">Exchanges page</a> and select an exchange you want to connect with. After creating an exchange binding (see details in <a href="/info/exchanges">Exchanges</a>), you need to create at least one plugin that uses this binding. 
+To archive this, go to the <a href="/plugins">Plugins page</a> and create an plugin (see plugin details in <a href="/info/plugins">Plugins</a>). At the creating process you have to select an exchange binding which is the place where you link the firstly created exchange binding to your plugin. You can create more than one plugin that uses this binding, so that you can create more complex strategies later on. After finishing this step, you need to create a strategy that uses these plugins. 
+To do so, select the <a href="/strategies">Strategies page</a> from the Pages menu and create a Strategy. While creating, you are requested to add some plugin bundles. A plugin bundle is a bunch of plugins and is handled AND connected from the Strategy. For instance, if one plugin inside this bundle determined a buy or sell action, the bundle will not progress this to the strategy unless all other plugins inside this bundle determined the same action in the same time. This is why it is called AND connected. 
+The bundles itself are OR connected. This means if only one bundle progresses an action to the strategy, the strategy will perform this action. 
+After creating an Strategy you need to activate it. An activated strategy is a running strategy and can be found inside the <a href="/actives">Actives page</a>. 
+That’s it. This is the general work flow to create and activate your own strategy. For an example work flow see the <a href="#example">Example</a> chapter.
+ 
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Example
+ ---------------------------------------------------------------->
+<template name='howtoExample'>
+<h3 id="example">Example</h3> 
+To demonstrate the workflow we first create a TestData exchange binding. This is a special exchange binding because it is more an own created data set to test your strategy with then a binding like the others (see details in <a href="/info/exchanges">Exchanges</a>).
+
+ 
+{{> RetToToC}}
 </template>

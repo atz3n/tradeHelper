@@ -17,17 +17,22 @@
 <template name="aboutCont">
   {{#markdown}}
 {{> overview}}
-{{> credits}}
+{{> whatitis}}
+{{> whatitisnot}}
   {{/markdown}}
 </template>
 
 <template name='overview'>
 ##Overview
-<!-- Trade Helper is a platform with the intension to support traders while trading. It can be used from manual mode, where -->
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+The Trade Helpers intention is to support you in trading any kind of assets from different exchanges with different, own created strategies. It is kind of a platform where you can configure your own trading strategy and run it in fully automated, semi-automated or manual mode. With the ability to create a strategy based on combinations of OR and/or AND connected mini strategies (so called plugins), it gives you enormous flexibility and customization possibilities. 
 </template>
 
-<template name='credits'>
-##Credits
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+<template name='whatitis'>
+##What it is
+It is a platform for creating and running customized trading strategies based on implemented plugins and tied exchanges.
+</template>
+
+<template name='whatitisnot'>
+##What it is not
+It is not a platform to trade assets directly. To use and trade via an exchange, an account at this exchange is needed.
 </template>
