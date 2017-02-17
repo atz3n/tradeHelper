@@ -1292,7 +1292,6 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
     }
     
     if(logConfig.logEnabled === true){
-      console.log('bös')
       _logger = new Logger();
       _logger.setConfig({fileLevel: logConfig.logLevel});
       _logger.setDailyFileLogger(_strDesc._id + '_fl', Meteor.settings.private.LogFolderPath + '/Actives/', '__' + _strDesc.name  + '__' + _strDesc._id);
@@ -1404,4 +1403,5 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
 
   /* constructor call */
   _constructor(strategyDescription, createPluginFunc, createExchangeFunc, logConfig)
+  _logger.info('Strategy created');
 }

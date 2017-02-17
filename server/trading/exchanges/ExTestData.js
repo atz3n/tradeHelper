@@ -387,7 +387,7 @@ export function ExTestData(logger) {
     switch (_config.priceType) {
 
       case 'sinus':
-        price = Math.abs(_config.gain * (Math.sin(_counter * 2 * Math.PI / 360) + 1) + _config.offset);
+        price = Math.abs(_config.gain * Math.sin(_counter * 2 * Math.PI / 360) + _config.offset);
         break;
 
       case 'data':
