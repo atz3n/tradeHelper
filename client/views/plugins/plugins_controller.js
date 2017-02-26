@@ -11,7 +11,7 @@ this.PluginsController = RouteController.extend({
 	},
 
 	action: function() {
-		this.redirect('plugins.pl_stop_loss', this.params || {}, { replaceState: true });
+		this.redirect('plugins.pl_dummy', this.params || {}, { replaceState: true });
 		/*ACTION_FUNCTION*/
 	},
 

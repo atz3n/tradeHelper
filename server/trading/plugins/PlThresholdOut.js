@@ -7,11 +7,13 @@
  *
  * 
  * @author Atzen
- * @version 0.1.0
+ * @version 0.3.0
  *
  * 
  * CHANGES:
  * 02-Dez-2016 : Initial version
+ * 05-Jan-2017 : adapted to IPlugin v 4.0.0
+ * 11-Jan-2017 : added logging mechanism
  */
 
 
@@ -106,6 +108,12 @@ export function PlThresholdOut(logger) {
   var _active = false;
 
   /**
+   * message string that a log message starts with
+   * @type {String}
+   */
+  var _logPreMsg = '';
+
+  /**
    * Callback function that will be called when a buy action is calculated
    */
   var _buyNotifyFunc = function() {};
@@ -157,7 +165,13 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
+    _logPreMsg = 'PlThresholdOut ' + configuration.id + ': ';
+    logger.debug(_logPreMsg + 'setConfig()');
+    
+    
     _config = mergeObjects(_config, configuration);
+    
+    
     return _checkConfig();
   }
 
@@ -166,6 +180,9 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getConfig = function() {
+    logger.debug(_logPreMsg + 'getConfig()');
+    
+
     return [
       { title: 'Threshold Base', value: _config.thresholdBase },
       { title: 'Threshold Type', value: _config.thresholdType },
@@ -180,6 +197,7 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getActiveState = function() {
+    logger.debug(_logPreMsg + 'getActiveState()');
     return _active;
   }
 
@@ -188,6 +206,9 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInfo = function() {
+    logger.debug(_logPreMsg + 'getInfo()');
+
+
     var tmp = [
       { title: 'High Price', value: '-' },
       { title: 'Low Price', value: '-' },
@@ -207,6 +228,9 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.start = function(price) {
+    logger.debug(_logPreMsg + 'start()');
+
+
     _position = 'none';
 
     /* set active state */
@@ -217,8 +241,25 @@ export function PlThresholdOut(logger) {
   /**
    * Interface function (see IPlugin.js for detail informations)
    */
+  this.reset = function(price) {
+    logger.debug(_logPreMsg + 'reset()');
+
+
+    if(_active) {
+      _highLowPrice = price;
+      _curPrice = price;
+    }
+  }
+
+
+  /**
+   * Interface function (see IPlugin.js for detail informations)
+   */
   this.update = function(price) {
     if(_active){
+
+      logger.debug(_logPreMsg + 'update() start');
+
     
       var diff = 0;
       _curPrice = price;
@@ -242,6 +283,7 @@ export function PlThresholdOut(logger) {
       /* stop long position */
       if (_position === 'long') {
         if (diff < -_config.thresholdAmount) {
+          logger.verbose(_logPreMsg + 'sell notification');
           _sellNotifyFunc(this.getInstInfo());
         }
       }
@@ -250,10 +292,13 @@ export function PlThresholdOut(logger) {
       /* stop short position */
       if (_position === 'short') {
         if (diff > _config.thresholdAmount) {
+          logger.verbose(_logPreMsg + 'buy notification');
           _buyNotifyFunc(this.getInstInfo());
         }
       }
 
+
+      logger.debug(_logPreMsg + 'update() end');
     }
   }
 
@@ -262,6 +307,9 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.bought = function(price, volume) {
+    logger.debug(_logPreMsg + 'bought()');
+
+
     if (_position !== 'long') { // for savety reasons
 
       /* long in */
@@ -297,6 +345,9 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.sold = function(price, volume) {
+    logger.debug(_logPreMsg + 'sold()');
+
+
     if (_position !== 'short') { // for savety reasons
 
       /* short in */
@@ -332,6 +383,7 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setBuyNotifyFunc = function(buyNotifyFunction) {
+    logger.debug(_logPreMsg + 'setBuyNotifyFunc()');
     _buyNotifyFunc = buyNotifyFunction;
   }
 
@@ -340,6 +392,7 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setSellNotifyFunc = function(sellNotifyFunction) {
+    logger.debug(_logPreMsg + 'setSellNotifyFunc()');
     _sellNotifyFunc = sellNotifyFunction;
   }
 
@@ -348,6 +401,7 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getInstInfo = function() {
+    logger.debug(_logPreMsg + 'getInstInfo()');
     return { id: _config.id, name: _config.name, type: "PlThresholdOut" };
   }
 
@@ -356,6 +410,7 @@ export function PlThresholdOut(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.getPositions = function() {
+    logger.debug(_logPreMsg + 'getPositions()');
     return { long: _config.enLong, short: _config.enShort }
   }
 

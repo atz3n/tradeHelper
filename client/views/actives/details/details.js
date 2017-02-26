@@ -453,10 +453,37 @@ Template.ActivesDetailsDetailsForm.events({
   "click #form-refresh-button": function(e, t) {
     e.preventDefault();
     var strId = this.params.strategyId;
+
     Session.set('data1', ['data1', 30, 200, 100, 400, cnt++]);
     Meteor.call('strategyRefresh', strId, function(e, r) {
       if (e) console.log(e);
     });
+  },
+  "click #form-reset-button": function(e, t) {
+    e.preventDefault();
+    var strId = this.params.strategyId;
+    bootbox.dialog({
+      message: "Reset Plugins? Are you sure?",
+      title: "Plugins Reset",
+      animate: false,
+      buttons: {
+        success: {
+          label: "Yes",
+          className: "btn-success",
+          callback: function() {
+            Meteor.call('strategyReset', strId, function(e, r) {
+              if (e) console.log(e);
+            });
+          }
+        },
+        danger: {
+          label: "No",
+          className: "btn-default"
+        }
+      }
+    });
+
+
   },
   "click #form-buy-button": function(e, t) {
     e.preventDefault();

@@ -14,6 +14,7 @@
 <template name="plCont">
   {{#markdown}}
 <h2 id="tableOfCont">Table of Content</h2> 
++ <a href="#dummy">Dummy</a> 
 + <a href="#stopLoss">StopLoss</a> 
 + <a href="#takeProfit">TakeProfit</a> 
 + <a href="#ThresholdIn">ThresholdIn</a> 
@@ -21,12 +22,23 @@
 
 
 <br/>
+{{> plDummy}}
 {{> plStopLoss}}
 {{> plTakeProfit}}
 {{> plThresholdIn}}
 {{> plThresholdOut}}
 
   {{/markdown}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  Dummy
+ ---------------------------------------------------------------->
+<template name='plDummy'>
+<h3 id="dummy">Dummy</h3> 
+tbd
+{{> RetToToC}}
 </template>
 
 

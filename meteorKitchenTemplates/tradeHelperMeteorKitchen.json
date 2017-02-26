@@ -30,8 +30,8 @@
             "name": "updateTime",
             "title": "Update Time",
             "type": "integer",
-            "min": 0,
-            "default": 0,
+            "min": 1,
+            "default": 1,
             "required": true
           },
           {
@@ -108,6 +108,43 @@
               {
                 "title": "Automatic",
                 "value": "auto"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "enLog",
+            "title": "Enable Logging",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "logLevel",
+            "title": "Logging Level",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "Error",
+                "value": "error"
+              },
+              {
+                "title": "Warning",
+                "value": "warn"
+              },
+              {
+                "title": "Info",
+                "value": "info"
+              },
+              {
+                "title": "Verbose",
+                "value": "verbose"
+              },
+              {
+                "title": "Debug",
+                "value": "debug"
               }
             ],
             "required": true
@@ -306,7 +343,6 @@
         ],
         "before_insert_code": "doc.type = 'plStopLoss';"
       },
-      ,
       {
         "name": "plTakeProfits",
         "fields": [
@@ -573,6 +609,42 @@
           "owner"
         ],
         "before_insert_code": "doc.type = 'plThresholdIn';"
+      },
+      ,
+      {
+        "name": "plDummies",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ],
+        "before_insert_code": "doc.type = 'plDummy';"
       },
       {
         "name": "exKrakens",
@@ -1169,6 +1241,27 @@
         "collection": "plTakeProfits",
         "filter": {
           "_id": ":plTakeProfitId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "plDummies",
+        "collection": "plDummies",
+        "filter": {}
+      },
+      {
+        "name": "plDummies_empty",
+        "collection": "plDummies",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "plDummy",
+        "collection": "plDummies",
+        "filter": {
+          "_id": ":plDummyId"
         },
         "find_one": true
       },
@@ -1921,7 +2014,90 @@
                 }
               ],
               "type": "page"
-            }
+            },
+            {
+              "name": "plDummy",
+              "components": [
+                {
+                  "name": "viewPlDummy",
+                  "title": "Dummy",
+                  "type": "data_view",
+                  "text_if_empty": "No Dummy configured",
+                  "query_name": "plDummies",
+                  "query_params": [],
+                  "insert_route": "plugins.plDummy.insertPlDummy",
+                  "edit_route": "plugins.plDummy.editPlDummy",
+                  "edit_route_params": [
+                    {
+                      "name": "plDummyId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plDummy.detailsPlDummy",
+                  "details_route_params": [
+                    {
+                      "name": "plDummyId",
+                      "value": "this._id"
+                    }
+                  ]
+                }
+              ],
+              "pages": [
+                {
+                  "name": "insertPlDummy",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New Dummy",
+                      "query_name": "plDummies_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plDummy",
+                      "cancel_route": "plugins.plDummy"
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsPlDummy",
+                  "route_params": [
+                    "plDummyId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plDummy",
+                      "query_params": [],
+                      "close_route": "plugins.plDummy",
+                      "back_route": "plugins.plDummy"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlDummy",
+                  "route_params": [
+                    "plDummyId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit Dummy",
+                      "submit_route": "plugins.plDummy",
+                      "cancel_route": "plugins.plDummy",
+                      "query_name": "plDummy",
+                      "query_params": []
+                    }
+                  ]
+                },
+              ],
+              "type": "page"
+            },
           ],
           "components": [
             {
@@ -1929,6 +2105,10 @@
               "type": "menu",
               "class": "nav nav-stacked nav-pills",
               "items": [
+                {
+                  "title": "Dummy",
+                  "route": "plugins.plDummy"
+                },
                 {
                   "title": "StopLoss",
                   "route": "plugins.plStopLoss"

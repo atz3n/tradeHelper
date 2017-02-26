@@ -25,6 +25,13 @@
 
 <template name="PluginsSideMenu">
 	<ul id="menu-items" class="nav nav-stacked nav-pills">
+		<li id="menu-item-simple" class="{{menuItemClass 'plugins.pl_dummy'}}">
+			<a href="{{pathFor 'plugins.pl_dummy'}}">
+				<span class="item-title">
+					Dummy
+				</span>
+			</a>
+		</li>
 		<li id="menu-item-simple" class="{{menuItemClass 'plugins.pl_stop_loss'}}">
 			<a href="{{pathFor 'plugins.pl_stop_loss'}}">
 				<span class="item-title">

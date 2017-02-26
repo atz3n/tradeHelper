@@ -40,6 +40,16 @@
           </p>
         </div>
       </div>
+       <div class="form-group  field-id">
+        <label for="id" class="col-sm-3 control-label">
+          Id
+        </label>
+        <div class="input-div col-sm-9">
+          <p class="form-control-static">
+            {{strategyData._id}}
+          </p>
+        </div>
+      </div>
       <div class="form-group  field-update-time">
         <label for="updateTime" class="col-sm-3 control-label">
           Update Time
@@ -216,10 +226,6 @@
       </div>
       <div class="form-group">
         <div class="submit-div col-sm-9">
-          <button id="form-refresh-button" class="btn btn-default" type="submit">
-            <span class="fa fa-refresh">
-            </span> Refresh
-          </button>
           {{#if strategyPaused}}
           <button id="form-pausePlay-button" class="btn btn-default" type="submit">
             <span class="fa fa-play">
@@ -234,6 +240,18 @@
           <button id="form-stop-button" class="btn btn-default" type="submit">
             <span class="fa fa-stop">
             </span> Stop
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="submit-div col-sm-9">
+          <button id="form-refresh-button" class="btn btn-default" type="submit">
+            <span class="fa fa-refresh">
+            </span> Refresh
+          </button>
+          <button id="form-reset-button" class="btn btn-default" type="submit">
+            <span class="fa fa-undo">
+            </span> Pl. Reset
           </button>
         </div>
       </div>
@@ -379,5 +397,7 @@
   </tr>
 </template>
 <template name="ActivesDetailsChartForm">
-  <div class="chart"></div>
+  <div class="col-sm-12">
+    <div class="chart"></div>
+  </div>
 </template>

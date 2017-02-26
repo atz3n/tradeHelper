@@ -19,6 +19,7 @@ Meteor.subscribe("pl_stop_losses");
 Meteor.subscribe("pl_take_profits");
 Meteor.subscribe("pl_threshold_ins");
 Meteor.subscribe("pl_threshold_outs");
+Meteor.subscribe("pl_dummies");
 
 
 /***********************************************************************
@@ -34,6 +35,7 @@ pluginHandler.setObject('PlStopLosses', PlStopLosses);
 pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
 pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
 pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
+pluginHandler.setObject('PlDummies', PlDummies);
 
 
 /* Exchanges */

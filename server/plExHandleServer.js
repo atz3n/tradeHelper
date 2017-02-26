@@ -9,6 +9,7 @@ import { PlStopLoss } from './trading/plugins/PlStopLoss.js';
 import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
 import { PlThresholdIn } from './trading/plugins/PlThresholdIn.js';
 import { PlThresholdOut } from './trading/plugins/PlThresholdOut.js';
+import { PlDummy } from './trading/plugins/PlDummy.js';
 
 import { ExTestData } from './trading/exchanges/ExTestData.js';
 import { ExKraken } from './trading/exchanges/ExKraken.js';
@@ -27,6 +28,7 @@ pluginHandler.setObject('PlStopLosses', PlStopLosses);
 pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
 pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
 pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
+pluginHandler.setObject('PlDummies', PlDummies);
 
 
 /* Exchanges */
@@ -44,7 +46,7 @@ exchangeHandler.setObject('ExKrakens', ExKrakens);
  * @param  {InstHandler} strPlHandler Strategy's plugin handler
  * @return {bool}                     error
  */
-this.createPlugin = function(plugin, strPlHandler) {
+this.createPlugin = function(plugin, logger, strPlHandler) {
   var conf = {};
 
 
@@ -54,6 +56,7 @@ this.createPlugin = function(plugin, strPlHandler) {
   if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlTakeProfit.ConfigDefault);
   if (plugin.type === 'plThresholdIns') conf = Object.assign({}, PlThresholdIn.ConfigDefault);
   if (plugin.type === 'plThresholdOuts') conf = Object.assign({}, PlThresholdOut.ConfigDefault);
+  if (plugin.type === 'plDummies') conf = Object.assign({}, PlDummy.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -74,10 +77,11 @@ this.createPlugin = function(plugin, strPlHandler) {
 
   /***** add plugin instance creation here ******/
 
-  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(), exId: plugin.exchange._id });
-  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(), exId: plugin.exchange._id });
+  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plDummy') strPlHandler.setObject(plugin._id, { inst: new PlDummy(logger), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 
@@ -89,10 +93,11 @@ this.createPlugin = function(plugin, strPlHandler) {
 /**
  * Function that creates an Exchange instance for Strategy.js
  * @param  {Object} exchange          exchange object including exchange configuration
+ * @param  {Object} logger            logger instance 
  * @param  {InstHandler} strPlHandler Strategy's exchange handler
  * @return {errHandle object}         error
  */
-this.createExchange = function(exchange, strExHandler) {
+this.createExchange = function(exchange, logger, strExHandler) {
   var conf = {};
 
 
@@ -119,8 +124,8 @@ this.createExchange = function(exchange, strExHandler) {
 
   /***** add exchange instance creation here ******/
 
-  if (exchange.type === 'exKraken') strExHandler.setObject(exchange._id, new ExKraken());
-  if (exchange.type === 'exTestData') strExHandler.setObject(exchange._id, new ExTestData());
+  if (exchange.type === 'exKraken') strExHandler.setObject(exchange._id, new ExKraken(logger));
+  if (exchange.type === 'exTestData') strExHandler.setObject(exchange._id, new ExTestData(logger));
 
   /***** add exchange instance creation here ******/
 

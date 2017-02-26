@@ -36,8 +36,18 @@
 					Name
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-name">
 						{{strategy.name}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-id">
+				<label for="id" class="col-sm-3 control-label">
+					Id
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{strategy._id}}
 					</p>
 				</div>
 			</div>
@@ -46,7 +56,7 @@
 					Update Time
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-update-time">
 						{{strategy.updateTime}}
 					</p>
 				</div>
@@ -56,7 +66,7 @@
 					Time Unit
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-time-unit">
 						{{strategy.timeUnit}}
 					</p>
 				</div>
@@ -66,11 +76,33 @@
 					Mode
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-mode">
 						{{strategy.mode}}
 					</p>
 				</div>
 			</div>
+			{{#if showLogSettings}}
+			<div class="form-group  field-en-log">
+				<label for="enLog" class="col-sm-3 control-label">
+					Enable Logging
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-en-log">
+						{{booleanToYesNo strategy.enLog}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-log-level">
+				<label for="logLevel" class="col-sm-3 control-label">
+					Logging Level
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-log-level">
+						{{strategy.logLevel}}
+					</p>
+				</div>
+			</div>
+			{{/if}}
 			<div class="form-group  field-plugin-bundles">
 				<label for="pluginBundles" class="col-sm-3 control-label">
 					Plugin Bundles (logical connected via 'or')

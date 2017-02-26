@@ -41,10 +41,10 @@ function strError(strategyId, errObj) {
   Private functions
  ***********************************************************************/
 
-var start = function(strategyId) {
+var start = function(strategyId, logConfig) {
   if (strategies.getObject(strategyId) === 'undefined') {
 
-    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId), createPlugin, createExchange), startFlag: true });
+    strategies.setObject(strategyId, { inst: new Strategy(getStrategyObject(strategyId), logConfig, createPlugin, createExchange), startFlag: true });
     var ret = strategies.getObject(strategyId).inst.getStatus();
     if (ret.error !== StrError.ok) return ret;
 
@@ -125,6 +125,17 @@ var refresh = function(strategyId) {
 }
 
 
+var reset = function(strategyId) {
+  if (strategies.getObject(strategyId) !== 'undefined') {
+    strategies.getObject(strategyId).inst.reset();
+  } else {
+    return errHandle(StrError.notFound, strategyId)
+  }
+
+  return errHandle(StrError.ok, null);
+}
+
+
 var stopTrade = function(strategyId) {
   if (strategies.getObject(strategyId) !== 'undefined') {
     strategies.getObject(strategyId).inst.stopTrading();
@@ -181,6 +192,10 @@ var errMessage = function(errHandleObject, strategyId) {
     return errHandle('info', errHandleObject.result);
   }
 
+  if (errHandleObject.error === StrError.info) {
+    return errHandle('info', errHandleObject.result);
+  }
+
   return errHandle('error', 'Sorry, an unknown error occurred!');
 }
 
@@ -200,8 +215,10 @@ Meteor.methods({
 
   /*************** trading functions  ***************/
 
-  strategyStart: function(strategyId) {
-    var tmp = start(strategyId);
+  strategyStart: function(params) {
+    var strategyId = params[0];
+    var logConfig = params[1];
+    var tmp = start(strategyId, logConfig);
 
     if (tmp.error !== StrError.ok) {
       stop(strategyId);
@@ -230,6 +247,10 @@ Meteor.methods({
 
   strategyRefresh: function(strategyId) {
     return errMessage(refresh(strategyId));
+  },
+
+  strategyReset: function(strategyId) {
+    return errMessage(reset(strategyId));
   },
 
   strategyStopTrade: function(strategyId) {

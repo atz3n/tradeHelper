@@ -1,12 +1,39 @@
 {
+  "_": "this is a comment field and is only used to enable commenting inside this file",
+  
+
   "public": {
-  	"Version": "0.3.1",
-  	"ExTestDataErrorConfig": "false",
-  	"ShowDevelopView": "false",
-  	"EnableAccessCode": "true"
+
+    "_":  "The version number in <Major>.<Minor>.<Patch> format",
+    "Version": "0.3.1",
+ 
+    "_":  "Enables error selection in TestData exchange",
+    "ExTestDataErrorConfig": "false",
+
+    "_":  "Enables an additional view for development",
+    "ShowDevelopView": "false",
+
+    "_":  "Enables an additional AccessCode field in register view",
+    "EnableAccessCode": "true",
+
+
+    "_":  "Enables Logging per default",
+    "DefaultLogEnabled": "true",
+    
+    "_":  "Sets default log level (ascending order: debug, verbose, info, warn, error)",
+    "DefaultLogLevel": "error"
   },
+
+
   "private": {
-  	"AccessCode": "YouAr3ACh0sen0ne",
-  	"UpdatePairs": "true"
+
+    "_":  "The AccessCode that is requiered by the AccessCode field",
+    "AccessCode": "YouAr3ACh0sen0ne",
+    
+    "_":  "Activates the periodic update function that updates the available trading pairs from each exchange (once every day)",
+    "UpdatePairs": "true",
+
+    "_":  "Sets the parent log folder",
+    "LogFolderPath": "../../../../../Logs/" 
   }
 }

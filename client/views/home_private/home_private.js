@@ -41,7 +41,10 @@ Template.HomePrivateView.helpers({
 	numOfLogins: function() {
 		if(pageSession.get('Logins')) 
 			return pageSession.get('Logins').length;
-	}
+	},
+  showLogins: function() {
+    return pageSession.get("showLogins");
+  },
 });
 
 
@@ -82,4 +85,25 @@ Template.HomePrivateViewLogin.events({
 Template.HomePrivateViewLogin.helpers({
 
 });
+
+
+
+Template.HomePrivateViewLoginsFieldButton.rendered = function() {
+};
+
+Template.HomePrivateViewLoginsFieldButton.events({
+  "click #form-entity-button": function(e, t) {
+    e.preventDefault();
+    if(pageSession.get('showLogins') !== true)
+      pageSession.set('showLogins', true);
+    else
+      pageSession.set('showLogins', false);
+  }});
+
+Template.HomePrivateViewLoginsFieldButton.helpers({
+    "showLogins": function() {
+    return pageSession.get("showLogins");
+  }
+});
+
 
