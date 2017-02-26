@@ -2,9 +2,7 @@
   <div class="page-container container" id="content">
     <div class="row" id="title_row">
       <div class="col-md-12">
-        <h2 id="page_title" class="pull-left">
-			Welcome {{userFullName}}! 
-		</h2>
+        <h2 id="page_title" class="pull-left">Welcome {{userFullName}}!</h2>
         <div id="page_menu" class="pull-right">
         </div>
       </div>
@@ -15,18 +13,16 @@
 
 <template name="HomePrivateView">
   <form>
-    {{#if $eq numOfLogins 1}}
-    	<h4>You are logged in with 1 entity</h4> 
-    {{else}}
-    	<h4>You are logged in with {{numOfLogins}} entities</h4> 
-    {{/if}} 
-    {{#each logins}} {{> HomePrivateViewLogin}} {{/each}}
     <br/>
-    <div>
-    	<a href="#" id="form-goToActives-button" class="btn btn-warning">
-			Goto Actives
-		</a>
-    </div>
+    {{#if $eq numOfLogins 1}}
+    	<p>You are logged in with 1 entity {{> HomePrivateViewLoginsFieldButton}}</p> 
+    {{else}}
+    	<p>You are logged in with {{numOfLogins}} entities {{> HomePrivateViewLoginsFieldButton}}</p> 
+    {{/if}} 
+    {{#if showLogins}}
+    {{#each logins}} {{> HomePrivateViewLogin}} {{/each}}
+    {{/if}} 
+    {{> HomePrivateViewLinks}}
   </form>
 </template>
 <template name="HomePrivateViewLogin">
@@ -40,4 +36,23 @@
       </a>
     </p>
   </div>
+</template>
+
+
+<template name="HomePrivateViewLoginsFieldButton">
+  <button id="form-entity-button" class="btn btn-default btn-xs" type="submit">
+      {{#if showLogins}}
+      <span class="fa fa-angle-up">
+      </span> {{else}}
+      <span class="fa fa-angle-down">
+      </span> {{/if}}
+    </button>
+</template>
+
+
+<template name="HomePrivateViewLinks">
+ {{#markdown}}
+ If you're new and/or need some informations visit the <a href="/info">Info page</a>.
+ If you want to see your active strategies visit the <a href="/actives">Actives page</a>.
+ {{/markdown}}
 </template>
