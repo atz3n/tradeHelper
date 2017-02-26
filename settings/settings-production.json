@@ -5,7 +5,7 @@
   "public": {
 
     "_":  "The version number in <Major>.<Minor>.<Patch> format",
-    "Version": "0.3.1",
+    "Version": "0.3.2",
  
     "_":  "Enables error selection in TestData exchange",
     "ExTestDataErrorConfig": "false",
