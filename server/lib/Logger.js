@@ -10,7 +10,7 @@
  * 
  * 
  * @author Atzen
- * @version 0.2.1
+ * @version 0.2.2
  *
  * 
  * CHANGES:
@@ -18,6 +18,7 @@
  * 19-July-2016 : BugFix: setDailyFileLogger() did not create daily schedule
  * 09-Jan-2017 : Added recursive folder creation
  * 01-Feb-2017 : setConfig function now has effect while logger is running
+ * 03-Mar-2017 : changed daily file build to 00:01 for correct name handling
  */
 
 
@@ -349,7 +350,7 @@ export function Logger(name) {
     _createLogger();
 
     // return SchMSC.createSchedule(scheduleName, 'every 1 min', function() {
-    return SchMSC.createSchedule(scheduleName, 'at 00:00', function() {
+    return SchMSC.createSchedule(scheduleName, 'at 00:01', function() {
       _createFileLogger(path, _createFileName(suffix));
       _createLogger();
     });

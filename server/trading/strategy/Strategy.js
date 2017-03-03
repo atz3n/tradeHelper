@@ -8,7 +8,7 @@
  *
  * 
  * @author Atzen
- * @version 0.5.0
+ * @version 0.5.1
  *
  * 
  * CHANGES:
@@ -20,6 +20,7 @@
  * 22-Dez-2016 : added exchange dependent long or short trading availability at manual buy/sell
  * 05-Jan-2017 : added reset function
  * 11-Jan-2017 : added logging mechanism
+ * 03-Mar-2017 : fixed dailyFileLogger removal bug
  */
 
 import { InstHandler } from '../../lib/InstHandler.js';
@@ -185,7 +186,7 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
    */
   var _firstRun = false;
 
-   /**
+  /**
    * Used for first run (update) handling
    * @type {Boolean}
    */
@@ -203,6 +204,12 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
    * @type {Object}
    */
   var _logger = Logger.DummyLogger;
+
+  /**
+   * Logging enabled flag
+   * @type {Boolean}
+   */
+  var _logEnabled = false;
 
 
   /***********************************************************************
@@ -1096,9 +1103,7 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
 
     _logger.info('Strategy stopped');
 
-    if(Meteor.settings.private.Logging === 'true'){
-      _logger.removeDailyFileLogger();
-    }
+    if(_logEnabled) _logger.removeDailyFileLogger();
   }
 
 
@@ -1289,13 +1294,16 @@ export function Strategy(strategyDescription, logConfig, createPluginFunc, creat
     if(Object.keys(logConfig).length === 0) {
       logConfig.logEnabled = (Meteor.settings.public.DefaultLogEnabled === 'true');
       logConfig.logLevel = Meteor.settings.public.DefaultLogLevel;
+      _logEnabled = logConfig.logEnabled;
     }
-    
+
     if(logConfig.logEnabled === true){
       _logger = new Logger();
       _logger.setConfig({fileLevel: logConfig.logLevel});
       _logger.setDailyFileLogger(_strDesc._id + '_fl', Meteor.settings.private.LogFolderPath + '/Actives/', '__' + _strDesc.name  + '__' + _strDesc._id);
     }
+
+    _logEnabled = logConfig.logEnabled;
 
     _logger.verbose('Creating strategy instance...');
     _logger.debug('Configuration: ' + JSON.stringify(strDesc));

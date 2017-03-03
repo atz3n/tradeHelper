@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.4.1
  *
  * 
  * CHANGES:
@@ -19,6 +19,8 @@
  * 22-July-2016 : adapted to IExchange v1.3
  * 24-July-2016 : fixed bug in default config and getConfig() function
  * 11-Jan-2017 : added logging mechanism
+ * 02-Mar-2017 : added error logging in api call
+ * 03-Mar-2017 : fixed bug while trading with krakenBalance
  */
 
 /***********************************************************************
@@ -176,6 +178,12 @@ export function ExKraken(logger) {
   var _oBalance = 0;
 
   /**
+   * used trading balance if _config.balanceType = 'krakenBalance'
+   * @type {Number}
+   */
+  var _kBalance = 0;
+
+  /**
    * Indicates that an open order exists
    * @type {Boolean}
    */
@@ -224,9 +232,16 @@ export function ExKraken(logger) {
     return Async.runSync(function(done) { // wraps asynchronous function call in synchronous call
 
       /* call kraken.com api */
+      logger.debug(_logPreMsg + '  ...calling API "' + method + '"...');
       _kraken.api(method, params, function(error, data) {
-        if (error) return done(ExError.srvConError, error);
-        else return done(ExError.ok, data.result);
+        if (error) {
+          logger.debug(_logPreMsg + '  ..."' + method + '" ' + error);
+          return done(ExError.srvConError, error);
+        }
+        else {
+          logger.debug(_logPreMsg + '  ..."' + method + '" OK...');
+          return done(ExError.ok, data.result);
+        }
       });
 
     });
@@ -256,6 +271,8 @@ export function ExKraken(logger) {
         if (balance < _oBalance) return errHandle(ExError.toLessBalance, null);
         balance = _oBalance;
       }
+
+      _kBalance = balance;
 
     } else {
 
@@ -559,10 +576,6 @@ export function ExKraken(logger) {
     if (!_checkConfig()) return errHandle(ExError.error, null);
 
 
-    /* set balance */
-    if (_config.oBalance !== 'kBalance') _oBalance = _config.oBalanceAmount;
-
-
     /* instantiate kraken api class */
     _kraken = new KrakenClient(_config.key, _config.secret);
 
@@ -578,6 +591,25 @@ export function ExKraken(logger) {
     _pairUnits.base = tRet.result[_config.pair].base;
     _pairUnits.quote = tRet.result[_config.pair].quote;
     _cropFactor = cF;
+
+
+    /* set balance */
+    if (_config.balanceType === 'ownBalance') {
+
+      _oBalance = _config.oBalanceAmount;
+
+    } else {
+
+      /* get available balance from kraken.com */
+      var sRet = _syncApiCall('Balance', null);
+      if (sRet.error !== ExError.ok) return sRet;
+
+
+      /* check returned quote balance */
+      _kBalance = parseFloat(sRet.result[_pairUnits.quote]);
+      if (isNaN(_kBalance)) return errHandle(ExError.parseError, null)
+
+    }
 
 
     logger.verbose(_logPreMsg + '...trade pair settings set');
@@ -652,7 +684,12 @@ export function ExKraken(logger) {
    */
   this.getInfo = function() {
     logger.debug(_logPreMsg + 'getInfo()');
-    return errHandle(ExError.ok, [{ title: 'Own Balance', value: _oBalance }]);
+
+    var tmp = 0;
+    if (_config.balanceType === 'ownBalance') tmp = _oBalance;
+    else tmp = _kBalance;
+
+    return errHandle(ExError.ok, [{ title: 'Balance', value: tmp }]);
   }
 
 
@@ -746,6 +783,7 @@ export function ExKraken(logger) {
         if (coRet.result) {
           _orderOpen = false;
           _oBalance -= _tPrice * _volume;
+          _kBalance -= _tPrice * _volume;
 
           logger.verbose(_logPreMsg + '...order closed. bought');         
           logger.debug(_logPreMsg + 'buy() end');
@@ -776,7 +814,6 @@ export function ExKraken(logger) {
     /* wrong parameter */
     _boughtNotifyFunc(this.getInstInfo().result, errHandle(ExError.error, null));
   }
-
 
 
   /**
@@ -830,6 +867,7 @@ export function ExKraken(logger) {
         if (coRet.result) {
           _orderOpen = false;
           _oBalance += _tPrice * _volume;
+          _kBalance += _tPrice * _volume;
 
           logger.verbose(_logPreMsg + '...order closed. Sold'); 
           logger.debug(_logPreMsg + 'sell() end');
