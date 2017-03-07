@@ -21,7 +21,7 @@
     "DefaultLogEnabled": "true",
     
     "_":  "Sets default log level (ascending order: debug, verbose, info, warn, error)",
-    "DefaultLogLevel": "verbose"
+    "DefaultLogLevel": "debug"
   },
 
 
