@@ -236,7 +236,7 @@ export function ExKraken(logger) {
       logger.debug(_logPreMsg + '  ...calling API "' + method + '"...');
       _kraken.api(method, params, function(error, data) {
         if (error) {
-          logger.debug(_logPreMsg + '  ..."' + method + '" ' + error);
+          logger.error(_logPreMsg + '  ..."' + method + '" ' + error);
           return done(ExError.srvConError, error);
         }
         else {
@@ -265,6 +265,9 @@ export function ExKraken(logger) {
       /* check returned quote balance */
       var balance = parseFloat(sRet.result[_pairUnits.quote]);
       if (isNaN(balance)) return errHandle(ExError.parseError, null)
+      
+      /* TODO: check if quote value is in sRet.result array and if not throw "no funds available" error */
+      // console.log(JSON.stringify(sRet))
 
 
       /* set balance to _oBalance if ownBalance is configured */
