@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.4.1
+ * @version 0.4.2
  *
  * 
  * CHANGES:
@@ -21,6 +21,7 @@
  * 11-Jan-2017 : added logging mechanism
  * 02-Mar-2017 : added error logging in api call
  * 03-Mar-2017 : fixed bug while trading with krakenBalance
+ * 07-Mar-2017 : changed kraken client from node package to KrakenClient class
  */
 
 /***********************************************************************
@@ -31,7 +32,7 @@
 
 
 import { IExchange } from '../../apis/IExchange.js';
-var KrakenClient = Meteor.npmRequire('kraken-api'); // npm import 
+import { KrakenClient } from '../../apis/KrakenClient.js';
 
 
 /***********************************************************************
