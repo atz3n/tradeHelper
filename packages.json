@@ -1,5 +1,6 @@
 {
   "winston": "0.9.0",
   "winston-mongodb": "1.4.0",
-  "kraken-api": "0.1.7"
+  "querystring": "0.2.0",
+  "request": "2.27.0"
 }

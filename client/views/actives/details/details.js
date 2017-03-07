@@ -43,6 +43,8 @@ var processActiveData = function(data) {
     pE.num = data._id + cntEx;
     cntEx++;
 
+    var exPageString = convertCamelCaseToUnderscore(e.instInfo.type);
+    pE.link = "/exchanges/" + exPageString + "/" + "details_" + exPageString + "/" + e.instInfo.id;
 
     if (pData.position === 'none') {
       pE.inPrice = '-';
@@ -91,7 +93,7 @@ var processActiveData = function(data) {
 
   for (var i = 0; i < data.bundles.length; i++) {
     pData.bundles[i] = {};
-    pData.bundles[i].name = data.bundles[i].name;
+    pData.bundles[i].name = "Bundle " + (i + 1);
     pData.bundles[i].plugins = new Array(data.bundles[i].plugins.length);
 
     for (var j = 0; j < data.bundles[i].plugins.length; j++) {
@@ -100,6 +102,9 @@ var processActiveData = function(data) {
       for (var k = 0; k < data.plugins.length; k++) {
         if (data.bundles[i].plugins[j].pId === data.plugins[k].instInfo.id) {
           pData.bundles[i].plugins[j] = Object.assign({}, data.plugins[k]);
+
+          var plPageString = convertCamelCaseToUnderscore(data.plugins[k].instInfo.type);
+          pData.bundles[i].plugins[j].link = "/plugins/" + plPageString + "/" + "details_" + plPageString + "/" + data.plugins[k].instInfo.id;
         }
       }
 

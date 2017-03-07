@@ -16,3 +16,7 @@ this.getUserRole = function(userId) {
 this.getUserName = function(userId) {
 	return Users.findOne({_id: userId}).profile.name;
 }
+
+this.convertCamelCaseToUnderscore = function(string) {
+	return string.replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
+}
