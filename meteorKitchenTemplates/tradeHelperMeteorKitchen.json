@@ -505,6 +505,14 @@
             "min": 0
           },
           {
+            "name": "thresholdExceedCnt",
+            "title": "Threshold Exceedings",
+            "type": "integer",
+            "required": true,
+            "default": 1,
+            "min": 1
+          },
+          {
             "name": "enLong",
             "title": "Enable Long",
             "type": "bool",
@@ -580,6 +588,14 @@
             "required": true,
             "default": 3,
             "min": 0
+          },
+          {
+            "name": "thresholdExceedCnt",
+            "title": "Threshold Exceedings",
+            "type": "integer",
+            "required": true,
+            "default": 1,
+            "min": 1
           },
           {
             "name": "enLong",
