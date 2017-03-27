@@ -39,7 +39,7 @@ PlThresholdOut.ConfigDefault = {
 
     thresholdBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
 
-    thresholdType: 'value', // value (total amount), percentage (relative to in price)
+    thresholdType: 'value', // value (total amount), percentage (relative to high/low price)
     thresholdAmount: 0,
     thresholdExceedCnt: 1, // plugin only sets an action (buy/sell) when the threshold is exceeded this number of times in a row
 

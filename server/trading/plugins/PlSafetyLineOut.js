@@ -6,33 +6,13 @@
  * <Optional informations>
  *
  * 
- * @author <Your Name>
+ * @author Atzen
  * @version 1.0.0
  *
  * 
  * CHANGES:
  * 02-Jun-2015 : Initial version
  */
-
-/***********************************************************************
-------------------------
-    HOW TO USE
-------------------------
-
-This is a template for an Plugin. It includes the IPlugin interface functions
-and some basic logic.
-
-
-Replace the fields marked with <YOUR CODE: <some description>> with your code inside.
-
-Of course, your allowed to add any, delete or modify every line inside this template as long
-as the functionality is kept and the api's are served.
-
-
-Delete this How To area after finishing your work.
-
-************************************************************************/
-
 
 
 import { IPlugin } from '../../apis/IPlugin.js'
@@ -50,11 +30,15 @@ import { IPlugin } from '../../apis/IPlugin.js'
  * Configuration structure
  * @type {Object}
  */
-<YOUR CODE: plugin name with prefix "Pl">.ConfigDefault = {
+PlSafetyLineOut.ConfigDefault = {
   id: 'undefined',
   name: 'undefined',
 
-  <YOUR CODE: plugin specific config variables> 
+  safetyLineBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
+
+  safetyLineType: 'value', // value (total amount), percentage (relative to in price)
+  safetyLinSteps: 0,
+
 
   enLong: true, // enable long trading
   enShort: true // enable short trading
@@ -73,7 +57,7 @@ import { IPlugin } from '../../apis/IPlugin.js'
   Class
  ***********************************************************************/
 
-export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
+export function PlSafetyLineOut(logger) {
 
   /***********************************************************************
     Inheritances
@@ -90,7 +74,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Internal configuration object
    * @type {Object}
    */
-  var _config = Object.assign({}, <YOUR CODE: Plugin name with prefix "Pl">.ConfigDefault);
+  var _config = Object.assign({}, PlSafetyLineOut.ConfigDefault);
 
   /**
    * Current Price
@@ -122,9 +106,29 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    */
   var _logPreMsg = '';
 
+  /**
+   * In Price
+   * @type {Number}
+   */
+  var _inPrice = 0;
 
-  <YOUR CODE: private variables>
+  /**
+   * safety line exceeded counter
+   * @type {Number}
+   */
+  var _sflExCnt = 0;
 
+  /**
+   * safety line step counter
+   * @type {Number}
+   */
+  var _stepCnt = 0;
+
+    /**
+   * safety line step width
+   * @type {Number}
+   */
+  var _stepDiff = 0;
 
   /**
    * Callback function that will be called when a buy action is calculated
@@ -152,12 +156,37 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
   var _checkConfig = function() {
     if (_config.id === 'undefined') return false;
 
-    <YOUR CODE: configuration checks>
+    if (_config.safetyLineBase !== 'price' && _config.safetyLineBase !== 'profit') return false;
+
+    if (_config.safetyLineType !== 'value' && _config.safetyLineType !== 'percentage') return false;
+
+    if (isNaN(_config.safetyLineWidth)) return false;
+    if (_config.safetyLineWidth < 0) return false;
+
+    if (_config.safetyLineType === 'percentage') {
+        if (_config.safetyLineWidth > 100) return false;
+    }
 
     if (typeof _config.enLong !== 'boolean') return false;
     if (typeof _config.enShort !== 'boolean') return false;
 
     return true;
+  }
+
+
+
+
+
+  var _getStepDiff = function(inPrice) {
+    let diff = 0;
+
+    if (_config.safetyLineType === 'percentage') {
+        diff = inPrice * _config.safetyLineWidth / 100;
+    } else {
+        diff = _config.safetyLineWidth;
+    }
+
+    if (_config.safetyLineBase === 'profit') diff *= _inVolume;
   }
 
 
@@ -169,12 +198,13 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    * Interface function (see IPlugin.js for detail informations)
    */
   this.setConfig = function(configuration) {
-    _logPreMsg = '<YOUR CODE: plugin name with prefix "Pl"> ' + configuration.id + ': ';
+    _logPreMsg = 'PlSafetyLineOut ' + configuration.id + ': ';
     logger.debug(_logPreMsg + 'setConfig()');
 
 
     _config = mergeObjects(_config, configuration);
 
+    _config.safetyLineExceedCnt = 1; // For future integration
 
     return _checkConfig();
   }
@@ -188,7 +218,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
     
 
     return [
-      <YOUR CODE: configuration array objects>
+      { title: 'Safety Line Base', value: _config.safetyLineBase },
+      { title: 'Safety Line Type', value: _config.safetyLineType },
+      { title: 'Safety Line Steps', value: _config.safetyLineWidth },
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
       { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
     ];
@@ -212,10 +244,11 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
 
     
     var tmp = [
-      <YOUR CODE: information array objects>
+      { title: 'Safety Line', value: '-' },
+      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
 
-    <YOUR CODE: some view logic>
+    if (_position === 'long') tmp[0].value = cropFracDigits(_inPrice + _stepCnt * _stepDiff, 6)
 
     if(!_active) for(i in tmp) tmp[i].value = '-';
 
@@ -232,10 +265,9 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
 
     _position = 'none';
 
-    <YOUR CODE: set some price values>
 
     /* set active state */
-    <YOUR CODE: set _active value to true/false>
+    _active = false;
   }
 
 
@@ -247,7 +279,8 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
 
 
     if(_active) {
-      <YOUR CODE: set some price values>
+      _stepCnt = 0;
+      _sflExCnt = 0;
     }
   }
 
@@ -260,12 +293,42 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
 
       logger.debug(_logPreMsg + 'update() start');
 
-      
-       _curPrice = price;
 
-       
-      <YOUR CODE: update logic> // add logger.verbose(_logPreMsg + 'buy notification'); / logger.verbose(_logPreMsg + 'sell notification')); 
-                                // when calling _buyNotifyFunc / _sellNotifyFunc
+      _curPrice = price;
+
+
+
+      /* stop long position */
+      if (_position === 'long') {
+        if(_curPrice >= _inPrice + (_stepCnt + 1) * _stepDiff) _stepCnt++;
+
+        if(_stepCnt !== 0) {
+
+          if (_curPrice < _inPrice + _stepCnt * _stepDiff) _sflExCnt++;
+          else _sflExCnt = 0;
+
+          if (_sflExCnt >= _config.safetyLineExceedCnt) {
+              logger.verbose(_logPreMsg + 'sell notification');
+              _sellNotifyFunc(this.getInstInfo());
+          }
+
+        }
+
+      }
+
+
+      /* stop short position */
+      if (_position === 'short') {
+
+          if (diff > _config.thresholdAmount) _sflExCnt++;
+          else _sflExCnt = 0;
+
+          if (_sflExCnt >= _config.thresholdExceedCnt) {
+              logger.verbose(_logPreMsg + 'buy notification');
+              _buyNotifyFunc(this.getInstInfo());
+          }
+      }      
+
 
 
       logger.debug(_logPreMsg + 'update() end');
@@ -287,8 +350,10 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       {
         _position = 'long';
         
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
+        if (_config.enLong) _active = true;
+        // _threshold = price;
+        _inPrice = price;
+        _stepDiff = _getStepDiff(price);
 
         _inVolume = volume;
       } 
@@ -299,8 +364,8 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       {
         _position = 'none';
         
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
+        // <YOUR CODE: set _active variable to true/false>
+        // <YOUR CODE: set your price variable>
 
         _inVolume = 0;
       }
@@ -325,8 +390,8 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       {
         _position = 'short';
 
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
+        // <YOUR CODE: set _active variable to true/false>
+        // <YOUR CODE: set your price variable>
 
         _inVolume = volume;
       } 
@@ -337,8 +402,11 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
       {
         _position = 'none';
 
-        <YOUR CODE: set _active variable to true/false>
-        <YOUR CODE: set your price variable>
+        _active = false;
+        _stepCnt = 0;
+        _stepDiff = 0;
+        _sflExCnt = 0;
+        _inPrice = 0;
 
         _inVolume = 0;
       }
@@ -372,7 +440,7 @@ export function <YOUR CODE: plugin name with prefix "Pl">(logger) {
    */
   this.getInstInfo = function() {
     logger.debug(_logPreMsg + 'getInstInfo()');
-    return { id: _config.id, name: _config.name, type: "<YOUR CODE: plugin name with prefix "Pl">" };
+    return { id: _config.id, name: _config.name, type: "PlSafetyLineOut" };
   }
 
 
