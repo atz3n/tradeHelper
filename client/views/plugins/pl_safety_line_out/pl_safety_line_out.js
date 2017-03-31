@@ -1,26 +1,25 @@
 var pageSession = new ReactiveDict();
 
-Template.PluginsPlThresholdOut.rendered = function() {
+Template.PluginsPlSafetyLineOut.rendered = function() {
 	Session.set('activePage', 'plugins');
 };
 
-Template.PluginsPlThresholdOut.events({
+Template.PluginsPlSafetyLineOut.events({
 	
 });
 
-Template.PluginsPlThresholdOut.helpers({
+Template.PluginsPlSafetyLineOut.helpers({
 	
 });
 
-
-var PluginsPlThresholdOutViewPlThresholdOutsItems = function(cursor) {
+var PluginsPlSafetyLineOutViewPlSafetyLineOutsItems = function(cursor) {
 	if(!cursor) {
 		return [];
 	}
 
-	var searchString = pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSearchString");
-	var sortBy = pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSortBy");
-	var sortAscending = pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSortAscending");
+	var searchString = pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString");
+	var sortBy = pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortBy");
+	var sortAscending = pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortAscending");
 	if(typeof(sortAscending) == "undefined") sortAscending = true;
 
 	var raw = cursor.fetch();
@@ -34,7 +33,7 @@ var PluginsPlThresholdOutViewPlThresholdOutsItems = function(cursor) {
 	} else {
 		searchString = searchString.replace(".", "\\.");
 		var regEx = new RegExp(searchString, "i");
-		var searchFields = ["name", "exchange", "thresholdBase", "thresholdType", "thresholdAmount", "thresholdExceedCnt", "enLong", "enShort"];
+		var searchFields = ["name", "exchange", "safetyLineBase", "safetyLineType", "safetyLineStepWidth", "enLong", "enShort"];
 		filtered = _.filter(raw, function(item) {
 			var match = false;
 			_.each(searchFields, function(field) {
@@ -62,8 +61,8 @@ var PluginsPlThresholdOutViewPlThresholdOutsItems = function(cursor) {
 	return filtered;
 };
 
-var PluginsPlThresholdOutViewPlThresholdOutsExport = function(cursor, fileType) {
-	var data = PluginsPlThresholdOutViewPlThresholdOutsItems(cursor);
+var PluginsPlSafetyLineOutViewPlSafetyLineOutsExport = function(cursor, fileType) {
+	var data = PluginsPlSafetyLineOutViewPlSafetyLineOutsItems(cursor);
 	var exportFields = [];
 
 	var str = convertArrayOfObjects(data, exportFields, fileType);
@@ -74,12 +73,12 @@ var PluginsPlThresholdOutViewPlThresholdOutsExport = function(cursor, fileType) 
 }
 
 
-Template.PluginsPlThresholdOutViewPlThresholdOuts.rendered = function() {
-	pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsStyle", "table");
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOuts.rendered = function() {
+	pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsStyle", "table");
 	
 };
 
-Template.PluginsPlThresholdOutViewPlThresholdOuts.events({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOuts.events({
 	"submit #dataview-controls": function(e, t) {
 		return false;
 	},
@@ -92,7 +91,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOuts.events({
 			if(searchInput) {
 				searchInput.focus();
 				var searchString = searchInput.val();
-				pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSearchString", searchString);
+				pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString", searchString);
 			}
 
 		}
@@ -108,7 +107,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOuts.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					var searchString = searchInput.val();
-					pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSearchString", searchString);
+					pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString", searchString);
 				}
 
 			}
@@ -123,7 +122,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOuts.events({
 				var searchInput = form.find("#dataview-search-input");
 				if(searchInput) {
 					searchInput.val("");
-					pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSearchString", "");
+					pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString", "");
 				}
 
 			}
@@ -135,100 +134,100 @@ Template.PluginsPlThresholdOutViewPlThresholdOuts.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.pl_threshold_out.insert_pl_threshold_out", {});
+		Router.go("plugins.pl_safety_line_out.insert_pl_safety_line_out", {});
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		PluginsPlThresholdOutViewPlThresholdOutsExport(this.pl_threshold_outs, "csv");
+		PluginsPlSafetyLineOutViewPlSafetyLineOutsExport(this.pl_safety_line_outs, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		PluginsPlThresholdOutViewPlThresholdOutsExport(this.pl_threshold_outs, "csv");
+		PluginsPlSafetyLineOutViewPlSafetyLineOutsExport(this.pl_safety_line_outs, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		PluginsPlThresholdOutViewPlThresholdOutsExport(this.pl_threshold_outs, "tsv");
+		PluginsPlSafetyLineOutViewPlSafetyLineOutsExport(this.pl_safety_line_outs, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		PluginsPlThresholdOutViewPlThresholdOutsExport(this.pl_threshold_outs, "json");
+		PluginsPlSafetyLineOutViewPlSafetyLineOutsExport(this.pl_safety_line_outs, "json");
 	}
 
 	
 });
 
-Template.PluginsPlThresholdOutViewPlThresholdOuts.helpers({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOuts.helpers({
 
 	"insertButtonClass": function() {
-		return PlThresholdOuts.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
+		return PlSafetyLineOuts.userCanInsert(Meteor.userId(), {}) ? "" : "hidden";
 	},
 
 	"isEmpty": function() {
-		return !this.pl_threshold_outs || this.pl_threshold_outs.count() == 0;
+		return !this.pl_safety_line_outs || this.pl_safety_line_outs.count() == 0;
 	},
 	"isNotEmpty": function() {
-		return this.pl_threshold_outs && this.pl_threshold_outs.count() > 0;
+		return this.pl_safety_line_outs && this.pl_safety_line_outs.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.pl_threshold_outs && pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSearchString") && PluginsPlThresholdOutViewPlThresholdOutsItems(this.pl_threshold_outs).length == 0;
+		return this.pl_safety_line_outs && pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString") && PluginsPlSafetyLineOutViewPlSafetyLineOutsItems(this.pl_safety_line_outs).length == 0;
 	},
 	"searchString": function() {
-		return pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSearchString");
+		return pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSearchString");
 	},
 	"viewAsTable": function() {
-		return pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsStyle") == "table";
+		return pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsStyle") == "table";
 	},
 	"viewAsList": function() {
-		return pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsStyle") == "list";
+		return pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsStyle") == "list";
 	},
 	"viewAsGallery": function() {
-		return pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsStyle") == "gallery";
+		return pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsStyle") == "gallery";
 	}
 
 	
 });
 
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTable.rendered = function() {
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTable.rendered = function() {
 	
 };
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTable.events({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTable.events({
 	"click .th-sortable": function(e, t) {
 		e.preventDefault();
-		var oldSortBy = pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSortBy");
+		var oldSortBy = pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortBy");
 		var newSortBy = $(e.target).attr("data-sort");
 
-		pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSortBy", newSortBy);
+		pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortBy", newSortBy);
 		if(oldSortBy == newSortBy) {
-			var sortAscending = pageSession.get("PluginsPlThresholdOutViewPlThresholdOutsSortAscending") || false;
-			pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSortAscending", !sortAscending);
+			var sortAscending = pageSession.get("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortAscending") || false;
+			pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortAscending", !sortAscending);
 		} else {
-			pageSession.set("PluginsPlThresholdOutViewPlThresholdOutsSortAscending", true);
+			pageSession.set("PluginsPlSafetyLineOutViewPlSafetyLineOutsSortAscending", true);
 		}
 	}
 });
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTable.helpers({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTable.helpers({
 	"tableItems": function() {
-		return PluginsPlThresholdOutViewPlThresholdOutsItems(this.pl_threshold_outs);
+		return PluginsPlSafetyLineOutViewPlSafetyLineOutsItems(this.pl_safety_line_outs);
 	}
 });
 
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.rendered = function() {
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTableItems.rendered = function() {
 	
 };
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("plugins.pl_threshold_out.details_pl_threshold_out", {plThresholdOutId: this._id});
+		Router.go("plugins.pl_safety_line_out.details_pl_safety_line_out", {plSafetyLineOutId: this._id});
 		return false;
 	},
 
@@ -243,7 +242,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
 		var values = {};
 		values[fieldName] = !this[fieldName];
 
-		PlThresholdOuts.update({ _id: this._id }, { $set: values });
+		PlSafetyLineOuts.update({ _id: this._id }, { $set: values });
 
 		return false;
 	},
@@ -254,7 +253,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
 		var tmp = this;
 		delete tmp._id;
 
-		PlThresholdOuts.insert(tmp);
+		PlSafetyLineOuts.insert(tmp);
 		return false;
 	},
 
@@ -270,7 +269,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
 					label: "Yes",
 					className: "btn-success",
 					callback: function() {
-						PlThresholdOuts.remove({ _id: me._id });
+						PlSafetyLineOuts.remove({ _id: me._id });
 					}
 				},
 				danger: {
@@ -283,7 +282,7 @@ Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.pl_threshold_out.edit_pl_threshold_out", {plThresholdOutId: this._id});
+		Router.go("plugins.pl_safety_line_out.edit_pl_safety_line_out", {plSafetyLineOutId: this._id});
 		return false;
 	},
 	"click #actives-button": function(e, t) {
@@ -293,14 +292,14 @@ Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.events({
 	}
 });
 
-Template.PluginsPlThresholdOutViewPlThresholdOutsTableItems.helpers({
+Template.PluginsPlSafetyLineOutViewPlSafetyLineOutsTableItems.helpers({
 	"checked": function(value) { return value ? "checked" : "" }, 
 	"editButtonClass": function() {
-		return PlThresholdOuts.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
+		return PlSafetyLineOuts.userCanUpdate(Meteor.userId(), this) ? "" : "hidden";
 	},
 
 	"deleteButtonClass": function() {
-		return PlThresholdOuts.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
+		return PlSafetyLineOuts.userCanRemove(Meteor.userId(), this) ? "" : "hidden";
 	},
 	"rowClass": function() {
 		if(this.actives > 0) return "warning";

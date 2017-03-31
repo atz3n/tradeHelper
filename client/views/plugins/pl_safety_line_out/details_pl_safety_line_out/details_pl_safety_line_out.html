@@ -1,4 +1,4 @@
-<template name="PluginsPlThresholdOutDetailsPlThresholdOut">
+<template name="PluginsPlSafetyLineOutDetailsPlSafetyLineOut">
 	<div class="page-container container" id="content">
 		<div class="row" id="title_row">
 			<div class="col-md-12">
@@ -6,12 +6,12 @@
 				</div>
 			</div>
 		</div>
-		{{> PluginsPlThresholdOutDetailsPlThresholdOutDetailsForm}}
+		{{> PluginsPlSafetyLineOutDetailsPlSafetyLineOutDetailsForm}}
 	</div>
 </template>
 
-<template name="PluginsPlThresholdOutDetailsPlThresholdOutDetailsForm">
-	<div id="plugins-pl-threshold-out-details-pl-threshold-out-details-form" class="">
+<template name="PluginsPlSafetyLineOutDetailsPlSafetyLineOutDetailsForm">
+	<div id="plugins-pl-safety-line-out-details-pl-safety-line-out-details-form" class="">
 		<h2 id="component-title">
 			<a href="#" id="form-back-button" class="btn btn-default" title="back">
 				<span class="fa fa-chevron-left">
@@ -37,7 +37,7 @@
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-name">
-						{{pl_threshold_out.name}}
+						{{pl_safety_line_out.name}}
 					</p>
 				</div>
 			</div>
@@ -47,7 +47,7 @@
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static">
-						{{pl_threshold_out._id}}
+						{{pl_safety_line_out._id}}
 					</p>
 				</div>
 			</div>
@@ -56,48 +56,38 @@
 					Exchange
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static">
+					<p class="form-control-static  control-field-exchange">
 						{{exchangeName}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-threshold-base">
-				<label for="thresholdBase" class="col-sm-3 control-label">
-					Threshold Base
+			<div class="form-group  field-safety-line-base">
+				<label for="safetyLineBase" class="col-sm-3 control-label">
+					Safety Line Base
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-threshold-base">
-						{{pl_threshold_out.thresholdBase}}
+					<p class="form-control-static  control-field-safety-line-base">
+						{{pl_safety_line_out.safetyLineBase}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-threshold-type">
-				<label for="thresholdType" class="col-sm-3 control-label">
-					Threshold Type
+			<div class="form-group  field-safety-line-type">
+				<label for="safetyLineType" class="col-sm-3 control-label">
+					Safety Line Type
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-threshold-type">
-						{{pl_threshold_out.thresholdType}}
+					<p class="form-control-static  control-field-safety-line-type">
+						{{pl_safety_line_out.safetyLineType}}
 					</p>
 				</div>
 			</div>
-			<div class="form-group  field-threshold-amount">
-				<label for="thresholdAmount" class="col-sm-3 control-label">
-					Threshold Value
+			<div class="form-group  field-safety-line-step-width">
+				<label for="safetyLineStepWidth" class="col-sm-3 control-label">
+					Safety Line Step Width
 				</label>
 				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-threshold-amount">
-						{{pl_threshold_out.thresholdAmount}}
-					</p>
-				</div>
-			</div>
-			<div class="form-group  field-threshold-exceed-cnt">
-				<label for="thresholdExceedCnt" class="col-sm-3 control-label">
-					Threshold Exceedings
-				</label>
-				<div class="input-div col-sm-9">
-					<p class="form-control-static  control-field-threshold-exceed-cnt">
-						{{pl_threshold_out.thresholdExceedCnt}}
+					<p class="form-control-static  control-field-safety-line-step-width">
+						{{pl_safety_line_out.safetyLineStepWidth}}
 					</p>
 				</div>
 			</div>
@@ -107,7 +97,7 @@
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-en-long">
-						{{booleanToYesNo pl_threshold_out.enLong}}
+						{{booleanToYesNo pl_safety_line_out.enLong}}
 					</p>
 				</div>
 			</div>
@@ -117,7 +107,7 @@
 				</label>
 				<div class="input-div col-sm-9">
 					<p class="form-control-static  control-field-en-short">
-						{{booleanToYesNo pl_threshold_out.enShort}}
+						{{booleanToYesNo pl_safety_line_out.enShort}}
 					</p>
 				</div>
 			</div>
