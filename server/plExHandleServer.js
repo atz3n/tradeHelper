@@ -10,6 +10,7 @@ import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
 import { PlThresholdIn } from './trading/plugins/PlThresholdIn.js';
 import { PlThresholdOut } from './trading/plugins/PlThresholdOut.js';
 import { PlDummy } from './trading/plugins/PlDummy.js';
+import { PlSafetyLineOut } from './trading/plugins/PlSafetyLineOut.js';
 
 import { ExTestData } from './trading/exchanges/ExTestData.js';
 import { ExKraken } from './trading/exchanges/ExKraken.js';
@@ -29,6 +30,7 @@ pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
 pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
 pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
 pluginHandler.setObject('PlDummies', PlDummies);
+pluginHandler.setObject('PlSafetyLineOuts', PlSafetyLineOuts);
 
 
 /* Exchanges */
@@ -54,9 +56,10 @@ this.createPlugin = function(plugin, logger, strPlHandler) {
 
   if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
   if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlTakeProfit.ConfigDefault);
-  if (plugin.type === 'plThresholdIns') conf = Object.assign({}, PlThresholdIn.ConfigDefault);
-  if (plugin.type === 'plThresholdOuts') conf = Object.assign({}, PlThresholdOut.ConfigDefault);
-  if (plugin.type === 'plDummies') conf = Object.assign({}, PlDummy.ConfigDefault);
+  if (plugin.type === 'plThresholdIn') conf = Object.assign({}, PlThresholdIn.ConfigDefault);
+  if (plugin.type === 'plThresholdOut') conf = Object.assign({}, PlThresholdOut.ConfigDefault);
+  if (plugin.type === 'plDummy') conf = Object.assign({}, PlDummy.ConfigDefault);
+  if (plugin.type === 'plSafetyLineOut') conf = Object.assign({}, PlSafetyLineOut.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -82,6 +85,7 @@ this.createPlugin = function(plugin, logger, strPlHandler) {
   if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(logger), exId: plugin.exchange._id });
   if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(logger), exId: plugin.exchange._id });
   if (plugin.type === 'plDummy') strPlHandler.setObject(plugin._id, { inst: new PlDummy(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plSafetyLineOut') strPlHandler.setObject(plugin._id, { inst: new PlSafetyLineOut(logger), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 

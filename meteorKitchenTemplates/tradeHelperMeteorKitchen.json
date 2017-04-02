@@ -461,7 +461,7 @@
             "required": true
           },
           {
-            "name": "thresholdBaseBase",
+            "name": "thresholdBase",
             "title": "Threshold Base",
             "type": "string",
             "input": "radio",
@@ -626,7 +626,101 @@
         ],
         "before_insert_code": "doc.type = 'plThresholdIn';"
       },
-      ,
+      {
+        "name": "plSafetyLineOuts",
+        "fields": [
+          {
+            "name": "name",
+            "title": "Name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "exchange",
+            "title": "Exchange",
+            "type": "string",
+            "input": "select",
+            "input_items": [
+              {
+                "title": "Dummy",
+                "value": "Dummy"
+              }
+            ],
+            "required": true
+          },
+          {
+            "name": "safetyLineBase",
+            "title": "Safety Line Base",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "price",
+                "value": "price"
+              },
+              {
+                "title": "profit",
+                "value": "profit"
+              }
+            ],
+            "required": true,
+            "default": "profit"
+          },
+          {
+            "name": "safetyLineType",
+            "title": "Safety Line Type",
+            "type": "string",
+            "input": "radio",
+            "input_items": [
+              {
+                "title": "value",
+                "value": "value"
+              },
+              {
+                "title": "percentage",
+                "value": "percentage"
+              }
+            ],
+            "required": true,
+            "default": "percentage"
+          },
+          {
+            "name": "safetyLineStepWidth",
+            "title": "Safety Line Step Width",
+            "type": "integer",
+            "required": true,
+            "default": 5,
+            "min": 0
+          },
+          {
+            "name": "enLong",
+            "title": "Enable Long",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "true"
+          },
+          {
+            "name": "enShort",
+            "title": "Enable Short",
+            "type": "bool",
+            "input": "checkbox",
+            "display_helper": "booleanToYesNo",
+            "default": "false"
+          }
+        ],
+        "owner_field": "ownerId",
+        "roles_allowed_to_read": [
+          "owner"
+        ],
+        "roles_allowed_to_update": [
+          "owner"
+        ],
+        "roles_allowed_to_delete": [
+          "owner"
+        ],
+        "before_insert_code": "doc.type = 'plSafetyLine';"
+      },
       {
         "name": "plDummies",
         "fields": [
@@ -1215,6 +1309,27 @@
         "collection": "plThresholdOuts",
         "filter": {
           "_id": ":plThresholdOutId"
+        },
+        "find_one": true
+      },
+      {
+        "name": "plSafetyLineOuts",
+        "collection": "plSafetyLineOuts",
+        "filter": {}
+      },
+      {
+        "name": "plSafetyLineOuts_empty",
+        "collection": "plSafetyLineOuts",
+        "filter": {
+          "_id": null
+        },
+        "find_one": true
+      },
+      {
+        "name": "plSafetyLineOut",
+        "collection": "plSafetyLineOuts",
+        "filter": {
+          "_id": ":plSafetyLineOutId"
         },
         "find_one": true
       },
@@ -2032,6 +2147,89 @@
               "type": "page"
             },
             {
+              "name": "plSafetyLineOut",
+              "components": [
+                {
+                  "name": "viewPlSafetyLineOuts",
+                  "title": "SafetyLineOut",
+                  "type": "data_view",
+                  "text_if_empty": "No Safety Line configured",
+                  "query_name": "plSafetyLineOuts",
+                  "query_params": [],
+                  "insert_route": "plugins.plSafetyLineOut.insertPlSafetyLineOut",
+                  "edit_route": "plugins.plSafetyLineOut.editPlSafetyLineOut",
+                  "edit_route_params": [
+                    {
+                      "name": "plSafetyLineOutId",
+                      "value": "this._id"
+                    }
+                  ],
+                  "details_route": "plugins.plSafetyLineOut.detailsPlSafetyLineOut",
+                  "details_route_params": [
+                    {
+                      "name": "plSafetyLineOutId",
+                      "value": "this._id"
+                    }
+                  ]
+                }
+              ],
+              "pages": [
+                {
+                  "name": "insertPlSafetyLineOut",
+                  "components": [
+                    {
+                      "name": "insert_form",
+                      "type": "form",
+                      "mode": "insert",
+                      "title": "New SafetyLineOut",
+                      "query_name": "plSafetyLineOuts_empty",
+                      "query_params": [],
+                      "submit_route": "plugins.plSafetyLineOut",
+                      "cancel_route": "plugins.plSafetyLineOut"
+                    }
+                  ]
+                },
+                {
+                  "name": "detailsPlSafetyLineOut",
+                  "route_params": [
+                    "plSafetyLineOutId"
+                  ],
+                  "components": [
+                    {
+                      "name": "details_form",
+                      "type": "form",
+                      "mode": "read_only",
+                      "title": "Details",
+                      "layout": "horizontal",
+                      "query_name": "plSafetyLineOut",
+                      "query_params": [],
+                      "close_route": "plugins.plSafetyLineOut",
+                      "back_route": "plugins.plSafetyLineOut"
+                    }
+                  ]
+                },
+                {
+                  "name": "editPlSafetyLineOut",
+                  "route_params": [
+                    "plSafetyLineOutId"
+                  ],
+                  "components": [
+                    {
+                      "name": "edit_form",
+                      "type": "form",
+                      "mode": "update",
+                      "title": "Edit SafetyLineOut",
+                      "submit_route": "plugins.plSafetyLineOut",
+                      "cancel_route": "plugins.plSafetyLineOut",
+                      "query_name": "plSafetyLineOut",
+                      "query_params": []
+                    }
+                  ]
+                }
+              ],
+              "type": "page"
+            },
+            {
               "name": "plDummy",
               "components": [
                 {
@@ -2140,6 +2338,10 @@
                 {
                   "title": "ThresholdOut",
                   "route": "plugins.plThresholdOut"
+                },
+                {
+                  "title": "SafetyLineOut",
+                  "route": "plugins.plSafetyLineOut"
                 }
               ]
             }
