@@ -10,6 +10,7 @@ import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
 import { PlThresholdIn } from './trading/plugins/PlThresholdIn.js';
 import { PlThresholdOut } from './trading/plugins/PlThresholdOut.js';
 import { PlDummy } from './trading/plugins/PlDummy.js';
+import { PlSafetyLineOut } from './trading/plugins/PlSafetyLineOut.js';
 
 import { ExTestData } from './trading/exchanges/ExTestData.js';
 import { ExKraken } from './trading/exchanges/ExKraken.js';

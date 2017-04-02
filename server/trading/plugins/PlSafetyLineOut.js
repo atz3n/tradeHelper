@@ -37,7 +37,7 @@ PlSafetyLineOut.ConfigDefault = {
   safetyLineBase: 'profit', // price (curPrice - inPrice), profit ((curPrice - inPrice) * inVolume)
 
   safetyLineType: 'value', // value (total amount), percentage (relative to in price)
-  safetyLinSteps: 0,
+  safetyLineStepWidth: 5,
 
 
   enLong: true, // enable long trading
@@ -160,11 +160,11 @@ export function PlSafetyLineOut(logger) {
 
     if (_config.safetyLineType !== 'value' && _config.safetyLineType !== 'percentage') return false;
 
-    if (isNaN(_config.safetyLineWidth)) return false;
-    if (_config.safetyLineWidth < 0) return false;
+    if (isNaN(_config.safetyLineStepWidth)) return false;
+    if (_config.safetyLineStepWidth < 0) return false;
 
     if (_config.safetyLineType === 'percentage') {
-        if (_config.safetyLineWidth > 100) return false;
+        if (_config.safetyLineStepWidth > 100) return false;
     }
 
     if (typeof _config.enLong !== 'boolean') return false;
@@ -174,19 +174,27 @@ export function PlSafetyLineOut(logger) {
   }
 
 
-
-
-
-  var _getStepDiff = function(inPrice) {
+  var _calcStepDiff = function() {
     let diff = 0;
 
     if (_config.safetyLineType === 'percentage') {
-        diff = inPrice * _config.safetyLineWidth / 100;
+        diff = _inPrice * _config.safetyLineStepWidth / 100;
     } else {
-        diff = _config.safetyLineWidth;
+        diff = _config.safetyLineStepWidth;
     }
 
     if (_config.safetyLineBase === 'profit') diff *= _inVolume;
+
+    _stepDiff = diff;
+  }
+
+
+  var _resetVars = function() {
+    _stepCnt = 0;
+    _stepDiff = 0;
+    _sflExCnt = 0;
+    _inPrice = 0;
+    _inVolume = 0;
   }
 
 
@@ -220,7 +228,7 @@ export function PlSafetyLineOut(logger) {
     return [
       { title: 'Safety Line Base', value: _config.safetyLineBase },
       { title: 'Safety Line Type', value: _config.safetyLineType },
-      { title: 'Safety Line Steps', value: _config.safetyLineWidth },
+      { title: 'Safety Line Step Width', value: _config.safetyLineStepWidth },
       { title: 'Enable Long', value: JSON.stringify(_config.enLong) },
       { title: 'Enable Short', value: JSON.stringify(_config.enShort) }
     ];
@@ -248,7 +256,8 @@ export function PlSafetyLineOut(logger) {
       { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
     ];
 
-    if (_position === 'long') tmp[0].value = cropFracDigits(_inPrice + _stepCnt * _stepDiff, 6)
+    if (_position === 'long' && _stepCnt > 0) tmp[0].value = cropFracDigits(_inPrice + _stepCnt * _stepDiff, 6)
+    if (_position === 'short' && _stepCnt > 0) tmp[0].value = cropFracDigits(_inPrice - _stepCnt * _stepDiff, 6)
 
     if(!_active) for(i in tmp) tmp[i].value = '-';
 
@@ -300,6 +309,7 @@ export function PlSafetyLineOut(logger) {
 
       /* stop long position */
       if (_position === 'long') {
+        
         if(_curPrice >= _inPrice + (_stepCnt + 1) * _stepDiff) _stepCnt++;
 
         if(_stepCnt !== 0) {
@@ -311,24 +321,26 @@ export function PlSafetyLineOut(logger) {
               logger.verbose(_logPreMsg + 'sell notification');
               _sellNotifyFunc(this.getInstInfo());
           }
-
         }
-
       }
 
 
       /* stop short position */
       if (_position === 'short') {
 
-          if (diff > _config.thresholdAmount) _sflExCnt++;
+        if(_curPrice <= _inPrice - (_stepCnt + 1) * _stepDiff) _stepCnt++;
+
+        if(_stepCnt !== 0) {
+
+          if (_curPrice > _inPrice - _stepCnt * _stepDiff) _sflExCnt++;
           else _sflExCnt = 0;
 
-          if (_sflExCnt >= _config.thresholdExceedCnt) {
+          if (_sflExCnt >= _config.safetyLineExceedCnt) {
               logger.verbose(_logPreMsg + 'buy notification');
               _buyNotifyFunc(this.getInstInfo());
           }
+        }
       }      
-
 
 
       logger.debug(_logPreMsg + 'update() end');
@@ -351,9 +363,8 @@ export function PlSafetyLineOut(logger) {
         _position = 'long';
         
         if (_config.enLong) _active = true;
-        // _threshold = price;
         _inPrice = price;
-        _stepDiff = _getStepDiff(price);
+        _calcStepDiff();
 
         _inVolume = volume;
       } 
@@ -364,10 +375,8 @@ export function PlSafetyLineOut(logger) {
       {
         _position = 'none';
         
-        // <YOUR CODE: set _active variable to true/false>
-        // <YOUR CODE: set your price variable>
-
-        _inVolume = 0;
+        _active = false;
+        _resetVars();
       }
 
 
@@ -390,8 +399,9 @@ export function PlSafetyLineOut(logger) {
       {
         _position = 'short';
 
-        // <YOUR CODE: set _active variable to true/false>
-        // <YOUR CODE: set your price variable>
+         if (_config.enShort) _active = true;
+        _inPrice = price;
+        _calcStepDiff();
 
         _inVolume = volume;
       } 
@@ -403,12 +413,7 @@ export function PlSafetyLineOut(logger) {
         _position = 'none';
 
         _active = false;
-        _stepCnt = 0;
-        _stepDiff = 0;
-        _sflExCnt = 0;
-        _inPrice = 0;
-
-        _inVolume = 0;
+        _resetVars();
       }
 
 

@@ -90,7 +90,7 @@
 </template>
 
 <template name="PluginsPlSafetyLineOutViewPlSafetyLineOutsTableItems">
-	<tr id="dataview-table-items-row">
+	<tr class="{{rowClass}}" id="dataview-table-items-row">
 		<td>
 			{{name}}
 		</td>
@@ -98,10 +98,10 @@
 			{{exchangeName}}
 		</td>
 		<td>
-			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enLong" {{checked enLong}}>
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enLong" {{checked enLong}} disabled>
 		</td>
 		<td>
-			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enShort" {{checked enShort}}>
+			<input type="checkbox" class="inline-checkbox {{editButtonClass}}" data-field="enShort" {{checked enShort}} disabled>
 		</td>
 		<td class="td-icon">
 			<span id="duplicate-button" class="fa fa-copy" title="duplicate">
