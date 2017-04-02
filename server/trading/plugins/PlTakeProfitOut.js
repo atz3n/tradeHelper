@@ -7,7 +7,7 @@
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.5.0
  *
  * 
  * CHANGES:
@@ -17,6 +17,7 @@
  * 12-Dez-2016 : Added _active mechanism
  * 05-Jan-2017 : adapted to IPlugin v 4.0.0
  * 11-Jan-2017 : added logging mechanism
+ * 02-Apr-2017 : renamed PlTakeProfit -> PlTakeProfitOut
  */
 
 

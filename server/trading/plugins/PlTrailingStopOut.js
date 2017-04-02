@@ -1,13 +1,13 @@
 /**
  * @description:
- * Class for threshold trading (for in to out positioning)
+ * Class for trailing stop trading (for in to out positioning)
  *
  * 
- * This class implements a configurable threshold to go out of a position
+ * This class implements a configurable trailing stop like trading to go out of a position
  *
  * 
  * @author Atzen
- * @version 0.4.0
+ * @version 0.5.0
  *
  * 
  * CHANGES:
@@ -15,6 +15,7 @@
  * 05-Jan-2017 : adapted to IPlugin v 4.0.0
  * 11-Jan-2017 : added logging mechanism
  * 18-Mar-2017 : added threshold exceeding counter
+ * 02-Apr-2017 : renamed PlThresholdOut -> PlTrailingStopOut
  */
 
 
