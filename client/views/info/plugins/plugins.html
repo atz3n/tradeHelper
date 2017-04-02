@@ -15,18 +15,18 @@
   {{#markdown}}
 <h2 id="tableOfCont">Table of Content</h2> 
 + <a href="#dummy">Dummy</a> 
-+ <a href="#stopLoss">StopLoss</a> 
-+ <a href="#takeProfit">TakeProfit</a> 
-+ <a href="#ThresholdIn">ThresholdIn</a> 
-+ <a href="#ThresholdOut">ThresholdOut</a> 
++ <a href="#stopLossOut">StopLossOut</a> 
++ <a href="#takeProfitOut">TakeProfitOut</a> 
++ <a href="#TrailingStopIn">TrailingStopIn</a> 
++ <a href="#TrailingStopOut">TrailingStopOut</a> 
 
 
 <br/>
 {{> plDummy}}
-{{> plStopLoss}}
-{{> plTakeProfit}}
-{{> plThresholdIn}}
-{{> plThresholdOut}}
+{{> plStopLossOut}}
+{{> plTakeProfitOut}}
+{{> plTrailingStopIn}}
+{{> plTrailingStopOut}}
 
   {{/markdown}}
 </template>
@@ -43,40 +43,44 @@ tbd
 
 
 <!--------------------------------------------------------------- 
-  StopLoss
+  StopLossOut
  ---------------------------------------------------------------->
-<template name='plStopLoss'>
-<h3 id="stopLoss">StopLoss</h3> 
+<template name='plStopLossOut'>
+<h3 id="stopLossOut">StopLossOut</h3> 
+tbd
+[External informations](https://support.kraken.com/hc/en-us/articles/203325793-Stop-Loss-Orders)
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  TakeProfitOut
+ ---------------------------------------------------------------->
+<template name='plTakeProfitOut'>
+<h3 id="takeProfitOut">TakeProfitOut</h3> 
+tbd
+[External informations](https://support.kraken.com/hc/en-us/articles/203053226-Take-Profit-Orders)
+{{> RetToToC}}
+</template>
+
+
+<!--------------------------------------------------------------- 
+  TrailingStopIn
+ ---------------------------------------------------------------->
+<template name='plTrailingStopIn'>
+<h3 id="trailingStopIn">TrailingStopIn</h3> 
+[External informations](https://support.kraken.com/hc/en-us/articles/203325793-Stop-Loss-Orders)
 tbd
 {{> RetToToC}}
 </template>
 
 
 <!--------------------------------------------------------------- 
-  TakeProfit
+  TrailingStopIn
  ---------------------------------------------------------------->
-<template name='plTakeProfit'>
-<h3 id="takeProfit">TakeProfit</h3> 
-tbd
-{{> RetToToC}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  ThresholdIn
- ---------------------------------------------------------------->
-<template name='plThresholdIn'>
-<h3 id="thresholdIn">ThresholdIn</h3> 
-tbd
-{{> RetToToC}}
-</template>
-
-
-<!--------------------------------------------------------------- 
-  ThresholdIn
- ---------------------------------------------------------------->
-<template name='plThresholdOut'>
-<h3 id="thresholdOut">ThresholdOut</h3> 
+<template name='plTrailingStopOut'>
+<h3 id="trailingStopOut">TrailingStopOut</h3> 
+[External informations](https://support.kraken.com/hc/en-us/articles/203325793-Stop-Loss-Orders)
 tbd
 {{> RetToToC}}
 </template>

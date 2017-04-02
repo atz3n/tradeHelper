@@ -5,12 +5,12 @@ import { InstHandler } from './lib/InstHandler.js';
   Import Plugin / Exchange
  ***********************************************************************/
 
-import { PlStopLoss } from './trading/plugins/PlStopLoss.js';
-import { PlTakeProfit } from './trading/plugins/PlTakeProfit.js';
-import { PlThresholdIn } from './trading/plugins/PlThresholdIn.js';
-import { PlThresholdOut } from './trading/plugins/PlThresholdOut.js';
+import { PlStopLossOut } from './trading/plugins/PlStopLossOut.js';
+import { PlTakeProfitOut } from './trading/plugins/PlTakeProfitOut.js';
+import { PlTrailingStopIn } from './trading/plugins/PlTrailingStopIn.js';
+import { PlTrailingStopOut } from './trading/plugins/PlTrailingStopOut.js';
 import { PlDummy } from './trading/plugins/PlDummy.js';
-import { PlSafetyLineOut } from './trading/plugins/PlSafetyLineOut.js';
+import { PlProfitLineStopOut } from './trading/plugins/PlProfitLineStopOut.js';
 
 import { ExTestData } from './trading/exchanges/ExTestData.js';
 import { ExKraken } from './trading/exchanges/ExKraken.js';
@@ -25,12 +25,12 @@ exchangeHandler = new InstHandler();
 
 
 /* Plugins */
-pluginHandler.setObject('PlStopLosses', PlStopLosses);
-pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
-pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
-pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
+pluginHandler.setObject('PlStopLossOutes', PlStopLossOutes);
+pluginHandler.setObject('PlTakeProfitOuts', PlTakeProfitOuts);
+pluginHandler.setObject('PlTrailingStopIns', PlTrailingStopIns);
+pluginHandler.setObject('PlTrailingStopOuts', PlTrailingStopOuts);
 pluginHandler.setObject('PlDummies', PlDummies);
-pluginHandler.setObject('PlSafetyLineOuts', PlSafetyLineOuts);
+pluginHandler.setObject('PlProfitLineStopOuts', PlProfitLineStopOuts);
 
 
 /* Exchanges */
@@ -54,12 +54,12 @@ this.createPlugin = function(plugin, logger, strPlHandler) {
 
   /***** add plugin default config here ******/
 
-  if (plugin.type === 'plStopLoss') conf = Object.assign({}, PlStopLoss.ConfigDefault);
-  if (plugin.type === 'plTakeProfit') conf = Object.assign({}, PlTakeProfit.ConfigDefault);
-  if (plugin.type === 'plThresholdIn') conf = Object.assign({}, PlThresholdIn.ConfigDefault);
-  if (plugin.type === 'plThresholdOut') conf = Object.assign({}, PlThresholdOut.ConfigDefault);
+  if (plugin.type === 'plStopLossOut') conf = Object.assign({}, PlStopLossOut.ConfigDefault);
+  if (plugin.type === 'plTakeProfitOut') conf = Object.assign({}, PlTakeProfitOut.ConfigDefault);
+  if (plugin.type === 'plTrailingStopIn') conf = Object.assign({}, PlTrailingStopIn.ConfigDefault);
+  if (plugin.type === 'plTrailingStopOut') conf = Object.assign({}, PlTrailingStopOut.ConfigDefault);
   if (plugin.type === 'plDummy') conf = Object.assign({}, PlDummy.ConfigDefault);
-  if (plugin.type === 'plSafetyLineOut') conf = Object.assign({}, PlSafetyLineOut.ConfigDefault);
+  if (plugin.type === 'plProfitLineStopOut') conf = Object.assign({}, PlProfitLineStopOut.ConfigDefault);
 
   /***** add plugin default config here ******/
 
@@ -80,12 +80,12 @@ this.createPlugin = function(plugin, logger, strPlHandler) {
 
   /***** add plugin instance creation here ******/
 
-  if (plugin.type === 'plStopLoss') strPlHandler.setObject(plugin._id, { inst: new PlStopLoss(logger), exId: plugin.exchange._id });
-  if (plugin.type === 'plTakeProfit') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfit(logger), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdIn') strPlHandler.setObject(plugin._id, { inst: new PlThresholdIn(logger), exId: plugin.exchange._id });
-  if (plugin.type === 'plThresholdOut') strPlHandler.setObject(plugin._id, { inst: new PlThresholdOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plStopLossOut') strPlHandler.setObject(plugin._id, { inst: new PlStopLossOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plTakeProfitOut') strPlHandler.setObject(plugin._id, { inst: new PlTakeProfitOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plTrailingStopIn') strPlHandler.setObject(plugin._id, { inst: new PlTrailingStopIn(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plTrailingStopOut') strPlHandler.setObject(plugin._id, { inst: new PlTrailingStopOut(logger), exId: plugin.exchange._id });
   if (plugin.type === 'plDummy') strPlHandler.setObject(plugin._id, { inst: new PlDummy(logger), exId: plugin.exchange._id });
-  if (plugin.type === 'plSafetyLineOut') strPlHandler.setObject(plugin._id, { inst: new PlSafetyLineOut(logger), exId: plugin.exchange._id });
+  if (plugin.type === 'plProfitLineStopOut') strPlHandler.setObject(plugin._id, { inst: new PlProfitLineStopOut(logger), exId: plugin.exchange._id });
 
   /***** add plugin instance creation here ******/
 

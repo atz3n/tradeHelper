@@ -249,7 +249,7 @@
         ]
       },
       {
-        "name": "plStopLosses",
+        "name": "plStopLossOutes",
         "fields": [
           {
             "name": "name",
@@ -341,10 +341,10 @@
         "roles_allowed_to_delete": [
           "owner"
         ],
-        "before_insert_code": "doc.type = 'plStopLoss';"
+        "before_insert_code": "doc.type = 'plStopLossOut';"
       },
       {
-        "name": "plTakeProfits",
+        "name": "plTakeProfitOuts",
         "fields": [
           {
             "name": "name",
@@ -436,10 +436,10 @@
         "roles_allowed_to_delete": [
           "owner"
         ],
-        "before_insert_code": "doc.type = 'plTakeProfit';"
+        "before_insert_code": "doc.type = 'plTakeProfitOut';"
       },
       {
-        "name": "plThresholdOuts",
+        "name": "plTrailingStopOuts",
         "fields": [
           {
             "name": "name",
@@ -497,7 +497,7 @@
             "default": "percentage"
           },
           {
-            "name": "thresholdAmount",
+            "name": "thresholdValue",
             "title": "Threshold Value",
             "type": "integer",
             "required": true,
@@ -505,7 +505,7 @@
             "min": 0
           },
           {
-            "name": "thresholdExceedCnt",
+            "name": "thresholdExceedings",
             "title": "Threshold Exceedings",
             "type": "integer",
             "required": true,
@@ -539,10 +539,10 @@
         "roles_allowed_to_delete": [
           "owner"
         ],
-        "before_insert_code": "doc.type = 'plThresholdOut';"
+        "before_insert_code": "doc.type = 'plTrailingStopOut';"
       },
       {
-        "name": "plThresholdIns",
+        "name": "plTrailingStopIns",
         "fields": [
           {
             "name": "name",
@@ -582,7 +582,7 @@
             "default": "percentage"
           },
           {
-            "name": "thresholdAmount",
+            "name": "thresholdValue",
             "title": "Threshold Value",
             "type": "integer",
             "required": true,
@@ -590,7 +590,7 @@
             "min": 0
           },
           {
-            "name": "thresholdExceedCnt",
+            "name": "thresholdExceedings",
             "title": "Threshold Exceedings",
             "type": "integer",
             "required": true,
@@ -624,10 +624,10 @@
         "roles_allowed_to_delete": [
           "owner"
         ],
-        "before_insert_code": "doc.type = 'plThresholdIn';"
+        "before_insert_code": "doc.type = 'plTrailingStopIn';"
       },
       {
-        "name": "plSafetyLineOuts",
+        "name": "plProfitLineStopOuts",
         "fields": [
           {
             "name": "name",
@@ -649,8 +649,8 @@
             "required": true
           },
           {
-            "name": "safetyLineBase",
-            "title": "Safety Line Base",
+            "name": "profitLineBase",
+            "title": "Profit Line Base",
             "type": "string",
             "input": "radio",
             "input_items": [
@@ -667,8 +667,8 @@
             "default": "profit"
           },
           {
-            "name": "safetyLineType",
-            "title": "Safety Line Type",
+            "name": "profitLineType",
+            "title": "Profit Line Type",
             "type": "string",
             "input": "radio",
             "input_items": [
@@ -685,8 +685,8 @@
             "default": "percentage"
           },
           {
-            "name": "safetyLineStepWidth",
-            "title": "Safety Line Step Width",
+            "name": "profitLineStepWidth",
+            "title": "Profit Line Step Width",
             "type": "integer",
             "required": true,
             "default": 5,
@@ -1271,107 +1271,107 @@
  ***********************************************************************/
     "queries": [
       {
-        "name": "plThresholdIns",
-        "collection": "plThresholdIns",
+        "name": "plTrailingStopIns",
+        "collection": "plTrailingStopIns",
         "filter": {}
       },
       {
-        "name": "plThresholdIns_empty",
-        "collection": "plThresholdIns",
+        "name": "plTrailingStopIns_empty",
+        "collection": "plTrailingStopIns",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plThresholdIn",
-        "collection": "plThresholdIns",
+        "name": "plTrailingStopIn",
+        "collection": "plTrailingStopIns",
         "filter": {
-          "_id": ":plThresholdInId"
+          "_id": ":plTrailingStopInId"
         },
         "find_one": true
       },
       {
-        "name": "plThresholdOuts",
-        "collection": "plThresholdOuts",
+        "name": "plTrailingStopOuts",
+        "collection": "plTrailingStopOuts",
         "filter": {}
       },
       {
-        "name": "plThresholdOuts_empty",
-        "collection": "plThresholdOuts",
+        "name": "plTrailingStopOuts_empty",
+        "collection": "plTrailingStopOuts",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plThresholdOut",
-        "collection": "plThresholdOuts",
+        "name": "plTrailingStopOut",
+        "collection": "plTrailingStopOuts",
         "filter": {
-          "_id": ":plThresholdOutId"
+          "_id": ":plTrailingStopOutId"
         },
         "find_one": true
       },
       {
-        "name": "plSafetyLineOuts",
-        "collection": "plSafetyLineOuts",
+        "name": "plProfitLineStopOuts",
+        "collection": "plProfitLineStopOuts",
         "filter": {}
       },
       {
-        "name": "plSafetyLineOuts_empty",
-        "collection": "plSafetyLineOuts",
+        "name": "plProfitLineStopOuts_empty",
+        "collection": "plProfitLineStopOuts",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plSafetyLineOut",
-        "collection": "plSafetyLineOuts",
+        "name": "plProfitLineStopOut",
+        "collection": "plProfitLineStopOuts",
         "filter": {
-          "_id": ":plSafetyLineOutId"
+          "_id": ":plProfitLineStopOutId"
         },
         "find_one": true
       },
       {
-        "name": "plStopLosses",
-        "collection": "plStopLosses",
+        "name": "plStopLossOutes",
+        "collection": "plStopLossOutes",
         "filter": {}
       },
       {
-        "name": "plStopLosses_empty",
-        "collection": "plStopLosses",
+        "name": "plStopLossOutes_empty",
+        "collection": "plStopLossOutes",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plStopLoss",
-        "collection": "plStopLosses",
+        "name": "plStopLossOut",
+        "collection": "plStopLossOutes",
         "filter": {
-          "_id": ":plStopLossId"
+          "_id": ":plStopLossOutId"
         },
         "find_one": true
       },
       {
-        "name": "plTakeProfits",
-        "collection": "plTakeProfits",
+        "name": "plTakeProfitOuts",
+        "collection": "plTakeProfitOuts",
         "filter": {}
       },
       {
-        "name": "plTakeProfits_empty",
-        "collection": "plTakeProfits",
+        "name": "plTakeProfitOuts_empty",
+        "collection": "plTakeProfitOuts",
         "filter": {
           "_id": null
         },
         "find_one": true
       },
       {
-        "name": "plTakeProfit",
-        "collection": "plTakeProfits",
+        "name": "plTakeProfitOut",
+        "collection": "plTakeProfitOuts",
         "filter": {
-          "_id": ":plTakeProfitId"
+          "_id": ":plTakeProfitOutId"
         },
         "find_one": true
       },
@@ -1815,27 +1815,27 @@
           "name": "plugins",
           "pages": [
             {
-              "name": "plStopLoss",
+              "name": "plStopLossOut",
               "components": [
                 {
-                  "name": "viewPlStopLosses",
-                  "title": "StopLoss",
+                  "name": "viewPlStopLossOutes",
+                  "title": "StopLossOut",
                   "type": "data_view",
-                  "text_if_empty": "No StopLoss configured",
-                  "query_name": "plStopLosses",
+                  "text_if_empty": "No plugin configured",
+                  "query_name": "plStopLossOutes",
                   "query_params": [],
-                  "insert_route": "plugins.plStopLoss.insertPlStopLoss",
-                  "edit_route": "plugins.plStopLoss.editPlStopLoss",
+                  "insert_route": "plugins.plStopLossOut.insertPlStopLossOut",
+                  "edit_route": "plugins.plStopLossOut.editPlStopLossOut",
                   "edit_route_params": [
                     {
-                      "name": "plStopLossId",
+                      "name": "plStopLossOutId",
                       "value": "this._id"
                     }
                   ],
-                  "details_route": "plugins.plStopLoss.detailsPlStopLoss",
+                  "details_route": "plugins.plStopLossOut.detailsPlStopLossOut",
                   "details_route_params": [
                     {
-                      "name": "plStopLossId",
+                      "name": "plStopLossOutId",
                       "value": "this._id"
                     }
                   ]
@@ -1843,24 +1843,24 @@
               ],
               "pages": [
                 {
-                  "name": "insertPlStopLoss",
+                  "name": "insertPlStopLossOut",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "New StopLoss",
-                      "query_name": "plStopLosses_empty",
+                      "title": "New StopLossOut",
+                      "query_name": "plStopLossOutes_empty",
                       "query_params": [],
-                      "submit_route": "plugins.plStopLoss",
-                      "cancel_route": "plugins.plStopLoss"
+                      "submit_route": "plugins.plStopLossOut",
+                      "cancel_route": "plugins.plStopLossOut"
                     }
                   ]
                 },
                 {
-                  "name": "detailsPlStopLoss",
+                  "name": "detailsPlStopLossOut",
                   "route_params": [
-                    "plStopLossId"
+                    "plStopLossOutId"
                   ],
                   "components": [
                     {
@@ -1869,27 +1869,27 @@
                       "mode": "read_only",
                       "title": "Details",
                       "layout": "horizontal",
-                      "query_name": "plStopLoss",
+                      "query_name": "plStopLossOut",
                       "query_params": [],
-                      "close_route": "plugins.plStopLoss",
-                      "back_route": "plugins.plStopLoss"
+                      "close_route": "plugins.plStopLossOut",
+                      "back_route": "plugins.plStopLossOut"
                     }
                   ]
                 },
                 {
-                  "name": "editPlStopLoss",
+                  "name": "editPlStopLossOut",
                   "route_params": [
-                    "plStopLossId"
+                    "plStopLossOutId"
                   ],
                   "components": [
                     {
                       "name": "edit_form",
                       "type": "form",
                       "mode": "update",
-                      "title": "Edit StopLoss",
-                      "submit_route": "plugins.plStopLoss",
-                      "cancel_route": "plugins.plStopLoss",
-                      "query_name": "plStopLoss",
+                      "title": "Edit StopLossOut",
+                      "submit_route": "plugins.plStopLossOut",
+                      "cancel_route": "plugins.plStopLossOut",
+                      "query_name": "plStopLossOut",
                       "query_params": []
                     }
                   ]
@@ -1898,27 +1898,27 @@
               "type": "page"
             },
             {
-              "name": "plTakeProfit",
+              "name": "plTakeProfitOut",
               "components": [
                 {
-                  "name": "viewPlTakeProfits",
-                  "title": "TakeProfit",
+                  "name": "viewPlTakeProfitOuts",
+                  "title": "TakeProfitOut",
                   "type": "data_view",
-                  "text_if_empty": "No TakeProfit configured",
-                  "query_name": "plTakeProfits",
+                  "text_if_empty": "No plugin configured",
+                  "query_name": "plTakeProfitOuts",
                   "query_params": [],
-                  "insert_route": "plugins.plTakeProfit.insertPlTakeProfit",
-                  "edit_route": "plugins.plTakeProfit.editPlTakeProfit",
+                  "insert_route": "plugins.plTakeProfitOut.insertPlTakeProfitOut",
+                  "edit_route": "plugins.plTakeProfitOut.editPlTakeProfitOut",
                   "edit_route_params": [
                     {
-                      "name": "plTakeProfitId",
+                      "name": "plTakeProfitOutId",
                       "value": "this._id"
                     }
                   ],
-                  "details_route": "plugins.plTakeProfit.detailsPlTakeProfit",
+                  "details_route": "plugins.plTakeProfitOut.detailsPlTakeProfitOut",
                   "details_route_params": [
                     {
-                      "name": "plTakeProfitId",
+                      "name": "plTakeProfitOutId",
                       "value": "this._id"
                     }
                   ]
@@ -1926,24 +1926,24 @@
               ],
               "pages": [
                 {
-                  "name": "insertPlTakeProfit",
+                  "name": "insertPlTakeProfitOut",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "New TakeProfit",
-                      "query_name": "plTakeProfits_empty",
+                      "title": "New TakeProfitOut",
+                      "query_name": "plTakeProfitOuts_empty",
                       "query_params": [],
-                      "submit_route": "plugins.plTakeProfit",
-                      "cancel_route": "plugins.plTakeProfit"
+                      "submit_route": "plugins.plTakeProfitOut",
+                      "cancel_route": "plugins.plTakeProfitOut"
                     }
                   ]
                 },
                 {
-                  "name": "detailsPlTakeProfit",
+                  "name": "detailsPlTakeProfitOut",
                   "route_params": [
-                    "plTakeProfitId"
+                    "plTakeProfitOutId"
                   ],
                   "components": [
                     {
@@ -1952,27 +1952,27 @@
                       "mode": "read_only",
                       "title": "Details",
                       "layout": "horizontal",
-                      "query_name": "plTakeProfit",
+                      "query_name": "plTakeProfitOut",
                       "query_params": [],
-                      "close_route": "plugins.plTakeProfit",
-                      "back_route": "plugins.plTakeProfit"
+                      "close_route": "plugins.plTakeProfitOut",
+                      "back_route": "plugins.plTakeProfitOut"
                     }
                   ]
                 },
                 {
-                  "name": "editPlTakeProfit",
+                  "name": "editPlTakeProfitOut",
                   "route_params": [
-                    "plTakeProfitId"
+                    "plTakeProfitOutId"
                   ],
                   "components": [
                     {
                       "name": "edit_form",
                       "type": "form",
                       "mode": "update",
-                      "title": "Edit TakeProfit",
-                      "submit_route": "plugins.plTakeProfit",
-                      "cancel_route": "plugins.plTakeProfit",
-                      "query_name": "plTakeProfit",
+                      "title": "Edit TakeProfitOut",
+                      "submit_route": "plugins.plTakeProfitOut",
+                      "cancel_route": "plugins.plTakeProfitOut",
+                      "query_name": "plTakeProfitOut",
                       "query_params": []
                     }
                   ]
@@ -1981,27 +1981,27 @@
               "type": "page"
             },
             {
-              "name": "plThresholdIn",
+              "name": "plTrailingStopIn",
               "components": [
                 {
-                  "name": "viewPlThresholdIns",
-                  "title": "ThresholdIn",
+                  "name": "viewPlTrailingStopIns",
+                  "title": "TrailingStopIn",
                   "type": "data_view",
-                  "text_if_empty": "No Threshold configured",
-                  "query_name": "plThresholdIns",
+                  "text_if_empty": "No plugin configured",
+                  "query_name": "plTrailingStopIns",
                   "query_params": [],
-                  "insert_route": "plugins.plThresholdIn.insertPlThresholdIn",
-                  "edit_route": "plugins.plThresholdIn.editPlThresholdIn",
+                  "insert_route": "plugins.plTrailingStopIn.insertPlTrailingStopIn",
+                  "edit_route": "plugins.plTrailingStopIn.editPlTrailingStopIn",
                   "edit_route_params": [
                     {
-                      "name": "plThresholdInId",
+                      "name": "plTrailingStopInId",
                       "value": "this._id"
                     }
                   ],
-                  "details_route": "plugins.plThresholdIn.detailsPlThresholdIn",
+                  "details_route": "plugins.plTrailingStopIn.detailsPlTrailingStopIn",
                   "details_route_params": [
                     {
-                      "name": "plThresholdInId",
+                      "name": "plTrailingStopInId",
                       "value": "this._id"
                     }
                   ]
@@ -2009,24 +2009,24 @@
               ],
               "pages": [
                 {
-                  "name": "insertPlThresholdIn",
+                  "name": "insertPlTrailingStopIn",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "New ThresholdIn",
-                      "query_name": "plThresholdIns_empty",
+                      "title": "New TrailingStopIn",
+                      "query_name": "plTrailingStopIns_empty",
                       "query_params": [],
-                      "submit_route": "plugins.plThresholdIn",
-                      "cancel_route": "plugins.plThresholdIn"
+                      "submit_route": "plugins.plTrailingStopIn",
+                      "cancel_route": "plugins.plTrailingStopIn"
                     }
                   ]
                 },
                 {
-                  "name": "detailsPlThresholdIn",
+                  "name": "detailsPlTrailingStopIn",
                   "route_params": [
-                    "plThresholdInId"
+                    "plTrailingStopInId"
                   ],
                   "components": [
                     {
@@ -2035,27 +2035,27 @@
                       "mode": "read_only",
                       "title": "Details",
                       "layout": "horizontal",
-                      "query_name": "plThresholdIn",
+                      "query_name": "plTrailingStopIn",
                       "query_params": [],
-                      "close_route": "plugins.plThresholdIn",
-                      "back_route": "plugins.plThresholdIn"
+                      "close_route": "plugins.plTrailingStopIn",
+                      "back_route": "plugins.plTrailingStopIn"
                     }
                   ]
                 },
                 {
-                  "name": "editPlThresholdIn",
+                  "name": "editPlTrailingStopIn",
                   "route_params": [
-                    "plThresholdInId"
+                    "plTrailingStopInId"
                   ],
                   "components": [
                     {
                       "name": "edit_form",
                       "type": "form",
                       "mode": "update",
-                      "title": "Edit ThresholdIn",
-                      "submit_route": "plugins.plThresholdIn",
-                      "cancel_route": "plugins.plThresholdIn",
-                      "query_name": "plThresholdIn",
+                      "title": "Edit TrailingStopIn",
+                      "submit_route": "plugins.plTrailingStopIn",
+                      "cancel_route": "plugins.plTrailingStopIn",
+                      "query_name": "plTrailingStopIn",
                       "query_params": []
                     }
                   ]
@@ -2064,27 +2064,27 @@
               "type": "page"
             },
             {
-              "name": "plThresholdOut",
+              "name": "plTrailingStopOut",
               "components": [
                 {
-                  "name": "viewPlThresholdOuts",
-                  "title": "ThresholdOut",
+                  "name": "viewPlTrailingStopOuts",
+                  "title": "TrailingStopOut",
                   "type": "data_view",
-                  "text_if_empty": "No Threshold configured",
-                  "query_name": "plThresholdOuts",
+                  "text_if_empty": "No plugin configured",
+                  "query_name": "plTrailingStopOuts",
                   "query_params": [],
-                  "insert_route": "plugins.plThresholdOut.insertPlThresholdOut",
-                  "edit_route": "plugins.plThresholdOut.editPlThresholdOut",
+                  "insert_route": "plugins.plTrailingStopOut.insertPlTrailingStopOut",
+                  "edit_route": "plugins.plTrailingStopOut.editPlTrailingStopOut",
                   "edit_route_params": [
                     {
-                      "name": "plThresholdOutId",
+                      "name": "plTrailingStopOutId",
                       "value": "this._id"
                     }
                   ],
-                  "details_route": "plugins.plThresholdOut.detailsPlThresholdOut",
+                  "details_route": "plugins.plTrailingStopOut.detailsPlTrailingStopOut",
                   "details_route_params": [
                     {
-                      "name": "plThresholdOutId",
+                      "name": "plTrailingStopOutId",
                       "value": "this._id"
                     }
                   ]
@@ -2092,24 +2092,24 @@
               ],
               "pages": [
                 {
-                  "name": "insertPlThresholdOut",
+                  "name": "insertPlTrailingStopOut",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "New ThresholdOut",
-                      "query_name": "plThresholdOuts_empty",
+                      "title": "New TrailingStopOut",
+                      "query_name": "plTrailingStopOuts_empty",
                       "query_params": [],
-                      "submit_route": "plugins.plThresholdOut",
-                      "cancel_route": "plugins.plThresholdOut"
+                      "submit_route": "plugins.plTrailingStopOut",
+                      "cancel_route": "plugins.plTrailingStopOut"
                     }
                   ]
                 },
                 {
-                  "name": "detailsPlThresholdOut",
+                  "name": "detailsPlTrailingStopOut",
                   "route_params": [
-                    "plThresholdOutId"
+                    "plTrailingStopOutId"
                   ],
                   "components": [
                     {
@@ -2118,27 +2118,27 @@
                       "mode": "read_only",
                       "title": "Details",
                       "layout": "horizontal",
-                      "query_name": "plThresholdOut",
+                      "query_name": "plTrailingStopOut",
                       "query_params": [],
-                      "close_route": "plugins.plThresholdOut",
-                      "back_route": "plugins.plThresholdOut"
+                      "close_route": "plugins.plTrailingStopOut",
+                      "back_route": "plugins.plTrailingStopOut"
                     }
                   ]
                 },
                 {
-                  "name": "editPlThresholdOut",
+                  "name": "editPlTrailingStopOut",
                   "route_params": [
-                    "plThresholdOutId"
+                    "plTrailingStopOutId"
                   ],
                   "components": [
                     {
                       "name": "edit_form",
                       "type": "form",
                       "mode": "update",
-                      "title": "Edit ThresholdOut",
-                      "submit_route": "plugins.plThresholdOut",
-                      "cancel_route": "plugins.plThresholdOut",
-                      "query_name": "plThresholdOut",
+                      "title": "Edit TrailingStopOut",
+                      "submit_route": "plugins.plTrailingStopOut",
+                      "cancel_route": "plugins.plTrailingStopOut",
+                      "query_name": "plTrailingStopOut",
                       "query_params": []
                     }
                   ]
@@ -2147,27 +2147,27 @@
               "type": "page"
             },
             {
-              "name": "plSafetyLineOut",
+              "name": "plProfitLineStopOut",
               "components": [
                 {
-                  "name": "viewPlSafetyLineOuts",
-                  "title": "SafetyLineOut",
+                  "name": "viewPlProfitLineStopOuts",
+                  "title": "ProfitLineStopOut",
                   "type": "data_view",
-                  "text_if_empty": "No Safety Line configured",
-                  "query_name": "plSafetyLineOuts",
+                  "text_if_empty": "No plugin configured",
+                  "query_name": "plProfitLineStopOuts",
                   "query_params": [],
-                  "insert_route": "plugins.plSafetyLineOut.insertPlSafetyLineOut",
-                  "edit_route": "plugins.plSafetyLineOut.editPlSafetyLineOut",
+                  "insert_route": "plugins.plProfitLineStopOut.insertPlProfitLineStopOut",
+                  "edit_route": "plugins.plProfitLineStopOut.editPlProfitLineStopOut",
                   "edit_route_params": [
                     {
-                      "name": "plSafetyLineOutId",
+                      "name": "plProfitLineStopOutId",
                       "value": "this._id"
                     }
                   ],
-                  "details_route": "plugins.plSafetyLineOut.detailsPlSafetyLineOut",
+                  "details_route": "plugins.plProfitLineStopOut.detailsPlProfitLineStopOut",
                   "details_route_params": [
                     {
-                      "name": "plSafetyLineOutId",
+                      "name": "plProfitLineStopOutId",
                       "value": "this._id"
                     }
                   ]
@@ -2175,24 +2175,24 @@
               ],
               "pages": [
                 {
-                  "name": "insertPlSafetyLineOut",
+                  "name": "insertPlProfitLineStopOut",
                   "components": [
                     {
                       "name": "insert_form",
                       "type": "form",
                       "mode": "insert",
-                      "title": "New SafetyLineOut",
-                      "query_name": "plSafetyLineOuts_empty",
+                      "title": "New ProfitLineStopOut",
+                      "query_name": "plProfitLineStopOuts_empty",
                       "query_params": [],
-                      "submit_route": "plugins.plSafetyLineOut",
-                      "cancel_route": "plugins.plSafetyLineOut"
+                      "submit_route": "plugins.plProfitLineStopOut",
+                      "cancel_route": "plugins.plProfitLineStopOut"
                     }
                   ]
                 },
                 {
-                  "name": "detailsPlSafetyLineOut",
+                  "name": "detailsPlProfitLineStopOut",
                   "route_params": [
-                    "plSafetyLineOutId"
+                    "plProfitLineStopOutId"
                   ],
                   "components": [
                     {
@@ -2201,27 +2201,27 @@
                       "mode": "read_only",
                       "title": "Details",
                       "layout": "horizontal",
-                      "query_name": "plSafetyLineOut",
+                      "query_name": "plProfitLineStopOut",
                       "query_params": [],
-                      "close_route": "plugins.plSafetyLineOut",
-                      "back_route": "plugins.plSafetyLineOut"
+                      "close_route": "plugins.plProfitLineStopOut",
+                      "back_route": "plugins.plProfitLineStopOut"
                     }
                   ]
                 },
                 {
-                  "name": "editPlSafetyLineOut",
+                  "name": "editPlProfitLineStopOut",
                   "route_params": [
-                    "plSafetyLineOutId"
+                    "plProfitLineStopOutId"
                   ],
                   "components": [
                     {
                       "name": "edit_form",
                       "type": "form",
                       "mode": "update",
-                      "title": "Edit SafetyLineOut",
-                      "submit_route": "plugins.plSafetyLineOut",
-                      "cancel_route": "plugins.plSafetyLineOut",
-                      "query_name": "plSafetyLineOut",
+                      "title": "Edit ProfitLineStopOut",
+                      "submit_route": "plugins.plProfitLineStopOut",
+                      "cancel_route": "plugins.plProfitLineStopOut",
+                      "query_name": "plProfitLineStopOut",
                       "query_params": []
                     }
                   ]
@@ -2236,7 +2236,7 @@
                   "name": "viewPlDummy",
                   "title": "Dummy",
                   "type": "data_view",
-                  "text_if_empty": "No Dummy configured",
+                  "text_if_empty": "No plugin configured",
                   "query_name": "plDummies",
                   "query_params": [],
                   "insert_route": "plugins.plDummy.insertPlDummy",
@@ -2324,24 +2324,24 @@
                   "route": "plugins.plDummy"
                 },
                 {
-                  "title": "StopLoss",
-                  "route": "plugins.plStopLoss"
+                  "title": "StopLossOut",
+                  "route": "plugins.plStopLossOut"
                 },
                 {
-                  "title": "TakeProfit",
-                  "route": "plugins.plTakeProfit"
+                  "title": "TakeProfitOut",
+                  "route": "plugins.plTakeProfitOut"
                 },
                 {
-                  "title": "ThresholdIn",
-                  "route": "plugins.plThresholdIn"
+                  "title": "TrailingStopIn",
+                  "route": "plugins.plTrailingStopIn"
                 },
                 {
-                  "title": "ThresholdOut",
-                  "route": "plugins.plThresholdOut"
+                  "title": "TrailingStopOut",
+                  "route": "plugins.plTrailingStopOut"
                 },
                 {
-                  "title": "SafetyLineOut",
-                  "route": "plugins.plSafetyLineOut"
+                  "title": "ProfitLineStopOut",
+                  "route": "plugins.plProfitLineStopOut"
                 }
               ]
             }

@@ -1,0 +1,134 @@
+<template name="PluginsPlTrailingStopOutDetailsPlTrailingStopOut">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> PluginsPlTrailingStopOutDetailsPlTrailingStopOutDetailsForm}}
+	</div>
+</template>
+
+<template name="PluginsPlTrailingStopOutDetailsPlTrailingStopOutDetailsForm">
+	<div id="plugins-pl-trailing-stop-out-details-pl-trailing-stop-out-details-form" class="">
+		<h2 id="component-title">
+			<a href="#" id="form-back-button" class="btn btn-default" title="back">
+				<span class="fa fa-chevron-left">
+				</span>
+			</a>
+			Details
+		</h2>
+		<form role="form" class="form-horizontal">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name" class="col-sm-3 control-label">
+					Name
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-name">
+						{{pl_trailing_stop_out.name}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-id">
+				<label for="id" class="col-sm-3 control-label">
+					Id
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{pl_trailing_stop_out._id}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-exchange">
+				<label for="exchange" class="col-sm-3 control-label">
+					Exchange
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static">
+						{{exchangeName}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-base">
+				<label for="thresholdBase" class="col-sm-3 control-label">
+					Threshold Base
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-threshold-base">
+						{{pl_trailing_stop_out.thresholdBase}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-type">
+				<label for="thresholdType" class="col-sm-3 control-label">
+					Threshold Type
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-threshold-type">
+						{{pl_trailing_stop_out.thresholdType}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-value">
+				<label for="thresholdValue" class="col-sm-3 control-label">
+					Threshold Value
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-threshold-value">
+						{{pl_trailing_stop_out.thresholdValue}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-threshold-exceedings">
+				<label for="thresholdExceedings" class="col-sm-3 control-label">
+					Threshold Exceedings
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-threshold-exceedings">
+						{{pl_trailing_stop_out.thresholdExceedings}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-en-long">
+				<label for="enLong" class="col-sm-3 control-label">
+					Enable Long
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-en-long">
+						{{booleanToYesNo pl_trailing_stop_out.enLong}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group  field-en-short">
+				<label for="enShort" class="col-sm-3 control-label">
+					Enable Short
+				</label>
+				<div class="input-div col-sm-9">
+					<p class="form-control-static  control-field-en-short">
+						{{booleanToYesNo pl_trailing_stop_out.enShort}}
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div col-sm-9">
+					<a href="#" id="form-close-button" class="btn btn-primary">
+						OK
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+
