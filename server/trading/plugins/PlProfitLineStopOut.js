@@ -11,7 +11,7 @@
  *
  * 
  * CHANGES:
- * 02-Jun-2015 : Initial version
+ * 03-Apr-2017 : Initial version
  */
 
 
@@ -178,12 +178,16 @@ export function PlProfitLineStopOut(logger) {
     let diff = 0;
 
     if (_config.profitLineType === 'percentage') {
-        diff = _inPrice * _config.profitLineStepWidth / 100;
+        
+        if(_config.profitLineBase === 'profit') {
+          diff = _inPrice * _inVolume * _config.profitLineStepWidth / 100;
+        } else {
+          diff = _inPrice * _config.profitLineStepWidth / 100;
+        }
+
     } else {
         diff = _config.profitLineStepWidth;
     }
-
-    if (_config.profitLineBase === 'profit') diff *= _inVolume;
 
     _stepDiff = diff;
   }
@@ -250,14 +254,32 @@ export function PlProfitLineStopOut(logger) {
   this.getInfo = function() {
     logger.debug(_logPreMsg + 'getInfo()');
 
-    
-    var tmp = [
-      { title: 'Safety Line', value: '-' },
-      { title: 'Current Price', value: cropFracDigits(_curPrice, 6) }
-    ];
 
-    if (_position === 'long' && _stepCnt > 0) tmp[0].value = cropFracDigits(_inPrice + _stepCnt * _stepDiff, 6)
-    if (_position === 'short' && _stepCnt > 0) tmp[0].value = cropFracDigits(_inPrice - _stepCnt * _stepDiff, 6)
+    let lineTitle = 'Price Line';
+    let lineVal = '-';
+    let currTitle = 'Current Price';
+    let currVal = cropFracDigits(_curPrice, 6);
+    
+    if(_config.profitLineBase === 'profit') 
+    {
+      lineTitle = "Cost Line";
+      currTitle = "Current Cost";
+      currVal = cropFracDigits(_curPrice * _inVolume, 6)
+
+      if (_position === 'long' && _stepCnt > 0) lineVal = cropFracDigits(_inPrice * _inVolume + _stepCnt * _stepDiff, 6);
+      if (_position === 'short' && _stepCnt > 0) lineVal = cropFracDigits(_inPrice * _inVolume - _stepCnt * _stepDiff, 6);
+    } 
+    else 
+    {
+      if (_position === 'long' && _stepCnt > 0) lineVal = cropFracDigits(_inPrice + _stepCnt * _stepDiff, 6);
+      if (_position === 'short' && _stepCnt > 0) lineVal = cropFracDigits(_inPrice - _stepCnt * _stepDiff, 6);
+    }
+
+
+    var tmp = [
+      { title: lineTitle, value: lineVal },
+      { title: currTitle, value: currVal }
+    ];
 
     if(!_active) for(i in tmp) tmp[i].value = '-';
 
@@ -306,15 +328,25 @@ export function PlProfitLineStopOut(logger) {
       _curPrice = price;
 
 
+      let curVal = _curPrice;
+      let inVal = _inPrice;
+
+
+      /* map to profit base */
+      if(_config.profitLineBase === 'profit') {
+        curVal *= _inVolume;
+        inVal *= _inVolume;
+      }
+
 
       /* stop long position */
       if (_position === 'long') {
         
-        if(_curPrice >= _inPrice + (_stepCnt + 1) * _stepDiff) _stepCnt++;
+        if(curVal >= inVal + (_stepCnt + 1) * _stepDiff) _stepCnt++;
 
         if(_stepCnt !== 0) {
 
-          if (_curPrice < _inPrice + _stepCnt * _stepDiff) _prlExCnt++;
+          if (curVal < inVal + _stepCnt * _stepDiff) _prlExCnt++;
           else _prlExCnt = 0;
 
           if (_prlExCnt >= _config.profitLineExceedCnt) {
@@ -328,11 +360,11 @@ export function PlProfitLineStopOut(logger) {
       /* stop short position */
       if (_position === 'short') {
 
-        if(_curPrice <= _inPrice - (_stepCnt + 1) * _stepDiff) _stepCnt++;
+        if(curVal <= inVal - (_stepCnt + 1) * _stepDiff) _stepCnt++;
 
         if(_stepCnt !== 0) {
 
-          if (_curPrice > _inPrice - _stepCnt * _stepDiff) _prlExCnt++;
+          if (curVal > inVal - _stepCnt * _stepDiff) _prlExCnt++;
           else _prlExCnt = 0;
 
           if (_prlExCnt >= _config.profitLineExceedCnt) {
@@ -364,9 +396,9 @@ export function PlProfitLineStopOut(logger) {
         
         if (_config.enLong) _active = true;
         _inPrice = price;
-        _calcStepDiff();
-
         _inVolume = volume;
+
+        _calcStepDiff();
       } 
 
 
@@ -401,9 +433,9 @@ export function PlProfitLineStopOut(logger) {
 
          if (_config.enShort) _active = true;
         _inPrice = price;
-        _calcStepDiff();
-
         _inVolume = volume;
+
+        _calcStepDiff();
       } 
 
 

@@ -67,7 +67,7 @@ Template.PluginsPlProfitLineStopOutEditPlProfitLineStopOutEditForm.events({
 				}
 			}
 
-			Router.go("plugins.pl_profit_line_stop_out_out", {});
+			Router.go("plugins.pl_profit_line_stop_out", {});
 		}
 
 		function errorAction(msg) {
@@ -87,7 +87,7 @@ Template.PluginsPlProfitLineStopOutEditPlProfitLineStopOutEditForm.events({
 			function(values) {
 				
 
-				PlProfitLineStopOuts.update({ _id: t.data.pl_profit_line_stop_out_out._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
+				PlProfitLineStopOuts.update({ _id: t.data.pl_profit_line_stop_out._id }, { $set: values }, function(e) { if(e) errorAction(e); else submitAction(); });
 			}
 		);
 
@@ -98,7 +98,7 @@ Template.PluginsPlProfitLineStopOutEditPlProfitLineStopOutEditForm.events({
 
 		
 
-		Router.go("plugins.pl_profit_line_stop_out_out", {});
+		Router.go("plugins.pl_profit_line_stop_out", {});
 	},
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();

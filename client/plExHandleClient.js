@@ -20,7 +20,7 @@ Meteor.subscribe("pl_take_profit_outs");
 Meteor.subscribe("pl_trailing_stop_ins");
 Meteor.subscribe("pl_trailing_stop_outs");
 Meteor.subscribe("pl_dummies");
-Meteor.subscribe("pl_profit_line_stop_out_outs");
+Meteor.subscribe("pl_profit_line_stop_outs");
 
 
 /***********************************************************************

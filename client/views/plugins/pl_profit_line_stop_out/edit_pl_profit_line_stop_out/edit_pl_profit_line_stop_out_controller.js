@@ -20,7 +20,7 @@ this.PluginsPlProfitLineStopOutEditPlProfitLineStopOutController = RouteControll
 		
 
 		var subs = [
-			Meteor.subscribe("pl_profit_line_stop_out_out", this.params.plProfitLineStopOutId)
+			Meteor.subscribe("pl_profit_line_stop_out", this.params.plProfitLineStopOutId)
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,7 +35,7 @@ this.PluginsPlProfitLineStopOutEditPlProfitLineStopOutController = RouteControll
 
 		var data = {
 			params: this.params || {},
-			pl_profit_line_stop_out_out: PlProfitLineStopOuts.findOne({_id:this.params.plProfitLineStopOutId}, {})
+			pl_profit_line_stop_out: PlProfitLineStopOuts.findOne({_id:this.params.plProfitLineStopOutId}, {})
 		};
 		
 
