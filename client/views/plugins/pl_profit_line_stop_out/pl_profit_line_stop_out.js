@@ -134,27 +134,27 @@ Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOuts.events({
 
 	"click #dataview-insert-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.pl_profit_line_stop_out_out.insert_pl_profit_line_stop_out_out", {});
+		Router.go("plugins.pl_profit_line_stop_out.insert_pl_profit_line_stop_out", {});
 	},
 
 	"click #dataview-export-default": function(e, t) {
 		e.preventDefault();
-		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_out_outs, "csv");
+		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_outs, "csv");
 	},
 
 	"click #dataview-export-csv": function(e, t) {
 		e.preventDefault();
-		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_out_outs, "csv");
+		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_outs, "csv");
 	},
 
 	"click #dataview-export-tsv": function(e, t) {
 		e.preventDefault();
-		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_out_outs, "tsv");
+		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_outs, "tsv");
 	},
 
 	"click #dataview-export-json": function(e, t) {
 		e.preventDefault();
-		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_out_outs, "json");
+		PluginsPlProfitLineStopOutViewPlProfitLineStopOutsExport(this.pl_profit_line_stop_outs, "json");
 	}
 
 	
@@ -167,13 +167,13 @@ Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOuts.helpers({
 	},
 
 	"isEmpty": function() {
-		return !this.pl_profit_line_stop_out_outs || this.pl_profit_line_stop_out_outs.count() == 0;
+		return !this.pl_profit_line_stop_outs || this.pl_profit_line_stop_outs.count() == 0;
 	},
 	"isNotEmpty": function() {
-		return this.pl_profit_line_stop_out_outs && this.pl_profit_line_stop_out_outs.count() > 0;
+		return this.pl_profit_line_stop_outs && this.pl_profit_line_stop_outs.count() > 0;
 	},
 	"isNotFound": function() {
-		return this.pl_profit_line_stop_out_outs && pageSession.get("PluginsPlProfitLineStopOutViewPlProfitLineStopOutsSearchString") && PluginsPlProfitLineStopOutViewPlProfitLineStopOutsItems(this.pl_profit_line_stop_out_outs).length == 0;
+		return this.pl_profit_line_stop_outs && pageSession.get("PluginsPlProfitLineStopOutViewPlProfitLineStopOutsSearchString") && PluginsPlProfitLineStopOutViewPlProfitLineStopOutsItems(this.pl_profit_line_stop_outs).length == 0;
 	},
 	"searchString": function() {
 		return pageSession.get("PluginsPlProfitLineStopOutViewPlProfitLineStopOutsSearchString");
@@ -214,7 +214,7 @@ Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOutsTable.events({
 
 Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOutsTable.helpers({
 	"tableItems": function() {
-		return PluginsPlProfitLineStopOutViewPlProfitLineStopOutsItems(this.pl_profit_line_stop_out_outs);
+		return PluginsPlProfitLineStopOutViewPlProfitLineStopOutsItems(this.pl_profit_line_stop_outs);
 	}
 });
 
@@ -227,7 +227,7 @@ Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOutsTableItems.events({
 	"click td": function(e, t) {
 		e.preventDefault();
 		
-		Router.go("plugins.pl_profit_line_stop_out_out.details_pl_profit_line_stop_out_out", {plProfitLineStopOutId: this._id});
+		Router.go("plugins.pl_profit_line_stop_out.details_pl_profit_line_stop_out", {plProfitLineStopOutId: this._id});
 		return false;
 	},
 
@@ -282,7 +282,7 @@ Template.PluginsPlProfitLineStopOutViewPlProfitLineStopOutsTableItems.events({
 	},
 	"click #edit-button": function(e, t) {
 		e.preventDefault();
-		Router.go("plugins.pl_profit_line_stop_out_out.edit_pl_profit_line_stop_out_out", {plProfitLineStopOutId: this._id});
+		Router.go("plugins.pl_profit_line_stop_out.edit_pl_profit_line_stop_out", {plProfitLineStopOutId: this._id});
 		return false;
 	},
 	"click #actives-button": function(e, t) {

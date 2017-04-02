@@ -20,7 +20,7 @@ this.PluginsPlProfitLineStopOutInsertPlProfitLineStopOutController = RouteContro
 		
 
 		var subs = [
-			Meteor.subscribe("pl_profit_line_stop_out_outs_empty"),
+			Meteor.subscribe("pl_profit_line_stop_outs_empty"),
 			Meteor.subscribe("settings_first")
 		];
 		var ready = true;
@@ -36,7 +36,7 @@ this.PluginsPlProfitLineStopOutInsertPlProfitLineStopOutController = RouteContro
 
 		var data = {
 			params: this.params || {},
-			pl_profit_line_stop_out_outs_empty: PlProfitLineStopOuts.findOne({_id:null}, {}),
+			pl_profit_line_stop_outs_empty: PlProfitLineStopOuts.findOne({_id:null}, {}),
 			settings: Settings.findOne({ownerId: Meteor.userId()})
 		};
 		

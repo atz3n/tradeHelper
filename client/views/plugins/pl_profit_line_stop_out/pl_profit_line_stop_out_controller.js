@@ -20,7 +20,7 @@ this.PluginsPlProfitLineStopOutController = RouteController.extend({
 		
 
 		var subs = [
-			Meteor.subscribe("pl_profit_line_stop_out_outs")
+			Meteor.subscribe("pl_profit_line_stop_outs")
 		];
 		var ready = true;
 		_.each(subs, function(sub) {
@@ -35,7 +35,7 @@ this.PluginsPlProfitLineStopOutController = RouteController.extend({
 
 		var data = {
 			params: this.params || {},
-			pl_profit_line_stop_out_outs: PlProfitLineStopOuts.find({}, {})
+			pl_profit_line_stop_outs: PlProfitLineStopOuts.find({}, {})
 		};
 		
 

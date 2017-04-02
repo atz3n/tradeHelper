@@ -103,12 +103,12 @@ Template.PluginsPlProfitLineStopOutDetailsPlProfitLineStopOutDetailsForm.events(
 	"click #form-close-button": function(e, t) {
 		e.preventDefault();
 
-		Router.go("plugins.pl_profit_line_stop_out_out", {});
+		Router.go("plugins.pl_profit_line_stop_out", {});
 	},
 	"click #form-back-button": function(e, t) {
 		e.preventDefault();
 
-		Router.go("plugins.pl_profit_line_stop_out_out", {});
+		Router.go("plugins.pl_profit_line_stop_out", {});
 	}
 
 	
@@ -122,7 +122,7 @@ Template.PluginsPlProfitLineStopOutDetailsPlProfitLineStopOutDetailsForm.helpers
 		return pageSession.get("pluginsPlProfitLineStopOutDetailsPlProfitLineStopOutDetailsFormErrorMessage");
 	},
 	"exchangeName": function() {
-		return getExchangeName(this.pl_profit_line_stop_out_out.exchange);
+		return getExchangeName(this.pl_profit_line_stop_out.exchange);
 	}
 	
 });
