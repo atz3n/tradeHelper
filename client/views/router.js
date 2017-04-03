@@ -26,22 +26,26 @@ var privateRoutes = [
 	"strategies.details",
 	"strategies.edit",
 	"plugins",
-	"plugins.pl_stop_loss",
-	"plugins.pl_stop_loss.insert_pl_stop_loss",
-	"plugins.pl_stop_loss.details_pl_stop_loss",
-	"plugins.pl_stop_loss.edit_pl_stop_loss",
-	"plugins.pl_take_profit",
-	"plugins.pl_take_profit.insert_pl_take_profit",
-	"plugins.pl_take_profit.details_pl_take_profit",
-	"plugins.pl_take_profit.edit_pl_take_profit",
-	"plugins.pl_threshold_in",
-	"plugins.pl_threshold_in.insert_pl_threshold_in",
-	"plugins.pl_threshold_in.details_pl_threshold_in",
-	"plugins.pl_threshold_in.edit_pl_threshold_in",
-	"plugins.pl_threshold_out",
-	"plugins.pl_threshold_out.insert_pl_threshold_out",
-	"plugins.pl_threshold_out.details_pl_threshold_out",
-	"plugins.pl_threshold_out.edit_pl_threshold_out",
+	"plugins.pl_stop_loss_out",
+	"plugins.pl_stop_loss_out.insert_pl_stop_loss_out",
+	"plugins.pl_stop_loss_out.details_pl_stop_loss_out",
+	"plugins.pl_stop_loss_out.edit_pl_stop_loss_out",
+	"plugins.pl_take_profit_out",
+	"plugins.pl_take_profit_out.insert_pl_take_profit_out",
+	"plugins.pl_take_profit_out.details_pl_take_profit_out",
+	"plugins.pl_take_profit_out.edit_pl_take_profit_out",
+	"plugins.pl_trailing_stop_in",
+	"plugins.pl_trailing_stop_in.insert_pl_trailing_stop_in",
+	"plugins.pl_trailing_stop_in.details_pl_trailing_stop_in",
+	"plugins.pl_trailing_stop_in.edit_pl_trailing_stop_in",
+	"plugins.pl_trailing_stop_out",
+	"plugins.pl_trailing_stop_out.insert_pl_trailing_stop_out",
+	"plugins.pl_trailing_stop_out.details_pl_trailing_stop_out",
+	"plugins.pl_trailing_stop_out.edit_pl_trailing_stop_out",
+	"plugins.pl_profit_line_stop_out",
+	"plugins.pl_profit_line_stop_out.insert_pl_profit_line_stop_out",
+	"plugins.pl_profit_line_stop_out.details_pl_profit_line_stop_out",
+	"plugins.pl_profit_line_stop_out.edit_pl_profit_line_stop_out",
 	"plugins.pl_dummy",
 	"plugins.pl_dummy.insert_pl_dummy",
 	"plugins.pl_dummy.details_pl_dummy",
@@ -278,22 +282,26 @@ Router.map(function () {
 	this.route("strategies.details", {path: "/strategies/details/:strategyId", controller: "StrategiesDetailsController"});
 	this.route("strategies.edit", {path: "/strategies/edit/:strategyId", controller: "StrategiesEditController"});
 	this.route("plugins", {path: "/plugins", controller: "PluginsController"});
-	this.route("plugins.pl_stop_loss", {path: "/plugins/pl_stop_loss", controller: "PluginsPlStopLossController"});
-	this.route("plugins.pl_stop_loss.insert_pl_stop_loss", {path: "/plugins/pl_stop_loss/insert_pl_stop_loss", controller: "PluginsPlStopLossInsertPlStopLossController"});
-	this.route("plugins.pl_stop_loss.details_pl_stop_loss", {path: "/plugins/pl_stop_loss/details_pl_stop_loss/:plStopLossId", controller: "PluginsPlStopLossDetailsPlStopLossController"});
-	this.route("plugins.pl_stop_loss.edit_pl_stop_loss", {path: "/plugins/pl_stop_loss/edit_pl_stop_loss/:plStopLossId", controller: "PluginsPlStopLossEditPlStopLossController"});
-	this.route("plugins.pl_take_profit", {path: "/plugins/pl_take_profit", controller: "PluginsPlTakeProfitController"});
-	this.route("plugins.pl_take_profit.insert_pl_take_profit", {path: "/plugins/pl_take_profit/insert_pl_take_profit", controller: "PluginsPlTakeProfitInsertPlTakeProfitController"});
-	this.route("plugins.pl_take_profit.details_pl_take_profit", {path: "/plugins/pl_take_profit/details_pl_take_profit/:plTakeProfitId", controller: "PluginsPlTakeProfitDetailsPlTakeProfitController"});
-	this.route("plugins.pl_take_profit.edit_pl_take_profit", {path: "/plugins/pl_take_profit/edit_pl_take_profit/:plTakeProfitId", controller: "PluginsPlTakeProfitEditPlTakeProfitController"});
-	this.route("plugins.pl_threshold_in", {path: "/plugins/pl_threshold_in", controller: "PluginsPlThresholdInController"});
-	this.route("plugins.pl_threshold_in.insert_pl_threshold_in", {path: "/plugins/pl_threshold_in/insert_pl_threshold_in", controller: "PluginsPlThresholdInInsertPlThresholdInController"});
-	this.route("plugins.pl_threshold_in.details_pl_threshold_in", {path: "/plugins/pl_threshold_in/details_pl_threshold_in/:plThresholdInId", controller: "PluginsPlThresholdInDetailsPlThresholdInController"});
-	this.route("plugins.pl_threshold_in.edit_pl_threshold_in", {path: "/plugins/pl_threshold_in/edit_pl_threshold_in/:plThresholdInId", controller: "PluginsPlThresholdInEditPlThresholdInController"});
-	this.route("plugins.pl_threshold_out", {path: "/plugins/pl_threshold_out", controller: "PluginsPlThresholdOutController"});
-	this.route("plugins.pl_threshold_out.insert_pl_threshold_out", {path: "/plugins/pl_threshold_out/insert_pl_threshold_out", controller: "PluginsPlThresholdOutInsertPlThresholdOutController"});
-	this.route("plugins.pl_threshold_out.details_pl_threshold_out", {path: "/plugins/pl_threshold_out/details_pl_threshold_out/:plThresholdOutId", controller: "PluginsPlThresholdOutDetailsPlThresholdOutController"});
-	this.route("plugins.pl_threshold_out.edit_pl_threshold_out", {path: "/plugins/pl_threshold_out/edit_pl_threshold_out/:plThresholdOutId", controller: "PluginsPlThresholdOutEditPlThresholdOutController"});
+	this.route("plugins.pl_stop_loss_out", {path: "/plugins/pl_stop_loss_out", controller: "PluginsPlStopLossOutController"});
+	this.route("plugins.pl_stop_loss_out.insert_pl_stop_loss_out", {path: "/plugins/pl_stop_loss_out/insert_pl_stop_loss_out", controller: "PluginsPlStopLossOutInsertPlStopLossOutController"});
+	this.route("plugins.pl_stop_loss_out.details_pl_stop_loss_out", {path: "/plugins/pl_stop_loss_out/details_pl_stop_loss_out/:plStopLossOutId", controller: "PluginsPlStopLossOutDetailsPlStopLossOutController"});
+	this.route("plugins.pl_stop_loss_out.edit_pl_stop_loss_out", {path: "/plugins/pl_stop_loss_out/edit_pl_stop_loss_out/:plStopLossOutId", controller: "PluginsPlStopLossOutEditPlStopLossOutController"});
+	this.route("plugins.pl_take_profit_out", {path: "/plugins/pl_take_profit_out", controller: "PluginsPlTakeProfitOutController"});
+	this.route("plugins.pl_take_profit_out.insert_pl_take_profit_out", {path: "/plugins/pl_take_profit_out/insert_pl_take_profit_out", controller: "PluginsPlTakeProfitOutInsertPlTakeProfitOutController"});
+	this.route("plugins.pl_take_profit_out.details_pl_take_profit_out", {path: "/plugins/pl_take_profit_out/details_pl_take_profit_out/:plTakeProfitOutId", controller: "PluginsPlTakeProfitOutDetailsPlTakeProfitOutController"});
+	this.route("plugins.pl_take_profit_out.edit_pl_take_profit_out", {path: "/plugins/pl_take_profit_out/edit_pl_take_profit_out/:plTakeProfitOutId", controller: "PluginsPlTakeProfitOutEditPlTakeProfitOutController"});
+	this.route("plugins.pl_trailing_stop_in", {path: "/plugins/pl_trailing_stop_in", controller: "PluginsPlTrailingStopInController"});
+	this.route("plugins.pl_trailing_stop_in.insert_pl_trailing_stop_in", {path: "/plugins/pl_trailing_stop_in/insert_pl_trailing_stop_in", controller: "PluginsPlTrailingStopInInsertPlTrailingStopInController"});
+	this.route("plugins.pl_trailing_stop_in.details_pl_trailing_stop_in", {path: "/plugins/pl_trailing_stop_in/details_pl_trailing_stop_in/:plTrailingStopInId", controller: "PluginsPlTrailingStopInDetailsPlTrailingStopInController"});
+	this.route("plugins.pl_trailing_stop_in.edit_pl_trailing_stop_in", {path: "/plugins/pl_trailing_stop_in/edit_pl_trailing_stop_in/:plTrailingStopInId", controller: "PluginsPlTrailingStopInEditPlTrailingStopInController"});
+	this.route("plugins.pl_trailing_stop_out", {path: "/plugins/pl_trailing_stop_out", controller: "PluginsPlTrailingStopOutController"});
+	this.route("plugins.pl_trailing_stop_out.insert_pl_trailing_stop_out", {path: "/plugins/pl_trailing_stop_out/insert_pl_trailing_stop_out", controller: "PluginsPlTrailingStopOutInsertPlTrailingStopOutController"});
+	this.route("plugins.pl_trailing_stop_out.details_pl_trailing_stop_out", {path: "/plugins/pl_trailing_stop_out/details_pl_trailing_stop_out/:plTrailingStopOutId", controller: "PluginsPlTrailingStopOutDetailsPlTrailingStopOutController"});
+	this.route("plugins.pl_trailing_stop_out.edit_pl_trailing_stop_out", {path: "/plugins/pl_trailing_stop_out/edit_pl_trailing_stop_out/:plTrailingStopOutId", controller: "PluginsPlTrailingStopOutEditPlTrailingStopOutController"});
+	this.route("plugins.pl_profit_line_stop_out", {path: "/plugins/pl_profit_line_stop_out", controller: "PluginsPlProfitLineStopOutController"});
+	this.route("plugins.pl_profit_line_stop_out.insert_pl_profit_line_stop_out", {path: "/plugins/pl_profit_line_stop_out/insert_pl_profit_line_stop_out", controller: "PluginsPlProfitLineStopOutInsertPlProfitLineStopOutController"});
+	this.route("plugins.pl_profit_line_stop_out.details_pl_profit_line_stop_out", {path: "/plugins/pl_profit_line_stop_out/details_pl_profit_line_stop_out/:plProfitLineStopOutId", controller: "PluginsPlProfitLineStopOutDetailsPlProfitLineStopOutController"});
+	this.route("plugins.pl_profit_line_stop_out.edit_pl_profit_line_stop_out", {path: "/plugins/pl_profit_line_stop_out/edit_pl_profit_line_stop_out/:plProfitLineStopOutId", controller: "PluginsPlProfitLineStopOutEditPlProfitLineStopOutController"});
 	this.route("plugins.pl_dummy", {path: "/plugins/pl_dummy", controller: "PluginsPlDummyController"});
 	this.route("plugins.pl_dummy.insert_pl_dummy", {path: "/plugins/pl_dummy/insert_pl_dummy", controller: "PluginsPlDummyInsertPlDummyController"});
 	this.route("plugins.pl_dummy.details_pl_dummy", {path: "/plugins/pl_dummy/details_pl_dummy/:plDummyId", controller: "PluginsPlDummyDetailsPlDummyController"});

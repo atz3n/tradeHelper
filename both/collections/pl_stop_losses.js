@@ -1,13 +1,13 @@
-this.PlStopLosses = new Mongo.Collection("plStopLosses");
+this.PlStopLossOutes = new Mongo.Collection("plStopLossOutes");
 
-this.PlStopLosses.userCanInsert = function(userId, doc) {
+this.PlStopLossOutes.userCanInsert = function(userId, doc) {
 	return true;
 };
 
-this.PlStopLosses.userCanUpdate = function(userId, doc) {
+this.PlStopLossOutes.userCanUpdate = function(userId, doc) {
 	return userId && doc.ownerId == userId;
 };
 
-this.PlStopLosses.userCanRemove = function(userId, doc) {
+this.PlStopLossOutes.userCanRemove = function(userId, doc) {
 	return userId && doc.ownerId == userId;
 };

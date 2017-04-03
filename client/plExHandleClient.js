@@ -15,11 +15,12 @@ Meteor.subscribe("ex_test_datas");
 
 
 /* Plugins */
-Meteor.subscribe("pl_stop_losses");
-Meteor.subscribe("pl_take_profits");
-Meteor.subscribe("pl_threshold_ins");
-Meteor.subscribe("pl_threshold_outs");
+Meteor.subscribe("pl_stop_loss_outes");
+Meteor.subscribe("pl_take_profit_outs");
+Meteor.subscribe("pl_trailing_stop_ins");
+Meteor.subscribe("pl_trailing_stop_outs");
 Meteor.subscribe("pl_dummies");
+Meteor.subscribe("pl_profit_line_stop_outs");
 
 
 /***********************************************************************
@@ -31,11 +32,12 @@ var exchangeHandler = new InstHandler();
 
 
 /* Plugins */
-pluginHandler.setObject('PlStopLosses', PlStopLosses);
-pluginHandler.setObject('PlTakeProfits', PlTakeProfits);
-pluginHandler.setObject('PlThresholdIns', PlThresholdIns);
-pluginHandler.setObject('PlThresholdOuts', PlThresholdOuts);
+pluginHandler.setObject('PlStopLossOutes', PlStopLossOutes);
+pluginHandler.setObject('PlTakeProfitOuts', PlTakeProfitOuts);
+pluginHandler.setObject('PlTrailingStopIns', PlTrailingStopIns);
+pluginHandler.setObject('PlTrailingStopOuts', PlTrailingStopOuts);
 pluginHandler.setObject('PlDummies', PlDummies);
+pluginHandler.setObject('PlProfitLineStopOuts', PlProfitLineStopOuts);
 
 
 /* Exchanges */
