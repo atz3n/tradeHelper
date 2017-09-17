@@ -34,6 +34,15 @@
     "UpdatePairs": "true",
 
     "_":  "Sets the parent log folder",
-    "LogFolderPath": "../../../../../Logs/" 
+    "LogFolderPath": "../../../../../Logs/",
+
+    "_":  "Sets the path to the ssl certificate (in pem format)",
+    "SslCertificate": "../../../../../private/tradeHelperCert.crt",
+
+    "_":  "Sets the path to the ssl private key (in pk8 format)",
+    "SslPrivateKey": "../../../../../private/tradeHelperKey.pk8",
+
+    "_":  "Sets the ssl port",
+    "SslPort": "443"
   }
 }

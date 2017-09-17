@@ -32,6 +32,7 @@ email@1.0.14_1
 es5-shim@4.5.12_1
 evenfrost:spacekit@0.0.6
 fastclick@1.0.12
+force-ssl@1.0.12
 geojson-utils@1.0.9
 hot-code-push@1.0.4
 html-tools@1.0.10
@@ -76,6 +77,7 @@ mrt:moment@2.8.1
 natestrauser:font-awesome@4.6.1
 nemo64:bootstrap@3.3.5_2
 nemo64:bootstrap-data@3.3.5
+nourharidy:ssl@0.2.2
 npm-bcrypt@0.8.6_1
 npm-container@1.2.0
 npm-mongo@1.4.44_1
