@@ -8,6 +8,10 @@ Meteor.startup(function() {
 
 deactivateStrategies();
 
+/* enable ssl function */
+SSL(Meteor.settings.private.SslPrivateKey, Meteor.settings.private.SslCertificate, Meteor.settings.private.SslPort);
+
+
 if (Meteor.settings.private.UpdatePairs === 'true') {
 	getExTradePairInfos();
 	SchMSC.createSchedule('getExTradePairInfos', 'every ' + 1 + ' ' + 'day', getExTradePairInfos);
