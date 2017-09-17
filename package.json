@@ -2,8 +2,8 @@
   "name": "tradeHelper",
   "private": true,
   "scripts": {
-    "startDev": "meteor --settings settings/settings-development.json",
-    "startProd": "meteor --settings settings/settings-production.json --production",
+    "startDev": "sudo meteor --allow-superuser --settings settings/settings-development.json",
+    "startProd": "sudo meteor --allow-superuser --settings settings/settings-production.json --production",
     "startDevMltCore": "export CLUSTER_WORKERS_COUNT=auto; npm run startDev",
     "startProdMltCore": "export CLUSTER_WORKERS_COUNT=auto; npm run startProd"
   },
